@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>연준과 재무성 상관관계 - 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section-divider {
+            text-align: center;
+            padding: 16px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+            margin: 24px 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1a237e;
+        }
+        .question-section {
+            margin-bottom: 28px;
+        }
+        .question-header {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .question-header h2 {
+            font-size: 1.2rem;
+            color: #1a237e;
+            margin-bottom: 8px;
+        }
+        .question-header p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .question {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3f51b5;
+        }
+        .question-number {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .q-num {
+            background: #3f51b5;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .difficulty {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .difficulty.easy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .difficulty.medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .difficulty.hard {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .q-type {
+            font-size: 0.75rem;
+            color: #666;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+        .options {
+            margin-left: 8px;
+        }
+        .option {
+            display: block;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid #e0e0e0;
+        }
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 2px solid #3f51b5;
+            margin: 0 4px;
+        }
+        .answer-section {
+            margin-top: 40px;
+            border-top: 3px dashed #3f51b5;
+            padding-top: 20px;
+        }
+        .answer-header {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        .answer {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #4caf50;
+        }
+        .answer-number {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .a-num {
+            background: #4caf50;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .correct-answer {
+            font-weight: 700;
+            color: #2e7d32;
+            font-size: 1rem;
+        }
+        .explanation {
+            margin-top: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .explanation strong {
+            color: #1a237e;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f5f5f5;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .print-break {
+            page-break-before: always;
+        }
+        @media print {
+            .container {
+                box-shadow: none;
+            }
+            .answer-section {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 시험문제</h1>
+            <p class="subtitle">연준과 미 재무성의 상관관계 - 미국 증시 투자 필수 가이드</p>
+        </div>
+
+        <div class="content">
+            <!-- 문제지 섹션 -->
+            <div class="question-section">
+                <div class="question-header">
+                    <h2>━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+                    <h2>📋 시험문제 (총 10문제)</h2>
+                    <h2>━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+                    <p>난이도: ⭐ 쉬움 | ⭐⭐ 보통 | ⭐⭐⭐ 어려움</p>
+                </div>
+
+                <!-- 문제 1 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">1</span>
+                        <span class="difficulty easy">⭐ 쉬움</span>
+                        <span class="q-type">객관식</span>
+                    </div>
+                    <p class="question-text">1964년부터 현재까지 S&P 500의 상승률은 약 몇 %입니까?</p>
+                    <div class="options">
+                        <label class="option">① 852%</label>
+                        <label class="option">② 2,500%</label>
+                        <label class="option">③ 4,116%</label>
+                        <label class="option">④ 6,000%</label>
+                    </div>
+                </div>
+
+                <!-- 문제 2 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">2</span>
+                        <span class="difficulty easy">⭐ 쉬움</span>
+                        <span class="q-type">OX 문제</span>
+                    </div>
+                    <p class="question-text">주식의 종류 중 ADR(American Depository Receipt)은 외국 기업이 미국에 상장하는 증서이며, 환율 리스크(Exchange Rate Risk)가 존재한다. (O / X)</p>
+                </div>
+
+                <!-- 문제 3 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">3</span>
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="q-type">객관식</span>
+                    </div>
+                    <p class="question-text">미국 기업에서 CEO의 가장 중요한 임무 중 하나로 언급된 것은 무엇입니까?</p>
+                    <div class="options">
+                        <label class="option">① 직원 복지 향상</label>
+                        <label class="option">② 주가 상승</label>
+                        <label class="option">③ 시장점유율 확대</label>
+                        <label class="option">④ 해외 진출</label>
+                    </div>
+                </div>
+
+                <!-- 문제 4 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">4</span>
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="q-type">빈칸채우기</span>
+                    </div>
+                    <p class="question-text">연준이 밸런스시트를 줄인다(Quantitative Tightening)는 것은 미 재무성의 국채와 <span class="blank"></span>를 달러로 안 산다는 의미입니다.</p>
+                </div>
+
+                <!-- 문제 5 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">5</span>
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="q-type">객관식</span>
+                    </div>
+                    <p class="question-text">국민연금 실패 원인으로 언급되지 않은 것은?</p>
+                    <div class="options">
+                        <label class="option">① 국민 자산의 정치적 이용</label>
+                        <label class="option">② 비전문가들의 정책 결정</label>
+                        <label class="option">③ 미국 증권 시장에 과도한 투자</label>
+                        <label class="option">④ 가치 하락 채권 시장에 높은 비중</label>
+                    </div>
+                </div>
+
+                <!-- 문제 6 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">6</span>
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="q-type">단답형</span>
+                    </div>
+                    <p class="question-text">1990년대를 기점으로 무엇이 급격히 커졌다고 설명했습니까? (4글자)</p>
+                </div>
+
+                <!-- 문제 7 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">7</span>
+                        <span class="difficulty easy">⭐ 쉬움</span>
+                        <span class="q-type">OX 문제</span>
+                    </div>
+                    <p class="question-text">포트폴리오 투자에서 가장 중요한 것은 개별 주식의 등락이 아니라 전체 포트폴리오의 움직이는 방향이다. (O / X)</p>
+                </div>
+
+                <!-- 문제 8 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">8</span>
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="q-type">객관식</span>
+                    </div>
+                    <p class="question-text">미 재무성(Department of Treasury)의 특수한 권한에 대한 설명으로 옳은 것은?</p>
+                    <div class="options">
+                        <label class="option">① 국채만 발행할 수 있고, 달러 발행은 연준의 권한이다</label>
+                        <label class="option">② 국채 발행과 달러 발행량 결정을 모두 할 수 있다</label>
+                        <label class="option">③ 세무 업무만 담당하며, 통화 정책에는 관여하지 않는다</label>
+                        <label class="option">④ 연준의 지시에 따라 국채를 발행한다</label>
+                    </div>
+                </div>
+
+                <!-- 문제 9 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">9</span>
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="q-type">빈칸채우기</span>
+                    </div>
+                    <p class="question-text">1997년에 10만 달러를 투자했을 때, 현금 보유 시 약 15만 달러, Fixed Income(채권)은 약 20만 달러가 되었지만, Large Cap Equity에 투자했다면 약 <span class="blank"></span>만 달러가 되었습니다.</p>
+                </div>
+
+                <!-- 문제 10 -->
+                <div class="question">
+                    <div class="question-number">
+                        <span class="q-num">10</span>
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="q-type">서술형</span>
+                    </div>
+                    <p class="question-text">미국의 QE(양적완화)가 한국 경제와 개인 투자자에게 미치는 영향을 달러 가치와 원화 구매력 관점에서 간략히 설명하시오. (50자 이상)</p>
+                </div>
+            </div>
+
+            <!-- 정답지 섹션 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <h2>━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+                    <h2>📝 정답 및 해설</h2>
+                    <h2>━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+                </div>
+
+                <!-- 정답 1 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">1</span>
+                        <span class="correct-answer">정답: ③ 4,116%</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 1964년부터 현재까지 미국 임금 인상률은 852%인 반면, S&P 500의 상승률은 <strong>4,116%</strong>로 약 5배 높습니다. 이는 월급만으로는 주식 가치 상승률을 따라갈 수 없다는 것을 보여줍니다.
+                    </div>
+                </div>
+
+                <!-- 정답 2 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">2</span>
+                        <span class="correct-answer">정답: O</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> ADR(American Depository Receipt)은 외국 기업이 미국 GAAP 등 기준을 충족하여 미국에 상장할 수 있게 해주는 증서입니다. 원화, 위안화 등 로컬 통화에 대한 <strong>환율 리스크(Exchange Rate Risk)</strong>가 존재하므로, 동일 조건이라면 보수적 투자가 권장됩니다.
+                    </div>
+                </div>
+
+                <!-- 정답 3 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">3</span>
+                        <span class="correct-answer">정답: ② 주가 상승</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 미국 기업에서 CEO의 가장 중요한 임무 중 하나는 <strong>주가를 상승시키는 것</strong>입니다. 아무리 R&D, 상품 개발, 영업을 잘해도 주가가 오르지 않으면 CEO로서 능력을 인정받지 못하며, 그만둘 수밖에 없는 상황이 됩니다.
+                    </div>
+                </div>
+
+                <!-- 정답 4 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">4</span>
+                        <span class="correct-answer">정답: MBS (Mortgage-Backed Securities, 주택저당증권)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 연준의 밸런스시트 축소(QT, Quantitative Tightening)란 미 재무성의 <strong>국채와 MBS(Mortgage-Backed Securities, 주택저당증권)</strong>를 달러로 매입하지 않겠다는 것을 의미합니다. 이로 인해 시중의 달러가 연준으로 흡수됩니다.
+                    </div>
+                </div>
+
+                <!-- 정답 5 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">5</span>
+                        <span class="correct-answer">정답: ③ 미국 증권 시장에 과도한 투자</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 국민연금의 실패 원인은 오히려 <strong>미국 증권 시장에 투자를 하지 않은 것</strong>입니다. 2009~2022년 미국 증권 시장 급상승기에 참여하지 못하고, 가치가 떨어지는 채권 시장에 너무 많은 비중을 두었습니다. 일본, 스웨덴, 이스라엘, 싱가포르 국부펀드는 미국에 적극 투자하여 성공했습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 6 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">6</span>
+                        <span class="correct-answer">정답: 기업 영향력 (또는 "기업의 사회적 영향력")</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 1990년대를 기점으로 <strong>기업의 사회적 영향력</strong>이 급격히 커졌습니다. 특히 2010년대 4차 산업혁명 이후, 한 기업의 영향력(예: 테슬라, 애플, 구글)이 웬만한 중간 규모 국가보다 커졌습니다. 시가총액 1조 달러(Trillion Dollar)를 넘는 기업들이 등장했습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 7 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">7</span>
+                        <span class="correct-answer">정답: O</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 포트폴리오 투자의 핵심 원칙은 <strong>전체 포트폴리오의 움직이는 방향</strong>을 보는 것입니다. 10개 주식 중 2개가 하락해도 전체 포트폴리오가 상승 중이라면 문제없습니다. 모든 주식이 동시에 오르는 포트폴리오는 좋은 포트폴리오가 아니며, 섹터별 분산(Complementary Relationships)이 필요합니다.
+                    </div>
+                </div>
+
+                <!-- 정답 8 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">8</span>
+                        <span class="correct-answer">정답: ② 국채 발행과 달러 발행량 결정을 모두 할 수 있다</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 미 재무성(Department of Treasury)은 <strong>국채 발행권과 달러 발행량 결정권</strong>을 모두 가지고 있습니다. 채권도 발행하고, 그 채권을 매입할 돈도 찍어내는 유일한 국가가 미국입니다. 또한 세무 업무(IRS)도 재무성 산하에 있어 엄청난 권한을 보유합니다. 이 시스템은 미국과 미국 기업에 가장 유리하게 설계되어 있습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 9 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">9</span>
+                        <span class="correct-answer">정답: 40 (만 달러)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 1997년에 10만 달러를 투자했을 때 자산 변화:<br>
+                        • 현금 보유: 약 15만 달러 (실질 손실)<br>
+                        • Fixed Income(채권): 약 20만 달러 (2배)<br>
+                        • <strong>Large Cap Equity: 약 40만 달러 (4배)</strong><br><br>
+                        주식 투자와 현금 보유 사이에 약 <strong>4배의 격차</strong>가 발생했습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 10 -->
+                <div class="answer">
+                    <div class="answer-number">
+                        <span class="a-num">10</span>
+                        <span class="correct-answer">정답: (모범답안)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>모범답안:</strong> 미국의 QE(양적완화)로 달러가 시중에 대량 공급되었지만, 기축통화로서 달러 가치는 오히려 상승했습니다. 이로 인해 원화의 실질 가치가 상대적으로 하락했고, 한국 개인의 실질 구매력도 감소했습니다. 달러 중심 글로벌 경제에서 한국 투자자는 미국 주식 투자를 통해 이러한 구조적 불리함을 극복해야 합니다.<br><br>
+                        <strong>채점 기준:</strong><br>
+                        • QE와 달러 가치 관계 설명 (20점)<br>
+                        • 원화 가치/구매력 하락 언급 (20점)<br>
+                        • 한국 투자자에 대한 시사점 (10점)
+                    </div>
+                </div>
+            </div>
+
+            <!-- 성적 기준 -->
+            <div style="background:#f5f5f5; padding:20px; border-radius:12px; margin-top:24px;">
+                <h3 style="font-size:1rem; color:#1a237e; margin-bottom:12px;">📊 성적 기준</h3>
+                <table style="width:100%; font-size:0.85rem;">
+                    <tr>
+                        <th style="background:#3f51b5; color:white; padding:8px;">점수</th>
+                        <th style="background:#3f51b5; color:white; padding:8px;">등급</th>
+                        <th style="background:#3f51b5; color:white; padding:8px;">평가</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px; text-align:center;">90-100점</td>
+                        <td style="padding:8px; text-align:center; color:#2e7d32; font-weight:600;">A</td>
+                        <td style="padding:8px;">연준-재무성 메커니즘 완벽 이해</td>
+                    </tr>
+                    <tr style="background:#f9f9f9;">
+                        <td style="padding:8px; text-align:center;">80-89점</td>
+                        <td style="padding:8px; text-align:center; color:#1565c0; font-weight:600;">B</td>
+                        <td style="padding:8px;">핵심 개념 이해, 세부 보완 필요</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px; text-align:center;">70-79점</td>
+                        <td style="padding:8px; text-align:center; color:#ff9800; font-weight:600;">C</td>
+                        <td style="padding:8px;">기본 개념 이해, 심화 학습 권장</td>
+                    </tr>
+                    <tr style="background:#f9f9f9;">
+                        <td style="padding:8px; text-align:center;">70점 미만</td>
+                        <td style="padding:8px; text-align:center; color:#c62828; font-weight:600;">D</td>
+                        <td style="padding:8px;">분석 자료 재학습 필요</td>
+                    </tr>
+                </table>
+                <p style="font-size:0.8rem; color:#666; margin-top:12px; text-align:center;">
+                    ※ 각 문제 10점 기준 (서술형은 부분점수 가능)
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📺 출처: 투자는인생TV 아카데미 5회</p>
+            <p>⚠️ 본 자료는 교육 목적이며, 투자 권유가 아닙니다.</p>
+        </div>
+    </div>
+</body>
+</html>
