@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 포트폴리오 이론 - 시험문제</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #1a5f7a;
+            --primary-light: #2d8bba;
+            --secondary: #f8b739;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --bg-dark: #0d1b2a;
+            --bg-card: #1b263b;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2c1;
+            --border: #415a77;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1b263b 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent) 0%, #c0392b 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .meta {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 24px;
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed var(--border);
+        }
+        
+        .question-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .question-number {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        
+        .difficulty.easy {
+            color: var(--success);
+        }
+        
+        .difficulty.medium {
+            color: var(--secondary);
+        }
+        
+        .difficulty.hard {
+            color: var(--accent);
+        }
+        
+        .question-type {
+            display: inline-block;
+            background: rgba(45,139,186,0.2);
+            color: var(--primary-light);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        .question-text {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background: rgba(45,139,186,0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .blank-box {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid var(--primary-light);
+            margin: 0 4px;
+        }
+        
+        /* Answer Section */
+        .answer-card {
+            background: rgba(39,174,96,0.1);
+            border: 1px solid rgba(39,174,96,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .answer-number {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .answer-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 12px;
+        }
+        
+        .explanation {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            padding-top: 12px;
+            border-top: 1px solid rgba(39,174,96,0.2);
+        }
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 40px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .stats-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .stat-value.easy { color: var(--success); }
+        .stat-value.medium { color: var(--secondary); }
+        .stat-value.hard { color: var(--accent); }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">📝 시험문제</div>
+            <h1>투자 포트폴리오 이론</h1>
+            <p class="meta">10분 투자아카데미 2편 학습 평가</p>
+            
+            <div class="stats-box">
+                <div class="stat-item">
+                    <div class="stat-value easy">3문제</div>
+                    <div class="stat-label">⭐ 쉬움</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value medium">5문제</div>
+                    <div class="stat-label">⭐⭐ 보통</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value hard">2문제</div>
+                    <div class="stat-label">⭐⭐⭐ 어려움</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==================== 문제지 ==================== -->
+        <section class="section">
+            <h2 class="section-title">📋 시험문제 (총 10문제)</h2>
+            
+            <!-- 문제 1 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 1</span>
+                    <span class="difficulty easy">⭐ 쉬움 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">
+                    투자 포트폴리오를 짜야 하는 가장 근본적인 이유는 무엇인가?
+                </p>
+                <div class="options">
+                    <div class="option">① 더 많은 수익을 얻기 위해</div>
+                    <div class="option">② 미래를 예측할 수 없기 때문에</div>
+                    <div class="option">③ 법적으로 의무이기 때문에</div>
+                    <div class="option">④ 전문가들이 추천하기 때문에</div>
+                </div>
+            </div>
+            
+            <!-- 문제 2 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 2</span>
+                    <span class="difficulty easy">⭐ 쉬움 <span class="question-type">OX문제</span></span>
+                </div>
+                <p class="question-text">
+                    "펀더멘털이 좋은 기업의 주가는 반드시 상승한다."
+                </p>
+                <div class="options">
+                    <div class="option">○ (맞다)</div>
+                    <div class="option">✕ (틀리다)</div>
+                </div>
+            </div>
+            
+            <!-- 문제 3 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 3</span>
+                    <span class="difficulty medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">
+                    베타(β)가 1보다 작은 종목의 특성으로 옳은 것은?
+                </p>
+                <div class="options">
+                    <div class="option">① S&P 500 대비 변동성이 크다</div>
+                    <div class="option">② S&P 500 대비 변동성이 작다</div>
+                    <div class="option">③ 시장과 반대로 움직인다</div>
+                    <div class="option">④ 배당을 지급하지 않는다</div>
+                </div>
+            </div>
+            
+            <!-- 문제 4 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 4</span>
+                    <span class="difficulty medium">⭐⭐ 보통 <span class="question-type">빈칸채우기</span></span>
+                </div>
+                <p class="question-text">
+                    알파(α)란 동일한 리스크에서 벤치마크 대비 얻은 <span class="blank-box"></span>을/를 의미한다. 예를 들어, S&P 500이 15% 상승할 때 포트폴리오가 30% 상승했다면, 알파는 <span class="blank-box"></span>%이다.
+                </p>
+            </div>
+            
+            <!-- 문제 5 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 5</span>
+                    <span class="difficulty medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">
+                    다음 중 국채 투자가 유리한 환경이 아닌 것은?
+                </p>
+                <div class="options">
+                    <div class="option">① 미국 달러가 강세일 때</div>
+                    <div class="option">② 주식시장의 투자 리스크가 커질 때</div>
+                    <div class="option">③ 경제 성장 속도가 빠르고 금리가 낮을 때</div>
+                    <div class="option">④ 국채 이자율이 높을 때</div>
+                </div>
+            </div>
+            
+            <!-- 문제 6 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 6</span>
+                    <span class="difficulty easy">⭐ 쉬움 <span class="question-type">단답형</span></span>
+                </div>
+                <p class="question-text">
+                    미국 기관투자자들이 주식 투자 시 미국 내 투자에 집중하는 비율은 대략 몇 %인가?
+                </p>
+            </div>
+            
+            <!-- 문제 7 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 7</span>
+                    <span class="difficulty medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">
+                    "7-2-1 법칙"에서 베타가 1인 경우, TOP 4 섹터에 배분해야 하는 최소 비율은?
+                </p>
+                <div class="options">
+                    <div class="option">① 50% 이상</div>
+                    <div class="option">② 60% 이상</div>
+                    <div class="option">③ 70% 이상</div>
+                    <div class="option">④ 80% 이상</div>
+                </div>
+            </div>
+            
+            <!-- 문제 8 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 8</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움 <span class="question-type">서술형</span></span>
+                </div>
+                <p class="question-text">
+                    "원금 보장 + 언제든 인출 가능 + 연 7% 수익"을 약속하는 금융상품이 존재할 수 없는 이유를 투자 리스크 관점에서 설명하시오.
+                </p>
+            </div>
+            
+            <!-- 문제 9 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 9</span>
+                    <span class="difficulty medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">
+                    Top-Down Approach에서 분석 순서로 올바른 것은?
+                </p>
+                <div class="options">
+                    <div class="option">① 기업 → 산업 → 경제</div>
+                    <div class="option">② 경제 → 기업 → 산업</div>
+                    <div class="option">③ 경제 → 산업 → 기업</div>
+                    <div class="option">④ 산업 → 경제 → 기업</div>
+                </div>
+            </div>
+            
+            <!-- 문제 10 -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">문제 10</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움 <span class="question-type">계산형</span></span>
+                </div>
+                <p class="question-text">
+                    다음 포트폴리오의 가중평균 기대수익률을 계산하시오.
+                </p>
+                <table style="width: 100%; margin: 16px 0; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="background: var(--primary);">
+                            <th style="padding: 10px; text-align: left; border-radius: 8px 0 0 0;">종목</th>
+                            <th style="padding: 10px; text-align: center;">비중</th>
+                            <th style="padding: 10px; text-align: center; border-radius: 0 8px 0 0;">연평균 수익률</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid var(--border);">A 종목</td>
+                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border);">30%</td>
+                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border);">20%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid var(--border);">B 종목</td>
+                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border);">50%</td>
+                            <td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border);">8%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">C 종목</td>
+                            <td style="padding: 10px; text-align: center;">20%</td>
+                            <td style="padding: 10px; text-align: center;">5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- 구분선 -->
+        <div class="divider"></div>
+        
+        <!-- ==================== 정답지 ==================== -->
+        <section class="section">
+            <h2 class="section-title">📝 정답 및 해설</h2>
+            
+            <!-- 정답 1 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 1</span>
+                </div>
+                <p class="answer-text">정답: ② 미래를 예측할 수 없기 때문에</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 투자의 대전제는 "미래를 모른다(I don't know)"입니다. 미래를 정확히 알 수 있다면 가장 수익이 높은 단일 상품에 100% 투자하면 되지만, 현실에서는 펀더멘털, 경제 상황, 산업 동향, 지정학적 리스크 등 수많은 변수가 존재하여 완벽한 예측이 불가능합니다. 따라서 분산 투자를 통해 리스크를 관리해야 합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 2 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 2</span>
+                </div>
+                <p class="answer-text">정답: ✕ (틀리다)</p>
+                <div class="explanation">
+                    <strong>해설:</strong> "밸류 트랩(Value Trap)"이라는 현상이 있습니다. 기업의 PE가 낮고 펀더멘털이 좋아도 주가가 오르지 않는 경우가 있으며, 반대로 PE가 200~300인 고평가 기업의 주가가 계속 상승하는 경우도 있습니다. 펀더멘털은 중요한 요소이지만, 주가에는 경제 상황, 시장 심리, 산업 동향 등 다양한 요인이 복합적으로 작용합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 3 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 3</span>
+                </div>
+                <p class="answer-text">정답: ② S&P 500 대비 변동성이 작다</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 베타(β)는 시장(S&P 500) 대비 변동성을 측정하는 지표입니다. β=1이면 시장과 동일한 변동성, β&lt;1이면 시장보다 낮은 변동성(안정적), β&gt;1이면 시장보다 높은 변동성(공격적)을 의미합니다. 예를 들어, 다우존스 종목들은 대체로 베타가 1 미만으로 변동성이 낮습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 4 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 4</span>
+                </div>
+                <p class="answer-text">정답: 초과수익(또는 초과 수익률), 15</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 알파(α)는 동일한 리스크 수준에서 벤치마크를 초과하여 달성한 수익률입니다. 계산식은 α = 실제 수익률 - 기대 수익률입니다. S&P 500이 15% 상승했을 때 포트폴리오가 30% 상승했다면, 알파는 30% - 15% = 15%입니다. "플러스 알파"라는 표현은 여기서 유래했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 5 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 5</span>
+                </div>
+                <p class="answer-text">정답: ③ 경제 성장 속도가 빠르고 금리가 낮을 때</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 경제 성장이 빠르고 금리가 낮을 때는 주식에 유리한 환경입니다. 국채는 달러가 강하고, 국채 이자율이 높으며, 주식시장의 리스크가 커질 때 안전자산으로서 매력이 증가합니다. 국채는 상대적으로 안전하지만, 인플레이션 리스크에 노출되어 있다는 점도 기억해야 합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 6 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 6</span>
+                </div>
+                <p class="answer-text">정답: 95~99%</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 미국 기관투자자들은 주식 투자의 95~99%를 미국 내에 집중합니다. 나머지는 글로벌 펀드(미국+해외, 약 1%)와 인터내셔널 펀드(미국 제외, 약 0.2%)로 구성됩니다. 이는 미국 시장의 규모, 유동성, 투명성이 압도적이기 때문입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 7 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 7</span>
+                </div>
+                <p class="answer-text">정답: ③ 70% 이상</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 7-2-1 법칙에서 베타가 1인 경우, 11개 섹터 중 TOP 4 섹터에 70% 이상을 배분합니다. 보수적인 투자자의 경우 90% 이상을 TOP 4 섹터에 집중하기도 합니다. 나머지 20~30%는 다른 유망 섹터와 기타 자산에 분산 투자합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 8 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 8</span>
+                </div>
+                <p class="answer-text">정답: (서술형 모범답안)</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 모든 금융상품에는 고유의 투자 리스크가 존재합니다. <br><br>
+                    <strong>1) 원금 보장</strong>: 주식은 물론이고 심지어 예금(CD)도 완전한 원금 보장이 아닙니다. 은행이 파산하면 예금도 위험합니다.<br><br>
+                    <strong>2) 유동성(언제든 인출)</strong>: 언제든 인출이 가능하려면 유동성이 높아야 하는데, 고수익 상품은 대부분 장기 투자를 전제로 하며 중도 인출 시 페널티가 있습니다.<br><br>
+                    <strong>3) 고수익(연 7%)</strong>: 리스크와 리턴은 비례합니다. 안전한 국채 수익률이 4%인데 7% 수익을 보장한다면 그만큼 더 높은 리스크가 있어야 합니다.<br><br>
+                    이 세 가지 조건을 동시에 만족하는 상품은 존재할 수 없으며, 이를 약속하는 것은 사기입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 9 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 9</span>
+                </div>
+                <p class="answer-text">정답: ③ 경제 → 산업 → 기업</p>
+                <div class="explanation">
+                    <strong>해설:</strong> Top-Down Approach(하향식 접근법)는 거시적 관점에서 미시적 관점으로 분석을 진행합니다. <br><br>
+                    <strong>1단계)</strong> 미국 경제(US Economy): 연준 정책, 금리, 인플레이션, 트럼프 리스크 등<br>
+                    <strong>2단계)</strong> 산업/섹터: AI 슈퍼사이클, 반도체 등 산업 동향<br>
+                    <strong>3단계)</strong> 기업 펀더멘털: 매출, 이익, 캐시플로우, 배당 등<br><br>
+                    거시경제를 무시하고 개별 종목에만 집중하면 동반 하락장에서 큰 손실을 볼 수 있습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 10 -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <span class="answer-number">문제 10</span>
+                </div>
+                <p class="answer-text">정답: 11%</p>
+                <div class="explanation">
+                    <strong>해설:</strong> 가중평균 계산:<br><br>
+                    (0.30 × 20%) + (0.50 × 8%) + (0.20 × 5%)<br>
+                    = 6% + 4% + 1%<br>
+                    = <strong>11%</strong><br><br>
+                    실제 투자에서는 이 기대수익률의 ±25% 범위 내에서 변동이 발생할 수 있습니다. 즉, 8.25%~13.75% 사이의 수익률을 예상할 수 있습니다.
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>📺 원본: NOVA Real Invest - 10분 투자아카데미 2편</p>
+            <p>출제일: 2026년 1월 17일</p>
+        </footer>
+    </div>
+</body>
+</html>

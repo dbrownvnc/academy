@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 포트폴리오 이론 분석 - 미국 증시 관점</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #1a5f7a;
+            --primary-light: #2d8bba;
+            --secondary: #f8b739;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --bg-dark: #0d1b2a;
+            --bg-card: #1b263b;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2c1;
+            --border: #415a77;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1b263b 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .meta {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+        
+        h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin: 20px 0 12px 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(26,95,122,0.3) 0%, rgba(45,139,186,0.2) 100%);
+            border-left: 4px solid var(--primary-light);
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        
+        .highlight p {
+            margin-bottom: 0;
+            color: var(--text-primary);
+        }
+        
+        .key-point {
+            background: rgba(248,183,57,0.1);
+            border: 1px solid rgba(248,183,57,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .key-point-title {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .warning {
+            background: rgba(231,76,60,0.1);
+            border: 1px solid rgba(231,76,60,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .warning-title {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        
+        li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        
+        .chart-container {
+            background: rgba(13,27,42,0.8);
+            border-radius: 12px;
+            padding: 20px 16px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        /* Risk-Return Chart */
+        .risk-return-chart {
+            position: relative;
+            height: 280px;
+            margin: 20px 0;
+        }
+        
+        .chart-axis {
+            position: absolute;
+            background: var(--border);
+        }
+        
+        .y-axis {
+            width: 2px;
+            height: 220px;
+            left: 40px;
+            bottom: 40px;
+        }
+        
+        .x-axis {
+            height: 2px;
+            width: calc(100% - 60px);
+            left: 40px;
+            bottom: 40px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .y-label {
+            left: 0;
+            top: 100px;
+            transform: rotate(-90deg);
+            transform-origin: left center;
+        }
+        
+        .x-label {
+            bottom: 10px;
+            right: 20px;
+        }
+        
+        .chart-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .point-label {
+            position: absolute;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        
+        .efficient-frontier {
+            position: absolute;
+            left: 40px;
+            bottom: 40px;
+            width: calc(100% - 80px);
+            height: 200px;
+        }
+        
+        /* Asset Allocation Pie Chart */
+        .pie-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        /* Beta Scale */
+        .beta-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .beta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .beta-bar-container {
+            flex: 1;
+            height: 24px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .beta-bar {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .beta-label {
+            width: 80px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.85rem;
+        }
+        
+        .data-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+        
+        .data-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        
+        .data-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .data-table tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+        
+        .data-table tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(45,139,186,0.1);
+        }
+        
+        /* Flow Chart */
+        .flow-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 0;
+        }
+        
+        .flow-item {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            width: 90%;
+            font-size: 0.9rem;
+        }
+        
+        .flow-arrow {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+        
+        /* Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .comparison-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .comparison-card.korea {
+            border: 1px solid rgba(231,76,60,0.5);
+        }
+        
+        .comparison-card.usa {
+            border: 1px solid rgba(39,174,96,0.5);
+        }
+        
+        .comparison-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .comparison-card.korea .comparison-title {
+            color: var(--accent);
+        }
+        
+        .comparison-card.usa .comparison-title {
+            color: var(--success);
+        }
+        
+        .comparison-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Statistics Box */
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--secondary);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Formula Box */
+        .formula-box {
+            background: rgba(45,139,186,0.1);
+            border: 1px solid rgba(45,139,186,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: var(--primary-light);
+            margin: 10px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        /* SVG Charts */
+        svg text {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">📊 투자 교육</div>
+            <h1>투자 포트폴리오란 무엇인가</h1>
+            <p class="meta">10분 투자아카데미 2편 | 2026년 1월 17일</p>
+            <p class="meta">미국 증시 및 경제적 관점 분석</p>
+        </header>
+
+        <!-- 핵심 요약 -->
+        <section class="section">
+            <h2 class="section-title">핵심 요약</h2>
+            
+            <div class="highlight">
+                <p><strong>"투자란 미래를 모른다는 전제에서 시작한다"</strong></p>
+            </div>
+            
+            <p>이 영상은 <strong>26년 경력</strong>의 포트폴리오 매니저가 설명하는 투자 포트폴리오의 기본 원리와 리스크 관리 방법론을 다룹니다. 핵심 메시지는 <strong>불확실성 인정</strong>과 <strong>체계적 분산투자</strong>의 중요성입니다.</p>
+            
+            <div class="key-point">
+                <div class="key-point-title">💡 핵심 투자 원칙</div>
+                <ul>
+                    <li>미래 예측 불가능 → 포트폴리오 분산 필수</li>
+                    <li>리스크와 리턴은 비례 관계</li>
+                    <li>개인의 투자 목적과 성향에 맞는 전략 수립</li>
+                    <li>장기 투자 관점에서 리스크 관리</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 투자의 불확실성 -->
+        <section class="section">
+            <h2 class="section-title">투자의 불확실성</h2>
+            
+            <h3>왜 미래를 예측할 수 없는가?</h3>
+            <p>투자 수익에 영향을 미치는 요소는 매우 다양하며, 이들 간의 상호작용을 완벽히 예측하는 것은 불가능합니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">📈 주가에 영향을 미치는 요소들</div>
+                <div class="flow-chart">
+                    <div class="flow-item">🏢 펀더멘털 (Fundamentals)<br><small>매출, 이익, 현금흐름, 경영진</small></div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-item">📊 경제 상황 (Economics)<br><small>GDP, 금리, 인플레이션</small></div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-item">🏭 산업 동향 (Industry)<br><small>AI 슈퍼사이클, 기술 혁신</small></div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-item">🌍 지정학적 리스크 (Geopolitical)<br><small>국제 정세, 무역 분쟁</small></div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <div class="warning-title">⚠️ 밸류 트랩(Value Trap) 주의</div>
+                <p>펀더멘털이 좋다고 해서 주가가 반드시 오르는 것이 아닙니다. PE가 낮은데도 주가 보상이 없는 경우(밸류 트랩)가 있는 반면, PE가 200~300임에도 주가가 상승하는 경우도 있습니다.</p>
+            </div>
+        </section>
+
+        <!-- 자산군별 투자 시점 -->
+        <section class="section">
+            <h2 class="section-title">자산군별 투자 시점</h2>
+            
+            <p>기관투자자들은 <strong>조(trillion) 단위의 자금</strong>을 운용하며, 경제 상황에 따라 자산 배분을 조정합니다.</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>자산</th>
+                        <th>유리한 환경</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>주식</strong></td>
+                        <td>경제성장 빠름, 저금리, 인플레이션 상승기</td>
+                    </tr>
+                    <tr>
+                        <td><strong>국채</strong></td>
+                        <td>달러 강세, 높은 국채금리, 주식 리스크 증가 시</td>
+                    </tr>
+                    <tr>
+                        <td><strong>회사채</strong></td>
+                        <td>주식시장 부진, 스프레드(국채 대비) 매력적</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PE</strong></td>
+                        <td>경제 정체기 (GDP 성장률 0.9~1.2%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>금</strong></td>
+                        <td>경기 불안, 지정학적 리스크 증가</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="key-point">
+                <div class="key-point-title">💰 자산 이동의 원리</div>
+                <p>돈은 사라지는 것이 아니라 금융상품 A에서 B, C로 <strong>흘러가는 것</strong>입니다. 내 금융상품의 가치가 하락했다고 해서 돈이 없어진 것이 아닙니다.</p>
+            </div>
+            
+            <h3>국채의 인플레이션 리스크</h3>
+            <p>국채도 투자 리스크가 있습니다. 국채 수익률이 <strong>4%</strong>인데 실질 인플레이션이 <strong>6~8%</strong>라면, 실질 구매력은 <strong>2~4%</strong> 하락하는 셈입니다.</p>
+            
+            <h3>회사채 투자 기준</h3>
+            <p>국채는 연방세(Federal Tax)가 면제되므로, 회사채 수익률은 국채 대비 <strong>최소 2배</strong> 이상이어야 매력적입니다. (국채 4% → 회사채 8% 이상)</p>
+        </section>
+
+        <!-- 현대 포트폴리오 이론 -->
+        <section class="section">
+            <h2 class="section-title">현대 포트폴리오 이론 (MPT)</h2>
+            
+            <p><strong>Modern Portfolio Theory</strong>는 동일한 리스크 수준에서 최대 수익을 추구하거나, 동일한 수익 목표에서 리스크를 최소화하는 포트폴리오를 구성하는 이론입니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">📊 리스크-리턴 관계 (Efficient Frontier)</div>
+                <svg viewBox="0 0 320 240" style="width: 100%; height: auto;">
+                    <!-- 배경 그리드 -->
+                    <defs>
+                        <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#f8b739;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- 축 -->
+                    <line x1="50" y1="200" x2="300" y2="200" stroke="#415a77" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="50" y2="30" stroke="#415a77" stroke-width="2"/>
+                    
+                    <!-- 축 라벨 -->
+                    <text x="175" y="230" fill="#a8b2c1" font-size="11" text-anchor="middle">투자 리스크 (Risk) →</text>
+                    <text x="20" y="115" fill="#a8b2c1" font-size="11" text-anchor="middle" transform="rotate(-90, 20, 115)">리턴 (Return) →</text>
+                    
+                    <!-- Efficient Frontier 곡선 -->
+                    <path d="M 70 180 Q 120 80 280 50" stroke="url(#curveGradient)" stroke-width="3" fill="none"/>
+                    
+                    <!-- 데이터 포인트들 -->
+                    <circle cx="80" cy="170" r="8" fill="#1a5f7a"/>
+                    <text x="80" y="190" fill="#a8b2c1" font-size="9" text-anchor="middle">국채</text>
+                    
+                    <circle cx="120" cy="140" r="8" fill="#2d8bba"/>
+                    <text x="120" y="160" fill="#a8b2c1" font-size="9" text-anchor="middle">회사채</text>
+                    
+                    <circle cx="180" cy="100" r="8" fill="#27ae60"/>
+                    <text x="180" y="120" fill="#a8b2c1" font-size="9" text-anchor="middle">주식</text>
+                    
+                    <circle cx="260" cy="55" r="8" fill="#f8b739"/>
+                    <text x="260" y="75" fill="#a8b2c1" font-size="9" text-anchor="middle">벤처캐피탈</text>
+                    
+                    <!-- 화살표 -->
+                    <polygon points="300,200 295,195 295,205" fill="#415a77"/>
+                    <polygon points="50,30 45,35 55,35" fill="#415a77"/>
+                </svg>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Efficient Frontier (효율적 투자선)</strong>: 주어진 리스크 수준에서 달성 가능한 최대 수익률을 연결한 곡선. 포트폴리오 매니저의 핵심 업무는 이 곡선 위의 최적점을 찾는 것입니다.</p>
+            </div>
+            
+            <div class="warning">
+                <div class="warning-title">❌ 불가능한 기대</div>
+                <p>투자 리스크는 0.5로 낮추면서 리턴은 50%를 원하는 것은 <strong>불가능</strong>합니다. 리스크를 무한정 높인다고 리턴이 계속 증가하는 것도 아닙니다.</p>
+            </div>
+        </section>
+
+        <!-- 베타와 알파 -->
+        <section class="section">
+            <h2 class="section-title">베타(β)와 알파(α)</h2>
+            
+            <h3>베타(Beta) - 변동성 지표</h3>
+            <p>S&P 500의 평균 변동성을 <strong>1</strong>로 기준 삼아 개별 종목이나 포트폴리오의 변동성을 측정합니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">📈 베타 비교</div>
+                <div class="beta-scale">
+                    <div class="beta-item">
+                        <span class="beta-label">다우존스</span>
+                        <div class="beta-bar-container">
+                            <div class="beta-bar" style="width: 45%; background: linear-gradient(90deg, #27ae60, #2ecc71);">0.9</div>
+                        </div>
+                    </div>
+                    <div class="beta-item">
+                        <span class="beta-label">S&P 500</span>
+                        <div class="beta-bar-container">
+                            <div class="beta-bar" style="width: 50%; background: linear-gradient(90deg, #3498db, #5dade2);">1.0</div>
+                        </div>
+                    </div>
+                    <div class="beta-item">
+                        <span class="beta-label">나스닥</span>
+                        <div class="beta-bar-container">
+                            <div class="beta-bar" style="width: 60%; background: linear-gradient(90deg, #f39c12, #f8b739);">1.2</div>
+                        </div>
+                    </div>
+                    <div class="beta-item">
+                        <span class="beta-label">소형주</span>
+                        <div class="beta-bar-container">
+                            <div class="beta-bar" style="width: 80%; background: linear-gradient(90deg, #e74c3c, #ec7063);">1.6</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <ul>
+                <li><strong>β < 1</strong>: 시장 대비 변동성 낮음 (안정적)</li>
+                <li><strong>β = 1</strong>: 시장과 동일한 변동성</li>
+                <li><strong>β > 1</strong>: 시장 대비 변동성 높음 (공격적)</li>
+            </ul>
+            
+            <h3>알파(Alpha) - 초과수익</h3>
+            <p>동일한 리스크(베타)에서 벤치마크(S&P 500) 대비 얼마나 더 수익을 냈는지를 나타냅니다.</p>
+            
+            <div class="formula-box">
+                <div class="formula">α = 실제 수익률 - 기대 수익률</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 10px;">
+                    예: S&P 500이 15% 상승 시, 포트폴리오가 30% 상승했다면<br>
+                    <strong>α = 30% - 15% = 15%</strong>
+                </p>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-item">
+                    <div class="stat-value">β = 1</div>
+                    <div class="stat-label">기준 변동성</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">α = 15%+</div>
+                    <div class="stat-label">초과수익 목표</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7-2-1 법칙 -->
+        <section class="section">
+            <h2 class="section-title">7-2-1 법칙과 포트폴리오 구성</h2>
+            
+            <p>베타가 1인 경우, 투자 리스크 관리를 위해 <strong>7-2-1 법칙</strong>을 적용합니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">🥧 포트폴리오 구성 예시 (베타 = 1)</div>
+                <div class="pie-container">
+                    <svg viewBox="0 0 200 200" style="width: 200px; height: 200px;">
+                        <!-- 70% - 핵심 섹터 -->
+                        <circle cx="100" cy="100" r="80" fill="transparent" stroke="#2d8bba" stroke-width="40" stroke-dasharray="351.68 502.4" transform="rotate(-90 100 100)"/>
+                        <!-- 20% - 중간 섹터 -->
+                        <circle cx="100" cy="100" r="80" fill="transparent" stroke="#f8b739" stroke-width="40" stroke-dasharray="100.48 502.4" stroke-dashoffset="-351.68" transform="rotate(-90 100 100)"/>
+                        <!-- 10% - 기타 -->
+                        <circle cx="100" cy="100" r="80" fill="transparent" stroke="#27ae60" stroke-width="40" stroke-dasharray="50.24 502.4" stroke-dashoffset="-452.16" transform="rotate(-90 100 100)"/>
+                        <!-- 중앙 원 -->
+                        <circle cx="100" cy="100" r="55" fill="#1b263b"/>
+                        <text x="100" y="105" fill="white" font-size="14" text-anchor="middle" font-weight="bold">7-2-1</text>
+                    </svg>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #2d8bba;"></div>
+                            <span>70% TOP 4 섹터</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f8b739;"></div>
+                            <span>20% 유망 섹터</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #27ae60;"></div>
+                            <span>10% 기타</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="key-point-title">📌 TOP 4 섹터 집중 전략</div>
+                <p>11개 섹터 중 TOP 4 섹터에 <strong>70% 이상</strong> 투자합니다. 보수적 투자자는 <strong>90% 이상</strong>을 핵심 섹터에 배분합니다.</p>
+            </div>
+            
+            <h3>투자 성향별 포트폴리오</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>성향</th>
+                        <th>시가총액</th>
+                        <th>주식 유형</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>보수적</td>
+                        <td>대형주(Large Cap), 다우존스</td>
+                        <td>가치주(배당 중심)</td>
+                    </tr>
+                    <tr>
+                        <td>중립</td>
+                        <td>대형주 + 중형주 혼합</td>
+                        <td>성장주 + 가치주</td>
+                    </tr>
+                    <tr>
+                        <td>공격적</td>
+                        <td>중소형주(Small Cap)</td>
+                        <td>성장주(IT 등)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Top-Down Approach -->
+        <section class="section">
+            <h2 class="section-title">Top-Down Approach</h2>
+            
+            <p>포트폴리오를 구성할 때 <strong>거시경제 → 산업 → 기업</strong> 순서로 분석하는 하향식 접근법입니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">🔍 투자 분석 프레임워크</div>
+                <div class="flow-chart">
+                    <div class="flow-item" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                        🇺🇸 미국 경제 (US Economy)<br>
+                        <small>연준 정책, 금리, 인플레이션, 트럼프 리스크</small>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #f39c12, #d68910);">
+                        🏭 산업/섹터 (Industry/Sector)<br>
+                        <small>AI 슈퍼사이클, 반도체, 헬스케어</small>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #27ae60, #1e8449);">
+                        🏢 기업 펀더멘털 (Fundamentals)<br>
+                        <small>매출, 이익, 캐시플로우, 배당</small>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>펀더멘털 분석 핵심 지표</h3>
+            <ul>
+                <li><strong>Revenue (매출)</strong>: 외형 성장 추세</li>
+                <li><strong>Profit (이익)</strong>: 수익성 개선 여부</li>
+                <li><strong>Cash Flow</strong>: 현금 흐름 건전성</li>
+                <li><strong>Dividend</strong>: 배당금 증가/감소</li>
+                <li><strong>Preferred Stock 발행</strong>: 재무 상태 악화 신호</li>
+            </ul>
+            
+            <div class="warning">
+                <div class="warning-title">⚠️ 거시경제 무시의 위험</div>
+                <p>아무리 좋은 주식이라도 <strong>동반 하락장</strong>에서는 버티지 못합니다. 거시경제 분석 없이 개별 종목에만 집중하면 큰 손실을 볼 수 있습니다.</p>
+            </div>
+        </section>
+
+        <!-- 미국 기관투자 현황 -->
+        <section class="section">
+            <h2 class="section-title">미국 기관투자자 현황</h2>
+            
+            <p>미국 기관투자자들의 자산 배분을 보면, 압도적으로 <strong>미국 내 투자</strong>에 집중하고 있습니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">🌎 미국 기관 주식투자 지역 배분</div>
+                <svg viewBox="0 0 320 200" style="width: 100%; height: auto;">
+                    <!-- 미국 -->
+                    <rect x="40" y="30" width="240" height="50" rx="8" fill="#2d8bba"/>
+                    <text x="160" y="60" fill="white" font-size="14" text-anchor="middle" font-weight="bold">미국 (US) 95~99%</text>
+                    
+                    <!-- 글로벌 -->
+                    <rect x="40" y="95" width="48" height="40" rx="6" fill="#f8b739"/>
+                    <text x="64" y="120" fill="#1b263b" font-size="10" text-anchor="middle" font-weight="bold">글로벌 ~1%</text>
+                    
+                    <!-- 인터내셔널 -->
+                    <rect x="100" y="95" width="24" height="40" rx="6" fill="#27ae60"/>
+                    <text x="112" y="120" fill="#1b263b" font-size="8" text-anchor="middle" font-weight="bold">0.2%</text>
+                    
+                    <!-- 설명 -->
+                    <text x="40" y="160" fill="#a8b2c1" font-size="9">• 글로벌: 미국 + 해외 혼합</text>
+                    <text x="40" y="175" fill="#a8b2c1" font-size="9">• 인터내셔널: 미국 제외 (일본, 유럽 등)</text>
+                </svg>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-item">
+                    <div class="stat-value">95-99%</div>
+                    <div class="stat-label">미국 내 투자</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">~1%</div>
+                    <div class="stat-label">글로벌 펀드</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">~0.2%</div>
+                    <div class="stat-label">인터내셔널</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">미국인 투자 참여율</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="key-point-title">🇺🇸 미국 투자 환경의 특징</div>
+                <ul>
+                    <li>시가총액 1조 달러 이상 기업 다수 → 시장 조작 어려움</li>
+                    <li>100년 이상의 투자 관련 법률 체계 (1929~1936년 투자법)</li>
+                    <li>엄격한 법 집행과 투자자 보호</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 한국 vs 미국 투자 문화 -->
+        <section class="section">
+            <h2 class="section-title">한국 vs 미국 투자 문화</h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card korea">
+                    <div class="comparison-title">🇰🇷 한국</div>
+                    <div class="comparison-text">
+                        테크니컬 분석 중심<br>
+                        "무조건 사라" 문화<br>
+                        투자 역사 ~20년<br>
+                        기업 중심 구조
+                    </div>
+                </div>
+                <div class="comparison-card usa">
+                    <div class="comparison-title">🇺🇸 미국</div>
+                    <div class="comparison-text">
+                        펀더멘털 분석 중심<br>
+                        리스크 분석 필수<br>
+                        투자 역사 100년+<br>
+                        투자자 보호 중심
+                    </div>
+                </div>
+            </div>
+            
+            <h3>한국 투자 문화의 문제점</h3>
+            <ul>
+                <li><strong>Sell 리포트 부재</strong>: Buy/Hold만 있고 Sell 의견 희소</li>
+                <li><strong>리스크 분석 부재</strong>: 투자 위험도 설명 없이 "무조건 사라"</li>
+                <li><strong>캔들스틱 과의존</strong>: 테크니컬 분석만으로 판단</li>
+                <li><strong>집단 동조</strong>: 남이 가는 길을 따라가는 투자</li>
+            </ul>
+            
+            <div class="warning">
+                <div class="warning-title">🚫 존재하지 않는 금융상품</div>
+                <p>"원금 보장 + 언제든 인출 가능 + 연 7% 수익" → <strong>이런 금융상품은 존재하지 않습니다. 사기입니다.</strong></p>
+            </div>
+        </section>
+
+        <!-- 포트폴리오 수익률 계산 -->
+        <section class="section">
+            <h2 class="section-title">포트폴리오 수익률 계산</h2>
+            
+            <p><strong>가중평균(Weighted Average)</strong>을 이용해 포트폴리오의 예상 수익률을 계산합니다.</p>
+            
+            <div class="formula-box">
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">예시: 4개 종목 포트폴리오</div>
+                <table class="data-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th>종목</th>
+                            <th>비중</th>
+                            <th>연평균 수익률</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>테슬라</td>
+                            <td>20%</td>
+                            <td>15%</td>
+                        </tr>
+                        <tr>
+                            <td>포드</td>
+                            <td>50%</td>
+                            <td>5%</td>
+                        </tr>
+                        <tr>
+                            <td>보잉</td>
+                            <td>20%</td>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>월마트</td>
+                            <td>10%</td>
+                            <td>2%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="formula" style="margin-top: 15px;">
+                    (0.2×15%) + (0.5×5%) + (0.2×10%) + (0.1×2%)<br>
+                    = 3% + 2.5% + 2% + 0.2% = <strong>7.7%</strong>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 10px;">
+                    실제 수익률은 이 값의 <strong>±25%</strong> 범위 내에서 변동 예상
+                </p>
+            </div>
+        </section>
+
+        <!-- 투자 철학 -->
+        <section class="section">
+            <h2 class="section-title">투자의 궁극적 목적</h2>
+            
+            <div class="highlight">
+                <p><strong>"모든 투자의 궁극적 목적은 행복이다"</strong></p>
+            </div>
+            
+            <h3>올바른 투자 마인드</h3>
+            <ul>
+                <li>쓰이지 않은 돈은 아직 <strong>내 돈이 아닌 금융상품</strong></li>
+                <li>일일 등락에 <strong>일희일비하지 않기</strong></li>
+                <li>투자 목적은 <strong>행복과 연결</strong>되어야 함</li>
+                <li>과정이 행복해야 <strong>장기 투자</strong>가 가능</li>
+            </ul>
+            
+            <div class="key-point">
+                <div class="key-point-title">🎯 투자자의 자세</div>
+                <p>"남이 가는 길을 가면 안 된다. 투자에 있어서는 <strong>개인주의가 팽배해야 한다.</strong> 내 돈, 내 성향, 내 목적에 맞는 컬러풀한 투자를 하라."</p>
+            </div>
+            
+            <div class="warning">
+                <div class="warning-title">⚠️ 피해야 할 투자 행동</div>
+                <ul>
+                    <li>유튜버 말만 듣고 무조건 따라 투자</li>
+                    <li>빚(레버리지)으로 투자</li>
+                    <li>펀더멘털 분석 없이 그래프만 보고 투자</li>
+                    <li>치고 빠지는 단타 투기</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 미국 증시 시사점 -->
+        <section class="section">
+            <h2 class="section-title">미국 증시 투자 시사점</h2>
+            
+            <h3>📈 연준(Fed) 정책 영향</h3>
+            <p>금리 인하 시 주식 시장에 유리하며, 금리 인상 시 국채 매력이 증가합니다. 연준의 독립성 이슈(트럼프 리스크)도 증시 변동성 요인입니다.</p>
+            
+            <h3>🏭 섹터별 전략</h3>
+            <ul>
+                <li><strong>AI/반도체</strong>: 슈퍼사이클 지속 시 IT 섹터 비중 확대</li>
+                <li><strong>헬스케어</strong>: 방어적 섹터로 변동성 헤지</li>
+                <li><strong>금융</strong>: 금리 환경에 따라 수혜/피해 상이</li>
+            </ul>
+            
+            <h3>💰 현재 시장 환경</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>지표</th>
+                        <th>의미</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>국채금리 ~4%</td>
+                        <td>안전자산 수익률 확보</td>
+                    </tr>
+                    <tr>
+                        <td>인플레이션 6~8%</td>
+                        <td>실질 구매력 감소 주의</td>
+                    </tr>
+                    <tr>
+                        <td>달러 강세</td>
+                        <td>미국 자산 선호</td>
+                    </tr>
+                    <tr>
+                        <td>지정학적 불안</td>
+                        <td>금 등 안전자산 수요</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="key-point">
+                <div class="key-point-title">✅ 실천 사항</div>
+                <ol>
+                    <li>나의 투자 목적과 리스크 허용 범위 정의</li>
+                    <li>베타 1 기준 포트폴리오 구성</li>
+                    <li>TOP 섹터에 70% 이상 배분</li>
+                    <li>분기별 리밸런싱으로 리스크 관리</li>
+                    <li>거시경제 모니터링 지속</li>
+                </ol>
+            </div>
+        </section>
+
+        <footer>
+            <p>📺 원본: NOVA Real Invest - 10분 투자아카데미 2편</p>
+            <p>분석일: 2026년 1월 17일</p>
+            <p style="margin-top: 10px; font-size: 0.75rem;">
+                ※ 본 분석은 교육 목적이며, 투자 권유가 아닙니다.<br>
+                투자의 책임은 본인에게 있습니다.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
