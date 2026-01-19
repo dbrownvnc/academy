@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 아카데미: 8K 보고서 - 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            padding: 24px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(83, 52, 131, 0.3);
+        }
+        header h1 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        header .meta {
+            font-size: 0.85rem;
+            color: #b8b8d1;
+        }
+        section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            color: #7dd3fc;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(125, 211, 252, 0.3);
+            text-align: center;
+        }
+        .question-block {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6366f1;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .question-number {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        .difficulty-easy {
+            color: #34d399;
+        }
+        .difficulty-medium {
+            color: #fbbf24;
+        }
+        .difficulty-hard {
+            color: #f87171;
+        }
+        .question-type {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        .question-text {
+            font-size: 1rem;
+            color: #f3f4f6;
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .choice {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #d1d5db;
+            transition: background 0.2s;
+        }
+        .choice:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .blank-box {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px dashed #6366f1;
+            margin: 0 4px;
+        }
+        .answer-section {
+            margin-top: 40px;
+        }
+        .answer-block {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #10b981;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .answer-badge {
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .correct-answer {
+            color: #34d399;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .explanation {
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+            margin: 30px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        .score-guide {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .score-guide h3 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        .score-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 투자 아카데미 4회 - 시험문제</h1>
+            <p style="font-size: 1rem; color: #c4b5fd; margin: 8px 0;">8K 보고서 분석법과 실시간 투자 정보</p>
+            <div class="meta">총 10문제 | 제한시간 15분</div>
+        </header>
+
+        <section>
+            <div class="score-guide">
+                <h3>📊 난이도 및 배점 안내</h3>
+                <div class="score-item">
+                    <span>⭐ 쉬움 (3문제)</span>
+                    <span>각 8점</span>
+                </div>
+                <div class="score-item">
+                    <span>⭐⭐ 보통 (5문제)</span>
+                    <span>각 10점</span>
+                </div>
+                <div class="score-item">
+                    <span>⭐⭐⭐ 어려움 (2문제)</span>
+                    <span>각 12점</span>
+                </div>
+                <div class="score-item" style="font-weight: bold; color: #7dd3fc;">
+                    <span>총점</span>
+                    <span>100점</span>
+                </div>
+            </div>
+
+            <h2>━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>📋 시험문제 (총 10문제)<br>━━━━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+
+            <!-- 문제 1 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 1</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">8K 보고서는 중요한 기업 이벤트 발생 후 며칠 이내에 SEC에 제출해야 하는가?</p>
+                <div class="choices">
+                    <div class="choice">① 1일</div>
+                    <div class="choice">② 4일</div>
+                    <div class="choice">③ 7일</div>
+                    <div class="choice">④ 30일</div>
+                </div>
+            </div>
+
+            <!-- 문제 2 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 2</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움 <span class="question-type">OX</span></span>
+                </div>
+                <p class="question-text">10-K는 분기별 실적 보고서이고, 10-Q는 연간 보고서이다.</p>
+                <div class="choices">
+                    <div class="choice">○ 맞다</div>
+                    <div class="choice">✕ 틀리다</div>
+                </div>
+            </div>
+
+            <!-- 문제 3 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 3</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">다음 중 8K 보고서에 반드시 포함되어야 하는 "Material Information"에 해당하지 <strong>않는</strong> 것은?</p>
+                <div class="choices">
+                    <div class="choice">① CEO 교체</div>
+                    <div class="choice">② 회사 인수합병(M&A) 소식</div>
+                    <div class="choice">③ 신제품 광고 캠페인 시작</div>
+                    <div class="choice">④ 파산(Bankruptcy) 신청</div>
+                </div>
+            </div>
+
+            <!-- 문제 4 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 4</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통 <span class="question-type">빈칸채우기</span></span>
+                </div>
+                <p class="question-text">미국 증권거래법은 <span class="blank-box"></span>년 대공황 이후 투자자 보호를 위해 <span class="blank-box"></span>년에 제정되었다.</p>
+            </div>
+
+            <!-- 문제 5 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 5</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">펩시코 8K 분석 사례에서 가장 높은 성장률을 보인 지역은?</p>
+                <div class="choices">
+                    <div class="choice">① 북미 (Frito-Lay)</div>
+                    <div class="choice">② 라틴아메리카</div>
+                    <div class="choice">③ 유럽</div>
+                    <div class="choice">④ 아시아태평양</div>
+                </div>
+            </div>
+
+            <!-- 문제 6 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 6</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움 <span class="question-type">단답형</span></span>
+                </div>
+                <p class="question-text">펩시코 8K 보고서에서 가장 부진한 실적을 보인 브랜드/제품 라인의 이름은?</p>
+            </div>
+
+            <!-- 문제 7 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 7</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통 <span class="question-type">객관식</span></span>
+                </div>
+                <p class="question-text">임원진에 대한 높은 보너스 지급이 일반적으로 주가에 미치는 영향은?</p>
+                <div class="choices">
+                    <div class="choice">① 긍정적 (회사 실적이 좋고 현금 흐름 건전)</div>
+                    <div class="choice">② 부정적 (비용 증가로 수익성 악화)</div>
+                    <div class="choice">③ 중립적 (주가와 무관)</div>
+                    <div class="choice">④ 매우 부정적 (경영 방만 신호)</div>
+                </div>
+            </div>
+
+            <!-- 문제 8 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 8</span>
+                    <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움 <span class="question-type">서술형</span></span>
+                </div>
+                <p class="question-text">"주식 투자가 아니라 기업 투자"라는 관점에서, 8K 보고서를 활용한 투자 의사결정의 장점을 2가지 이상 서술하시오.</p>
+            </div>
+
+            <!-- 문제 9 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 9</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통 <span class="question-type">OX</span></span>
+                </div>
+                <p class="question-text">미국에서 기업 공시 의무를 "몰라서" 위반한 경우, 고의가 아니므로 법적 처벌을 면할 수 있다.</p>
+                <div class="choices">
+                    <div class="choice">○ 맞다</div>
+                    <div class="choice">✕ 틀리다</div>
+                </div>
+            </div>
+
+            <!-- 문제 10 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <span class="question-number">문제 10</span>
+                    <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움 <span class="question-type">서술형</span></span>
+                </div>
+                <p class="question-text">영상에서 설명한 "우량주 매수 타이밍" 전략을 설명하고, 왜 대부분의 개인 투자자들이 이 전략을 실행하지 못하는지 분석하시오.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 정답 및 해설 -->
+            <div class="answer-section">
+                <h2>━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>📝 정답 및 해설<br>━━━━━━━━━━━━━━━━━━━━━━━━━━━</h2>
+
+                <!-- 정답 1 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 1</span>
+                        <span class="correct-answer">정답: ②</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 8K 보고서는 Material Information(중대한 정보)이 발생한 날로부터 <strong>4일 이내</strong>에 SEC에 제출해야 합니다. 이는 투자자들에게 주가에 영향을 미칠 수 있는 정보를 신속하게 공개하기 위함입니다.
+                    </div>
+                </div>
+
+                <!-- 정답 2 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 2</span>
+                        <span class="correct-answer">정답: ✕ 틀리다</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 반대입니다. <strong>10-K는 Annual Report(연간 보고서)</strong>이고, <strong>10-Q는 Quarterly Report(분기 보고서)</strong>입니다. 10-K는 1년에 1번, 10-Q는 분기마다 제출됩니다.
+                    </div>
+                </div>
+
+                <!-- 정답 3 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 3</span>
+                        <span class="correct-answer">정답: ③</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 신제품 광고 캠페인은 일반적인 마케팅 활동으로, 주가에 중대한 영향을 미치는 Material Information에 해당하지 않습니다. 반면 CEO 교체, M&A, 파산은 모두 즉각적인 주가 변동을 유발할 수 있는 중요 정보입니다.
+                    </div>
+                </div>
+
+                <!-- 정답 4 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 4</span>
+                        <span class="correct-answer">정답: 1929년, 1934년</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 1929년 대공황 이후, 투자자 보호를 위해 전문가들이 5년간 노력하여 <strong>1934년 증권거래법(Securities Exchange Act)</strong>이 제정되었습니다. 이 법은 약 90년이 지난 현재까지도 미국 증권시장의 기본 틀을 제공합니다.
+                    </div>
+                </div>
+
+                <!-- 정답 5 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 5</span>
+                        <span class="correct-answer">정답: ②</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 펩시코 8K 보고서에 따르면, <strong>라틴아메리카가 +18%</strong>로 가장 높은 성장률을 기록했습니다. 북미 Frito-Lay는 +14%, 유럽은 +15%, 아시아태평양은 +8%였습니다. 반면 아프리카는 -5%로 부진했습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 6 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 6</span>
+                        <span class="correct-answer">정답: Quaker Foods (퀘이커 푸드)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> Quaker Foods는 <strong>+1%</strong> 성장에 그쳐 인플레이션을 감안하면 실질적으로 역성장한 수준입니다. 다른 브랜드들이 10% 이상 성장한 것과 대조적이며, 이는 향후 회사 차원의 조치가 필요한 부분입니다.
+                    </div>
+                </div>
+
+                <!-- 정답 7 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 7</span>
+                        <span class="correct-answer">정답: ①</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 임원에 대한 보너스 지급은 일반적으로 <strong>긍정적 신호(Good News)</strong>입니다. 회사 실적이 양호하고 보너스를 지급할 수 있는 충분한 현금 흐름이 있다는 것을 의미하기 때문입니다.
+                    </div>
+                </div>
+
+                <!-- 정답 8 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 8</span>
+                        <span class="correct-answer">정답: 서술형 (아래 예시 참고)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>모범 답안 예시:</strong><br><br>
+                        <strong>1. 정보 비대칭 해소:</strong> 8K는 공개 정보이지만 일반 투자자의 95%가 확인하지 않습니다. 8K를 활용하면 기관 투자자와 동등한 정보 기반에서 판단할 수 있습니다.<br><br>
+                        <strong>2. 선제적 대응:</strong> M&A, 임원 변경, 파산 등의 정보를 수일 내로 확인하여 다른 투자자들보다 빠르게 대응할 수 있습니다.<br><br>
+                        <strong>3. 기업 가치 평가:</strong> 단순 주가 움직임이 아닌, 기업의 재무상태, 경영진 역량, 사업 방향성을 파악하여 장기적 관점의 투자 의사결정이 가능합니다.
+                    </div>
+                </div>
+
+                <!-- 정답 9 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 9</span>
+                        <span class="correct-answer">정답: ✕ 틀리다</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>해설:</strong> 미국에서 "몰랐다"는 변명이 통하지 않습니다. <strong>아는 것은 권리가 아니라 의무</strong>이며, 고의든 실수든 누락은 비윤리적(Unethical) 행위로 간주됩니다. 실제로 한국 기업이 나스닥 상장 후 8K 보고 위반으로 상장 폐지된 사례가 있습니다.
+                    </div>
+                </div>
+
+                <!-- 정답 10 -->
+                <div class="answer-block">
+                    <div class="answer-header">
+                        <span class="answer-badge">문제 10</span>
+                        <span class="correct-answer">정답: 서술형 (아래 예시 참고)</span>
+                    </div>
+                    <div class="explanation">
+                        <strong>모범 답안 예시:</strong><br><br>
+                        <strong>[매수 타이밍 전략]</strong><br>
+                        우량주가 어닝 리포트 전후 또는 일시적 노이즈로 하락할 때가 최적의 매수 시점입니다. 펩시코 사례에서 보듯, 우량 기업은 단기 하락 후 반드시 회복하며, 이때 3~4% 할인된 가격에 매입할 수 있습니다.<br><br>
+                        <strong>[개인 투자자 실패 원인]</strong><br>
+                        1. <strong>단기적 관점:</strong> 2주 이상의 하락을 심리적으로 견디지 못함<br>
+                        2. <strong>손실 회피 편향:</strong> 손실을 확정짓기 싫어 더 떨어지기 전에 매도<br>
+                        3. <strong>정보 부족:</strong> 8K 등 공개 정보를 확인하지 않아 기업의 실제 상황을 모름<br>
+                        4. <strong>역발상 실패:</strong> 개인이 매도할 때 기관이 매수하는 패턴을 인지하지 못함
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>투자하는 인생TV 투자 아카데미 | 시험문제</p>
+            <p style="margin-top: 8px;">본 자료는 교육 목적으로 작성되었습니다.</p>
+        </footer>
+    </div>
+</body>
+</html>
