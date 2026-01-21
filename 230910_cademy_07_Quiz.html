@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>섹터 로테이션 - 시험문제</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a237e;
+            text-align: center;
+            border-bottom: 3px solid #3f51b5;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .section-divider {
+            background: linear-gradient(135deg, #3f51b5, #7986cb);
+            color: white;
+            text-align: center;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 24px -20px;
+            letter-spacing: 2px;
+        }
+        .question-box {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .question-number {
+            background: #3f51b5;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        .difficulty-easy { color: #4caf50; }
+        .difficulty-medium { color: #ff9800; }
+        .difficulty-hard { color: #f44336; }
+        .question-type {
+            background: #e8eaf6;
+            color: #3f51b5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+        .options {
+            margin-left: 10px;
+        }
+        .option {
+            padding: 8px 12px;
+            margin: 6px 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid #3f51b5;
+            margin: 0 4px;
+        }
+        .answer-box {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .answer-label {
+            background: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .answer-text {
+            font-weight: 700;
+            color: #2e7d32;
+            font-size: 1.05rem;
+        }
+        .explanation {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #a5d6a7;
+            font-size: 0.95rem;
+            color: #424242;
+        }
+        .ox-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .ox-option {
+            padding: 10px 30px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .info-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        .page-break {
+            page-break-after: always;
+            margin: 40px 0;
+            border-top: 2px dashed #ccc;
+            padding-top: 10px;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #757575;
+        }
+        @media print {
+            .page-break { page-break-after: always; }
+            .container { box-shadow: none; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 14px; }
+            h1 { font-size: 1.2rem; }
+            .section-divider { margin: 24px -14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 섹터 로테이션 시험문제<br><small style="font-size:0.65em;color:#666;">투자 아카데미 7회 학습 평가</small></h1>
+
+        <div class="info-box">
+            <strong>📋 시험 안내</strong>
+            <ul style="margin:8px 0 0 16px;">
+                <li>총 10문제 (객관식, 단답형, OX, 빈칸채우기, 서술형)</li>
+                <li>난이도: ⭐쉬움(3) / ⭐⭐보통(5) / ⭐⭐⭐어려움(2)</li>
+                <li>문제지 → 정답지 순서로 구성</li>
+            </ul>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div class="section-divider">━━━ 📋 문제지 (총 10문제) ━━━</div>
+        <!-- ═══════════════════════════════════════════════════════ -->
+
+        <!-- 문제 1 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 1</span>
+                <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                섹터 로테이션을 가장 적절하게 표현한 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 투자의 과학 (Science of Investment)</div>
+                <div class="option">② 예측의 예술 (Art of Prediction)</div>
+                <div class="option">③ 수학적 계산 (Mathematical Calculation)</div>
+                <div class="option">④ 확률 게임 (Probability Game)</div>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 2</span>
+                <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                <span class="question-type">OX문제</span>
+            </div>
+            <div class="question-text">
+                S&P 500은 총 11개의 섹터로 구성되어 있으며, 투자 전략상 현금(Cash)도 하나의 섹터로 간주하여 12개 섹터로 관리하는 것이 좋다.
+            </div>
+            <div class="ox-options">
+                <div class="ox-option">⭕ O</div>
+                <div class="ox-option">❌ X</div>
+            </div>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 3</span>
+                <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                사기꾼들이 투자를 권유할 때 공통적으로 강조하는 3가지에 해당하지 <strong>않는</strong> 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 원금 보장</div>
+                <div class="option">② 유동성 보장 (언제든 출금 가능)</div>
+                <div class="option">③ 수익률 보장 (Guarantee)</div>
+                <div class="option">④ 리스크 존재 명시</div>
+            </div>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 4</span>
+                <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <div class="question-text">
+                리스크와 리워드는 영어로 <span class="blank"></span> relation(역관계/반비례 관계)이라고 표현하며, 기본적으로 리스크가 크면 리워드도 <span class="blank"></span>는 것이 원칙이다.
+            </div>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 5</span>
+                <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                경제 사이클 중 'Late Expansion(후기 확장기)'에 가장 유망한 섹터의 조합으로 올바른 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 테크놀로지, 금융</div>
+                <div class="option">② 에너지, 헬스케어</div>
+                <div class="option">③ Consumer Staples, 유틸리티</div>
+                <div class="option">④ 리얼에스테이트, 소재</div>
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 6</span>
+                <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <div class="question-text">
+                현금(Cash)을 장기 보유할 때 발생하는 가장 큰 리스크는 무엇인가?<br>
+                (영어 또는 한글로 답하시오)
+            </div>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 7</span>
+                <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                다음 중 섹터를 'Defensive(방어형)'으로 분류할 수 있는 것은?
+            </div>
+            <div class="options">
+                <div class="option">① Consumer Discretionary</div>
+                <div class="option">② 금융 (Financial)</div>
+                <div class="option">③ 유틸리티 (Utilities)</div>
+                <div class="option">④ 커뮤니케이션 서비스</div>
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 8</span>
+                <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                <span class="question-type">OX문제</span>
+            </div>
+            <div class="question-text">
+                섹터 로테이션은 시장 상황에 민감하게 대응하기 위해 매월 또는 매주 자주 실행하는 것이 효과적이다.
+            </div>
+            <div class="ox-options">
+                <div class="ox-option">⭕ O</div>
+                <div class="ox-option">❌ X</div>
+            </div>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 9</span>
+                <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                섹터 로테이션 전략이 성공하기 위해 필요한 3가지 조건을 설명하시오.
+            </div>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 10</span>
+                <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                금리 인하가 시작되면 어떤 섹터가 주목받을 가능성이 높은지, 그 이유와 함께 설명하시오.
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div class="page-break">✂️ - - - - - - - - 여기서 페이지 분리 - - - - - - - - ✂️</div>
+        <!-- ═══════════════════════════════════════════════════════ -->
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div class="section-divider">━━━ 📝 정답 및 해설 ━━━</div>
+        <!-- ═══════════════════════════════════════════════════════ -->
+
+        <!-- 정답 1 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 1</span>
+                <span class="answer-text">정답: ②</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 섹터 로테이션은 "예측의 예술(Art of Prediction)"이라고 표현됨. 주식시장은 불확실성(Uncertainty)이 항상 존재하고 심리적 요인도 많이 작용하기 때문에 수학이나 과학처럼 정확한 답이 있는 것이 아니라 '예술'이라는 표현이 적절함.
+            </div>
+        </div>
+
+        <!-- 정답 2 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 2</span>
+                <span class="answer-text">정답: ⭕ O</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> S&P 500은 공식적으로 11개 섹터로 구성되어 있지만, 투자 전략상 현금(Cash)도 하나의 섹터(알파)로 간주해야 함. 모든 섹터가 하락할 때 현금 비중을 늘리는 것도 중요한 방어 전략이기 때문.
+            </div>
+        </div>
+
+        <!-- 정답 3 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 3</span>
+                <span class="answer-text">정답: ④</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 사기꾼들의 3가지 특징은 ①원금 보장, ②유동성 보장(언제든 출금 가능), ③수익률 보장(Guarantee). 정직한 투자 제안이라면 "리스크가 존재한다"고 명시해야 함. 리스크가 없는 투자는 존재하지 않음.
+            </div>
+        </div>
+
+        <!-- 정답 4 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 4</span>
+                <span class="answer-text">정답: inverse, 크다(커진다)</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 리스크와 리워드는 'inverse relation(역관계)'으로, 기본적으로 정비례 관계임. 리스크가 크면 리워드도 크고, 리스크가 작으면 리워드도 작음. 이 원칙을 무시하는 것은 사기일 가능성이 높음.
+            </div>
+        </div>
+
+        <!-- 정답 5 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 5</span>
+                <span class="answer-text">정답: ②</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> Late Expansion(후기 확장기)은 경제 성장이 정점에 도달하고 인플레이션이 상승하는 시기. 이때는 에너지 섹터와 헬스케어 섹터가 상대적으로 강세를 보임. 테크놀로지는 Early Expansion, Consumer Staples/유틸리티는 Contraction 시기에 유망.
+            </div>
+        </div>
+
+        <!-- 정답 6 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 6</span>
+                <span class="answer-text">정답: 인플레이션 리스크 (Inflation Risk)</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 현금은 안전해 보이지만 인플레이션 리스크가 있음. 실질 인플레이션이 약 8% 수준일 때, 10만 달러를 현금으로 1년간 보유하면 실질 구매력은 약 $86,000~$88,000로 감소함. 예: 3년 전 코스트코 장보기 $330 → 현재 $500 이상.
+            </div>
+        </div>
+
+        <!-- 정답 7 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 7</span>
+                <span class="answer-text">정답: ③</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> Defensive(방어형) 섹터는 경기 변동에 관계없이 안정적인 수요가 있어 변동성이 낮은 섹터임. 유틸리티, Consumer Staples, 헬스케어가 방어형에 해당. Consumer Discretionary와 금융은 Cyclical(경기순환형), 커뮤니케이션 서비스는 Sensitive(민감형).
+            </div>
+        </div>
+
+        <!-- 정답 8 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 8</span>
+                <span class="answer-text">정답: ❌ X</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 섹터 로테이션을 너무 자주 하면 오히려 해로움. 단기적 전망으로 잘못된 판단을 할 수 있고, 거래 비용도 증가함. 적절한 빈도는 <strong>1년에 1~2번</strong> 정도이며, 11~12월(기관 전망 발표 시기)과 6~7월(중간 점검) 시기가 적합.
+            </div>
+        </div>
+
+        <!-- 정답 9 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 9</span>
+                <span class="answer-text">정답: (아래 해설 참조)</span>
+            </div>
+            <div class="explanation">
+                <strong>모범답안:</strong><br><br>
+                <strong>① 거시경제에 대한 이해</strong><br>
+                금리, GDP, 소비자심리, 유가, 고용지표, FOMC 미팅, 베이지북 등 거시경제 지표들과 주식시장의 상관관계를 파악해야 함.<br><br>
+                <strong>② 11개(12개) 섹터에 대한 이해</strong><br>
+                각 섹터의 특성(Cyclical/Sensitive/Defensive)과 대표 종목, 경기 사이클별 움직임을 알아야 함.<br><br>
+                <strong>③ 섹터와 거시경제의 상호 관계 이해</strong><br>
+                예: 금리 상승 시 금융섹터 약세, 인플레이션 상승 시 유틸리티 매력도 감소, 경기 확장기에 Consumer Discretionary 강세 등 상관관계를 분석할 수 있어야 함.
+            </div>
+        </div>
+
+        <!-- 정답 10 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 10</span>
+                <span class="answer-text">정답: (아래 해설 참조)</span>
+            </div>
+            <div class="explanation">
+                <strong>모범답안:</strong><br><br>
+                <strong>주목 섹터: 금융 섹터 (Financial Sector)</strong><br><br>
+                <strong>이유:</strong><br>
+                ① 금리가 인하되면 대출 수요가 증가하고 경제 활동이 활발해져 은행의 대출 사업이 성장함<br>
+                ② 높은 금리 환경에서는 대출 수요가 위축되어 은행주가 부진했지만, 금리 인하 시 상황이 반전됨<br>
+                ③ 리얼에스테이트(부동산) 섹터도 주목 대상 - 모기지 금리 하락으로 주택 수요 증가 예상<br>
+                ④ Late Contraction에서 Recovery로 넘어가는 시기에 금융 섹터가 선제적으로 반등하는 패턴이 있음<br><br>
+                <strong>전략:</strong> 금리 인하 결정 전에 미리 선점하는 것이 중요 (섹터 로테이션의 핵심은 '선행 예측')
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top:30px;">
+            <strong>📊 채점 기준</strong>
+            <ul style="margin:8px 0 0 16px;">
+                <li>객관식/OX/단답형: 정답 여부</li>
+                <li>빈칸채우기: 핵심 키워드 포함 여부</li>
+                <li>서술형: 핵심 개념 포함 및 논리적 설명 (부분 점수 가능)</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>📺 출처: 투자 아카데미 7회 - 투자는인생TV</p>
+            <p>섹터 로테이션의 의미와 방법</p>
+        </footer>
+    </div>
+</body>
+</html>

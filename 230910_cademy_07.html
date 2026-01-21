@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>섹터 로테이션의 의미와 방법 - 미국 증시 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a237e;
+            border-bottom: 3px solid #3f51b5;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #283593;
+            margin: 24px 0 12px;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            border-radius: 8px;
+            border-left: 4px solid #3f51b5;
+        }
+        h3 {
+            font-size: 1.05rem;
+            color: #3949ab;
+            margin: 16px 0 10px;
+            padding-left: 10px;
+            border-left: 3px solid #7986cb;
+        }
+        p {
+            margin: 10px 0;
+            text-align: justify;
+        }
+        .meta-info {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .meta-info span {
+            display: block;
+            margin: 4px 0;
+        }
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #fff59d 60%);
+            padding: 0 2px;
+            font-weight: 600;
+        }
+        .key-point {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px 14px;
+            margin: 14px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 12px 14px;
+            margin: 14px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px 14px;
+            margin: 14px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .definition {
+            background: #f3e5f5;
+            border: 1px solid #ce93d8;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 14px 0;
+        }
+        .definition-term {
+            font-weight: 700;
+            color: #7b1fa2;
+            font-size: 1.05rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 8px;
+            text-align: left;
+        }
+        th {
+            background: #3f51b5;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        tr:hover {
+            background: #e8eaf6;
+        }
+        .chart-container {
+            width: 100%;
+            margin: 16px 0;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: #424242;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        ul, ol {
+            margin: 10px 0 10px 20px;
+        }
+        li {
+            margin: 6px 0;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .summary-box h3 {
+            color: #fff;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        .summary-box ul {
+            margin-left: 16px;
+        }
+        .formula {
+            background: #263238;
+            color: #4fc3f7;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 12px 0;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .sector-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 2px;
+        }
+        .sector-up { background: #c8e6c9; color: #2e7d32; }
+        .sector-down { background: #ffcdd2; color: #c62828; }
+        .sector-stable { background: #fff9c4; color: #f57f17; }
+        .risk-reward {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 14px 0;
+        }
+        .risk-box, .reward-box {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .risk-box {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+        }
+        .reward-box {
+            background: #e8f5e9;
+            border: 2px solid #66bb6a;
+        }
+        .cycle-flow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 14px 0;
+        }
+        .cycle-item {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .cycle-arrow {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #9e9e9e;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #757575;
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 14px; }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1.1rem; }
+            table { font-size: 0.8rem; }
+            th, td { padding: 8px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 섹터 로테이션의 의미와 방법<br><small style="font-size:0.7em;color:#666;">미국 증시 및 경제적 관점 분석</small></h1>
+        
+        <div class="meta-info">
+            <span><strong>📺 출처:</strong> 투자 아카데미 7회 (투자는인생TV)</span>
+            <span><strong>📅 분석일:</strong> 2026년 1월 22일</span>
+            <span><strong>🎯 주제:</strong> 섹터 로테이션 전략의 이해와 실전 적용</span>
+        </div>
+
+        <h2>1️⃣ 섹터 로테이션의 정의</h2>
+        
+        <div class="definition">
+            <span class="definition-term">섹터 로테이션(Sector Rotation)</span>
+            <p style="margin-top:8px;">경제 사이클의 변화에 따라 <span class="highlight">11개 섹터</span> 중 더 유리한 섹터로 포트폴리오 비중을 이동시키는 투자 전략. 경제 흐름을 예측하여 선제적으로 포지션을 조정함으로써 리스크를 줄이고 수익률을 유지하거나 높이는 것이 목표.</p>
+        </div>
+
+        <div class="key-point">
+            <strong>💡 핵심 개념:</strong> 섹터 로테이션은 <span class="highlight">"예측의 예술(Art of Prediction)"</span>
+            <p style="margin-top:6px;">수학이나 과학처럼 정확한 답이 있는 것이 아니며, 시장의 불확실성(Uncertainty)과 심리적 요인이 항상 존재하기 때문에 '예술'이라는 표현이 적절함.</p>
+        </div>
+
+        <h3>📌 왜 예측이 중요한가?</h3>
+        <p><strong>"잘못된 예측도 없는 예측보다 낫다"</strong>는 말처럼, 선행지수와 경제 지표를 분석하여 미리 포트폴리오를 구성해 놓아야 기회가 왔을 때 수익을 극대화할 수 있음.</p>
+
+        <h2>2️⃣ 경제 사이클과 섹터의 관계</h2>
+
+        <div class="chart-container">
+            <div class="chart-title">📈 경제 사이클별 유망 섹터</div>
+            <canvas id="cycleChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>경제 사이클</th>
+                    <th>특징</th>
+                    <th>유망 섹터</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Early Expansion</strong><br>(초기 확장)</td>
+                    <td>경기 회복 시작<br>GDP 상승 시작</td>
+                    <td>
+                        <span class="sector-tag sector-up">테크놀로지</span>
+                        <span class="sector-tag sector-up">인더스트리</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Mid Expansion</strong><br>(중기 확장)</td>
+                    <td>경제 성장 가속화</td>
+                    <td>
+                        <span class="sector-tag sector-up">커뮤니케이션 서비스</span>
+                        <span class="sector-tag sector-up">Consumer Discretionary</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Late Expansion</strong><br>(후기 확장)</td>
+                    <td>성장 정점 도달<br>인플레이션 상승</td>
+                    <td>
+                        <span class="sector-tag sector-up">에너지</span>
+                        <span class="sector-tag sector-up">헬스케어</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Early Contraction</strong><br>(초기 수축)</td>
+                    <td>경기 둔화 시작<br>인플레이션 하락</td>
+                    <td>
+                        <span class="sector-tag sector-stable">Consumer Staples</span>
+                        <span class="sector-tag sector-stable">유틸리티</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Late Contraction</strong><br>(후기 수축/회복기)</td>
+                    <td>금리 인하 시작<br>경기 바닥 도달</td>
+                    <td>
+                        <span class="sector-tag sector-up">금융(Financial)</span>
+                        <span class="sector-tag sector-up">리얼에스테이트</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3️⃣ 11개 섹터 + 알파(현금)</h2>
+
+        <div class="tip">
+            <strong>✅ 12개 섹터 개념:</strong> 일반적으로 S&P 500은 11개 섹터로 구성되지만, <span class="highlight">현금(Cash)을 12번째 섹터</span>로 간주해야 함. 모든 섹터가 하락할 때 현금 비중을 늘리는 것도 중요한 전략.
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📊 S&P 500 11개 섹터 구성</div>
+            <canvas id="sectorChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>섹터</th>
+                    <th>대표 종목</th>
+                    <th>특성</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>IT (Technology)</td>
+                    <td>Apple, Microsoft, NVIDIA</td>
+                    <td><span class="sector-tag" style="background:#bbdefb;color:#1565c0;">Cyclical</span></td>
+                </tr>
+                <tr>
+                    <td>헬스케어</td>
+                    <td>UNH, JNJ, CVS</td>
+                    <td><span class="sector-tag" style="background:#c8e6c9;color:#2e7d32;">Defensive</span></td>
+                </tr>
+                <tr>
+                    <td>금융 (Financial)</td>
+                    <td>JP Morgan, Bank of America</td>
+                    <td><span class="sector-tag" style="background:#bbdefb;color:#1565c0;">Cyclical</span></td>
+                </tr>
+                <tr>
+                    <td>Consumer Discretionary</td>
+                    <td>Amazon, Tesla, Nike</td>
+                    <td><span class="sector-tag" style="background:#bbdefb;color:#1565c0;">Cyclical</span></td>
+                </tr>
+                <tr>
+                    <td>커뮤니케이션 서비스</td>
+                    <td>Meta, Google, Netflix</td>
+                    <td><span class="sector-tag" style="background:#ffe0b2;color:#e65100;">Sensitive</span></td>
+                </tr>
+                <tr>
+                    <td>인더스트리얼</td>
+                    <td>Caterpillar, Boeing</td>
+                    <td><span class="sector-tag" style="background:#ffe0b2;color:#e65100;">Sensitive</span></td>
+                </tr>
+                <tr>
+                    <td>Consumer Staples</td>
+                    <td>P&G, Coca-Cola, Costco</td>
+                    <td><span class="sector-tag" style="background:#c8e6c9;color:#2e7d32;">Defensive</span></td>
+                </tr>
+                <tr>
+                    <td>에너지</td>
+                    <td>Exxon, Chevron</td>
+                    <td><span class="sector-tag" style="background:#ffe0b2;color:#e65100;">Sensitive</span></td>
+                </tr>
+                <tr>
+                    <td>유틸리티</td>
+                    <td>Duke Energy, NextEra</td>
+                    <td><span class="sector-tag" style="background:#c8e6c9;color:#2e7d32;">Defensive</span></td>
+                </tr>
+                <tr>
+                    <td>리얼에스테이트</td>
+                    <td>American Tower, Prologis</td>
+                    <td><span class="sector-tag" style="background:#bbdefb;color:#1565c0;">Cyclical</span></td>
+                </tr>
+                <tr>
+                    <td>소재 (Materials)</td>
+                    <td>Linde, Dow</td>
+                    <td><span class="sector-tag" style="background:#bbdefb;color:#1565c0;">Cyclical</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>🏷️ 섹터 분류 기준</h3>
+        <ul>
+            <li><strong>Cyclical (경기순환형):</strong> 경제 상황에 따라 등락폭이 큼 - 금융, Consumer Discretionary, 리얼에스테이트, 소재</li>
+            <li><strong>Sensitive (민감형):</strong> 경제 변화에 예민하게 반응 - 커뮤니케이션 서비스, 에너지, 인더스트리얼, 테크놀로지</li>
+            <li><strong>Defensive (방어형):</strong> 잘 올라가지 않지만 잘 떨어지지도 않음 - Consumer Staples, 헬스케어, 유틸리티</li>
+        </ul>
+
+        <h2>4️⃣ 리스크와 리워드의 관계</h2>
+
+        <div class="definition">
+            <span class="definition-term">Inverse Relation (역관계)</span>
+            <p style="margin-top:8px;">리스크와 리워드는 기본적으로 <span class="highlight">정비례</span> 관계. 리스크가 크면 리워드도 크고, 리스크가 작으면 리워드도 작음.</p>
+        </div>
+
+        <div class="risk-reward">
+            <div class="risk-box">
+                <strong>⚠️ 리스크</strong>
+                <p style="font-size:0.85rem;margin-top:6px;">높은 리스크 → 큰 손실 가능성</p>
+            </div>
+            <div class="reward-box">
+                <strong>💰 리워드</strong>
+                <p style="font-size:0.85rem;margin-top:6px;">높은 리스크 → 큰 수익 가능성</p>
+            </div>
+        </div>
+
+        <div class="formula">
+            리스크 ↑ = 리워드 ↑ | 리스크 ↓ = 리워드 ↓
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ 사기꾼의 3가지 특징:</strong>
+            <ol style="margin-top:8px;">
+                <li><strong>원금 보장</strong> - "언제든지 원금을 뺄 수 있다"</li>
+                <li><strong>유동성 보장</strong> - "원하면 언제든 출금 가능"</li>
+                <li><strong>수익 보장(Guarantee)</strong> - "무조건 몇 % 올라간다"</li>
+            </ol>
+            <p style="margin-top:10px;font-size:0.9rem;">→ <strong>리스크 없는 투자는 존재하지 않음</strong>. 이 세 가지를 모두 약속하면 사기일 가능성이 매우 높음.</p>
+        </div>
+
+        <h3>🎰 현금의 리스크: 인플레이션</h3>
+        <div class="key-point">
+            <p>현금이 안전하다고 생각하지만, <span class="highlight">인플레이션 리스크</span>가 존재함.</p>
+            <ul style="margin-top:8px;">
+                <li>실질 인플레이션율 약 <strong>8%</strong> 수준</li>
+                <li>10만 달러 현금 보유 시 → 1년 후 실질 구매력 약 <strong>$86,000~$88,000</strong></li>
+                <li>3년 전 코스트코 장보기 $330 → 현재 $500 이상</li>
+            </ul>
+        </div>
+
+        <h2>5️⃣ 섹터 로테이션 전략의 목적</h2>
+
+        <div class="summary-box">
+            <h3>🎯 섹터 로테이션의 핵심 목표</h3>
+            <ul>
+                <li><strong>같은 리스크</strong>에서 <strong>더 높은 리워드</strong> 추구</li>
+                <li><strong>같은 리워드</strong>에서 <strong>더 낮은 리스크</strong> 추구</li>
+                <li>경제 사이클의 변화에 <strong>선제적 대응</strong></li>
+                <li>하락장에서 <strong>손실 최소화</strong></li>
+            </ul>
+        </div>
+
+        <h3>📊 실전 사례 분석</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>시기</th>
+                    <th>예측/전략</th>
+                    <th>결과</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023년 봄</td>
+                    <td>에너지 섹터 강화 추천<br>유가 $80 이상 전망</td>
+                    <td>에너지 ETF 약 <strong>35% 상승</strong></td>
+                </tr>
+                <tr>
+                    <td>2023년 초</td>
+                    <td>IT 중 커뮤니케이션 서비스 강화<br>AI 4차 혁명 투자</td>
+                    <td>AI 관련 종목 <strong>80~150% 상승</strong></td>
+                </tr>
+                <tr>
+                    <td>2023년 상반기</td>
+                    <td>금융 섹터 비중 축소</td>
+                    <td>은행 위기로 금융섹터 하락</td>
+                </tr>
+                <tr>
+                    <td>2020년 말</td>
+                    <td>보수적 전환 추천<br>(Consumer Staples, 헬스케어)</td>
+                    <td>2022년 폭락장 방어 성공</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>6️⃣ 거시경제 지표의 이해</h2>
+
+        <p>섹터 로테이션 성공을 위해서는 <span class="highlight">거시경제에 대한 이해</span>가 필수적임.</p>
+
+        <div class="chart-container">
+            <div class="chart-title">📋 주요 거시경제 지표</div>
+            <canvas id="macroChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>지표</th>
+                    <th>설명</th>
+                    <th>영향받는 섹터</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>금리 (Interest Rate)</strong></td>
+                    <td>연준 기준금리<br>FOMC 미팅 결정</td>
+                    <td>금융, 리얼에스테이트, 유틸리티</td>
+                </tr>
+                <tr>
+                    <td><strong>소비자 심리</strong></td>
+                    <td>Consumer Spending<br>소비 활동 지수</td>
+                    <td>Consumer Discretionary, Staples</td>
+                </tr>
+                <tr>
+                    <td><strong>GDP</strong></td>
+                    <td>국내총생산 성장률</td>
+                    <td>전체 시장, 인더스트리얼</td>
+                </tr>
+                <tr>
+                    <td><strong>유가</strong></td>
+                    <td>국제 원유 가격</td>
+                    <td>에너지, 인더스트리얼</td>
+                </tr>
+                <tr>
+                    <td><strong>베이지북</strong></td>
+                    <td>연준 지역 경제 보고서</td>
+                    <td>전체 시장 전망</td>
+                </tr>
+                <tr>
+                    <td><strong>고용지표</strong></td>
+                    <td>실업률, 비농업 고용</td>
+                    <td>Consumer, 서비스업</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>7️⃣ 섹터 로테이션 실행 시기</h2>
+
+        <div class="key-point">
+            <strong>🗓️ 최적의 시기</strong>
+            <ul style="margin-top:8px;">
+                <li><strong>11월~12월:</strong> 기관들의 내년 전망 발표 시기 (Goldman Sachs, JP Morgan, Bank of America 등)</li>
+                <li><strong>6월~7월:</strong> 여름 소비 시즌 데이터 확인 후 가을 전략 수립</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>⛔ 주의사항</strong>
+            <p style="margin-top:6px;">섹터 로테이션을 <strong>너무 자주 하면 오히려 해로움</strong></p>
+            <ul style="margin-top:8px;">
+                <li>단기적 전망으로 잘못된 판단 가능</li>
+                <li>거래 비용 증가</li>
+                <li><strong>1년에 1~2번</strong> 정도가 적절</li>
+            </ul>
+        </div>
+
+        <div class="cycle-flow">
+            <span class="cycle-item" style="background:#e3f2fd;color:#1565c0;">11~12월 전망 분석</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-item" style="background:#e8f5e9;color:#2e7d32;">포트폴리오 조정</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-item" style="background:#fff3e0;color:#e65100;">6~7월 중간 점검</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-item" style="background:#fce4ec;color:#c2185b;">필요시 미세 조정</span>
+        </div>
+
+        <h2>8️⃣ 현재 시장 상황 분석 (2023년 기준)</h2>
+
+        <h3>📈 자금 유입 섹터</h3>
+        <div style="margin:10px 0;">
+            <span class="sector-tag sector-up">IT (AI)</span>
+            <span class="sector-tag sector-up">에너지</span>
+            <span class="sector-tag sector-up">헬스케어</span>
+            <span class="sector-tag sector-up">Consumer Discretionary</span>
+            <span class="sector-tag sector-up">커뮤니케이션 서비스</span>
+        </div>
+
+        <h3>📉 자금 유출 섹터</h3>
+        <div style="margin:10px 0;">
+            <span class="sector-tag sector-down">유틸리티</span>
+            <span class="sector-tag sector-down">금융</span>
+            <span class="sector-tag sector-down">인더스트리얼</span>
+            <span class="sector-tag sector-down">Consumer Staples</span>
+            <span class="sector-tag sector-down">소재</span>
+        </div>
+
+        <h3>🔮 향후 전망</h3>
+        <div class="tip">
+            <ul>
+                <li><strong>금융 섹터:</strong> 금리 인하 시작 시 주목 필요 (내년 초 예상)</li>
+                <li><strong>AI 사이클:</strong> 현재 확장기 유지, 지속적 관심 필요</li>
+                <li><strong>에너지:</strong> 유가 동향에 따라 변동성 예상</li>
+            </ul>
+        </div>
+
+        <h2>9️⃣ 투자자 행동 패턴의 문제점</h2>
+
+        <div class="chart-container">
+            <div class="chart-title">📉 일반 투자자의 잘못된 매매 패턴</div>
+            <canvas id="behaviorChart"></canvas>
+        </div>
+
+        <div class="warning">
+            <strong>❌ 일반 투자자의 실수</strong>
+            <ul style="margin-top:8px;">
+                <li><strong>매수:</strong> 상승장 후반부에서 "나도 사야겠다" → 고점 매수</li>
+                <li><strong>매도:</strong> 하락장 후반부에서 참다참다 → 저점 매도</li>
+                <li><strong>원인:</strong> 예측 없이 투자, 감정적 판단, Short-sighted 사고</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>✅ 올바른 접근법</strong>
+            <ul style="margin-top:8px;">
+                <li>몇 달 전에 미리 예측하고 선제적 대응</li>
+                <li>경제 사이클 변화를 먼저 읽고 포지션 조정</li>
+                <li>감정이 아닌 데이터와 분석에 기반한 결정</li>
+            </ul>
+        </div>
+
+        <h2>🔟 핵심 요약</h2>
+
+        <div class="summary-box">
+            <h3 style="margin-bottom:12px;">📌 섹터 로테이션 핵심 포인트</h3>
+            <ol>
+                <li><strong>예측의 예술</strong> - 완벽할 수 없지만 예측 없는 투자보다 낫다</li>
+                <li><strong>12개 섹터</strong> - 11개 + 현금(Cash)도 하나의 섹터</li>
+                <li><strong>경제 사이클 이해</strong> - 확장기/수축기에 맞는 섹터 선택</li>
+                <li><strong>거시경제 분석</strong> - 금리, GDP, 소비자심리 등 핵심 지표 모니터링</li>
+                <li><strong>리스크-리워드</strong> - 정비례 관계 인식, 리스크 없는 투자는 없음</li>
+                <li><strong>적절한 빈도</strong> - 1년에 1~2번, 너무 잦은 로테이션은 해로움</li>
+                <li><strong>선제적 대응</strong> - 다음 사이클을 미리 예측하여 선점</li>
+            </ol>
+        </div>
+
+        <div class="key-point">
+            <strong>💬 핵심 메시지</strong>
+            <p style="margin-top:8px;">"Next Stage를 미리 예측해서 선점하는 것이 섹터 로테이션의 가장 큰 의미"</p>
+            <p style="margin-top:6px;font-size:0.9rem;">설사 예측이 틀리더라도, 먼저 섹터를 바꿔놓는 것이 리스크를 줄이면서 투자할 수 있는 방법.</p>
+        </div>
+
+        <footer>
+            <p>📺 출처: 투자 아카데미 7회 - 투자는인생TV</p>
+            <p>본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 경제 사이클 차트
+        const cycleCtx = document.getElementById('cycleChart').getContext('2d');
+        new Chart(cycleCtx, {
+            type: 'line',
+            data: {
+                labels: ['Early Expansion', 'Mid Expansion', 'Late Expansion', 'Early Contraction', 'Late Contraction'],
+                datasets: [{
+                    label: '경제 성장률',
+                    data: [2, 4, 3, 1, -1],
+                    borderColor: '#3f51b5',
+                    backgroundColor: 'rgba(63, 81, 181, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: ['#4caf50', '#8bc34a', '#ff9800', '#ff5722', '#f44336']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: '성장률 (%)' },
+                        suggestedMin: -2,
+                        suggestedMax: 5
+                    }
+                }
+            }
+        });
+
+        // 섹터 구성 차트
+        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+        new Chart(sectorCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['IT', '헬스케어', '금융', 'Consumer Disc.', '커뮤니케이션', '인더스트리얼', 'Consumer Staples', '에너지', '유틸리티', '리얼에스테이트', '소재'],
+                datasets: [{
+                    data: [28, 13, 12, 10, 9, 8, 7, 5, 3, 3, 2],
+                    backgroundColor: [
+                        '#1e88e5', '#43a047', '#5e35b1', '#fb8c00', '#e53935',
+                        '#00acc1', '#8e24aa', '#fdd835', '#6d4c41', '#546e7a', '#78909c'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            boxWidth: 12,
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 거시경제 지표 중요도 차트
+        const macroCtx = document.getElementById('macroChart').getContext('2d');
+        new Chart(macroCtx, {
+            type: 'bar',
+            data: {
+                labels: ['금리', 'GDP', '소비자심리', '유가', '고용지표', '인플레이션'],
+                datasets: [{
+                    label: '중요도',
+                    data: [95, 85, 80, 75, 70, 90],
+                    backgroundColor: [
+                        'rgba(63, 81, 181, 0.8)',
+                        'rgba(76, 175, 80, 0.8)',
+                        'rgba(255, 152, 0, 0.8)',
+                        'rgba(121, 85, 72, 0.8)',
+                        'rgba(33, 150, 243, 0.8)',
+                        'rgba(244, 67, 54, 0.8)'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: '중요도 (%)' }
+                    }
+                }
+            }
+        });
+
+        // 투자자 행동 패턴 차트
+        const behaviorCtx = document.getElementById('behaviorChart').getContext('2d');
+        new Chart(behaviorCtx, {
+            type: 'line',
+            data: {
+                labels: ['저점', '', '', '상승', '', '', '고점', '', '', '하락', '', '', '저점'],
+                datasets: [{
+                    label: '주가',
+                    data: [100, 110, 130, 160, 190, 210, 220, 200, 170, 140, 120, 105, 100],
+                    borderColor: '#3f51b5',
+                    backgroundColor: 'rgba(63, 81, 181, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: [8, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0],
+                    pointBackgroundColor: ['#4caf50', '', '', '', '', '', '#f44336', '', '', '', '', '', '']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {}
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: '주가' },
+                        suggestedMin: 80,
+                        suggestedMax: 240
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
