@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 8회: 중앙금리와 주식시장 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .meta {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #2563eb;
+            margin: 28px 0 16px 0;
+            padding-left: 12px;
+            border-left: 4px solid #2563eb;
+        }
+        h3 {
+            font-size: 1.05rem;
+            color: #374151;
+            margin: 20px 0 12px 0;
+        }
+        p {
+            margin-bottom: 14px;
+            color: #374151;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #2563eb;
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #f59e0b;
+        }
+        .danger-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #ef4444;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #10b981;
+        }
+        strong {
+            color: #1e40af;
+        }
+        .key-point {
+            background: #fef3c7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            margin: 20px 0;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 12px;
+            height: 280px;
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+        }
+        tr:hover {
+            background: #f9fafb;
+        }
+        .formula-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+        ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #d1d5db, transparent);
+            margin: 32px 0;
+        }
+        .emoji-header {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .comparison-item {
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .comparison-item.left {
+            background: #dbeafe;
+        }
+        .comparison-item.right {
+            background: #fee2e2;
+        }
+        .comparison-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .comparison-item p {
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+            margin: 16px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #d1d5db;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 16px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2563eb;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+        .summary-card h3 {
+            color: white;
+            margin-bottom: 12px;
+        }
+        .summary-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-card li {
+            color: #e0e7ff;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .summary-card li:last-child {
+            border-bottom: none;
+        }
+        .number-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 투자아카데미 8회: 중앙금리와 주식시장</h1>
+        <div class="meta">
+            📅 2026년 1월 22일 | 🔗 <a href="https://www.youtube.com/watch?v=ASWAdfPEcpA">원본 영상</a>
+        </div>
+
+        <!-- 핵심 요약 -->
+        <div class="summary-card">
+            <h3>💡 핵심 요약</h3>
+            <ul>
+                <li>✓ 금리와 채권 가격은 <strong>역의 관계(Inverse Relationship)</strong></li>
+                <li>✓ 금리 상승 시 성장주가 가장 큰 타격을 받음</li>
+                <li>✓ 역전된 일드커브는 경기침체의 선행지표</li>
+                <li>✓ 연준의 금리 인하 시점이 가장 위험한 순간</li>
+                <li>✓ 섹터 로테이션 전략으로 대응 가능</li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 1. 투자의 기본 원칙 -->
+        <h2><span class="emoji-header">🎯</span>투자의 기본 원칙</h2>
+        
+        <div class="highlight-box">
+            <strong>목적성 있는 투자</strong><br>
+            투자 활동은 단순히 주식을 사고파는 행위가 아니라, 명확한 <span class="key-point">목적</span>과 <span class="key-point">전략</span>을 가지고 접근해야 합니다. 목적 없는 투자는 '돈 놀이'에 불과합니다.
+        </div>
+
+        <h3>📌 거시경제 이해의 중요성</h3>
+        <p>미국 증시에 투자하려면 거시경제, 특히 <strong>중앙금리</strong>와 <strong>연준(Federal Reserve)</strong>의 정책을 이해해야 합니다. 이를 통해:</p>
+        <ul>
+            <li>시장 변동성 예측 가능</li>
+            <li>포트폴리오 적절한 조정 능력 확보</li>
+            <li>11개 섹터의 움직임 방향 파악</li>
+        </ul>
+
+        <div class="section-divider"></div>
+
+        <!-- 2. 리스크와 리워드 -->
+        <h2><span class="emoji-header">⚖️</span>리스크와 리워드의 관계</h2>
+
+        <div class="warning-box">
+            <strong>⚠️ 투자의 철칙</strong><br>
+            리스크 없이 리워드만 있는 금융상품은 <strong>존재하지 않습니다</strong>. 이를 믿으면 사기를 당할 수 있습니다.
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">리스크-리워드 관계도</div>
+            <canvas id="riskRewardChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>투자 유형</th>
+                    <th>리스크</th>
+                    <th>리워드</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🏛️ 국채 (Treasury)</td>
+                    <td>낮음</td>
+                    <td>낮음</td>
+                </tr>
+                <tr>
+                    <td>🏢 회사채</td>
+                    <td>중간</td>
+                    <td>중간</td>
+                </tr>
+                <tr>
+                    <td>📈 구글 (대형 가치주)</td>
+                    <td>중간 (35-40% 하락)</td>
+                    <td>중간</td>
+                </tr>
+                <tr>
+                    <td>🚀 코인베이스 (성장주)</td>
+                    <td>높음 (80-90% 하락)</td>
+                    <td>높음</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-divider"></div>
+
+        <!-- 3. 연준 금리와 회사채 -->
+        <h2><span class="emoji-header">🏦</span>연준 금리와 회사채의 관계</h2>
+
+        <div class="highlight-box">
+            <strong>핵심 공식: Inverse Relationship (역의 관계)</strong>
+            <div class="formula-box">
+                금리 ↑ → 채권 가격 ↓<br>
+                금리 ↓ → 채권 가격 ↑
+            </div>
+        </div>
+
+        <h3>📖 사례 분석: 김삿갓 물산 채권</h3>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <strong>2022년 - 초기 상황</strong><br>
+                • 김삿갓 물산 채권 이자율: 연 <strong>8%</strong><br>
+                • 채권 가격: 1,000달러 (표준)<br>
+                • 투자자 김삼식씨: 10주(10,000달러) 구입<br>
+                • 연간 수익: <strong>800달러</strong> (매년 1월, 6월 지급)
+            </div>
+            <div class="timeline-item">
+                <strong>2023년 - 금리 급등</strong><br>
+                • 중앙금리 급등 (2% → 5%+)<br>
+                • 국채 수익률 상승으로 회사채 매력 감소<br>
+                • 투자자들 "국채로 갈아타겠다" 요청
+            </div>
+            <div class="timeline-item">
+                <strong>해결책 - 채권 가격 인하</strong><br>
+                • 채권 가격: 1,000달러 → <strong>800달러</strong> (20% 할인)<br>
+                • 표면 이자율 8% 유지<br>
+                • 실질 수익률: <strong>10%</strong>로 상승<br>
+                • 만기 시 1,000달러 지급 (200달러 추가 이익)
+            </div>
+        </div>
+
+        <div class="danger-box">
+            <strong>🔴 회사 입장에서의 이중 부담</strong>
+            <ul>
+                <li>800달러만 받고 1,000달러 상환 필요</li>
+                <li>실질 이자 부담 증가 (8% → 10%)</li>
+                <li>유동성 악화 및 경영 어려움</li>
+            </ul>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">금리 변화에 따른 채권 가격 및 실질 수익률</div>
+            <canvas id="bondPriceChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 4. 금리와 기업 활동 -->
+        <h2><span class="emoji-header">🏭</span>금리가 기업 활동에 미치는 영향</h2>
+
+        <div class="chart-container">
+            <div class="chart-title">금리 상승 시 채권 유형별 가격 하락폭</div>
+            <canvas id="bondImpactChart"></canvas>
+        </div>
+
+        <h3>📊 기업 재무 흐름 분석</h3>
+        <p>기업의 순이익(Net Profit)이 발생하면:</p>
+
+        <div class="comparison-grid">
+            <div class="comparison-item left">
+                <h4>🚀 성장주</h4>
+                <p>순이익을 <strong>재투자</strong><br>(Balance Sheet 자산 증가)</p>
+            </div>
+            <div class="comparison-item right">
+                <h4>💰 가치주</h4>
+                <p>주주자본으로 이동<br>→ <strong>배당금</strong> 지급</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ 금리 상승 시 성장주가 더 타격받는 이유</strong>
+            <ol>
+                <li><strong>채권 이자 부담 증가</strong>: 빚이 많은 성장주는 이자 비용 급증</li>
+                <li><strong>미래 가치 할인</strong>: 높은 할인율(Discount Rate) 적용</li>
+                <li><strong>현재 가치 급락</strong>: 미래 수익의 현재 가치가 크게 떨어짐</li>
+            </ol>
+        </div>
+
+        <h3>📐 현재 가치(Present Value) 계산 원리</h3>
+        <div class="formula-box">
+Present Value = Σ (Future Earnings / (1 + r)^n)
+
+• r = 할인율 (Discount Rate) = 금리와 연동
+• n = 기간
+
+금리(r) ↑ → 분모 증가 → Present Value ↓
+        </div>
+
+        <div class="danger-box">
+            <strong>📉 2022년 성장주 폭락의 원인</strong>
+            <p>중앙금리 급등 → 미래 가치 할인율 상승 → 성장주(특히 신생 성장주)의 현재 가치 급락</p>
+            <p><em>예시: 캐시 우드(Cathie Wood)의 ARK 펀드 - 금리 환경 무시하고 성장주 집중 투자로 큰 손실</em></p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 5. 일드커브 -->
+        <h2><span class="emoji-header">📈</span>일드커브(Yield Curve) 분석</h2>
+
+        <div class="highlight-box">
+            <strong>일드커브란?</strong><br>
+            국채 만기일과 이자율 변화의 구조적 성격을 나타내는 곡선. <span class="key-point">거시경제 방향을 예측하는 선행지표</span>로 활용됩니다.
+        </div>
+
+        <h3>📊 정상적인 일드커브 (Normal Curve / Upward Sloping)</h3>
+        <div class="chart-container">
+            <div class="chart-title">정상 일드커브 vs 역전 일드커브</div>
+            <canvas id="yieldCurveChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>정상 커브</th>
+                    <th>역전 커브</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>영어명</td>
+                    <td>Normal / Upward Sloping</td>
+                    <td>Inverted / Downward Sloping</td>
+                </tr>
+                <tr>
+                    <td>단기 금리</td>
+                    <td>낮음</td>
+                    <td><strong>높음</strong></td>
+                </tr>
+                <tr>
+                    <td>장기 금리</td>
+                    <td>높음</td>
+                    <td><strong>낮음</strong></td>
+                </tr>
+                <tr>
+                    <td>경제 의미</td>
+                    <td>건강한 경제</td>
+                    <td>⚠️ 경기침체 경고</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>🔍 역전된 일드커브가 발생하는 이유</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="number-badge">1</span><strong>높은 단기 금리</strong><br>
+                현재 이자율이 지나치게 높아 장기 유지 불가능
+            </div>
+            <div class="timeline-item">
+                <span class="number-badge">2</span><strong>금리 인하 기대</strong><br>
+                투자자들이 금리 하락을 예상하고 장기 채권에 몰림
+            </div>
+            <div class="timeline-item">
+                <span class="number-badge">3</span><strong>수요-공급 원리</strong><br>
+                장기 채권 수요 증가 → 정부가 낮은 이자율로도 발행 가능
+            </div>
+        </div>
+
+        <div class="success-box">
+            <strong>💡 수요-공급 메커니즘</strong>
+            <p>"국채 5%인데 사실래?" → 수백 명 몰림<br>
+            "그래, 그럼 3%만 줘도 되겠네" → 장기 금리 하락</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 6. 역전 커브의 경제 현상 -->
+        <h2><span class="emoji-header">⚠️</span>역전된 일드커브 시 나타나는 현상</h2>
+
+        <div class="danger-box">
+            <strong>🚨 2023년 8월 기준 일드커브 상황</strong>
+            <ul>
+                <li>3개월물: <strong>5.5%</strong></li>
+                <li>30년물: <strong>4.5%</strong></li>
+                <li>→ 명백한 <strong>역전 상태</strong></li>
+            </ul>
+        </div>
+
+        <h3>📉 역전 커브 시 발생하는 현상</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>영역</th>
+                    <th>현상</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🏦 은행</td>
+                    <td>실적 침체, 대출 감소, 일부 은행 파산</td>
+                </tr>
+                <tr>
+                    <td>🏢 기업</td>
+                    <td>회사채 부담 증가, 투자 축소</td>
+                </tr>
+                <tr>
+                    <td>👷 고용</td>
+                    <td>신규 채용 감소, 실업률 상승</td>
+                </tr>
+                <tr>
+                    <td>🏠 부동산</td>
+                    <td>경기 하락, 거래 위축</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <div class="chart-title">일드커브 변화 단계</div>
+            <canvas id="curveTransitionChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 7. 가장 위험한 시점 -->
+        <h2><span class="emoji-header">🚨</span>가장 위험한 시점: 금리 인하 시작</h2>
+
+        <div class="danger-box">
+            <strong>⚠️ 경고 (WARNING)</strong>
+            <p>역사적 데이터에 따르면, <strong>연준이 금리를 인하하기 시작하는 시점</strong>이 가장 위험한 시점입니다.</p>
+            <p>이 시점에서 주식시장 폭락 가능성이 가장 커집니다.</p>
+        </div>
+
+        <h3>📅 예상 타임라인</h3>
+        <div class="highlight-box">
+            <strong>2024년</strong>에 연준의 금리 인하가 시작될 것으로 예상<br>
+            → 이 시점에서 특별한 주의 필요
+        </div>
+
+        <p><strong>소프트 랜딩 vs 하드 랜딩</strong></p>
+        <div class="comparison-grid">
+            <div class="comparison-item left">
+                <h4>✈️ 소프트 랜딩</h4>
+                <p>비행기가 부드럽게 착륙<br>경제가 완만하게 둔화</p>
+            </div>
+            <div class="comparison-item right">
+                <h4>💥 하드 랜딩</h4>
+                <p>비행기가 충격과 함께 착륙<br>경제 급락 (리세션)</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 8. 섹터 로테이션 -->
+        <h2><span class="emoji-header">🔄</span>섹터 로테이션 전략</h2>
+
+        <div class="success-box">
+            <strong>💡 핵심 인사이트</strong><br>
+            경기가 하락한다고 모든 섹터가 하락하는 것은 아닙니다. 각 시기별로 강세를 보이는 섹터가 다릅니다.
+        </div>
+
+        <h3>📊 2023년 섹터 로테이션 현황</h3>
+        <div class="chart-container" style="height: 320px;">
+            <div class="chart-title">월별 상위 성과 섹터 변화</div>
+            <canvas id="sectorRotationChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>시기</th>
+                    <th>상위 성과 섹터</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1월</strong></td>
+                    <td>Consumer Discretionary, Consumer Staples, Materials</td>
+                </tr>
+                <tr>
+                    <td><strong>7월</strong></td>
+                    <td>IT, Communication Services, Healthcare</td>
+                </tr>
+                <tr>
+                    <td><strong>9월</strong></td>
+                    <td>Energy, Utilities, Financials, Healthcare</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-divider"></div>
+
+        <!-- 9. 투자 시사점 -->
+        <h2><span class="emoji-header">💼</span>미국 증시 투자 시사점</h2>
+
+        <div class="summary-card">
+            <h3>🎯 핵심 투자 전략</h3>
+            <ul>
+                <li><strong>1.</strong> 금리 상승기: 성장주 비중 축소 (70-80% 수준)</li>
+                <li><strong>2.</strong> 가치주 비중 확대 (배당 안정성)</li>
+                <li><strong>3.</strong> 섹터 로테이션 적극 활용</li>
+                <li><strong>4.</strong> 일드커브 모니터링으로 경기 전환점 파악</li>
+                <li><strong>5.</strong> 금리 인하 시작 시점에 특별 경계</li>
+            </ul>
+        </div>
+
+        <h3>📌 추천 종목군 (금리 상승기)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>섹터</th>
+                    <th>예시 종목</th>
+                    <th>특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🏦 금융</td>
+                    <td>JP Morgan, Wells Fargo, Goldman Sachs, Bank of America</td>
+                    <td>금리 상승 수혜</td>
+                </tr>
+                <tr>
+                    <td>⚡ 에너지</td>
+                    <td>-</td>
+                    <td>인플레이션 헤지</td>
+                </tr>
+                <tr>
+                    <td>🔌 유틸리티</td>
+                    <td>-</td>
+                    <td>방어적 섹터</td>
+                </tr>
+                <tr>
+                    <td>💊 헬스케어</td>
+                    <td>-</td>
+                    <td>경기 비민감</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warning-box">
+            <strong>⚠️ 주의 섹터 (금리 상승기)</strong>
+            <ul>
+                <li>신생 성장주 (높은 부채, 미래 수익 의존)</li>
+                <li>고PER 기술주</li>
+                <li>부동산 관련주</li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 10. 결론 -->
+        <h2><span class="emoji-header">✅</span>결론 및 액션 플랜</h2>
+
+        <div class="highlight-box">
+            <strong>📚 핵심 교훈</strong>
+            <ol>
+                <li>거시경제(특히 금리)를 이해해야 투자 활동에 도움</li>
+                <li>금리와 채권 가격의 역관계 이해 필수</li>
+                <li>일드커브를 통해 6개월~1년 후 경제 예측 가능</li>
+                <li>섹터 로테이션으로 어떤 시장에서도 기회 포착</li>
+                <li>연준의 금리 인하 시작 시점이 가장 위험</li>
+            </ol>
+        </div>
+
+        <div class="success-box">
+            <strong>🎯 우리의 대책</strong><br>
+            "투자하는 인생을 열심히 공부하는 것" - 지속적인 학습과 시장 모니터링을 통해 변화에 대응하는 능력을 키워야 합니다.
+        </div>
+
+        <div class="meta" style="margin-top: 30px; text-align: center;">
+            <p>📊 투자아카데미 8회 분석 완료</p>
+            <p style="font-size: 0.8rem; color: #999;">본 자료는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. 리스크-리워드 차트
+        new Chart(document.getElementById('riskRewardChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: '투자 유형',
+                    data: [
+                        {x: 1, y: 1, label: '국채'},
+                        {x: 3, y: 3, label: '회사채'},
+                        {x: 5, y: 5, label: '구글'},
+                        {x: 9, y: 9, label: '코인베이스'}
+                    ],
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                    pointRadius: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: '리스크 →' }, min: 0, max: 10 },
+                    y: { title: { display: true, text: '리워드 →' }, min: 0, max: 10 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const labels = ['국채', '회사채', '구글', '코인베이스'];
+                                return labels[ctx.dataIndex];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. 채권 가격 차트
+        new Chart(document.getElementById('bondPriceChart'), {
+            type: 'bar',
+            data: {
+                labels: ['금리 2%', '금리 5%', '금리 7%'],
+                datasets: [
+                    {
+                        label: '채권 가격 ($)',
+                        data: [1000, 850, 750],
+                        backgroundColor: '#3b82f6',
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '실질 수익률 (%)',
+                        data: [8, 9.4, 10.7],
+                        backgroundColor: '#f59e0b',
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { type: 'linear', position: 'left', title: { display: true, text: '채권 가격 ($)' } },
+                    y1: { type: 'linear', position: 'right', title: { display: true, text: '실질 수익률 (%)' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+
+        // 3. 채권 유형별 영향 차트
+        new Chart(document.getElementById('bondImpactChart'), {
+            type: 'bar',
+            data: {
+                labels: ['단기 채권', '중기 채권', '장기 채권'],
+                datasets: [{
+                    label: '금리 1% 상승 시 가격 하락폭',
+                    data: [2, 5, 12],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { title: { display: true, text: '가격 하락폭 (%)' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 4. 일드커브 차트
+        new Chart(document.getElementById('yieldCurveChart'), {
+            type: 'line',
+            data: {
+                labels: ['3개월', '6개월', '1년', '2년', '5년', '10년', '30년'],
+                datasets: [
+                    {
+                        label: '정상 커브',
+                        data: [2.0, 2.3, 2.8, 3.2, 3.8, 4.2, 4.5],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: '역전 커브 (현재)',
+                        data: [5.5, 5.4, 5.2, 4.8, 4.5, 4.3, 4.1],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { title: { display: true, text: '수익률 (%)' } }
+                }
+            }
+        });
+
+        // 5. 커브 전환 단계 차트
+        new Chart(document.getElementById('curveTransitionChart'), {
+            type: 'line',
+            data: {
+                labels: ['단기', '중기', '장기'],
+                datasets: [
+                    {
+                        label: '1단계: 역전',
+                        data: [5.5, 4.5, 4.0],
+                        borderColor: '#ef4444',
+                        borderDash: [5, 5]
+                    },
+                    {
+                        label: '2단계: 플랫',
+                        data: [4.5, 4.4, 4.3],
+                        borderColor: '#f59e0b'
+                    },
+                    {
+                        label: '3단계: 정상화',
+                        data: [3.0, 3.5, 4.2],
+                        borderColor: '#10b981'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { title: { display: true, text: '수익률 (%)' }, min: 2.5, max: 6 }
+                }
+            }
+        });
+
+        // 6. 섹터 로테이션 차트
+        new Chart(document.getElementById('sectorRotationChart'), {
+            type: 'bar',
+            data: {
+                labels: ['1월', '7월', '9월'],
+                datasets: [
+                    { label: 'Consumer Disc.', data: [15, 5, 3], backgroundColor: '#3b82f6' },
+                    { label: 'IT/Comm.', data: [5, 18, -5], backgroundColor: '#8b5cf6' },
+                    { label: 'Energy', data: [-3, 2, 12], backgroundColor: '#f59e0b' },
+                    { label: 'Healthcare', data: [3, 8, 8], backgroundColor: '#10b981' },
+                    { label: 'Utilities', data: [-2, -1, 10], backgroundColor: '#6366f1' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { title: { display: true, text: '수익률 (%)' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
