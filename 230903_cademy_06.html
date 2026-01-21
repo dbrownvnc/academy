@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>리밸런싱 전략원론과 투자목적 - 미국 증시 관점 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a365d;
+            border-bottom: 3px solid #3182ce;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.25rem;
+            color: #2c5282;
+            margin: 28px 0 16px;
+            padding-left: 12px;
+            border-left: 4px solid #4299e1;
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin: 20px 0 12px;
+        }
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        .meta-info {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .meta-info span {
+            display: block;
+            margin: 4px 0;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border-left: 4px solid #3182ce;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning-box {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .key-point {
+            background: #fefcbf;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 14px 0;
+            border: 1px solid #ecc94b;
+        }
+        .key-point strong {
+            color: #975a16;
+        }
+        strong {
+            color: #2c5282;
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-weight: 600;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        canvas {
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        th {
+            background: #4a5568;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        .formula-box {
+            background: #1a365d;
+            color: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .quote-box {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 14px;
+            margin: 16px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #4299e1, #48bb78);
+            margin: 30px 0;
+            border-radius: 1px;
+        }
+        ul, ol {
+            margin: 12px 0 12px 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .comparison-item {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .comparison-item.before {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+        }
+        .comparison-item.after {
+            background: #c6f6d5;
+            border: 1px solid #68d391;
+        }
+        .rule-badge {
+            display: inline-block;
+            background: #805ad5;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 8px 0;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #718096;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 리밸런싱 전략원론과 투자목적</h1>
+        
+        <div class="meta-info">
+            <span>📺 <strong>출처:</strong> 투자는인생TV 투자아카데미 6회</span>
+            <span>📅 <strong>방송일:</strong> 2023년 9월 2일</span>
+            <span>🎯 <strong>분석 관점:</strong> 미국 증시 및 경제적 관점</span>
+        </div>
+
+        <h2>1️⃣ 리밸런싱 전 필수 자기 점검</h2>
+        
+        <p>리밸런싱(Rebalancing)은 단순히 포트폴리오를 조정하는 행위가 아닙니다. <strong>전략적 목표와 목적이 명확해야</strong> 의미 있는 리밸런싱이 가능합니다.</p>
+        
+        <div class="highlight-box">
+            <h3>📋 4가지 필수 질문</h3>
+            <ol>
+                <li><strong>나의 투자 목적은 무엇인가?</strong> - 돈을 벌어서 어디에 쓸 것인지</li>
+                <li><strong>나의 투자 목표는 얼마인가?</strong> - 구체적인 금액과 기간</li>
+                <li><strong>나의 리스크 성향 프로파일은?</strong> - 감당 가능한 손실 범위</li>
+                <li><strong>나의 투자 경험과 빈도는?</strong> - 시장에 대한 이해도</li>
+            </ol>
+        </div>
+
+        <h3>📌 목적 vs 목표의 차이</h3>
+        
+        <div class="comparison-grid">
+            <div class="comparison-item before">
+                <strong>투자 목표</strong><br>
+                10만불 → 20만불<br>
+                (금액 증가)
+            </div>
+            <div class="comparison-item after">
+                <strong>투자 목적</strong><br>
+                은퇴 자금, 자녀 교육비<br>
+                (자금 용도)
+            </div>
+        </div>
+        
+        <div class="key-point">
+            <strong>💡 핵심 인사이트:</strong> 돈 자체가 목적이 되면 가족도, 삶의 균형도 잃게 됩니다. 돈은 목적을 이루기 위한 <strong>수단</strong>일 뿐입니다.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>2️⃣ 리밸런싱의 정의와 필요성</h2>
+        
+        <p><strong>리밸런싱(Rebalancing)</strong>이란 투자 포트폴리오의 목적과 계획, 리스크 노출에 부합하게 포트폴리오 내 자산 사이즈를 조정하는 행위입니다.</p>
+        
+        <div class="highlight-box">
+            <h3>🔄 리밸런싱이 필요한 이유</h3>
+            <p>처음 설계한 포트폴리오는 시간이 지남에 따라 <strong>각 종목의 주가 성장 속도와 투자 리스크가 변합니다.</strong> 주가와 기업의 상태는 살아있는 생물체와 같아서 상황이 계속 변화합니다.</p>
+        </div>
+
+        <h3>📊 실제 사례: 홍길동님의 포트폴리오</h3>
+        
+        <p>45세의 약간 보수적인 투자자 홍길동님의 포트폴리오를 예로 살펴보겠습니다.</p>
+        
+        <table>
+            <tr>
+                <th>종목</th>
+                <th>초기 투자금</th>
+                <th>초기 비중</th>
+                <th>7개월 후</th>
+                <th>변경 비중</th>
+            </tr>
+            <tr>
+                <td>테슬라</td>
+                <td>$10,000</td>
+                <td>20%</td>
+                <td>$22,000</td>
+                <td style="color:#e53e3e;font-weight:bold">27%↑</td>
+            </tr>
+            <tr>
+                <td>메타</td>
+                <td>$10,000</td>
+                <td>20%</td>
+                <td>$30,000</td>
+                <td style="color:#e53e3e;font-weight:bold">37%↑</td>
+            </tr>
+            <tr>
+                <td>존슨앤존슨</td>
+                <td>$20,000</td>
+                <td>40%</td>
+                <td>$18,000</td>
+                <td style="color:#38a169">22%↓</td>
+            </tr>
+            <tr>
+                <td>오레일리</td>
+                <td>$10,000</td>
+                <td>20%</td>
+                <td>$11,000</td>
+                <td style="color:#38a169">13.5%↓</td>
+            </tr>
+            <tr style="background:#edf2f7;font-weight:bold">
+                <td>합계</td>
+                <td>$50,000</td>
+                <td>100%</td>
+                <td>$81,000</td>
+                <td>+62%</td>
+            </tr>
+        </table>
+
+        <div class="chart-container">
+            <div class="chart-title">📈 포트폴리오 비중 변화 (초기 vs 7개월 후)</div>
+            <canvas id="portfolioChart"></canvas>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ 문제점 분석</strong>
+            <ul>
+                <li>테슬라: 리스크 <strong>+7%</strong> 증가 (20% → 27%)</li>
+                <li>메타: 리스크 <strong>+17%</strong> 증가 (20% → 37%)</li>
+                <li>존슨앤존슨: 안정성 <strong>-18%</strong> 감소</li>
+                <li>오레일리: 안정성 <strong>-16.5%</strong> 감소</li>
+            </ul>
+            <p style="margin-top:12px"><strong>결과:</strong> 보수적 투자자가 고위험 포트폴리오로 변질됨 (베타값 1.0 → 1.5, 변동성 50% 증가)</p>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📊 리스크 성향 변화 (보수적 → 공격적)</div>
+            <canvas id="riskChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>3️⃣ 5.25 룰 (Five-Twenty-Five Rule)</h2>
+        
+        <div class="formula-box">
+            🎯 5.25 룰<br>
+            소형주 비중 ≤ 5% | 대형주 비중 ≤ 25%
+        </div>
+        
+        <div class="highlight-box">
+            <h3>📌 규칙 상세 설명</h3>
+            <ul>
+                <li><strong>대형주(Large Cap):</strong> 전체 포트폴리오의 <strong>25%</strong>를 초과하면 안됨</li>
+                <li><strong>소형주(Small Cap):</strong> 전체 포트폴리오의 <strong>5%</strong>를 초과하면 안됨</li>
+            </ul>
+        </div>
+        
+        <p>소형주는 상승 시 급등하지만, 하락 시에도 급락하기 때문에 5%가 마지노선입니다. 특히 <strong>변동성이 큰 시기(예: 9월, 10월)</strong>에는 소형주 비중을 50% 이상 줄이는 것이 권장됩니다.</p>
+
+        <div class="chart-container">
+            <div class="chart-title">⚖️ 5.25 룰 적용 기준</div>
+            <canvas id="ruleChart"></canvas>
+        </div>
+
+        <div class="key-point">
+            <strong>💡 미사일 비유:</strong> 현대 정밀 유도 무기처럼 포트폴리오도 목표점을 향해 지속적으로 경로를 수정해야 합니다. 아날로그 칩이 미사일의 거리, 속도, 위치를 계속 조정하듯, 5.25 룰로 포트폴리오를 정밀하게 관리해야 합니다.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>4️⃣ 리밸런싱 미실시의 위험</h2>
+        
+        <div class="warning-box">
+            <h3>🚨 리밸런싱을 하지 않으면?</h3>
+            <ol>
+                <li><strong>폭락장 노출:</strong> 나스닥 지수 변동성 증가 시 큰 손실 위험</li>
+                <li><strong>목표지향성 상실:</strong> 수익에 취해 더 큰 리스크 추구</li>
+                <li><strong>포트폴리오 관리 불능:</strong> 주식 집합체로 전락</li>
+                <li><strong>방어력 상실:</strong> 시장 변화에 무방비 상태</li>
+                <li><strong>기준점과 투자철학 상실</strong></li>
+            </ol>
+        </div>
+
+        <div class="quote-box">
+            "길을 잃은 자는 돈을 잃는다 (Way Lost Means Money Lost)"<br>
+            - 자신의 포트폴리오가 무엇인지 모르는 상태로 투자하면 결국 손실로 이어집니다.
+        </div>
+
+        <h3>📉 테슬라 주가 변동 사례 (2020년~)</h3>
+        
+        <div class="chart-container">
+            <div class="chart-title">테슬라 주가 변동성 예시</div>
+            <canvas id="volatilityChart"></canvas>
+        </div>
+        
+        <p>테슬라 주가는 +80%, -60%, +140% 등 극심한 변동성을 보여왔습니다. 포트폴리오의 50% 이상을 한 종목에 투자하면 <strong>정신적 스트레스와 함께 투자 실패 확률이 급증</strong>합니다.</p>
+
+        <div class="warning-box">
+            <strong>📌 ARK Invest(캐시 우드) 사례</strong><br>
+            혁신 성장주에 집중 투자한 ARK의 주력 펀드는 최대 <strong>-90%</strong> 하락을 경험했습니다. 메타, 구글 등 대형 성장주가 100% 이상 회복한 반면, 소형 성장주들은 여전히 회복되지 못한 경우가 많습니다.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>5️⃣ 리밸런싱 실행 전략</h2>
+        
+        <h3>📊 현금화된 자금의 재투자</h3>
+        
+        <div class="highlight-box">
+            <ol>
+                <li><strong>폭락장 또는 3일 이상 하락장에서 매입:</strong> 투자 목적에 부합하는 기업 선별</li>
+                <li><strong>비슷한 리스크 유지 시:</strong> 메타 매각 → 구글, 티모바일, 애플 등으로 전환</li>
+                <li><strong>리스크 축소 시:</strong> 메타 매각 → UNH, 오레일리 등 보수적 종목으로 전환</li>
+            </ol>
+        </div>
+
+        <h3>🔄 섹터 로테이션 (Sector Rotation)</h3>
+        
+        <p>매 분기 또는 해마다 성장성이 큰 섹터는 존재합니다. <strong>비중 조절이 잘 된다면</strong> 현금의 10%~15% 정도를 해당 섹터에 추가 배분할 수 있습니다.</p>
+        
+        <div class="key-point">
+            <strong>예시:</strong> 11개 섹터 중 IT섹터의 AI 관련주 비중을 늘리라는 권고는 이 섹터 로테이션 전략에 기반합니다.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>6️⃣ 리밸런싱의 종류</h2>
+        
+        <table>
+            <tr>
+                <th>유형</th>
+                <th>설명</th>
+                <th>특징</th>
+            </tr>
+            <tr>
+                <td><strong>캘린더 리밸런싱</strong></td>
+                <td>분기별로 정기적 조정<br>(1Q, 2Q, 3Q, 4Q)</td>
+                <td>가장 <strong>비용 효율적</strong><br>기관투자자 선호</td>
+            </tr>
+            <tr>
+                <td><strong>커스텀 믹스</strong></td>
+                <td>필요할 때 수시로 조정</td>
+                <td>유연한 대응 가능</td>
+            </tr>
+            <tr>
+                <td><strong>이벤트 드리븐</strong></td>
+                <td>실적발표 등 특정 이벤트 후 조정</td>
+                <td>시장 반응 반영</td>
+            </tr>
+            <tr>
+                <td><strong>코스트 베이스</strong></td>
+                <td>세금 최적화를 위한 조정</td>
+                <td>고자산가 전략<br>(Tax Loss Harvesting)</td>
+            </tr>
+        </table>
+
+        <h3>💰 코스트 베이스 리밸런싱 (세금 최적화)</h3>
+        
+        <div class="highlight-box">
+            <p><strong>예시:</strong> 테슬라에서 $100,000 수익 발생, 소형주에서 $50,000 손실 발생</p>
+            <p>→ 둘 다 매도하면 <strong>손익 상계(Offset)</strong>되어 $50,000에 대한 세금만 발생</p>
+            <p>→ 단기 양도소득세(Short-term Capital Gain Tax) 25% 이상을 절감 가능</p>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📊 리밸런싱 유형별 활용도</div>
+            <canvas id="rebalanceTypeChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>7️⃣ 미국 증시 투자 시사점</h2>
+        
+        <div class="highlight-box">
+            <h3>🇺🇸 미국 시장 적용 포인트</h3>
+            <ol>
+                <li><strong>변동성 관리:</strong> 나스닥의 높은 변동성을 고려한 포트폴리오 구성 필수</li>
+                <li><strong>섹터 분산:</strong> S&P 500의 11개 섹터를 활용한 분산 투자</li>
+                <li><strong>대형주 중심:</strong> 5.25 룰을 적용하여 안정성 확보</li>
+                <li><strong>분기별 리뷰:</strong> 실적발표 시즌(Earnings Season) 활용</li>
+                <li><strong>세금 효율성:</strong> Tax Loss Harvesting 전략 활용</li>
+            </ol>
+        </div>
+        
+        <div class="key-point">
+            <strong>🎯 핵심 메시지:</strong> 투자의 과정이 행복해야 합니다. 결과만 보고 리스크를 무시하면 정신적, 재정적 손실을 피할 수 없습니다. <strong>목적이 분명하고, 리스크가 관리되는 투자</strong>를 해야 합니다.
+        </div>
+
+        <div class="formula-box">
+            📝 투자 공식<br>
+            명확한 목적 + 현실적 목표 + 리스크 관리 + 정기적 리밸런싱<br>
+            = 장기적 투자 성공
+        </div>
+
+        <footer>
+            <p>📺 원본 영상: 투자는인생TV 투자아카데미 6회 (2023.09.02)</p>
+            <p>⚠️ 본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 포트폴리오 비중 변화 차트
+        const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(portfolioCtx, {
+            type: 'bar',
+            data: {
+                labels: ['테슬라', '메타', '존슨앤존슨', '오레일리'],
+                datasets: [
+                    {
+                        label: '초기 비중',
+                        data: [20, 20, 40, 20],
+                        backgroundColor: 'rgba(66, 153, 225, 0.7)',
+                        borderColor: 'rgba(66, 153, 225, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '7개월 후 비중',
+                        data: [27, 37, 22, 13.5],
+                        backgroundColor: 'rgba(237, 100, 100, 0.7)',
+                        borderColor: 'rgba(237, 100, 100, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+
+        // 리스크 성향 변화 차트
+        const riskCtx = document.getElementById('riskChart').getContext('2d');
+        new Chart(riskCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['성장주 (고위험)', '가치주 (저위험)'],
+                datasets: [
+                    {
+                        label: '초기',
+                        data: [40, 60],
+                        backgroundColor: ['rgba(237, 100, 100, 0.7)', 'rgba(72, 187, 120, 0.7)'],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: '초기: 성장주 40% / 가치주 60%' },
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 5.25 룰 차트
+        const ruleCtx = document.getElementById('ruleChart').getContext('2d');
+        new Chart(ruleCtx, {
+            type: 'bar',
+            data: {
+                labels: ['소형주 한도', '대형주 한도'],
+                datasets: [{
+                    label: '최대 비중 (%)',
+                    data: [5, 25],
+                    backgroundColor: ['rgba(128, 90, 213, 0.7)', 'rgba(49, 130, 206, 0.7)'],
+                    borderColor: ['rgba(128, 90, 213, 1)', 'rgba(49, 130, 206, 1)'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 30,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+
+        // 변동성 차트
+        const volatilityCtx = document.getElementById('volatilityChart').getContext('2d');
+        new Chart(volatilityCtx, {
+            type: 'line',
+            data: {
+                labels: ['시작', '1분기', '2분기', '3분기', '4분기', '5분기', '6분기'],
+                datasets: [{
+                    label: '주가 변동률 (%)',
+                    data: [100, 180, 120, 240, 140, 200, 160],
+                    borderColor: 'rgba(237, 100, 100, 1)',
+                    backgroundColor: 'rgba(237, 100, 100, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+
+        // 리밸런싱 유형 차트
+        const rebalanceTypeCtx = document.getElementById('rebalanceTypeChart').getContext('2d');
+        new Chart(rebalanceTypeCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['캘린더', '커스텀 믹스', '이벤트 드리븐', '코스트 베이스'],
+                datasets: [{
+                    data: [40, 25, 20, 15],
+                    backgroundColor: [
+                        'rgba(66, 153, 225, 0.7)',
+                        'rgba(72, 187, 120, 0.7)',
+                        'rgba(237, 137, 54, 0.7)',
+                        'rgba(128, 90, 213, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
