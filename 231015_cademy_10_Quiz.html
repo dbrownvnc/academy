@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 아카데미 10회: 시험문제</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a1a2e;
+            border-bottom: 3px solid #4361ee;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #4361ee;
+            margin: 24px 0 16px;
+            padding: 10px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .question-box {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .question-number {
+            background: #4361ee;
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .difficulty .star {
+            color: #ffc107;
+        }
+        .question-type {
+            background: #e8f4fd;
+            color: #4361ee;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .options {
+            padding-left: 8px;
+        }
+        .option {
+            padding: 8px 12px;
+            margin: 6px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .blank-line {
+            border-bottom: 2px solid #4361ee;
+            display: inline-block;
+            width: 100px;
+            margin: 0 4px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #4361ee, #7209b7);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        .answer-section {
+            margin-top: 40px;
+        }
+        .answer-box {
+            background: #f0fff4;
+            border: 1px solid #28a745;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .answer-label {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        .answer-text {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        .explanation {
+            margin-top: 10px;
+            padding: 12px;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #495057;
+            line-height: 1.6;
+        }
+        .explanation strong {
+            color: #4361ee;
+        }
+        .meta-info {
+            background: #f1f3f4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+        .score-guide {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        @media print {
+            .container { box-shadow: none; }
+            .page-break { page-break-before: always; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 16px; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 투자 아카데미 10회: 시험문제</h1>
+        
+        <div class="meta-info">
+            📚 주제: 본인에게 맞는 포트폴리오 구성법<br>
+            ⏱️ 총 10문제 | 난이도: ⭐ 쉬움 30% / ⭐⭐ 보통 50% / ⭐⭐⭐ 어려움 20%
+        </div>
+
+        <div class="score-guide">
+            <strong>📊 채점 기준:</strong><br>
+            • 객관식/OX/단답형: 각 10점<br>
+            • 빈칸채우기: 각 10점<br>
+            • 서술형: 각 10점 (부분 점수 가능)<br>
+            • 총점: 100점 / 합격: 70점 이상
+        </div>
+
+        <h2>━━━━━━━━━━━━━━━━━━━━━<br>📋 시험문제 (총 10문제)<br>━━━━━━━━━━━━━━━━━━━━━</h2>
+
+        <!-- 문제 1 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 1</span>
+                <span class="difficulty"><span class="star">⭐</span> 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                현재 한국의 투자 문화는 투자 진화 단계 중 몇 단계에 해당하는가?
+            </div>
+            <div class="options">
+                <div class="option">① 1단계 (Stock Picking)</div>
+                <div class="option">② 2단계 (분산 투자)</div>
+                <div class="option">③ 3단계 (포트폴리오 구성)</div>
+                <div class="option">④ 4단계 (Goal-Based Management)</div>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 2</span>
+                <span class="difficulty"><span class="star">⭐⭐</span> 보통</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                Small Cap(소형주)은 전체 포트폴리오의 10%까지 보유해도 안전하다. (O/X)
+            </div>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 3</span>
+                <span class="difficulty"><span class="star">⭐</span> 쉬움</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <div class="question-text">
+                포트폴리오에서 특정 종목의 비중이 과도하게 커졌을 때 이를 조정하여 균형을 맞추는 전략을 무엇이라고 하는가?
+            </div>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 4</span>
+                <span class="difficulty"><span class="star">⭐⭐</span> 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                30-30-30-10 자산 배분 전략에서 각 비율이 올바르게 연결된 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 부동산 30% - 주식 30% - 채권 30% - 현금 10%</div>
+                <div class="option">② 부동산 30% - 현금 30% - 주식 30% - 채권 10%</div>
+                <div class="option">③ 주식 30% - 부동산 30% - 현금 30% - 대안투자 10%</div>
+                <div class="option">④ 채권 30% - 주식 30% - 현금 30% - 부동산 10%</div>
+            </div>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 5</span>
+                <span class="difficulty"><span class="star">⭐⭐</span> 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <div class="question-text">
+                OEO 전략에 따르면, Large Cap 종목이 전체 포트폴리오의 <span class="blank-line"></span>% 이상이 되면 초과분을 매도하여 다른 종목을 매수해야 한다.
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 6</span>
+                <span class="difficulty"><span class="star">⭐⭐</span> 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                매매 시기 결정의 3가지 기준에 해당하지 않는 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 거시경제 변화 (섹터 로테이션)</div>
+                <div class="option">② 분기 실적 발표</div>
+                <div class="option">③ 이벤트 드리븐 (M&A, 경영진 변화)</div>
+                <div class="option">④ SNS 인플루언서 추천</div>
+            </div>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 7</span>
+                <span class="difficulty"><span class="star">⭐</span> 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                2년 내에 주택 구매 계획이 있는 투자자는 자산의 50~70%를 현금이나 적금으로 보유하는 것이 바람직하다. (O/X)
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 8</span>
+                <span class="difficulty"><span class="star">⭐⭐</span> 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                영상에서 분석한 4개 종목 중 5년간 가장 낮은 변동성(최대 하락폭 약 -5%)을 보인 종목은?
+            </div>
+            <div class="options">
+                <div class="option">① Tesla</div>
+                <div class="option">② Amazon</div>
+                <div class="option">③ Apple</div>
+                <div class="option">④ Walmart</div>
+            </div>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 9</span>
+                <span class="difficulty"><span class="star">⭐⭐⭐</span> 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                나이에 따른 투자 리스크 조절 원칙을 설명하시오. 30대, 50대, 80대 각각의 리스크 수준은 어떻게 달라져야 하는가? (3문장 이상)
+            </div>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 10</span>
+                <span class="difficulty"><span class="star">⭐⭐⭐</span> 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                "현명한 포트폴리오 구성"에서 Core(중심)와 Satellite(위성) 전략을 설명하고, 각각에 어떤 유형의 종목을 배치해야 하는지 예시와 함께 서술하시오. (4문장 이상)
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2 class="page-break">━━━━━━━━━━━━━━━━━━━━━<br>📝 정답 및 해설<br>━━━━━━━━━━━━━━━━━━━━━</h2>
+
+        <!-- 정답 1 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 1</span>
+                <span class="answer-text">정답: ① 1단계 (Stock Picking)</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 영상에서 한국의 투자 문화는 아직도 "어떤 주식이 좋아?"라는 1단계 Stock Picking 수준에 머물러 있다고 지적했다. 미국은 이미 1929년 대공황 이후 1단계를 졸업했으며, 현재 4~5단계(Goal-Based Management, Financial Planning)에 진입한 반면, 한국은 100년 가까이 뒤처져 있다는 분석이다.
+            </div>
+        </div>
+
+        <!-- 정답 2 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 2</span>
+                <span class="answer-text">정답: X</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> Small Cap(소형주)은 절대 <strong>5% 이상</strong> 보유해서는 안 된다. 영상에서는 "5% 이상 매입하면 폭망할 가능성이 크다"고 경고했다. 소형주는 변동성이 매우 크기 때문에 전체 포트폴리오에서 작은 비중만 유지해야 리스크를 관리할 수 있다.
+            </div>
+        </div>
+
+        <!-- 정답 3 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 3</span>
+                <span class="answer-text">정답: 리밸런싱 (Rebalancing)</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 리밸런싱은 시간이 지나면서 특정 종목의 비중이 오버웨이트(과잉 비중)되거나 언더웨이트(과소 비중)되었을 때, 초과분을 매도하고 부족한 부분을 매수하여 원래 목표 비중으로 되돌리는 전략이다. OEO 전략이 대표적인 리밸런싱 방법이다.
+            </div>
+        </div>
+
+        <!-- 정답 4 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 4</span>
+                <span class="answer-text">정답: ①</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 영상에서 제시한 30-30-30-10 전략은 <strong>부동산 30% + 채권/국채 30% + 주식 30% + 현금 10%</strong>이다. 이는 에셋클래스를 분산하여 한 자산군에 집중되는 위험을 줄이는 현명한 자산 배분 전략이다. 특히 한국처럼 부동산 100% 집중 투자는 21세기에 바람직하지 않다고 강조했다.
+            </div>
+        </div>
+
+        <!-- 정답 5 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 5</span>
+                <span class="answer-text">정답: 25 (%)</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> OEO 전략에서는 Large Cap 종목이 전체 포트폴리오의 <strong>25% 이상</strong>이 되면 초과분을 매도하고 다른 종목을 매수하도록 규정한다. 이는 특정 종목 집중으로 인한 리스크를 방지하기 위한 원칙이다. 아무리 좋은 대형주라도 25%를 초과하면 리밸런싱이 필요하다.
+            </div>
+        </div>
+
+        <!-- 정답 6 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 6</span>
+                <span class="answer-text">정답: ④</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 영상에서 제시한 매매 시기 결정의 3가지 기준은 <strong>① 거시경제 변화(섹터 로테이션), ② 분기 실적 발표, ③ 이벤트 드리븐(M&A, 경영진 변화)</strong>이다. SNS 인플루언서 추천은 체계적인 투자 기준이 아니며, 오히려 "고점 매수"의 원인이 될 수 있어 경계해야 한다.
+            </div>
+        </div>
+
+        <!-- 정답 7 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 7</span>
+                <span class="answer-text">정답: O</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 영상에서 2년 내 주택 구매 계획이 있는 멤버에게 "<strong>최소 50%, 많게는 70%를 현금이나 적금</strong>에 넣고, 나머지 30%만 대형주 위주로 투자하라"고 조언했다. 주택 구매처럼 정해진 시점에 큰 금액이 필요한 경우, 원금 손실 위험이 큰 투자 비중을 줄이고 유동성을 확보해야 한다.
+            </div>
+        </div>
+
+        <!-- 정답 8 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 8</span>
+                <span class="answer-text">정답: ④ Walmart</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 영상에서 분석한 4개 종목의 최대 하락폭은 <strong>Tesla -45%, Amazon -35%, Apple -15%, Walmart -5%</strong>이다. Walmart는 Consumer Staples(필수 소비재) 섹터로 경기 방어주 특성을 가져 변동성이 가장 낮았다. 어느 시점에 매수해도 최대 손실이 -5% 수준이었다.
+            </div>
+        </div>
+
+        <!-- 정답 9 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 9</span>
+                <span class="answer-text">정답: 서술형 (모범답안)</span>
+            </div>
+            <div class="explanation">
+                <strong>모범답안:</strong><br>
+                나이에 따른 투자 리스크는 역U자형으로 조절해야 한다. <strong>30대</strong>는 은퇴까지 시간이 충분하므로 리스크를 높게 가져가고 성장주 비중을 확대할 수 있다. <strong>50대</strong>부터는 은퇴가 가까워지므로 리스크를 점진적으로 줄이고 안정적인 배당주와 채권 비중을 늘려야 한다. <strong>80대</strong>는 원금 보존이 최우선이므로 Fixed Income(고정 수입)이나 Dividend Income(배당 수입) 중심으로 전환하여 리스크를 최소화해야 한다.<br><br>
+                <strong>채점 기준:</strong> 30대 리스크 확대(3점), 50대 리스크 축소(3점), 80대 Fixed Income 전환(4점)
+            </div>
+        </div>
+
+        <!-- 정답 10 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">문제 10</span>
+                <span class="answer-text">정답: 서술형 (모범답안)</span>
+            </div>
+            <div class="explanation">
+                <strong>모범답안:</strong><br>
+                Core-Satellite 전략은 포트폴리오를 중심(Core)과 위성(Satellite)으로 나누어 구성하는 방법이다. <strong>Core(70~80%)</strong>에는 Apple, Walmart와 같이 변동성이 낮고 꾸준히 성장하는 우량주를 배치한다. 이들은 포트폴리오의 안정성을 담당하며, 어떤 시점에 매수해도 큰 손실 없이 장기 수익을 기대할 수 있다. <strong>Satellite(10~20%)</strong>에는 Tesla, Amazon과 같이 높은 성장 잠재력을 가진 성장주를 소량 배치한다. 이들은 높은 수익 기회를 제공하지만 변동성이 크므로 비중을 제한해야 한다. 이렇게 구성하면 S&P 500 대비 초과 수익을 추구하면서도 전체 변동성은 낮게 유지할 수 있다.<br><br>
+                <strong>채점 기준:</strong> Core 개념 설명(2점), Core 종목 예시(2점), Satellite 개념 설명(2점), Satellite 종목 예시(2점), 전략의 효과 설명(2점)
+            </div>
+        </div>
+
+        <div class="score-guide" style="margin-top: 30px;">
+            <strong>📊 자가 채점 후 평가:</strong><br>
+            • 90~100점: 🏆 투자 마스터! 실전 적용 준비 완료<br>
+            • 70~89점: ✅ 합격! 추가 복습 권장<br>
+            • 50~69점: 📖 재학습 필요. 영상 다시 시청 권장<br>
+            • 50점 미만: 🔄 기초부터 다시 학습
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 16px; border-top: 1px solid #dee2e6; font-size: 0.85rem; color: #666; text-align: center;">
+            📺 원본 영상: <a href="https://www.youtube.com/watch?v=Ksga7rJh3kY&t=1876s" target="_blank" style="color: #4361ee;">투자아카데미 10회: 본인에게 맞는 포트폴리오 구성법</a>
+        </div>
+    </div>
+</body>
+</html>
