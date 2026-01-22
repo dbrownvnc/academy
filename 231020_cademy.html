@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>급변하는 미국증권시장 분석 (2023.10.19)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header .meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 28px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a237e;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8eaf6;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid #f44336;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #2196f3;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 4px;
+        }
+        .stat-card.danger .value {
+            color: #d32f2f;
+        }
+        .stat-card.success .value {
+            color: #388e3c;
+        }
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        strong {
+            color: #1a237e;
+        }
+        .chart-container {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .chart-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        canvas {
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+        tr:hover {
+            background: #fafafa;
+        }
+        .positive {
+            color: #388e3c;
+            font-weight: 600;
+        }
+        .negative {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        .stock-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+        .stock-card h4 {
+            font-size: 1rem;
+            color: #1a237e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stock-card .ticker {
+            background: #e8eaf6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .key-point {
+            background: #fffde7;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid #fff59d;
+        }
+        .footer {
+            background: #f5f5f5;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 24px 0;
+        }
+        .emoji {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 급변하는 미국증권시장, 우리의 대책은?</h1>
+            <div class="meta">2023년 10월 19일 방송 | 미국 증시 심층 분석</div>
+        </div>
+        
+        <div class="content">
+            <!-- 핵심 요약 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">🎯</span> 핵심 시장 상황</div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 최대 리스크 요인:</strong> 10년물 국채 금리가 <strong>5%</strong>에 근접 - 2007년 이후 최고치. 5%를 넘으면 시장에 큰 충격이 올 수 있음.
+                </div>
+                
+                <div class="stat-grid">
+                    <div class="stat-card danger">
+                        <div class="value">~4.9%</div>
+                        <div class="label">10년물 국채 금리</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="value">~8%</div>
+                        <div class="label">30년 고정 모기지</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">-0.87%</div>
+                        <div class="label">S&P 500 (당일)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">-1%</div>
+                        <div class="label">나스닥 (당일)</div>
+                    </div>
+                </div>
+                
+                <p>시장의 변동성이 급격히 확대되고 있습니다. <strong>2년물, 10년물, 30년물 국채 금리가 동반 상승</strong>하며 전체 시장에 노이즈를 만들고 있으며, 이스라엘-하마스 사태로 인한 지정학적 리스크와 연준의 금리 정책 불확실성이 복합적으로 작용하고 있습니다.</p>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 연준 정책 분석 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">🏛️</span> 연준(Fed) 정책 분석</div>
+                
+                <div class="info-box">
+                    <strong>파월 의장 발언 요약:</strong> 금리 인상도, 인하도 언급하지 않은 중립적 발언. 중동 사태를 예의주시하며 <strong>"추가 금리 인상을 신중히 고려할 것"</strong>이라는 신중론 견지.
+                </div>
+                
+                <p><strong>11월 FOMC 전망:</strong> 현재 상황에서 금리 인상이 어려운 이유가 존재합니다. 부동산 가격 하락과 거래량 감소가 동시에 나타나고 있으며, 추가 금리 인상 시 기업 파산이 증가할 가능성이 있습니다.</p>
+                
+                <div class="highlight-box">
+                    <strong>연말 금리 전망:</strong>
+                    <ul>
+                        <li>11월~12월 중 한 차례 인상 가능성 존재</li>
+                        <li>중동 사태 및 경제 지표에 따라 동결 가능성도 있음</li>
+                        <li>파월 의장의 어려운 결정이 연말까지 불가피</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 국채 금리 분석 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">📈</span> 국채 금리 급상승 분석</div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">10년물 국채 금리 추이 (2021-2023)</div>
+                    <canvas id="bondChart"></canvas>
+                </div>
+                
+                <p><strong>국채 금리 급상승 원인:</strong></p>
+                <ul>
+                    <li><strong>소프트랜딩 확신 저하:</strong> 경기 연착륙 가능성에 대한 불확실성 증가</li>
+                    <li><strong>QT(양적긴축) 지속:</strong> 연준의 긴축 정책에 대응한 장기 국채 선호</li>
+                    <li><strong>안전자산 선호:</strong> 주식시장에서 국채시장으로 자금 이동</li>
+                    <li><strong>중동 지정학적 리스크:</strong> 이스라엘-하마스 사태 확산 우려</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 마지노선 경고:</strong> 10년물 국채 금리가 <strong>5%를 돌파</strong>하면 금융시장에 심각한 스트레스 발생 가능. "버티다가 견딜 수 없는" 상황이 올 수 있으며, 이 경우 <strong>보유 자산의 30% 매각</strong>을 권고.
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 부동산 시장 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">🏠</span> 부동산 시장 리스크</div>
+                
+                <div class="stat-grid">
+                    <div class="stat-card danger">
+                        <div class="value">~8%</div>
+                        <div class="label">30년 모기지 금리</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="value">$2.5조</div>
+                        <div class="label">상업용 부동산 리파이낸싱 규모 (2년내)</div>
+                    </div>
+                </div>
+                
+                <p><strong>주택 시장:</strong> 주택 가격은 소폭 하락 중이나, 높은 모기지 금리(8%)로 인해 매매 거래가 크게 위축되었습니다. 인플레이션이 유지되는 한 집값의 급락은 제한적이나, 거래 동결 상태가 지속되고 있습니다.</p>
+                
+                <div class="warning-box">
+                    <strong>🚨 상업용 부동산 위기 경고:</strong>
+                    <p style="margin-top:8px;">2년 내 <strong>2.5조 달러</strong> 규모의 상업용 부동산 대출이 리파이낸싱 필요. 기존 금리(2-5%)에서 신규 금리(7-9%)로 전환 시 이자 부담이 급증하여 <strong>대량 파산 위험</strong> 존재.</p>
+                    <p style="margin-top:8px;">2007년 금융위기는 주거용 부동산에서 시작됐으나, 이번에는 <strong>상업용 부동산</strong>에서 위기가 발생할 가능성.</p>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- S&P 500 전망 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">📊</span> S&P 500 지수 전망</div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">S&P 500 연말 시나리오 확률</div>
+                    <canvas id="scenarioChart"></canvas>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th>시나리오</th>
+                        <th>S&P 500 레벨</th>
+                        <th>확률</th>
+                    </tr>
+                    <tr>
+                        <td>기본 시나리오</td>
+                        <td>4,500 ~ 4,600</td>
+                        <td><span class="positive">70%+</span></td>
+                    </tr>
+                    <tr>
+                        <td>하락 시나리오</td>
+                        <td>4,200 이하</td>
+                        <td>~10%</td>
+                    </tr>
+                    <tr>
+                        <td>상승 시나리오</td>
+                        <td>4,700 이상</td>
+                        <td>~10%</td>
+                    </tr>
+                </table>
+                
+                <div class="info-box">
+                    <strong>엘리엇 파동 분석:</strong> 큰 이벤트가 없다면 연말까지 등락을 반복하며 <strong>지지부진한 상승세</strong>가 이어질 전망. 10일/40일 이동평균선 기준으로 현재 수준에서 소폭 상승 예상.
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 섹터별 분석 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">📉</span> 섹터별 30일 실적</div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">섹터별 30일 수익률</div>
+                    <canvas id="sectorChart"></canvas>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th>섹터</th>
+                        <th>30일 수익률</th>
+                        <th>투자 의견</th>
+                    </tr>
+                    <tr>
+                        <td><strong>IT/성장주</strong></td>
+                        <td><span class="positive">+강세</span></td>
+                        <td>✅ 비중 확대</td>
+                    </tr>
+                    <tr>
+                        <td>나스닥</td>
+                        <td><span class="positive">+0.8%~1%</span></td>
+                        <td>✅ 유지</td>
+                    </tr>
+                    <tr>
+                        <td>밸류</td>
+                        <td>+0.6%</td>
+                        <td>➖ 중립</td>
+                    </tr>
+                    <tr>
+                        <td>유틸리티</td>
+                        <td class="negative">월초 -7~8%에서 회복 중</td>
+                        <td>⚠️ 관망</td>
+                    </tr>
+                    <tr>
+                        <td><strong>에너지</strong></td>
+                        <td><span class="negative">-약세</span></td>
+                        <td>❌ 비중 축소</td>
+                    </tr>
+                    <tr>
+                        <td>인더스트리얼</td>
+                        <td><span class="negative">-약세</span></td>
+                        <td>❌ 비중 축소</td>
+                    </tr>
+                    <tr>
+                        <td>헬스케어</td>
+                        <td>혼조 (대형주 제외 약세)</td>
+                        <td>⚠️ 선별적 접근</td>
+                    </tr>
+                    <tr>
+                        <td><strong>은행주</strong></td>
+                        <td><span class="negative">-약세</span></td>
+                        <td>❌ 회피 (웰스파고 예외)</td>
+                    </tr>
+                </table>
+                
+                <div class="success-box">
+                    <strong>✅ 주목할 대형 성장주:</strong> Google, Microsoft, Meta, NVIDIA, Adobe 등 AI 관련 대형주 중심으로 포트폴리오 구성 권고
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 개별 종목 분석 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">🔍</span> 주요 종목 분석</div>
+                
+                <!-- 테슬라 -->
+                <div class="stock-card">
+                    <h4>⚡ Tesla <span class="ticker">TSLA</span></h4>
+                    <div class="warning-box" style="margin-top:12px;">
+                        <strong>당일 -9% 이상 폭락</strong> | 3분기 실적 예상치 하회
+                    </div>
+                    <p><strong>실적 분석:</strong></p>
+                    <ul>
+                        <li>3분기 출고: <strong>43만 대</strong> (전분기 46.6만 대 대비 감소)</li>
+                        <li>회사측 원인: 공장 업그레이드 및 정비</li>
+                        <li>핵심 문제: <strong>이익률(Profit Margin) 지속 하락</strong></li>
+                        <li>연간 출고 전망: 180만 대 예상</li>
+                    </ul>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">테슬라 3개월 주가 추이</div>
+                        <canvas id="teslaChart"></canvas>
+                    </div>
+                    
+                    <div class="key-point">
+                        <strong>투자 의견:</strong> 테슬라는 이제 일반 자동차 제조사 수준의 펀더멘탈로 수렴 중. 포트폴리오 비중 <strong>5% 이내</strong>로 제한 권고. 10% 이상 보유는 리스크 과다.
+                    </div>
+                </div>
+                
+                <!-- ASML -->
+                <div class="stock-card">
+                    <h4>🔬 ASML <span class="ticker">ASML</span></h4>
+                    <div class="highlight-box" style="margin-top:12px;">
+                        <strong>실적 발표:</strong> EPS +3.8% Beat | 매출 -1.4% Miss
+                    </div>
+                    <p><strong>핵심 리스크:</strong></p>
+                    <ul>
+                        <li>칩 판매량 <strong>42% 감소</strong></li>
+                        <li>대중국 매출 비중 50% → 지정학적 리스크 높음</li>
+                        <li>다음 분기(1월 발표) 실적 추가 하락 예상</li>
+                        <li>이스라엘-하마스 사태로 미국의 대중국 견제 약화 시 리스크 증가</li>
+                    </ul>
+                    <div class="key-point">
+                        <strong>투자 의견:</strong> 펀더멘탈리스트 관점에서 매출 감소 시 <strong>매도</strong> 권고. 투자 리스크 급증.
+                    </div>
+                </div>
+                
+                <!-- TSMC -->
+                <div class="stock-card">
+                    <h4>💾 TSMC <span class="ticker">TSM</span></h4>
+                    <div class="info-box" style="margin-top:12px;">
+                        현재가: ~$90 | 목표가: <strong>$115</strong> | P/E: ~15배
+                    </div>
+                    <p><strong>성장 전망:</strong></p>
+                    <ul>
+                        <li>2022년: 고속 성장 (~40%)</li>
+                        <li>2023년: 저성장 (~5-8%)</li>
+                        <li>2024년 전망: <strong>+23%</strong> 성장 예상</li>
+                    </ul>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">TSMC 연간 성장률 추이</div>
+                        <canvas id="tsmcChart"></canvas>
+                    </div>
+                    
+                    <p><strong>긍정적 요인:</strong></p>
+                    <ul>
+                        <li>N3(3nm) 공정 파이프라인: Apple, AMD, Intel, NVIDIA</li>
+                        <li>HPC(고성능 컴퓨팅) 세그먼트 성장</li>
+                        <li>GPU/FPGA/ASIC 레버: 2024년까지 50%+ 성장 예상</li>
+                        <li>N5/N3 시장 점유율 ~90%</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>유일한 리스크:</strong> 중국의 대만 침공 리스크 (차이나 리스크). 기술적 펀더멘탈은 탁월하나 지정학적 불확실성이 상존.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 투자 전략 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">💡</span> 투자 전략 권고</div>
+                
+                <div class="success-box">
+                    <strong>✅ 핵심 포트폴리오 전략:</strong>
+                    <ul style="margin-top:8px;">
+                        <li><strong>대형주 위주</strong>로 포트폴리오 구성</li>
+                        <li>중소형주 비중 축소 또는 처분</li>
+                        <li>상단과 하단이 높고, <strong>중간(중형주) 비중이 적은</strong> 바벨 전략</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point">
+                    <strong>매수 권고 종목:</strong> Google, Adobe, Meta, Microsoft, NVIDIA
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 리스크 관리:</strong>
+                    <ul style="margin-top:8px;">
+                        <li>10년물 국채 금리 <strong>5% 돌파 시</strong> → 포트폴리오 30% 현금화</li>
+                        <li>11월 전 대량 매각 상황 발생 가능성 대비</li>
+                        <li>배당주(유틸리티 등)는 고인플레이션 환경에서 매력 저하</li>
+                    </ul>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th>구분</th>
+                        <th>추천</th>
+                        <th>회피</th>
+                    </tr>
+                    <tr>
+                        <td>시가총액</td>
+                        <td class="positive">대형주</td>
+                        <td class="negative">소형주, 중소형주</td>
+                    </tr>
+                    <tr>
+                        <td>스타일</td>
+                        <td class="positive">성장주, AI 관련</td>
+                        <td class="negative">배당주, 에너지</td>
+                    </tr>
+                    <tr>
+                        <td>섹터</td>
+                        <td class="positive">IT, 빅테크</td>
+                        <td class="negative">은행, 인더스트리얼</td>
+                    </tr>
+                    <tr>
+                        <td>지역</td>
+                        <td class="positive">미국 대형주</td>
+                        <td class="negative">중국 노출 기업</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 지정학적 리스크 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">🌍</span> 지정학적 리스크</div>
+                
+                <div class="warning-box">
+                    <strong>이중 리스크 구조:</strong>
+                    <ol style="margin-top:8px;">
+                        <li><strong>중동:</strong> 이스라엘-하마스(가자지구) 사태 확산 → 유가 상승 압력, 안전자산 선호</li>
+                        <li><strong>대만해협:</strong> 미국이 중동에 집중할 경우 중국의 대만 압박 가능성</li>
+                    </ol>
+                </div>
+                
+                <p>현재 미국은 중동 사태에 외교적 역량을 집중하고 있으며, 이 경우 <strong>대만해협에 대한 관심이 분산</strong>될 수 있습니다. 이는 TSMC, ASML 등 반도체 기업에 추가 리스크 요인으로 작용할 수 있습니다.</p>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 결론 -->
+            <div class="section">
+                <div class="section-title"><span class="emoji">📝</span> 결론 및 시사점</div>
+                
+                <div class="highlight-box">
+                    <strong>핵심 모니터링 지표:</strong>
+                    <ol style="margin-top:8px;">
+                        <li><strong>10년물 국채 금리</strong> - 5% 돌파 여부가 최대 변수</li>
+                        <li><strong>FOMC 결정</strong> - 11월/12월 금리 동결 또는 인상</li>
+                        <li><strong>중동 사태</strong> - 확전 여부 및 유가 동향</li>
+                        <li><strong>상업용 부동산</strong> - 파산 발생 여부</li>
+                    </ol>
+                </div>
+                
+                <p>현재 시장은 <strong>다중 리스크 환경</strong>에 놓여 있습니다. 금리 인상 사이클의 말미에서 국채 금리가 역사적 고점에 근접하고 있으며, 중동 지정학적 리스크와 상업용 부동산 위기가 잠재해 있습니다. 이러한 환경에서는 <strong>대형 성장주 중심의 보수적 포트폴리오</strong>와 함께, 급격한 변동성에 대비한 <strong>유동성 확보</strong>가 중요합니다.</p>
+                
+                <div class="info-box">
+                    <strong>장기 투자자 관점:</strong> 시장 판도가 변화하더라도 장기 투자 목적이라면 우량 대형주는 보유 유지. 단, 중소형주는 대형주로 리밸런싱 권고.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>본 자료는 2023년 10월 19일 방송 내용을 기반으로 작성되었습니다.</p>
+            <p>투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+        </div>
+    </div>
+    
+    <script>
+        // 10년물 국채 금리 차트
+        const bondCtx = document.getElementById('bondChart').getContext('2d');
+        new Chart(bondCtx, {
+            type: 'line',
+            data: {
+                labels: ['2021년 초', '2021년 말', '2022년 중', '2022년 말', '2023년 초', '2023년 중', '2023년 10월'],
+                datasets: [{
+                    label: '10년물 국채 금리 (%)',
+                    data: [1.0, 1.5, 3.0, 3.8, 3.5, 4.0, 4.9],
+                    borderColor: '#d32f2f',
+                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#d32f2f'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 5,
+                                yMax: 5,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                borderDash: [5, 5]
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0,
+                        max: 6,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+        
+        // 시나리오 확률 차트
+        const scenarioCtx = document.getElementById('scenarioChart').getContext('2d');
+        new Chart(scenarioCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['기본 (4,500-4,600)', '하락 (4,200↓)', '상승 (4,700↑)'],
+                datasets: [{
+                    data: [70, 10, 20],
+                    backgroundColor: ['#4caf50', '#f44336', '#2196f3'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 11 } }
+                    }
+                }
+            }
+        });
+        
+        // 섹터별 수익률 차트
+        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+        new Chart(sectorCtx, {
+            type: 'bar',
+            data: {
+                labels: ['IT/성장', '나스닥', '밸류', '유틸리티', '에너지', '인더스트리얼', '은행'],
+                datasets: [{
+                    label: '30일 수익률',
+                    data: [2.5, 0.9, 0.6, -3, -2, -1.5, -2.5],
+                    backgroundColor: ctx => {
+                        const value = ctx.raw;
+                        return value >= 0 ? '#4caf50' : '#f44336';
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+        
+        // 테슬라 주가 차트
+        const teslaCtx = document.getElementById('teslaChart').getContext('2d');
+        new Chart(teslaCtx, {
+            type: 'line',
+            data: {
+                labels: ['7월', '8월', '9월', '10월 19일'],
+                datasets: [{
+                    label: '테슬라 주가 ($)',
+                    data: [290, 260, 250, 218],
+                    borderColor: '#d32f2f',
+                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 200,
+                        max: 310,
+                        ticks: { callback: value => '$' + value }
+                    }
+                }
+            }
+        });
+        
+        // TSMC 성장률 차트
+        const tsmcCtx = document.getElementById('tsmcChart').getContext('2d');
+        new Chart(tsmcCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2022년', '2023년(E)', '2024년(E)'],
+                datasets: [{
+                    label: '연간 성장률',
+                    data: [40, 7, 23],
+                    backgroundColor: ['#4caf50', '#ff9800', '#2196f3']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
