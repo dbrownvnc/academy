@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>역투자 이론(Contrarian Theory) - 미국 증시 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 15px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            padding: 25px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            font-size: 1.5em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 0.9em;
+            color: #a8d8ea;
+        }
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .meta-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #f8b500;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f8b500;
+        }
+        .section h2 {
+            color: #f8b500;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            color: #a8d8ea;
+            font-size: 1em;
+            margin: 15px 0 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid #a8d8ea;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(248,181,0,0.2) 0%, rgba(248,181,0,0.05) 100%);
+            border: 1px solid rgba(248,181,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .highlight-box.blue {
+            background: linear-gradient(135deg, rgba(168,216,234,0.2) 0%, rgba(168,216,234,0.05) 100%);
+            border-color: rgba(168,216,234,0.3);
+        }
+        .highlight-box.green {
+            background: linear-gradient(135deg, rgba(76,175,80,0.2) 0%, rgba(76,175,80,0.05) 100%);
+            border-color: rgba(76,175,80,0.3);
+        }
+        .highlight-box.red {
+            background: linear-gradient(135deg, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0.05) 100%);
+            border-color: rgba(244,67,54,0.3);
+        }
+        .quote-box {
+            background: rgba(83,52,131,0.3);
+            border-left: 4px solid #9b59b6;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+        }
+        .quote-author {
+            text-align: right;
+            color: #a8d8ea;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .chart-container {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .chart-title {
+            color: #fff;
+            font-size: 0.95em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.85em;
+        }
+        th {
+            background: rgba(248,181,0,0.2);
+            color: #f8b500;
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 2px solid #f8b500;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .formula-box {
+            background: #0a0a15;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .formula-box .title {
+            color: #f8b500;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        .formula {
+            color: #4fc3f7;
+            font-size: 0.9em;
+            line-height: 2;
+        }
+        .key-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .key-point .icon {
+            font-size: 1.2em;
+            min-width: 25px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .comparison-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .comparison-item.positive {
+            border: 1px solid rgba(76,175,80,0.5);
+        }
+        .comparison-item.negative {
+            border: 1px solid rgba(244,67,54,0.5);
+        }
+        .comparison-item .label {
+            font-size: 0.8em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .comparison-item .value {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .positive .value { color: #4caf50; }
+        .negative .value { color: #f44336; }
+        .flow-diagram {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px 10px;
+            margin: 15px 0;
+        }
+        .flow-step {
+            background: linear-gradient(135deg, #0f3460, #1a1a4e);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            text-align: center;
+            position: relative;
+        }
+        .flow-arrow {
+            text-align: center;
+            color: #f8b500;
+            font-size: 1.2em;
+        }
+        .warning-box {
+            background: rgba(255,152,0,0.15);
+            border: 1px solid rgba(255,152,0,0.4);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        .warning-box::before {
+            content: "⚠️ ";
+        }
+        .conclusion {
+            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+            border: 1px solid rgba(76,175,80,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .conclusion h2 {
+            color: #4caf50;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            margin: 2px;
+        }
+        .tag-sector { background: #1565c0; color: #fff; }
+        .tag-strategy { background: #7b1fa2; color: #fff; }
+        .tag-indicator { background: #00695c; color: #fff; }
+        strong { color: #f8b500; }
+        em { color: #a8d8ea; }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 역투자 이론 (Contrarian Theory)</h1>
+            <p class="subtitle">투자 아카데미 10회 - 미국 증시 관점 분석</p>
+            <div class="meta-info">
+                <span class="meta-tag">📅 2026.01.22</span>
+                <span class="meta-tag">🎯 투자 전략</span>
+                <span class="meta-tag">💡 가치투자</span>
+            </div>
+        </div>
+
+        <!-- 1. 역투자 이론 개요 -->
+        <div class="section">
+            <h2>🔄 1. 역투자 이론(Contrarian Theory)이란?</h2>
+            
+            <p>역투자 이론은 <strong>대중의 투자 심리와 반대 방향으로 투자하는 전략</strong>입니다. 시장 참여자 대다수가 매수할 때 매도하고, 대다수가 매도할 때 매수하는 방식으로 수익을 추구합니다.</p>
+            
+            <div class="quote-box">
+                "When market is greedy, be fearful. When market is fearful, be greedy."
+                <div class="quote-author">- 워런 버핏 (Warren Buffett)</div>
+            </div>
+
+            <h3>핵심 개념</h3>
+            <div class="key-point">
+                <span class="icon">📊</span>
+                <div><strong>군집 심리(Herd Mentality) 역이용</strong>: 대중이 한 방향으로 쏠릴 때 반대 포지션을 취함</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">💰</span>
+                <div><strong>현금 동원력 한계 이론</strong>: 상승장에서 대부분 투자자가 매수 완료 시 추가 매수 여력 소진 → 하락 전환 예상</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">⏰</span>
+                <div><strong>타이밍 전략</strong>: 급등 시 매도하여 현금 확보, 급락 시 대량 매입 준비</div>
+            </div>
+        </div>
+
+        <!-- 2. 미국 증시 매매 비율 -->
+        <div class="section">
+            <h2>📉 2. 미국 증시의 매매 구조</h2>
+            
+            <p>미국 주식시장은 <strong>연준 정책</strong> 등 외부 요인에 의한 급등·급락장을 제외하면, 일반적으로 <em>70:30</em> 또는 <em>60:40</em> 비율로 매매가 이루어집니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">일반 시장 vs 비트코인 매매 비율 비교</div>
+                <canvas id="ratioChart" height="250"></canvas>
+            </div>
+
+            <div class="highlight-box">
+                <strong>💡 핵심 인사이트</strong><br>
+                비트코인은 상승장에서 90% 매수, 하락장에서 90% 매도로 극단적인 쏠림 현상을 보이지만, <strong>미국 주식시장은 폭락장에서도 10% 이상의 매수세력(역투자자)</strong>이 항상 존재합니다.
+            </div>
+
+            <h3>역투자자의 역할</h3>
+            <table>
+                <tr>
+                    <th>시장 상황</th>
+                    <th>일반 투자자</th>
+                    <th>역투자자</th>
+                </tr>
+                <tr>
+                    <td>급등장</td>
+                    <td>추가 매수 (FOMO)</td>
+                    <td>차익 실현 매도</td>
+                </tr>
+                <tr>
+                    <td>급락장</td>
+                    <td>공포 매도</td>
+                    <td>저가 대량 매수</td>
+                </tr>
+                <tr>
+                    <td>횡보장</td>
+                    <td>관망</td>
+                    <td>포지션 구축</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 3. 워런 버핏과 역투자 -->
+        <div class="section">
+            <h2>🏆 3. 워런 버핏의 역투자 전략</h2>
+            
+            <p>워런 버핏은 역투자 이론의 대표적 실천자로, 단순히 반대로 투자하는 것이 아닌 <strong>펀더멘탈(Fundamental)에 기반한 역투자</strong>를 실행합니다.</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-item positive">
+                    <div class="label">버핏 방식</div>
+                    <div class="value">좋은 기업을 쌀 때 매수</div>
+                </div>
+                <div class="comparison-item negative">
+                    <div class="label">캐시 우드 방식</div>
+                    <div class="value">미래 가치에 과다 베팅</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>ARK Invest 사례</strong>: 자산 규모가 1/10로 축소 중. 2-3년간 투자자들이 80-90% 손실을 겪으며 이탈 중. 취약한 기업에 집중 투자하며 역투자와 무모한 투자를 혼동한 사례.
+            </div>
+
+            <h3>성공적인 역투자의 조건</h3>
+            <div class="key-point">
+                <span class="icon">✅</span>
+                <div><strong>펀더멘탈 중심</strong>: 많이 팔고, 많이 남기고, 더 많이 남기는 회사 선별</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">✅</span>
+                <div><strong>저평가 확인</strong>: RSI 30 이하 = 언더밸류(Undervalued) 신호</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">✅</span>
+                <div><strong>현금 보유</strong>: 최소 10% ~ 최대 30% 현금 유지로 기회 대비</div>
+            </div>
+        </div>
+
+        <!-- 4. 내재가치 분석 -->
+        <div class="section">
+            <h2>💎 4. 내재가치(Intrinsic Value) 분석</h2>
+            
+            <p>역투자에서 가장 중요한 것은 <strong>"지금 이 주식이 싼지 비싼지"를 객관적으로 판단</strong>하는 것입니다. 이를 위해 내재가치 분석이 필수입니다.</p>
+
+            <h3>대차대조표(Balance Sheet) 구조</h3>
+            <div class="chart-container">
+                <div class="chart-title">Balance Sheet 기본 구조</div>
+                <canvas id="balanceChart" height="200"></canvas>
+            </div>
+
+            <div class="formula-box">
+                <div class="title">📐 기본 회계 등식</div>
+                <div class="formula">
+                    Assets = Liabilities + Stockholders' Equity<br>
+                    (자산 = 부채 + 자기자본)
+                </div>
+            </div>
+
+            <h3>자산(Assets) 구성</h3>
+            <table>
+                <tr>
+                    <th>유동자산 (Current Assets)</th>
+                    <th>비유동자산 (Long-term Assets)</th>
+                </tr>
+                <tr>
+                    <td>
+                        • Cash (현금)<br>
+                        • Accounts Receivable (매출채권)<br>
+                        • Inventory (재고자산)<br>
+                        • Prepaid Expenses (선급비용)
+                    </td>
+                    <td>
+                        • Property (부동산)<br>
+                        • Plant & Equipment (공장/설비)<br>
+                        • Intangible Assets (무형자산)
+                    </td>
+                </tr>
+            </table>
+
+            <div class="highlight-box blue">
+                <strong>🔑 핵심 체크포인트</strong><br>
+                자산(Assets) 규모의 변화를 감지하는 것이 중요합니다. 자산이 늘고 있는지, 줄고 있는지를 분기별로 확인해야 합니다.
+            </div>
+        </div>
+
+        <!-- 5. 내재가치 측정 지표 -->
+        <div class="section">
+            <h2>📊 5. 내재가치 측정의 두 가지 핵심 지표</h2>
+
+            <div class="flow-diagram">
+                <div class="flow-step" style="border-color: #f8b500;">
+                    <strong style="color: #f8b500;">📈 Market Price (현재 주가)</strong><br>
+                    <span style="font-size: 0.85em;">이 가격이 적정한가?</span>
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flow-step">
+                    <strong>내재가치(Intrinsic Value)로 판단</strong>
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="flow-step" style="border-color: #4caf50;">
+                        <strong style="color: #4caf50;">1️⃣ Net Assets</strong><br>
+                        <span style="font-size: 0.8em;">순자산 가치</span>
+                    </div>
+                    <div class="flow-step" style="border-color: #2196f3;">
+                        <strong style="color: #2196f3;">2️⃣ Free Cash Flow</strong><br>
+                        <span style="font-size: 0.8em;">잉여현금흐름</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>1️⃣ Net Assets (순자산)</h3>
+            <div class="formula-box">
+                <div class="title">순자산 계산</div>
+                <div class="formula">
+                    Net Assets = Total Assets - Total Liabilities
+                </div>
+            </div>
+            <p>기업이 보유한 실질적인 자산 가치를 나타내며, 청산 시 주주에게 돌아갈 수 있는 가치의 기준이 됩니다.</p>
+
+            <h3>2️⃣ Free Cash Flow (잉여현금흐름)</h3>
+            <div class="formula-box">
+                <div class="title">FCF 계산</div>
+                <div class="formula">
+                    FCF = Operating Cash Flow - Capital Expenditures<br>
+                    (잉여현금흐름 = 영업현금흐름 - 자본지출)
+                </div>
+            </div>
+
+            <div class="highlight-box green">
+                <strong>💰 FCF가 중요한 이유</strong><br>
+                • 동맥경화 비유: 현금흐름이 막히면 기업은 망함<br>
+                • 예시: 수입 300만원, 지출 400만원 = 곧 파산<br>
+                • <strong>FCF가 (+)이고 증가 추세 = 건강한 기업</strong>
+            </div>
+        </div>
+
+        <!-- 6. DCF 분석 -->
+        <div class="section">
+            <h2>🧮 6. DCF(Discounted Cash Flow) 분석법</h2>
+            
+            <p>내재가치 측정에서 가장 널리 사용되는 방법이 <strong>DCF 분석</strong>입니다. 미래의 현금흐름을 현재가치로 환산하여 적정 주가를 산출합니다.</p>
+
+            <h3>DCF 분석 프로세스</h3>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <strong>Step 1: 과거 3년 실적 분석</strong><br>
+                    Revenue, EBITDA, FCF 추이 확인
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flow-step">
+                    <strong>Step 2: 향후 5년 실적 예측</strong><br>
+                    성장률 기반 미래 FCF 추정
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flow-step">
+                    <strong>Step 3: 할인율(WACC) 적용</strong><br>
+                    미래 가치를 현재 가치로 환산
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flow-step">
+                    <strong>Step 4: 적정 주가 산출</strong><br>
+                    Enterprise Value ÷ 발행주식수
+                </div>
+            </div>
+
+            <h3>EBITDA 이해하기</h3>
+            <div class="formula-box">
+                <div class="title">EBITDA 정의</div>
+                <div class="formula">
+                    EBITDA = Earnings Before Interest, Taxes,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Depreciation, and Amortization<br><br>
+                    (이자, 세금, 감가상각비 차감 전 영업이익)
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>구분</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><strong>Depreciation</strong></td>
+                    <td>유형자산(기계, 건물, 비행기 등) 감가상각</td>
+                </tr>
+                <tr>
+                    <td><strong>Amortization</strong></td>
+                    <td>무형자산(특허, 영업권 등) 상각</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 7. WACC 설명 -->
+        <div class="section">
+            <h2>⚖️ 7. WACC (가중평균자본비용)</h2>
+            
+            <p><strong>WACC(Weighted Average Cost of Capital)</strong>는 기업이 자금을 조달하는 데 드는 평균 비용으로, DCF에서 할인율로 사용됩니다.</p>
+
+            <div class="formula-box">
+                <div class="title">WACC 구성요소</div>
+                <div class="formula">
+                    WACC = (E/V × Re) + (D/V × Rd × (1-T))<br><br>
+                    E = 자기자본, D = 타인자본(부채)<br>
+                    Re = 자기자본비용, Rd = 타인자본비용<br>
+                    T = 법인세율, V = 총 자본(E+D)
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">WACC 구성 비율 예시 (라이라 사례: 13.63%)</div>
+                <canvas id="waccChart" height="200"></canvas>
+            </div>
+
+            <div class="highlight-box">
+                <strong>📌 신용도와 WACC의 관계</strong><br>
+                • 신용도 높음 → 채권 금리 낮음 (예: 5%) → WACC 낮음<br>
+                • 신용도 낮음 → 채권 금리 높음 (예: 8%) → WACC 높음<br>
+                • <strong>WACC가 낮을수록 기업가치 산정에 유리</strong>
+            </div>
+        </div>
+
+        <!-- 8. DCF 실제 사례 -->
+        <div class="section">
+            <h2>📋 8. DCF 분석 실제 사례 (라이라, 2019)</h2>
+            
+            <table>
+                <tr>
+                    <th>항목</th>
+                    <th>수치</th>
+                </tr>
+                <tr>
+                    <td>분석 기준일</td>
+                    <td>2019년 3월 7일</td>
+                </tr>
+                <tr>
+                    <td>당시 주가</td>
+                    <td>$11.4</td>
+                </tr>
+                <tr>
+                    <td>분석 기간</td>
+                    <td>과거 3년(2016-2018) + 미래 5년 예측</td>
+                </tr>
+                <tr>
+                    <td>EBITDA 마진율</td>
+                    <td>약 36%</td>
+                </tr>
+                <tr>
+                    <td>WACC</td>
+                    <td>13.63%</td>
+                </tr>
+                <tr>
+                    <td>장기성장률(Terminal Growth)</td>
+                    <td>4%</td>
+                </tr>
+                <tr>
+                    <td style="color: #4caf50; font-weight: bold;">DCF 산출 적정가</td>
+                    <td style="color: #4caf50; font-weight: bold;">약 $10</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box green">
+                <strong>🎯 투자 판단</strong><br>
+                DCF 분석 결과 적정 주가가 $10이므로, 주가가 <strong>$10 아래로 하락하면 매수 적기</strong>로 판단. 이것이 역투자 이론을 객관적 수치로 실행하는 방법입니다.
+            </div>
+        </div>
+
+        <!-- 9. 미국 증시 특징 -->
+        <div class="section">
+            <h2>🇺🇸 9. 역투자 관점에서 본 미국 증시 특징</h2>
+            
+            <div class="chart-container">
+                <div class="chart-title">미국 증시 폭락 후 회복 기간</div>
+                <canvas id="recoveryChart" height="220"></canvas>
+            </div>
+
+            <h3>핵심 특징</h3>
+            <div class="key-point">
+                <span class="icon">📈</span>
+                <div><strong>장기 우상향</strong>: 30% 이상 폭락장에서도 3개월~3년 내 회복</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">🔄</span>
+                <div><strong>섹터 로테이션</strong>: Buy & Hold보다 섹터 로테이션 + 리밸런싱이 대체로 좋은 성과</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">💧</span>
+                <div><strong>유동성 중시</strong>: 기업의 유동성 문제를 가장 크게 다뤄야 함</div>
+            </div>
+
+            <div class="warning-box">
+                <strong>분기 실적 발표 전 주의</strong><br>
+                현재 분기에 유동성 문제가 없더라도, 다음 분기 발표 전에 망하는 회사가 있음. <strong>분기 실적 발표 시 반드시 잉여현금흐름(FCF) 확인 필수!</strong>
+            </div>
+        </div>
+
+        <!-- 10. 미국 시장의 신뢰성 -->
+        <div class="section">
+            <h2>🏛️ 10. DCF 분석이 가능한 이유: 시장 투명성</h2>
+            
+            <p>DCF 분석은 <strong>기업 재무제표의 신뢰성</strong>이 전제되어야 합니다. 미국 시장이 이 분석이 유효한 이유는 강력한 규제와 투명한 회계 시스템 때문입니다.</p>
+
+            <h3>미국 시장 시스템의 특징</h3>
+            <table>
+                <tr>
+                    <th>요소</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><strong>Due Diligence</strong></td>
+                    <td>기업의 재무 건전성을 의미<br>숫자를 속이지 않는 문화</td>
+                </tr>
+                <tr>
+                    <td><strong>Transparency</strong></td>
+                    <td>모든 시스템이 유리처럼 깨끗<br>중간에 장난치는 요소 최소화</td>
+                </tr>
+                <tr>
+                    <td><strong>투자자 보호</strong></td>
+                    <td>대주주뿐 아니라 일반 투자자 중시</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box red">
+                <strong>⚠️ 예외 사례: 엔론(Enron)</strong><br>
+                장부 조작 사례가 존재하지만, 대부분의 대형주(Blue Chip)는 정상적인 재무보고를 함. 썩은 사과가 시장에서 5% 미만일 때 시스템이 작동하며, 미국은 약 1% 수준으로 관리됨.
+            </div>
+        </div>
+
+        <!-- 투자 시사점 -->
+        <div class="conclusion">
+            <h2>🎯 투자 시사점 및 실전 적용</h2>
+            
+            <h3>역투자 전략 체크리스트</h3>
+            <div class="key-point">
+                <span class="icon">1️⃣</span>
+                <div><strong>현금 보유 유지</strong>: 포트폴리오의 10~30%는 현금으로 보유하여 기회 대비</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">2️⃣</span>
+                <div><strong>RSI 모니터링</strong>: RSI 30 이하 종목 중 펀더멘탈 양호한 기업 관심 목록 구축</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">3️⃣</span>
+                <div><strong>FCF 확인</strong>: 매 분기 실적 발표 시 잉여현금흐름 추이 점검</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">4️⃣</span>
+                <div><strong>펀더멘탈 우선</strong>: 단순 역방향이 아닌, 좋은 기업이 싸질 때 매수</div>
+            </div>
+            <div class="key-point">
+                <span class="icon">5️⃣</span>
+                <div><strong>장기 관점 유지</strong>: 미국 증시는 장기적으로 우상향, 위기는 기회</div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 20px;">
+                <strong>📌 핵심 메시지</strong><br>
+                역투자는 단순히 남들과 반대로 하는 것이 아닙니다. <strong>펀더멘탈에 기반하여 좋은 기업을 저렴한 가격에 매수</strong>하는 것이 진정한 역투자이며, 이를 위해 내재가치 분석(DCF)이 필수적입니다.
+            </div>
+
+            <div style="margin-top: 20px;">
+                <span class="tag tag-strategy">역투자 전략</span>
+                <span class="tag tag-indicator">DCF 분석</span>
+                <span class="tag tag-indicator">Free Cash Flow</span>
+                <span class="tag tag-indicator">WACC</span>
+                <span class="tag tag-sector">가치투자</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>본 자료는 투자 아카데미 10회 내용을 미국 증시 관점에서 분석한 교육 자료입니다.</p>
+            <p>투자 결정은 개인의 판단과 책임 하에 이루어져야 합니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 매매 비율 차트
+        new Chart(document.getElementById('ratioChart'), {
+            type: 'bar',
+            data: {
+                labels: ['일반 주식시장\n(상승장)', '일반 주식시장\n(하락장)', '비트코인\n(상승장)', '비트코인\n(하락장)'],
+                datasets: [{
+                    label: '매수 비율',
+                    data: [70, 30, 90, 10],
+                    backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                    borderColor: '#4caf50',
+                    borderWidth: 1
+                }, {
+                    label: '매도 비율',
+                    data: [30, 70, 10, 90],
+                    backgroundColor: 'rgba(244, 67, 54, 0.7)',
+                    borderColor: '#f44336',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8e8e8' }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: '#a8a8a8' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        stacked: true,
+                        max: 100,
+                        ticks: { 
+                            color: '#a8a8a8',
+                            callback: function(value) { return value + '%'; }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Balance Sheet 차트
+        new Chart(document.getElementById('balanceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Assets (자산)', 'Liabilities (부채)', 'Equity (자기자본)'],
+                datasets: [{
+                    data: [100, 60, 40],
+                    backgroundColor: [
+                        'rgba(76, 175, 80, 0.7)',
+                        'rgba(244, 67, 54, 0.7)',
+                        'rgba(33, 150, 243, 0.7)'
+                    ],
+                    borderColor: ['#4caf50', '#f44336', '#2196f3'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#e8e8e8', padding: 15 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (context.label === 'Assets (자산)') {
+                                    return 'Assets = Liabilities + Equity';
+                                }
+                                return context.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // WACC 차트
+        new Chart(document.getElementById('waccChart'), {
+            type: 'pie',
+            data: {
+                labels: ['자기자본비용 (Equity)', '타인자본비용 (Debt)'],
+                datasets: [{
+                    data: [88, 12],
+                    backgroundColor: [
+                        'rgba(33, 150, 243, 0.7)',
+                        'rgba(255, 152, 0, 0.7)'
+                    ],
+                    borderColor: ['#2196f3', '#ff9800'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#e8e8e8' }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Equity 88% / Debt 12% → WACC 13.63%',
+                        color: '#a8d8ea'
+                    }
+                }
+            }
+        });
+
+        // 회복 기간 차트
+        new Chart(document.getElementById('recoveryChart'), {
+            type: 'line',
+            data: {
+                labels: ['폭락', '3개월', '6개월', '1년', '2년', '3년'],
+                datasets: [{
+                    label: '지수 회복률 (%)',
+                    data: [70, 80, 88, 95, 100, 110],
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '폭락 전 기준선 (100%)',
+                    data: [100, 100, 100, 100, 100, 100],
+                    borderColor: '#f8b500',
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8e8e8' }
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 100,
+                                yMax: 100,
+                                borderColor: '#f8b500',
+                                borderDash: [5, 5]
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#a8a8a8' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        min: 60,
+                        max: 120,
+                        ticks: { 
+                            color: '#a8a8a8',
+                            callback: function(value) { return value + '%'; }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

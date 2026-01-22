@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>역투자 이론(Contrarian Theory) - 시험문제</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 15px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            padding: 25px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            font-size: 1.4em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 0.9em;
+            color: #a8d8ea;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            background: linear-gradient(135deg, #f8b500 0%, #ff9800 100%);
+            color: #1a1a2e;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .question {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #f8b500;
+            font-size: 1em;
+        }
+        .difficulty {
+            font-size: 0.8em;
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+        .difficulty.easy {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+        }
+        .difficulty.medium {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+        }
+        .difficulty.hard {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+        .question-type {
+            font-size: 0.75em;
+            background: rgba(33, 150, 243, 0.3);
+            color: #64b5f6;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        .question-text {
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        .options {
+            display: grid;
+            gap: 8px;
+        }
+        .option {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid #f8b500;
+            margin: 0 5px;
+        }
+        .ox-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .ox-option {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #533483, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+        /* 정답 섹션 스타일 */
+        .answer-section {
+            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        .answer-section .section-title {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        }
+        .answer {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .answer-number {
+            font-weight: bold;
+            color: #f8b500;
+        }
+        .correct-answer {
+            background: rgba(76, 175, 80, 0.3);
+            color: #81c784;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .explanation {
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.88em;
+            line-height: 1.7;
+            color: #b8b8b8;
+        }
+        .explanation strong {
+            color: #a8d8ea;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 30px;
+        }
+        .print-note {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px dashed rgba(33, 150, 243, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            color: #64b5f6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 역투자 이론 시험문제</h1>
+            <p class="subtitle">투자 아카데미 10회 - Contrarian Theory</p>
+        </div>
+
+        <div class="print-note">
+            💡 문제지와 정답지가 분리되어 있습니다. 인쇄 시 정답 확인 전 문제 풀이를 권장합니다.
+        </div>
+
+        <!-- 문제지 섹션 -->
+        <div class="section">
+            <div class="section-title">━━━ 📋 시험문제 (총 10문제) ━━━</div>
+
+            <!-- 문제 1 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 1]</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    역투자 이론(Contrarian Theory)의 핵심 원칙을 가장 잘 설명한 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 시장이 상승할 때 더 많이 매수하여 수익을 극대화한다</div>
+                    <div class="option">② 대중의 투자 심리와 반대 방향으로 투자하는 전략이다</div>
+                    <div class="option">③ 모든 종목에 동일한 금액을 분산 투자한다</div>
+                    <div class="option">④ 기술적 분석만을 기반으로 단기 트레이딩한다</div>
+                </div>
+            </div>
+
+            <!-- 문제 2 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 2]</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">OX문제</span>
+                </div>
+                <div class="question-text">
+                    워런 버핏은 "시장이 탐욕스러울 때 두려워하고, 시장이 두려워할 때 탐욕스러워라(When market is greedy, be fearful. When market is fearful, be greedy)"라는 명언으로 역투자 이론의 대표적인 실천자로 알려져 있다.
+                </div>
+                <div class="ox-options">
+                    <span class="ox-option">⭕ O</span>
+                    <span class="ox-option">❌ X</span>
+                </div>
+            </div>
+
+            <!-- 문제 3 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 3]</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">빈칸채우기</span>
+                </div>
+                <div class="question-text">
+                    미국 주식시장에서 일반적인 매매 비율은 상승장이나 하락장에서 약 <span class="blank"></span> : <span class="blank"></span> 또는 60:40 비율로 이루어지며, 이는 항상 <span class="blank"></span> 투자자들이 존재하기 때문이다.
+                </div>
+            </div>
+
+            <!-- 문제 4 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 4]</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    대차대조표(Balance Sheet)의 기본 회계 등식으로 올바른 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① Assets = Revenue - Expenses</div>
+                    <div class="option">② Assets = Liabilities + Stockholders' Equity</div>
+                    <div class="option">③ Net Income = Assets - Liabilities</div>
+                    <div class="option">④ Cash Flow = Assets × Interest Rate</div>
+                </div>
+            </div>
+
+            <!-- 문제 5 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 5]</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">단답형</span>
+                </div>
+                <div class="question-text">
+                    기업의 내재가치(Intrinsic Value)를 측정하는 두 가지 핵심 지표는 무엇인가?<br>
+                    (영어 또는 한글로 작성)
+                </div>
+            </div>
+
+            <!-- 문제 6 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 6]</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    EBITDA에서 'DA'가 의미하는 것으로 올바른 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① Debt and Assets (부채와 자산)</div>
+                    <div class="option">② Depreciation and Amortization (감가상각과 무형자산상각)</div>
+                    <div class="option">③ Dividends and Acquisitions (배당과 인수)</div>
+                    <div class="option">④ Discount and Appreciation (할인과 평가)</div>
+                </div>
+            </div>
+
+            <!-- 문제 7 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 7]</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">OX문제</span>
+                </div>
+                <div class="question-text">
+                    RSI(상대강도지수) 지표에서 30 이하의 값은 해당 주식이 과매수(Overbought) 상태임을 나타낸다.
+                </div>
+                <div class="ox-options">
+                    <span class="ox-option">⭕ O</span>
+                    <span class="ox-option">❌ X</span>
+                </div>
+            </div>
+
+            <!-- 문제 8 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 8]</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    DCF(Discounted Cash Flow) 분석에서 미래 현금흐름을 현재가치로 환산할 때 사용하는 할인율은 무엇인가?
+                </div>
+                <div class="options">
+                    <div class="option">① ROE (Return on Equity)</div>
+                    <div class="option">② PER (Price Earnings Ratio)</div>
+                    <div class="option">③ WACC (Weighted Average Cost of Capital)</div>
+                    <div class="option">④ EPS (Earnings Per Share)</div>
+                </div>
+            </div>
+
+            <!-- 문제 9 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 9]</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">서술형</span>
+                </div>
+                <div class="question-text">
+                    역투자 이론에서 "상승장에서 대부분의 투자자가 매입하면 주가가 곧 하락할 것으로 예상한다"고 합니다. 이 논리의 근거를 '현금 동원력(Cash Mobilization)'의 관점에서 설명하시오.
+                </div>
+            </div>
+
+            <!-- 문제 10 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 10]</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    역투자 관점에서 본 미국 증시의 특징으로 <strong>틀린</strong> 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 30% 이상 폭락장에서도 3개월~3년 내 회복되는 경향이 있다</div>
+                    <div class="option">② 장기적으로 우상향하는 특성을 보인다</div>
+                    <div class="option">③ 분기 실적 발표 시 잉여현금흐름(FCF) 확인이 중요하다</div>
+                    <div class="option">④ 폭락장에서는 100%의 투자자가 매도하므로 매수 기회가 없다</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 구분선 -->
+        <div class="divider"></div>
+
+        <!-- 정답지 섹션 -->
+        <div class="section answer-section">
+            <div class="section-title">━━━ 📝 정답 및 해설 ━━━</div>
+
+            <!-- 정답 1 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 1]</span>
+                    <span class="correct-answer">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 역투자 이론(Contrarian Theory)은 대중의 투자 심리와 반대 방향으로 투자하는 전략입니다. 시장 참여자 대다수가 매수할 때 매도하고, 대다수가 매도할 때 매수하는 방식으로 '청개구리 투자'라고도 불립니다.
+                </div>
+            </div>
+
+            <!-- 정답 2 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 2]</span>
+                    <span class="correct-answer">정답: O</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 워런 버핏은 해당 명언으로 유명하며, 역투자 이론의 대표적인 선봉장으로 인정받습니다. 단, 버핏의 역투자는 단순한 반대 투자가 아니라 <strong>펀더멘탈에 기반하여 좋은 기업을 싸게 사는 전략</strong>입니다.
+                </div>
+            </div>
+
+            <!-- 정답 3 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 3]</span>
+                    <span class="correct-answer">정답: 70, 30, 역(Contrarian)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 미국 주식시장은 70:30 또는 60:40 비율로 매매가 이루어집니다. 이는 폭락장에서도 약 10~30%의 역투자자들이 매수에 나서기 때문입니다. 비트코인처럼 90:10의 극단적 쏠림이 나타나지 않는 것이 특징입니다.
+                </div>
+            </div>
+
+            <!-- 정답 4 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 4]</span>
+                    <span class="correct-answer">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 대차대조표(Balance Sheet)의 기본 회계 등식은 <strong>Assets = Liabilities + Stockholders' Equity</strong> (자산 = 부채 + 자기자본)입니다. 이는 기업 재무 분석의 가장 기초가 되는 공식입니다.
+                </div>
+            </div>
+
+            <!-- 정답 5 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 5]</span>
+                    <span class="correct-answer">정답: Net Assets(순자산), Free Cash Flow(잉여현금흐름)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 내재가치를 측정하는 두 가지 핵심 지표는 <strong>① Net Assets(순자산)</strong>과 <strong>② Free Cash Flow(잉여현금흐름, FCF)</strong>입니다. 특히 FCF는 기업의 유동성과 건강상태를 나타내는 가장 중요한 지표로, "동맥경화가 없는지" 확인하는 것과 같습니다.
+                </div>
+            </div>
+
+            <!-- 정답 6 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 6]</span>
+                    <span class="correct-answer">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> EBITDA = Earnings Before Interest, Taxes, <strong>Depreciation</strong>, and <strong>Amortization</strong>. Depreciation은 유형자산(기계, 건물, 비행기 등)의 감가상각을, Amortization은 무형자산(특허, 영업권 등)의 상각을 의미합니다.
+                </div>
+            </div>
+
+            <!-- 정답 7 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 7]</span>
+                    <span class="correct-answer">정답: X</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> RSI 30 이하는 <strong>과매도(Oversold) 상태</strong>, 즉 <strong>언더밸류(Undervalued)</strong> 상태를 나타냅니다. 이는 주가가 실적 대비 과도하게 하락한 상태로, 역투자자들에게 매수 신호가 될 수 있습니다. 반대로 RSI 70 이상이 과매수(Overbought) 상태입니다.
+                </div>
+            </div>
+
+            <!-- 정답 8 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 8]</span>
+                    <span class="correct-answer">정답: ③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> DCF 분석에서는 <strong>WACC(Weighted Average Cost of Capital, 가중평균자본비용)</strong>를 할인율로 사용합니다. WACC는 기업이 자금을 조달하는 데 드는 평균 비용으로, 자기자본비용과 타인자본비용의 가중평균입니다. 신용도가 높을수록 WACC가 낮아져 기업가치 산정에 유리합니다.
+                </div>
+            </div>
+
+            <!-- 정답 9 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 9]</span>
+                    <span class="correct-answer">정답: 모범답안</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    상승장에서 대부분의 투자자가 매입을 완료하면, 이들의 <strong>현금 동원력(Cash Mobilization)이 한계점에 도달</strong>하게 됩니다. 
+                    <br><br>
+                    투자자들은 보유 현금을 대부분 주식 매입에 사용한 상태이므로, 추가 매입 여력이 소진됩니다. 더 이상 매수세가 유입되지 않으면 주가 상승을 지지할 동력이 사라지고, 결국 주가는 하락 전환할 것으로 예상할 수 있습니다.
+                    <br><br>
+                    이 논리에 따라 역투자자들은 급등장에서 매도하여 현금 보유량을 늘리고, 하락장 때 대량 매입을 준비하는 전략을 취합니다.
+                </div>
+            </div>
+
+            <!-- 정답 10 -->
+            <div class="answer">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 10]</span>
+                    <span class="correct-answer">정답: ④</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 미국 주식시장은 폭락장에서도 <strong>약 10% 이상의 매수세력(역투자자)이 존재</strong>합니다. 100% 매도가 일어나는 것은 비트코인과 같은 극단적 쏠림 현상이며, 일반 주식시장에서는 70:30 또는 60:40 비율이 유지됩니다. 이것이 폭락장에서도 역투자 기회가 존재하는 이유입니다.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>본 시험문제는 투자 아카데미 10회 '역투자 이론' 강의 내용을 기반으로 작성되었습니다.</p>
+            <p>교육 목적으로만 사용하시기 바랍니다.</p>
+        </div>
+    </div>
+</body>
+</html>
