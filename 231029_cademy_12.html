@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 12회: ETF, Mutual Fund, Annuity 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #ed8936;
+            --warning: #c53030;
+            --success: #276749;
+            --bg-light: #f7fafc;
+            --bg-card: #ffffff;
+            --text-dark: #1a202c;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+            color: var(--text-dark);
+            line-height: 1.8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(26, 54, 93, 0.3);
+        }
+        
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .meta-info {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title .icon {
+            font-size: 1.4rem;
+        }
+        
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin: 20px 0 12px 0;
+        }
+        
+        p {
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border-left: 4px solid var(--secondary);
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fffaf0 100%);
+            border-left: 4px solid var(--warning);
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        
+        .warning-box strong {
+            color: var(--warning);
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+            border-left: 4px solid var(--success);
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        
+        .key-term {
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.88rem;
+        }
+        
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        .comparison-table .label {
+            font-weight: 600;
+            color: var(--secondary);
+            width: 30%;
+        }
+        
+        .chart-container {
+            position: relative;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+        
+        .chart-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        ul {
+            margin: 12px 0 12px 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 12px 0;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .mini-card {
+            background: var(--bg-light);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .mini-card .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .mini-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .flow-diagram {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .flow-number {
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        
+        .flow-arrow {
+            width: 30px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        .flow-content {
+            flex: 1;
+            padding: 10px 14px;
+            background: white;
+            border-radius: 8px;
+            margin-left: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .pros, .cons {
+            padding: 16px;
+            border-radius: 10px;
+        }
+        
+        .pros {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .cons {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+        }
+        
+        .pros h4, .cons h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        
+        .pros h4 {
+            color: var(--success);
+        }
+        
+        .cons h4 {
+            color: var(--warning);
+        }
+        
+        .pros li, .cons li {
+            font-size: 0.88rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .important-note strong {
+            color: #b45309;
+        }
+        
+        .checklist {
+            background: var(--bg-light);
+            padding: 16px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .checklist-item::before {
+            content: "☐";
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 400px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .section {
+                padding: 20px 16px;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 투자아카데미 12회: ETF, Mutual Fund, Annuity의 정의</h1>
+            <div class="meta-info">
+                <span>📅 2026년 1월 22일</span>
+                <span>📺 투자아카데미</span>
+            </div>
+        </header>
+
+        <!-- 핵심 요약 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📌</span> 핵심 요약</h2>
+            
+            <div class="highlight-box">
+                <p><strong>이번 강의 핵심:</strong> 미국 금융상품(ETF, Mutual Fund, Annuity)의 구조적 차이와 투자자 보호를 위해 반드시 알아야 할 사항을 다룹니다. 특히 <span class="key-term">Variable Annuity</span>의 숨겨진 비용과 판매 관행의 문제점을 상세히 설명합니다.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="mini-card">
+                    <div class="value">7%</div>
+                    <div class="desc">Annuity 판매 시<br>커미션 비율</div>
+                </div>
+                <div class="mini-card">
+                    <div class="value">3일</div>
+                    <div class="desc">Mutual Fund<br>Settlement 기간</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ETF 섹션 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📈</span> ETF (Exchange Traded Fund)</h2>
+            
+            <h3>ETF란?</h3>
+            <p><span class="key-term">ETF</span>는 Exchange Traded Fund의 약자로, 여러 금융상품을 묶어 만든 <strong>Closed End Fund</strong>입니다. 주식처럼 거래 시간 내 실시간으로 사고 팔 수 있습니다.</p>
+            
+            <div class="highlight-box">
+                <p><strong>핵심 특징:</strong> ETF는 주식, 채권, 대체투자 상품 등 다양한 금융상품을 포트폴리오로 묶어 인덱스에 연동시킨 상품입니다. S&P 500 인덱스 펀드가 대표적입니다.</p>
+            </div>
+
+            <h3>NAV (Net Asset Value) 이해하기</h3>
+            <p>ETF는 정해진 고정가격이 없습니다. <span class="key-term">NAV</span>를 기준으로 수요와 공급에 따라 가격이 유동적으로 형성됩니다.</p>
+            
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <span class="flow-number">1</span>
+                    <div class="flow-content">NAV가 $100로 설정</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">2</span>
+                    <div class="flow-content">실제 매매 시 $99.10 또는 $101에 거래 가능</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">3</span>
+                    <div class="flow-content">Buy/Sell 실행 후 실제 가격 확정</div>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✅ ETF 장점</h4>
+                    <ul>
+                        <li>자산운용비(Expense Ratio)가 상대적으로 저렴</li>
+                        <li>주식처럼 거래 시간 내 즉시 매매 가능</li>
+                        <li>분산투자(Diversification) 효과</li>
+                        <li>포트폴리오 일부 매각 시 세금 미발생</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>❌ ETF 단점</h4>
+                    <ul>
+                        <li>거래 시 커미션 비용 발생 가능</li>
+                        <li>NAV 기준 가격으로 매매가 보장되지 않음</li>
+                        <li>숨겨진 비용(Hidden Cost) 존재 가능</li>
+                        <li>Passive 운용으로 시장 변화에 빠른 대응 어려움</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ETF vs Mutual Fund 비교 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">⚖️</span> ETF vs Mutual Fund 비교</h2>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>구분</th>
+                    <th>ETF</th>
+                    <th>Mutual Fund</th>
+                </tr>
+                <tr>
+                    <td class="label">펀드 유형</td>
+                    <td><strong>Closed End Fund</strong></td>
+                    <td><strong>Open End Fund</strong></td>
+                </tr>
+                <tr>
+                    <td class="label">거래 시간</td>
+                    <td>장중 실시간 거래</td>
+                    <td>장 마감 후 (4시 이후)</td>
+                </tr>
+                <tr>
+                    <td class="label">결제(Settlement)</td>
+                    <td>즉시</td>
+                    <td><strong>3일 소요</strong></td>
+                </tr>
+                <tr>
+                    <td class="label">가격 결정</td>
+                    <td>NAV 내외 유동적</td>
+                    <td>고정 가격</td>
+                </tr>
+                <tr>
+                    <td class="label">운용 방식</td>
+                    <td>Passive (수동적)</td>
+                    <td>Active (능동적)</td>
+                </tr>
+                <tr>
+                    <td class="label">비용</td>
+                    <td>상대적 저렴</td>
+                    <td>높음 (Hidden Cost 多)</td>
+                </tr>
+                <tr>
+                    <td class="label">현금 보유</td>
+                    <td>전액 금융상품 매입</td>
+                    <td>10~20% 현금 보유</td>
+                </tr>
+            </table>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 매도 시 대응 시간 비교</div>
+                <canvas id="settlementChart"></canvas>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>⚠️ Mutual Fund의 치명적 단점:</strong> 구글 같은 주식이 하루 9~10%씩 하락할 때, Mutual Fund는 매도까지 3일이 걸려 대응이 불가능합니다. "사건이 끝난 후 수습하는 것"과 같습니다.</p>
+            </div>
+        </section>
+
+        <!-- Annuity 섹션 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🛡️</span> Annuity (연금보험) 이해하기</h2>
+            
+            <h3>두 가지 Annuity 유형</h3>
+            
+            <div class="grid-2">
+                <div class="mini-card">
+                    <div class="value">Fixed</div>
+                    <div class="desc">고정 Annuity<br><strong>100% 보험상품</strong></div>
+                </div>
+                <div class="mini-card">
+                    <div class="value">Variable</div>
+                    <div class="desc">변액 Annuity<br><strong>투자+보험 혼합</strong></div>
+                </div>
+            </div>
+
+            <h3>Variable Annuity 구조</h3>
+            
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <span class="flow-number">1</span>
+                    <div class="flow-content"><strong>보험료 납입</strong> (예: $1,000만원)</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">2</span>
+                    <div class="flow-content"><strong>General Account</strong> (보험사 계좌) - 예: 40%</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">3</span>
+                    <div class="flow-content"><strong>Separate Account</strong> (투자 계좌) - 예: 60%<br>→ S&P 500 등 인덱스에 연동</div>
+                </div>
+            </div>
+
+            <div class="important-note">
+                <p><strong>⚠️ 중요:</strong> Variable Annuity는 투자 인덱스에 연동되어 있지만, 본질적으로 <strong>투자상품이 아닌 보험상품</strong>입니다. 그러나 증권 라이선스가 있어야만 판매할 수 있습니다.</p>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 Variable Annuity 자금 흐름 구조</div>
+                <canvas id="annuityFlowChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Annuity 숨겨진 비용 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">💰</span> Annuity의 숨겨진 비용</h2>
+
+            <div class="stat-card">
+                <div class="number">~7%</div>
+                <div class="label">일시납(Lump Sum) 시 보험업자 커미션</div>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>실제 사례:</strong> $100만 불을 Annuity에 투자하면, 약 <strong>$7만 불</strong>이 보험업자에게 즉시 지급됩니다. 투자자는 $100만 불을 투자했다고 생각하지만, 실제로는 <strong>$93만 불</strong>만 투자되는 것입니다.</p>
+            </div>
+
+            <h3>"Guarantee"의 진짜 의미</h3>
+            <div class="highlight-box">
+                <p><strong>"개런티(Guarantee)"라는 말을 좋아하시나요?</strong></p>
+                <p>누군가가 무언가를 "보장"해준다는 것은 = <strong>비용이 발생한다</strong>는 의미입니다.</p>
+                <p>세상에 공짜 점심은 없습니다. 모든 보장에는 프리미엄(비용)이 따릅니다.</p>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 $100만 불 투자 시 실제 배분</div>
+                <canvas id="costBreakdownChart"></canvas>
+            </div>
+
+            <h3>Annuitization (연금화) 후 주의사항</h3>
+            
+            <div class="warning-box">
+                <p><strong>⚠️ 핵심 경고:</strong> Annuitization 후 표시되는 금액(예: $54만 불)은 <strong>실제 수령 가능한 금액이 아닙니다</strong>.</p>
+                <ul style="margin-top: 10px;">
+                    <li>원금 $30만 불 → 장부상 $54만 불이 되어도</li>
+                    <li>실제 수령은 <strong>원금 기준 연 4%</strong> (약 $12,000/년)</li>
+                    <li>Annuitization 후 사망 시 <strong>미수령금은 소멸</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 라이선스와 규제 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📜</span> 라이선스와 투자자 보호</h2>
+
+            <h3>필수 라이선스 요건</h3>
+            <p>Variable Annuity를 판매하려면 <span class="key-term">브로커 딜러 라이선스</span>가 필수입니다. 일반 보험 에이전트 라이선스만으로는 <strong>불법</strong>입니다.</p>
+
+            <div class="grid-2">
+                <div class="mini-card">
+                    <div class="value">60%</div>
+                    <div class="desc">첫 시험<br>탈락률</div>
+                </div>
+                <div class="mini-card">
+                    <div class="value">15~20%</div>
+                    <div class="desc">최종<br>합격률</div>
+                </div>
+            </div>
+
+            <h3>1933년 증권법 (Securities Act) 핵심 원칙</h3>
+            <div class="success-box">
+                <p><strong>투자자 보호 3대 원칙:</strong></p>
+                <ul>
+                    <li><strong>금융상품에 대한 정확한 인식과 이해</strong> 제공 의무</li>
+                    <li><strong>적절한 라이선스</strong> 보유 필수</li>
+                    <li>고객에게 <strong>적합성(Suitability)</strong> 검토 의무</li>
+                </ul>
+            </div>
+
+            <div class="important-note">
+                <p><strong>65세 이상 고객 보호:</strong> 65세 이상 고객에게는 보험상품에 대한 <strong>완전한 이해</strong>가 될 때까지 판매할 수 없습니다. "대충 알아서 해주세요"는 판매자의 법적 책임 회피가 되지 않습니다.</p>
+            </div>
+        </section>
+
+        <!-- 미국 투자 사기 경고 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🚨</span> 미국 내 투자 사기 유형</h2>
+
+            <div class="warning-box">
+                <p><strong>미국 법상 "사기(Scam)"의 범위:</strong></p>
+                <p>한국에서의 사기는 주로 "남의 돈을 훔치는 것"을 의미하지만, 미국에서는 <strong>Misrepresentation</strong>(허위표시)도 사기에 포함됩니다.</p>
+                <ul style="margin-top: 10px;">
+                    <li>보험상품을 투자상품으로 둔갑시키는 행위</li>
+                    <li>투자상품인 것처럼 뉘앙스를 풍기는 행위</li>
+                    <li>Hidden Cost를 숨기거나 대충 넘어가는 행위</li>
+                    <li>고객의 이해 없이 서명만 받는 행위</li>
+                </ul>
+            </div>
+
+            <h3>구매 전 필수 확인 체크리스트</h3>
+            <div class="checklist">
+                <div class="checklist-item">일시 수령(Lump Sum) 가능 여부 확인</div>
+                <div class="checklist-item">조기 해약 시 페널티 금액 확인</div>
+                <div class="checklist-item">실제 투자되는 금액 (커미션 제외) 확인</div>
+                <div class="checklist-item">Annuitization 전/후 사망보험금 차이 확인</div>
+                <div class="checklist-item">Hidden Cost (Expense Ratio 외 비용) 확인</div>
+                <div class="checklist-item">판매자의 브로커 딜러 라이선스 보유 여부 확인</div>
+            </div>
+
+            <div class="important-note">
+                <p><strong>💡 전문가 조언:</strong> $10만 불 이상 금융상품 구매 시, 몇 천 불이 들더라도 <strong>변호사 리뷰</strong>를 받으시기 바랍니다. 금융상품의 모든 조항을 전문가에게 검토받는 것이 안전합니다.</p>
+            </div>
+        </section>
+
+        <!-- 실제 피해 사례 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📋</span> 실제 피해 사례</h2>
+
+            <div class="warning-box">
+                <p><strong>사례: PhD 보유 40대 전문가</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>투자금: <strong>$30만 불</strong></li>
+                    <li>현재 장부가: <strong>$45만 불</strong> (좋아 보임)</li>
+                    <li>실제 해약 시 수령액: <strong>$18만 불</strong></li>
+                    <li><strong>손실: 원금 대비 $12만 불 손해</strong></li>
+                </ul>
+                <p style="margin-top: 12px;">→ 머리가 좋은 전문가도 금융상품의 구조를 이해하지 못하면 피해를 볼 수 있습니다.</p>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 Annuity 착각 vs 현실</div>
+                <canvas id="realityChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 투자 시사점 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">💡</span> 미국 증시 투자 시사점</h2>
+
+            <h3>금융상품 선택 가이드</h3>
+            
+            <div class="highlight-box">
+                <p><strong>Active vs Passive 투자:</strong></p>
+                <ul>
+                    <li><strong>ETF/Mutual Fund:</strong> 시장 변동에 빠른 대응이 어려움 (Passive)</li>
+                    <li><strong>개별 주식:</strong> Rebalancing, Sector Rotation 가능 (Active)</li>
+                    <li>하루 등락폭이 큰 현대 시장에서는 <strong>Active 운용이 유리</strong></li>
+                </ul>
+            </div>
+
+            <h3>핵심 교훈</h3>
+            <div class="success-box">
+                <p><strong>"To Know is Your Responsibility"</strong></p>
+                <p>알아야 하는 것은 권리이자 <strong>의무</strong>입니다. 판매업자뿐 아니라 투자자 본인도 금융상품을 이해해야 할 책임이 있습니다.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="mini-card" style="background: #f0fff4;">
+                    <div class="value" style="color: #276749;">✅</div>
+                    <div class="desc">가성비 좋은 것은<br><strong>존재하지 않는다</strong></div>
+                </div>
+                <div class="mini-card" style="background: #fff5f5;">
+                    <div class="value" style="color: #c53030;">⚠️</div>
+                    <div class="desc">고가가 저렴하면<br><strong>사기 가능성</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 결론 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🎯</span> 결론 및 핵심 정리</h2>
+            
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <span class="flow-number">1</span>
+                    <div class="flow-content"><strong>ETF:</strong> Closed End Fund, 실시간 거래, 비용 저렴하나 Passive</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">2</span>
+                    <div class="flow-content"><strong>Mutual Fund:</strong> Open End Fund, 3일 Settlement, Active 운용</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">3</span>
+                    <div class="flow-content"><strong>Variable Annuity:</strong> 보험상품, 약 7% 커미션, 신중한 검토 필요</div>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-number">4</span>
+                    <div class="flow-content"><strong>투자자 보호:</strong> 1933년 증권법, 라이선스 확인 필수</div>
+                </div>
+            </div>
+
+            <div class="important-note">
+                <p><strong>최종 조언:</strong> 구글에 나오는 모든 정보를 100% 믿지 마세요. 전문가의 검토가 필요하며, 특히 금융상품은 직접 이해하고 확인한 후 구매하시기 바랍니다.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>📺 원본: 투자아카데미 12회</p>
+            <p>📅 분석일: 2026년 1월 22일</p>
+            <p style="margin-top: 8px; font-size: 0.8rem; color: #a0aec0;">본 문서는 교육 목적으로 작성되었으며, 투자 조언이 아닙니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Settlement 비교 차트
+        new Chart(document.getElementById('settlementChart'), {
+            type: 'bar',
+            data: {
+                labels: ['ETF', 'Mutual Fund', '개별 주식'],
+                datasets: [{
+                    label: '매도 완료까지 소요 시간',
+                    data: [0.01, 3, 0.01],
+                    backgroundColor: ['#48bb78', '#fc8181', '#4299e1'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '일(Days)' }
+                    }
+                }
+            }
+        });
+
+        // Annuity 구조 차트
+        new Chart(document.getElementById('annuityFlowChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['General Account (보험)', 'Separate Account (투자)', '커미션'],
+                datasets: [{
+                    data: [33, 60, 7],
+                    backgroundColor: ['#4299e1', '#48bb78', '#fc8181'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 11 } }
+                    }
+                }
+            }
+        });
+
+        // 비용 breakdown 차트
+        new Chart(document.getElementById('costBreakdownChart'), {
+            type: 'bar',
+            data: {
+                labels: ['투자자가 생각하는 금액', '실제 투자되는 금액', '보험업자 커미션'],
+                datasets: [{
+                    data: [100, 93, 7],
+                    backgroundColor: ['#4299e1', '#48bb78', '#fc8181'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: { display: true, text: '만 달러 ($)' }
+                    }
+                }
+            }
+        });
+
+        // 착각 vs 현실 차트
+        new Chart(document.getElementById('realityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['투자 원금', '장부상 금액', '실제 해약 수령액'],
+                datasets: [{
+                    label: '금액 (만 달러)',
+                    data: [30, 45, 18],
+                    backgroundColor: ['#4299e1', '#f6ad55', '#fc8181'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '만 달러 ($)' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
