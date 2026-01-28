@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 13회: 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a237e;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #3f51b5;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #283593;
+            margin: 28px 0 16px 0;
+            padding: 12px;
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .question {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+        .question-number {
+            background: #3f51b5;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .easy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .medium {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        .hard {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .question-type {
+            font-size: 0.8rem;
+            color: #666;
+            background: #eeeeee;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .choices {
+            margin-left: 8px;
+        }
+        .choice {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .choice-label {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 2px solid #3f51b5;
+            margin: 0 4px;
+        }
+        .section-divider {
+            border: none;
+            height: 3px;
+            background: linear-gradient(to right, #f44336, #ff9800, #4caf50, #2196f3);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+        /* 정답지 스타일 */
+        .answer-section {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .answer-badge {
+            background: #4caf50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+        .explanation {
+            background: white;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .term {
+            background: #ede7f6;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #512da8;
+        }
+        .print-break {
+            page-break-before: always;
+        }
+        @media print {
+            .container {
+                box-shadow: none;
+                padding: 10px;
+            }
+            .print-break {
+                page-break-before: always;
+            }
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 투자아카데미 13회: 시험문제</h1>
+        <div class="subtitle">미국 옵션시장의 이해와 공매도 | 총 10문제</div>
+
+        <h2>━━━ 📋 문제지 (총 10문제) ━━━</h2>
+
+        <!-- 문제 1 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 1</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                주가가 하락할 것으로 예상할 때 투자자산을 보호하기 위해 구매하는 옵션의 종류는?
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">①</span>
+                    <span>콜 옵션 (Call Option)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">②</span>
+                    <span>풋 옵션 (Put Option)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">③</span>
+                    <span>스톱 옵션 (Stop Option)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">④</span>
+                    <span>마진 옵션 (Margin Option)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 2</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <div class="question-text">
+                옵션 거래에서 옵션을 구매하기 위해 지불하는 비용(보험료)을 무엇이라고 하는가?
+            </div>
+            <p style="margin-top: 12px; color: #666;">정답: <span class="blank"></span></p>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 3</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                풋 옵션에서 옵션 보유자가 주식을 팔 수 있는 미리 정해진 가격을 무엇이라고 하는가?
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">①</span>
+                    <span>Market Price</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">②</span>
+                    <span>Premium Price</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">③</span>
+                    <span>Strike Price (Exercise Price)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">④</span>
+                    <span>Stop Price</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 4</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                풋 옵션 판매자(Writer)는 주가가 상승할 것이라고 믿기 때문에 프리미엄을 받고 의무를 지는 것이다.
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">O</span>
+                    <span>맞다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">X</span>
+                    <span>틀리다</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 5</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <div class="question-text">
+                칠수와 만수 같은 옵션 거래자들이 만나는 미국 최대의 옵션 거래소는 시카고에 위치한 <span class="blank"></span>이다. (영문 약어로 작성)
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 6</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                공매도(Short Selling)에 대한 설명으로 <strong>틀린</strong> 것은?
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">①</span>
+                    <span>해당 주식을 보유하지 않은 상태에서 하락에 베팅한다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">②</span>
+                    <span>기관에서 주식을 빌려서 매도한다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">③</span>
+                    <span>마진 계좌(Margin Account)가 필요하다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">④</span>
+                    <span>주가가 상승하면 이익을 얻는다</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 7</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                헤징(Hedging)으로 Stop Loss를 $95에 설정했을 때, 급락장에서 발생할 수 있는 상황은?
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">①</span>
+                    <span>반드시 $95에 체결된다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">②</span>
+                    <span>$95보다 높은 가격에 체결될 수 있다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">③</span>
+                    <span>$95보다 낮은 $92, $90, 심지어 $80 이하에 체결될 수 있다</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">④</span>
+                    <span>체결되지 않고 취소된다</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 8</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                공매도의 4가지 순기능을 간략히 설명하시오.
+            </div>
+            <div style="margin-top: 12px; border: 1px dashed #ccc; padding: 20px; border-radius: 8px; min-height: 120px; background: #fefefe;">
+                <p style="color: #999; font-size: 0.9rem;">답안 작성란</p>
+            </div>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 9</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">계산 문제</span>
+            </div>
+            <div class="question-text">
+                칠수가 테슬라 100주를 주당 $100에 보유하고 있다. Strike Price $90, 프리미엄 주당 $3인 풋 옵션을 구매했다. 만기일에 테슬라 주가가 $50로 하락했다면, 칠수의 풋 옵션으로 인한 <strong>순이익(또는 손실 방지액)</strong>은 얼마인가?
+            </div>
+            <div style="margin-top: 12px; border: 1px dashed #ccc; padding: 16px; border-radius: 8px; background: #fefefe;">
+                <p style="color: #999; font-size: 0.9rem;">계산 과정과 답안 작성</p>
+            </div>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-number">문제 10</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                강의에서 공매도보다 개인 투자자에게 더 위험하다고 언급된 전략은?
+            </div>
+            <div class="choices">
+                <div class="choice">
+                    <span class="choice-label">①</span>
+                    <span>풋 옵션 (Put Option)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">②</span>
+                    <span>헤징 (Hedging)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">③</span>
+                    <span>펌프앤덤프 (Pump & Dump)</span>
+                </div>
+                <div class="choice">
+                    <span class="choice-label">④</span>
+                    <span>콜 옵션 (Call Option)</span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+        <div class="print-break"></div>
+
+        <h2>━━━ 📝 정답 및 해설 ━━━</h2>
+
+        <!-- 정답 1 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 1</span>
+                <span class="answer-badge">정답: ②</span>
+            </div>
+            <div class="answer-text">풋 옵션 (Put Option)</div>
+            <div class="explanation">
+                <span class="term">풋 옵션</span>은 주가가 하락할 것으로 예상할 때 구매하는 옵션입니다. 
+                베어 마켓(Bear Market)에 대한 <strong>다운사이드 프로텍션(Downside Protection)</strong> 역할을 하며, 
+                미리 정해진 가격(Strike Price)에 주식을 팔 수 있는 권리를 부여합니다. 
+                반면, 콜 옵션은 상승장에 베팅하는 옵션입니다.
+            </div>
+        </div>
+
+        <!-- 정답 2 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 2</span>
+                <span class="answer-badge">정답: 프리미엄 (Premium)</span>
+            </div>
+            <div class="explanation">
+                <span class="term">프리미엄(Premium)</span>은 옵션을 구매할 때 지불하는 비용으로, 보험료와 유사한 개념입니다.
+                예를 들어, 주당 $3의 프리미엄으로 100주 옵션 계약을 체결하면 총 $300의 프리미엄을 지불합니다.
+                프리미엄은 옵션 보유자의 최대 손실 한도가 됩니다.
+            </div>
+        </div>
+
+        <!-- 정답 3 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 3</span>
+                <span class="answer-badge">정답: ③</span>
+            </div>
+            <div class="answer-text">Strike Price (Exercise Price)</div>
+            <div class="explanation">
+                <span class="term">Strike Price</span>(행사가격) 또는 <span class="term">Exercise Price</span>는 
+                옵션 보유자가 주식을 사거나 팔 수 있는 미리 약정된 가격입니다. 
+                예를 들어, Strike Price가 $90인 풋 옵션을 보유하면 주가가 아무리 하락해도 $90에 팔 수 있는 권리가 있습니다. 
+                Strike Price가 현재 주가에 가까울수록 프리미엄이 높아집니다.
+            </div>
+        </div>
+
+        <!-- 정답 4 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 4</span>
+                <span class="answer-badge">정답: O (맞다)</span>
+            </div>
+            <div class="explanation">
+                풋 옵션 판매자(Writer 또는 Seller)는 주가가 <strong>상승할 것이라고 확신</strong>하기 때문에 
+                프리미엄을 받고 옵션 계약의 의무를 집니다. 
+                만약 주가가 상승하면 프리미엄 전액이 순이익이 되고(Out of Money), 
+                반대로 주가가 하락하면 Strike Price에 주식을 매수해야 하는 의무가 발생하여 손실을 볼 수 있습니다.
+            </div>
+        </div>
+
+        <!-- 정답 5 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 5</span>
+                <span class="answer-badge">정답: CBOE</span>
+            </div>
+            <div class="explanation">
+                <span class="term">CBOE</span>는 <strong>Chicago Board Options Exchange</strong>의 약자로, 
+                시카고에 위치한 미국 최대의 옵션 거래소입니다. 
+                풋 옵션과 콜 옵션을 사고파는 거래자들이 이 시장에서 만나 계약을 체결합니다. 
+                강의에서는 "칠수와 만수가 만나는 장소"로 소개되었습니다.
+            </div>
+        </div>
+
+        <!-- 정답 6 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 6</span>
+                <span class="answer-badge">정답: ④</span>
+            </div>
+            <div class="answer-text">주가가 상승하면 이익을 얻는다 (틀린 설명)</div>
+            <div class="explanation">
+                공매도는 주가 <strong>하락</strong>에 베팅하는 전략입니다. 
+                빌린 주식을 높은 가격에 팔고, 주가 하락 후 낮은 가격에 사서 돌려주면 차익을 얻습니다.
+                따라서 주가가 <strong>상승하면 손실</strong>이 발생합니다. 
+                ①②③은 모두 공매도에 대한 올바른 설명입니다.
+            </div>
+        </div>
+
+        <!-- 정답 7 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 7</span>
+                <span class="answer-badge">정답: ③</span>
+            </div>
+            <div class="answer-text">$95보다 낮은 $92, $90, 심지어 $80 이하에 체결될 수 있다</div>
+            <div class="explanation">
+                <span class="term">헤징(Hedging)</span>을 통한 Stop Loss는 프리미엄 비용이 없지만, 
+                <strong>가격 보장이 없다</strong>는 큰 단점이 있습니다. 
+                급락장에서는 시장의 수급 상황에 따라 의도한 $95가 아닌 훨씬 낮은 가격에 체결될 수 있으며, 
+                심지어 100주 전체가 같은 가격에 체결되지 않을 수도 있습니다. 
+                이것이 풋 옵션과 헤징의 핵심적인 차이점입니다.
+            </div>
+        </div>
+
+        <!-- 정답 8 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 8</span>
+                <span class="answer-badge">정답: 서술형</span>
+            </div>
+            <div class="explanation">
+                <strong>공매도의 4가지 순기능:</strong><br><br>
+                <strong>① 시장 유동성 증가:</strong> 공매도 세력도 결국 주식을 매수해야 하므로 시장에 현금 흐름이 개선됩니다.<br><br>
+                <strong>② 지나친 낙관주의 견제:</strong> 모든 사람이 상승만 예측하는 일방적 분위기에 균형을 제공합니다. "When the market is greedy, be fearful."<br><br>
+                <strong>③ 기업 문제점 조기 발견:</strong> 공매도 세력이 기업의 회계 부정, 경영 악화 등을 집중 분석하여 문제를 발견합니다.<br><br>
+                <strong>④ 주가 조작 방지:</strong> 기업이나 기관의 주가 부풀리기(Pump)를 견제하는 역할을 합니다.
+            </div>
+        </div>
+
+        <!-- 정답 9 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 9</span>
+                <span class="answer-badge">정답: $3,700</span>
+            </div>
+            <div class="explanation">
+                <strong>계산 과정:</strong><br><br>
+                • 풋 옵션이 없었다면 손실: ($100 - $50) × 100주 = <strong>$5,000 손실</strong><br><br>
+                • 풋 옵션 보유 시:<br>
+                &nbsp;&nbsp;- Strike Price $90에 팔 수 있는 권리 행사<br>
+                &nbsp;&nbsp;- 손실: ($100 - $90) × 100주 = $1,000<br>
+                &nbsp;&nbsp;- 프리미엄 비용: $3 × 100주 = $300<br>
+                &nbsp;&nbsp;- 총 손실: $1,000 + $300 = <strong>$1,300</strong><br><br>
+                • 풋 옵션으로 인한 <strong>손실 방지액</strong>: $5,000 - $1,300 = <strong>$3,700</strong><br><br>
+                풋 옵션 덕분에 $5,000 손실을 $1,300으로 줄여 $3,700의 손실을 방지했습니다.
+            </div>
+        </div>
+
+        <!-- 정답 10 -->
+        <div class="answer-section">
+            <div class="answer-header">
+                <span class="question-number">문제 10</span>
+                <span class="answer-badge">정답: ③</span>
+            </div>
+            <div class="answer-text">펌프앤덤프 (Pump & Dump)</div>
+            <div class="explanation">
+                강의에서는 <span class="term">펌프앤덤프(Pump & Dump)</span>가 공매도보다 
+                개인 투자자에게 <strong>더 위험하다</strong>고 강조했습니다. 
+                펌프앤덤프는 주식을 대량 매집 후 좋은 소식으로 주가를 부양(Pump)하고, 
+                개인 투자자 유입 후 대량 매도(Dump)하여 주가를 폭락시키는 전략입니다. 
+                공매도 세력은 예측이 틀리면 자신이 손해를 보지만, 
+                펌프앤덤프는 <strong>개인 투자자에게 직접적이고 무자비한 손실</strong>을 초래합니다.
+            </div>
+        </div>
+
+        <footer>
+            <p>📺 출처: NOVA Real Invest - 투자아카데미 13회</p>
+            <p>📝 총 10문제 | 난이도: 쉬움 30% / 보통 50% / 어려움 20%</p>
+        </footer>
+    </div>
+</body>
+</html>

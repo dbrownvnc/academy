@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 13회: 미국 옵션시장의 이해와 공매도 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a237e;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #3f51b5;
+        }
+        .meta-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.25rem;
+            color: #283593;
+            margin: 28px 0 16px 0;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-left: 4px solid #3f51b5;
+            border-radius: 4px;
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: #303f9f;
+            margin: 20px 0 12px 0;
+            padding-left: 10px;
+            border-left: 3px solid #7986cb;
+        }
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: #fff3e0;
+            border: 1px solid #ffb74d;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .key-point {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .warning-box {
+            background: #ffebee;
+            border: 1px solid #ef9a9a;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .success-box {
+            background: #e8f5e9;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .term {
+            background: #ede7f6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #512da8;
+        }
+        .english {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        th {
+            background: #3f51b5;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .comparison-table {
+            font-size: 0.85rem;
+        }
+        .comparison-table th {
+            background: #1976d2;
+        }
+        .pros { color: #2e7d32; }
+        .cons { color: #c62828; }
+        .formula-box {
+            background: #fafafa;
+            border: 2px dashed #9e9e9e;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .player-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .player {
+            padding: 14px;
+            border-radius: 8px;
+        }
+        .buyer {
+            background: linear-gradient(135deg, #e3f2fd 0%, #90caf9 100%);
+            border: 2px solid #1976d2;
+        }
+        .seller {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+            border: 2px solid #f57c00;
+        }
+        .player-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        ul {
+            margin: 12px 0 12px 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .emoji-icon {
+            font-size: 1.2rem;
+            margin-right: 6px;
+        }
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #3f51b5, #9fa8da, #3f51b5);
+            margin: 30px 0;
+        }
+        .summary-list {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .summary-list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        .summary-list li:last-child {
+            border-bottom: none;
+        }
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin: 20px 0;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        .flow-step {
+            background: #3f51b5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 80%;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #3f51b5;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 투자아카데미 13회: 미국 옵션시장의 이해와 공매도</h1>
+        <div class="meta-info">
+            📅 2026년 1월 28일 | 🎬 NOVA Real Invest | 📍 미국 증시 분석
+        </div>
+
+        <h2>🎯 핵심 요약</h2>
+        <div class="key-point">
+            <p><strong>이번 강의의 핵심 포인트:</strong></p>
+            <ul>
+                <li><span class="term">풋 옵션(Put Option)</span>은 주식 하락에 대비한 <strong>보험</strong> 역할</li>
+                <li><span class="term">공매도(Short Selling)</span>는 주식을 빌려서 매도 후 하락 시 차익 실현</li>
+                <li>공매도는 시장의 <strong>순기능</strong>을 가지며, <span class="term">펌프앤덤프(Pump & Dump)</span>가 오히려 더 위험</li>
+                <li>옵션 거래의 중심지는 <strong>시카고 Board Options Exchange (CBOE)</strong></li>
+            </ul>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>📈 1. 옵션 시장의 필요성</h2>
+        
+        <h3>투자의 본질적 리스크</h3>
+        <p>미국 주식 시장에서 주식을 보유하는 이유는 <strong>주가 상승에 따른 이익 실현</strong>입니다. 그러나 현실적으로 주식은 <strong>단기적으로 상승만 하지 않고 하락도 합니다</strong>.</p>
+        
+        <div class="warning-box">
+            <p><span class="emoji-icon">⚠️</span><strong>투자 리스크의 실체:</strong></p>
+            <ul>
+                <li>100달러 투자 시 <strong>60% 하락</strong> 가능성 존재</li>
+                <li>극단적 경우 <strong>반토막</strong> 또는 <strong>주가 0원</strong>도 가능</li>
+                <li>실제 사례: 은행권 파산으로 주가가 0이 된 기업들 존재</li>
+            </ul>
+        </div>
+
+        <h3>옵션 = 투자 보험</h3>
+        <p>옵션은 마치 <strong>생명보험이나 자동차 보험</strong>처럼 작동합니다. 프리미엄(Premium)을 지불하고 투자 리스크를 줄일 수 있습니다.</p>
+        
+        <div class="chart-container">
+            <canvas id="riskChart"></canvas>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>📉 2. 풋 옵션 (Put Option) 완전 이해</h2>
+        
+        <h3>풋 옵션이란?</h3>
+        <div class="key-point">
+            <p><span class="term">풋 옵션</span> <span class="english">(Put Option)</span>은 주가가 <strong>하락할 것으로 예상</strong>할 때 드는 보험입니다.</p>
+            <p>베어 마켓(Bear Market)에 대한 <strong>다운사이드 프로텍션(Downside Protection)</strong> 역할을 합니다.</p>
+        </div>
+
+        <h3>실제 예시: 칠수의 테슬라 투자</h3>
+        <div class="highlight-box">
+            <p><strong>📋 시나리오 설정:</strong></p>
+            <ul>
+                <li>칠수가 테슬라 주식 <strong>100주</strong>를 <strong>주당 $100</strong>에 매입</li>
+                <li>주가 폭락이 걱정되어 <strong>풋 옵션 계약</strong> 체결</li>
+                <li><strong>Strike Price(행사가격): $90</strong> 설정</li>
+                <li>프리미엄(보험료)을 지불하고 $90에 팔 수 있는 <strong>권리</strong> 획득</li>
+            </ul>
+        </div>
+
+        <h3>핵심 용어 정리</h3>
+        <table>
+            <tr>
+                <th>용어</th>
+                <th>의미</th>
+            </tr>
+            <tr>
+                <td><span class="term">Strike Price</span><br>(행사가격)</td>
+                <td>옵션 보유자가 주식을 팔 수 있는 가격<br>예: $90</td>
+            </tr>
+            <tr>
+                <td><span class="term">Premium</span><br>(프리미엄)</td>
+                <td>옵션 구매 시 지불하는 보험료<br>예: 주당 $3 × 100주 = $300</td>
+            </tr>
+            <tr>
+                <td><span class="term">Expiry Date</span><br>(만기일)</td>
+                <td>옵션 권리 행사 기한<br>만기 후 모든 권리 소멸</td>
+            </tr>
+            <tr>
+                <td><span class="term">Put Owner</span><br>(풋 보유자)</td>
+                <td>프리미엄을 내고 풋 옵션을 산 사람<br>(예: 칠수)</td>
+            </tr>
+            <tr>
+                <td><span class="term">Put Seller/Writer</span><br>(풋 판매자)</td>
+                <td>프리미엄을 받고 의무를 지는 사람<br>(예: 만수)</td>
+            </tr>
+        </table>
+
+        <h3>옵션 계약 표기법</h3>
+        <div class="formula-box">
+            <strong>1 TSLA December 19 90 PUT</strong><br><br>
+            <small>
+            1 = 계약 수 (100주 단위) | TSLA = 종목 티커<br>
+            December 19 = 만기일 | 90 = 행사가격<br>
+            PUT = 풋 옵션 (하락 베팅)
+            </small>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>🤝 3. 풋 옵션 거래의 양측: 칠수 vs 만수</h2>
+
+        <div class="player-box">
+            <div class="player buyer">
+                <div class="player-name">🔵 칠수 (Put Buyer/Owner)</div>
+                <ul>
+                    <li><strong>시장 전망:</strong> 베어 마켓 (하락 예상)</li>
+                    <li><strong>행동:</strong> 프리미엄을 <strong>지불</strong></li>
+                    <li><strong>권리:</strong> Strike Price에 주식을 <strong>팔 수 있는 권리</strong></li>
+                    <li><strong>리스크:</strong> 최대 손실 = 프리미엄 금액</li>
+                </ul>
+            </div>
+            <div class="player seller">
+                <div class="player-name">🟠 만수 (Put Seller/Writer)</div>
+                <ul>
+                    <li><strong>시장 전망:</strong> 불 마켓 (상승 예상)</li>
+                    <li><strong>행동:</strong> 프리미엄을 <strong>수령</strong></li>
+                    <li><strong>의무:</strong> Strike Price에 주식을 <strong>사줘야 하는 의무</strong></li>
+                    <li><strong>리스크:</strong> 주가 폭락 시 큰 손실 가능</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="optionPayoffChart"></canvas>
+        </div>
+
+        <h3>왜 만수는 위험한 계약을 할까?</h3>
+        <div class="success-box">
+            <p>만수는 칠수와 달리 <strong>주가가 오를 것이라고 확신</strong>합니다.</p>
+            <ul>
+                <li>펀더멘털 분석 결과 상승 전망</li>
+                <li>비싼 주식을 직접 사지 않고 <strong>프리미엄만 수령</strong></li>
+                <li>주가 상승 시: 프리미엄 전액이 순이익 <span class="english">(Out of Money)</span></li>
+                <li>주가 하락 시: Strike Price에 매수 의무 발생</li>
+            </ul>
+        </div>
+
+        <h3>거래 장소: CBOE</h3>
+        <p><span class="term">시카고 Board Options Exchange (CBOE)</span>는 칠수와 만수 같은 옵션 거래자들이 만나는 미국 최대의 옵션 거래소입니다.</p>
+
+        <hr class="section-divider">
+
+        <h2>🛡️ 4. 헤징 (Hedging) vs 풋 옵션</h2>
+
+        <h3>헤징(Hedging)이란?</h3>
+        <p>프리미엄을 지불하기 싫을 때 사용하는 대안적 전략입니다.</p>
+        
+        <div class="highlight-box">
+            <p><strong>Stop Loss 주문:</strong></p>
+            <p>"테슬라 $100에 보유 중, $95로 떨어지면 자동 매도"</p>
+            <div class="formula-box">
+                Sell 100 TSLA Stop at $95
+            </div>
+        </div>
+
+        <h3>풋 옵션 vs 헤징 비교</h3>
+        <table class="comparison-table">
+            <tr>
+                <th>구분</th>
+                <th>풋 옵션</th>
+                <th>헤징 (Stop Loss)</th>
+            </tr>
+            <tr>
+                <td><strong>비용</strong></td>
+                <td>프리미엄 지불 필요</td>
+                <td>무료 (비용 없음)</td>
+            </tr>
+            <tr>
+                <td><strong>가격 보장</strong></td>
+                <td class="pros">Strike Price에 팔 수 있는 권리 <strong>보장</strong></td>
+                <td class="cons">보장 <strong>없음</strong></td>
+            </tr>
+            <tr>
+                <td><strong>급락장 대응</strong></td>
+                <td class="pros">Strike Price로 확정 매도 가능</td>
+                <td class="cons">시장 상황에 따라 $95보다 훨씬 낮은 가격에 체결 가능</td>
+            </tr>
+            <tr>
+                <td><strong>리스크</strong></td>
+                <td>프리미엄 비용</td>
+                <td>급락 시 의도한 가격에 매도 불가</td>
+            </tr>
+        </table>
+
+        <div class="warning-box">
+            <p><span class="emoji-icon">⚠️</span><strong>헤징의 한계:</strong></p>
+            <p>급락장에서는 $95에 Stop을 걸어도 <strong>$92, $90, 심지어 $80 이하</strong>에 체결될 수 있습니다. 100주 전체가 같은 가격에 체결되지 않을 수도 있습니다.</p>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>📊 5. 공매도 (Short Selling) 완전 분석</h2>
+
+        <h3>공매도란?</h3>
+        <div class="key-point">
+            <p><span class="term">공매도(Short Selling)</span>는 해당 주식을 <strong>보유하지 않은 상태</strong>에서 주가 하락에 베팅하는 투자 전략입니다.</p>
+        </div>
+
+        <h3>공매도 작동 원리</h3>
+        <div class="flow-diagram">
+            <div class="flow-step">① 기관에서 주식 100주 차입 (빌림)</div>
+            <div class="flow-arrow">⬇️</div>
+            <div class="flow-step">② 현재 시장가 ($100)에 매도</div>
+            <div class="flow-arrow">⬇️</div>
+            <div class="flow-step">③ 주가 하락 대기 ($100 → $50)</div>
+            <div class="flow-arrow">⬇️</div>
+            <div class="flow-step">④ 낮은 가격 ($50)에 매수</div>
+            <div class="flow-arrow">⬇️</div>
+            <div class="flow-step">⑤ 차입한 주식 반환 + 차익 실현</div>
+        </div>
+
+        <h3>공매도 수익 계산 예시</h3>
+        <div class="formula-box">
+            <strong>시나리오: 테슬라 공매도</strong><br><br>
+            차입 후 매도가: $100 × 100주 = <strong>$10,000</strong><br>
+            주가 하락 후 매수가: $50 × 100주 = <strong>$5,000</strong><br>
+            <hr style="margin: 10px 0; border-style: dashed;">
+            <strong style="color: #2e7d32;">순이익: $5,000 - 수수료 = 약 $4,000+</strong>
+        </div>
+
+        <h3>마진 계좌 (Margin Account)</h3>
+        <p>공매도를 위해서는 <span class="term">마진 계좌</span>가 필요합니다. 마진을 통해 실제 자본보다 더 큰 규모의 거래가 가능하지만, <strong>개인 투자자에게는 비추천</strong>됩니다.</p>
+
+        <div class="warning-box">
+            <p><span class="emoji-icon">⚠️</span><strong>공매도의 리스크:</strong></p>
+            <ul>
+                <li>주가가 <strong>상승</strong>하면 큰 손실 발생</li>
+                <li>주가 상승은 이론적으로 <strong>무한대</strong> 가능</li>
+                <li><strong>"Timing is Everything"</strong> - 기관도 어려워하는 전략</li>
+            </ul>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>⚖️ 6. 공매도의 순기능 vs 펌프앤덤프</h2>
+
+        <h3>공매도 세력은 나쁜가?</h3>
+        <div class="success-box">
+            <p><span class="emoji-icon">✅</span><strong>결론: 공매도는 시장에 필요합니다</strong></p>
+            <p>단, 전제 조건이 있습니다:</p>
+            <ul>
+                <li>전체 주식 시장 규모가 충분히 커야 함</li>
+                <li>공매도 세력의 비중이 적절해야 함</li>
+            </ul>
+        </div>
+
+        <h3>공매도의 4가지 순기능</h3>
+        <div class="chart-container">
+            <canvas id="functionChart"></canvas>
+        </div>
+
+        <table>
+            <tr>
+                <th>순기능</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td><strong>① 시장 유동성 증가</strong></td>
+                <td>공매도 세력도 결국 주식을 <strong>매수</strong>해야 함<br>→ 현금 흐름 개선</td>
+            </tr>
+            <tr>
+                <td><strong>② 지나친 낙관주의 경계</strong></td>
+                <td>일방적 상승론에 <strong>균형</strong> 제공<br>"When greedy, be fearful"</td>
+            </tr>
+            <tr>
+                <td><strong>③ 기업 문제점 조기 발견</strong></td>
+                <td>공매도 세력이 기업의 <strong>회계 부정, 경영 문제</strong> 등을 집중 분석</td>
+            </tr>
+            <tr>
+                <td><strong>④ 주가 조작 방지</strong></td>
+                <td>기업/기관의 <strong>주가 부풀리기</strong> 견제 역할</td>
+            </tr>
+        </table>
+
+        <h3>진짜 나쁜 놈: 펌프앤덤프 (Pump & Dump)</h3>
+        <div class="warning-box">
+            <p><span class="emoji-icon">🚨</span><strong>펌프앤덤프가 개인투자자에게 더 위험한 이유:</strong></p>
+            <ol>
+                <li>주식을 <strong>10% 이상 대량 매집</strong></li>
+                <li>좋은 소식, 과장된 전망으로 <strong>주가 부양 (Pump)</strong></li>
+                <li>개미 투자자들 유입 후 <strong>대량 매도 (Dump)</strong></li>
+                <li>주가 폭락 → <strong>개인 투자자 막대한 손실</strong></li>
+            </ol>
+        </div>
+
+        <h3>공매도 vs 펌프앤덤프 비교</h3>
+        <table class="comparison-table">
+            <tr>
+                <th>구분</th>
+                <th>공매도</th>
+                <th>펌프앤덤프</th>
+            </tr>
+            <tr>
+                <td><strong>개인 손실</strong></td>
+                <td>간접적 (주가 하락 시)</td>
+                <td class="cons"><strong>직접적, 무자비한 손실</strong></td>
+            </tr>
+            <tr>
+                <td><strong>기업 영향</strong></td>
+                <td>펀더멘털 문제 노출</td>
+                <td>건전한 기업도 피해 가능</td>
+            </tr>
+            <tr>
+                <td><strong>시장 기능</strong></td>
+                <td class="pros">균형 유지, 문제 발견</td>
+                <td class="cons">시장 왜곡, 신뢰 훼손</td>
+            </tr>
+            <tr>
+                <td><strong>주요 피해자</strong></td>
+                <td>공매도 세력 자신<br>(예측 실패 시)</td>
+                <td class="cons"><strong>개인 투자자</strong></td>
+            </tr>
+        </table>
+
+        <hr class="section-divider">
+
+        <h2>🇺🇸 7. 미국 증시 관점에서의 시사점</h2>
+
+        <h3>미국 vs 한국 옵션 시장 차이</h3>
+        <table>
+            <tr>
+                <th>특성</th>
+                <th>미국</th>
+                <th>한국</th>
+            </tr>
+            <tr>
+                <td><strong>시장 규모</strong></td>
+                <td>초대형<br>(공매도 영향 제한적)</td>
+                <td>상대적으로 작음<br>(공매도 영향 큼)</td>
+            </tr>
+            <tr>
+                <td><strong>옵션 시장</strong></td>
+                <td>시카고 CBOE 중심<br>체계적 운영</td>
+                <td>옵션 시장 규모가<br>미국보다 더 큼</td>
+            </tr>
+            <tr>
+                <td><strong>공매도 규제</strong></td>
+                <td>상대적으로 자유로움</td>
+                <td>금지 조치 등<br>강한 규제</td>
+            </tr>
+            <tr>
+                <td><strong>시장 조작 가능성</strong></td>
+                <td>대형주 조작 어려움<br>(자본 규모 한계)</td>
+                <td>상대적으로 높음</td>
+            </tr>
+        </table>
+
+        <h3>워런 버핏 명언의 적용</h3>
+        <div class="key-point">
+            <p style="text-align: center; font-size: 1.1rem;">
+                <strong>"When the market is fearful, be greedy.<br>
+                When the market is greedy, be fearful."</strong>
+            </p>
+            <p style="text-align: center; margin-top: 10px;">
+                공매도 세력의 존재는 시장이 과도하게 낙관적일 때<br>
+                <strong>경계심을 유지</strong>하게 해주는 역할을 합니다.
+            </p>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>💡 8. 투자 시사점 및 핵심 정리</h2>
+
+        <div class="summary-list">
+            <ul>
+                <li><span class="emoji-icon">📌</span><strong>풋 옵션</strong>은 하락장 대비 보험 - 프리미엄 비용 발생하나 <strong>가격 보장</strong></li>
+                <li><span class="emoji-icon">📌</span><strong>헤징(Stop Loss)</strong>은 무료지만 급락장에서 <strong>의도한 가격 체결 보장 없음</strong></li>
+                <li><span class="emoji-icon">📌</span><strong>공매도</strong>는 주식 미보유 상태에서 하락 베팅 - <strong>마진 계좌 필요</strong></li>
+                <li><span class="emoji-icon">📌</span>공매도 세력은 <strong>시장 균형 유지</strong>에 기여 (순기능 존재)</li>
+                <li><span class="emoji-icon">📌</span><strong>펌프앤덤프</strong>가 개인투자자에게 <strong>더 위험</strong>한 전략</li>
+                <li><span class="emoji-icon">📌</span>미국 시장은 규모가 커서 <strong>공매도의 시장 왜곡 가능성이 제한적</strong></li>
+                <li><span class="emoji-icon">📌</span><strong>포트폴리오 분산 투자</strong>가 리스크 관리의 기본</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <p><span class="emoji-icon">🎯</span><strong>핵심 메시지:</strong></p>
+            <p>"미국에 투자하는데 개념을 잘 정립해야 투자 활동에 도움이 된다. <strong>뭘 알고 투자하라.</strong>"</p>
+        </div>
+
+        <footer>
+            <p>📺 출처: NOVA Real Invest - 투자아카데미 13회</p>
+            <p>⚠️ 본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+            <p>모든 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 리스크 비교 차트
+        const riskCtx = document.getElementById('riskChart').getContext('2d');
+        new Chart(riskCtx, {
+            type: 'bar',
+            data: {
+                labels: ['일반 주식 투자', '풋 옵션 보유 시', '헤징 (Stop Loss)'],
+                datasets: [{
+                    label: '최대 잠재 손실률 (%)',
+                    data: [100, 15, 30],
+                    backgroundColor: ['#ef5350', '#66bb6a', '#ffa726'],
+                    borderColor: ['#c62828', '#2e7d32', '#f57c00'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '투자 전략별 최대 잠재 손실률 비교',
+                        font: { size: 14 }
+                    },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: '손실률 (%)' }
+                    }
+                }
+            }
+        });
+
+        // 옵션 손익 차트
+        const payoffCtx = document.getElementById('optionPayoffChart').getContext('2d');
+        new Chart(payoffCtx, {
+            type: 'line',
+            data: {
+                labels: ['$50', '$60', '$70', '$80', '$90', '$100', '$110', '$120'],
+                datasets: [{
+                    label: '칠수 (Put Buyer) 손익',
+                    data: [37, 27, 17, 7, -3, -3, -3, -3],
+                    borderColor: '#1976d2',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }, {
+                    label: '만수 (Put Seller) 손익',
+                    data: [-37, -27, -17, -7, 3, 3, 3, 3],
+                    borderColor: '#f57c00',
+                    backgroundColor: 'rgba(245, 124, 0, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '주가 변동에 따른 풋 옵션 손익 구조 (Strike: $90, Premium: $3)',
+                        font: { size: 14 }
+                    }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: '주당 손익 ($)' }
+                    },
+                    x: {
+                        title: { display: true, text: '주가' }
+                    }
+                }
+            }
+        });
+
+        // 공매도 순기능 차트
+        const funcCtx = document.getElementById('functionChart').getContext('2d');
+        new Chart(funcCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['시장 유동성 증가', '낙관주의 견제', '문제점 조기 발견', '주가 조작 방지'],
+                datasets: [{
+                    data: [25, 25, 25, 25],
+                    backgroundColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ab47bc'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '공매도의 4가지 순기능',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
