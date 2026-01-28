@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 14회: 12월 포트폴리오 조정 방향과 은퇴 전략 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e8e8e8;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .meta {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .meta a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 .icon {
+            font-size: 1.4rem;
+        }
+        
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #a8c0ff;
+            margin: 24px 0 12px;
+            padding-left: 12px;
+            border-left: 3px solid #667eea;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            color: #ccc;
+            font-size: 15px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+            border-left: 4px solid #667eea;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .highlight-box p {
+            margin-bottom: 8px;
+            color: #e8e8e8;
+        }
+        
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .warning-box {
+            background: rgba(255,107,107,0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .warning-box p {
+            color: #ffb3b3;
+            margin-bottom: 0;
+        }
+        
+        .success-box {
+            background: rgba(81,207,102,0.1);
+            border-left: 4px solid #51cf66;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .success-box p {
+            color: #98e4a6;
+            margin-bottom: 0;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-card .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .chart-container {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 20px 12px;
+            margin: 24px 0;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 14px;
+            color: #a8c0ff;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        
+        canvas {
+            max-width: 100%;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        th {
+            background: rgba(102,126,234,0.2);
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        td {
+            color: #ccc;
+        }
+        
+        tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .key-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        
+        .key-point .number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .key-point .content {
+            flex: 1;
+        }
+        
+        .key-point .title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .key-point .desc {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(102,126,234,0.2);
+            color: #a8c0ff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 30px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 40px;
+        }
+        
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .emoji {
+            font-style: normal;
+        }
+        
+        @media (max-width: 480px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            section {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">투자 아카데미 14회</div>
+            <h1>12월 포트폴리오 조정 방향과 은퇴 전략</h1>
+            <p class="meta">2026년 1월 29일 | <a href="https://www.youtube.com/watch?v=YGVSkLRwyAk" target="_blank">원본 영상</a></p>
+        </header>
+
+        <!-- 핵심 요약 -->
+        <section>
+            <h2><span class="icon">📌</span> 핵심 요약</h2>
+            
+            <div class="highlight-box">
+                <p><strong>12월 FOMC(12/12-13) 이후</strong> 본격적인 포트폴리오 리밸런싱 시점</p>
+                <p>현금 비중 <strong>10~30%</strong> 확보 권고 (내년 2월까지)</p>
+                <p>AI 대형주 + 검증된 성장주 <strong>30~40% 이상</strong> 유지</p>
+            </div>
+            
+            <p>연준의 12월 금리 결정을 기점으로 2027년 시장 방향이 결정됩니다. 금리 추가 인상 시 스태그플레이션 위험이 있어 디펜시브 섹터 비중 확대가 필요합니다.</p>
+        </section>
+
+        <!-- 포트폴리오 리밸런싱 전략 -->
+        <section>
+            <h2><span class="icon">⚖️</span> 포트폴리오 리밸런싱 전략</h2>
+            
+            <h3>1. AI 대형주 중심 보유</h3>
+            <p><strong>지속적인 수익 창출</strong>이 검증된 대형 기술주는 포트폴리오의 핵심으로 유지해야 합니다. 구글, 메타 등이 단기적으로 1% 이상 하락하더라도 장기적인 성과를 고려하면 "효자 종목"입니다.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="value">30-40%</span>
+                    <span class="label">AI 대형주 권장 비중</span>
+                </div>
+                <div class="stat-card">
+                    <span class="value">5-10%</span>
+                    <span class="label">성장주 최대 비중</span>
+                </div>
+            </div>
+            
+            <h3>2. 검증된 성장주 투자</h3>
+            <p>미래 산업을 개척하면서 <strong>매출·이익 성장이 검증</strong>된 기업들입니다. 마이너스에서 플러스로 전환된 기업들이 대표적입니다.</p>
+            
+            <div style="margin: 16px 0;">
+                <span class="tag">Affirm (AFRM)</span>
+                <span class="tag">Coinbase (COIN)</span>
+                <span class="tag">Snowflake (SNOW)</span>
+            </div>
+            
+            <p>이들 종목은 $80대에서 <strong>2~3배 상승</strong>한 사례가 있으나, 등락폭이 크므로 전체 포트폴리오의 <strong>5% 이하</strong>로 관리해야 합니다.</p>
+            
+            <h3>3. 현금 확보 전략</h3>
+            <div class="warning-box">
+                <p><strong>⚠️ 내년 2월까지 현금 비중 10~30% 확보 권고</strong></p>
+            </div>
+            <p>12월 FOMC 발표 이후 섹터 로테이션이 필수적입니다. 내년 시장 환경에 따라 유연하게 대응할 수 있는 현금이 필요합니다.</p>
+        </section>
+
+        <!-- FOMC와 시장 전망 -->
+        <section>
+            <h2><span class="icon">🏛️</span> FOMC와 시장 전망</h2>
+            
+            <p>12월 12-13일 FOMC 회의 결과에 따라 2027년 투자 전략이 크게 달라집니다. 현재 연준도 11월 거시경제 지표를 검토 중이며, 정확한 방향은 FOMC 이후 명확해질 전망입니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">FOMC 결과별 투자 전략</div>
+                <canvas id="fomcChart"></canvas>
+            </div>
+            
+            <h3>금리 추가 인상 시 시나리오</h3>
+            <div class="warning-box">
+                <p><strong>스태그플레이션 위험</strong>: 모든 것이 비싸지만 살 사람이 없는 상황</p>
+            </div>
+            <p>이 경우 <strong>디펜시브 주식</strong> 비중을 늘려야 합니다. 경기가 안 좋아도 소비가 유지되는 필수소비재 섹터입니다.</p>
+            
+            <div class="highlight-box">
+                <p><strong>디펜시브 주식이란?</strong></p>
+                <p>경제 상황과 관계없이 필수적으로 소비되는 품목을 생산하는 기업들. 예: $30-40 외식 대신 $8-9 식사를 해야 하는 상황에서도 수요가 유지되는 저가 생필품 기업</p>
+            </div>
+        </section>
+
+        <!-- 물가와 주식의 관계 -->
+        <section>
+            <h2><span class="icon">📊</span> 물가와 주식의 상관관계</h2>
+            
+            <table>
+                <tr>
+                    <th>물가 환경</th>
+                    <th>투자 전략</th>
+                </tr>
+                <tr>
+                    <td><strong>물가 상승기</strong></td>
+                    <td>우량주, 대형 성장주 비중 확대</td>
+                </tr>
+                <tr>
+                    <td><strong>물가 하락기</strong></td>
+                    <td>텔레콤, 배당주 비중 확대</td>
+                </tr>
+            </table>
+            
+            <h3>인플레이션과 기업의 가격 결정력</h3>
+            <p>물가가 10% 상승해도 개인의 임금은 10% 오르지 않습니다. 하지만 <strong>경쟁력 있는 기업</strong>은 상품·서비스 가격에 인플레이션을 전가(Pass-through)할 수 있습니다.</p>
+            
+            <div class="success-box">
+                <p><strong>핵심 인사이트</strong>: 우수한 제품·서비스를 가진 기업일수록 고객에게 가격 인상을 전가할 수 있는 능력(Pricing Power)이 있습니다. 이것이 인플레이션 환경에서 주식 투자가 유리한 이유입니다.</p>
+            </div>
+            
+            <h3>실제 인플레이션 체감 사례</h3>
+            <div class="highlight-box">
+                <p><strong>20년 단골 해물 식당 가격 변화 (3년간)</strong></p>
+                <p>4인 가족 식사: $110 → $190 (약 73% 상승)</p>
+                <p>팁 포함 총액: $130 → $230 (약 77% 상승)</p>
+            </div>
+            <p>연간 인플레이션율 8.8%로 계산해도, 실질적인 생활비 상승은 훨씬 가파릅니다.</p>
+        </section>
+
+        <!-- 연령별 포트폴리오 전략 -->
+        <section>
+            <h2><span class="icon">🎯</span> 연령별 포트폴리오 전략</h2>
+            
+            <p>자산 규모와 투자 여력은 연령대에 따라 다릅니다. 30대보다 40대가, 40대보다 50대가 더 많은 자산을 보유하고 있어 포트폴리오 구성이 가능합니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">연령대별 권장 자산 배분</div>
+                <canvas id="ageChart"></canvas>
+            </div>
+            
+            <h3>핵심 원칙: 베타(β) 관리</h3>
+            <p><strong>나이가 들수록 베타를 줄여야 합니다.</strong> 베타를 줄인다는 것은 포트폴리오의 변동성을 낮추는 것입니다. 급격한 시장 변화에 과도하게 노출되면 심리적·재정적 부담이 커집니다.</p>
+            
+            <div class="key-point">
+                <div class="number">!</div>
+                <div class="content">
+                    <div class="title">욕심이 생기더라도</div>
+                    <div class="desc">나이가 들수록 보수적인 포트폴리오가 정답입니다. 리스크를 줄이는 것이 핵심입니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 장기 수익률 분석 -->
+        <section>
+            <h2><span class="icon">📈</span> 주식 vs 채권: 20년 장기 수익률</h2>
+            
+            <p>2002년 $10,000 투자 시 약 20년 후 결과를 분석합니다. 우량 주식은 폭락장에서도 회복력이 강하며, 문제는 <strong>비중 조절</strong>과 <strong>현금 필요 시점</strong>입니다.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="value">7.41%</span>
+                    <span class="label">주식 연평균 수익률</span>
+                </div>
+                <div class="stat-card">
+                    <span class="value">2.82%</span>
+                    <span class="label">채권 연평균 수익률</span>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">$10,000 투자 시 20년 후 자산 가치</div>
+                <canvas id="returnChart"></canvas>
+            </div>
+            
+            <table>
+                <tr>
+                    <th>포트폴리오 유형</th>
+                    <th>연수익률</th>
+                    <th>20년 후 가치</th>
+                    <th>특징</th>
+                </tr>
+                <tr>
+                    <td>주식 100%</td>
+                    <td>7.41%</td>
+                    <td>~$42,000</td>
+                    <td>고수익, 고변동</td>
+                </tr>
+                <tr>
+                    <td>주식 70% / 채권 30%</td>
+                    <td>~6.0%</td>
+                    <td>~$32,000</td>
+                    <td>균형형</td>
+                </tr>
+                <tr>
+                    <td>주식 50% / 채권 50%</td>
+                    <td>~5.1%</td>
+                    <td>~$27,000</td>
+                    <td>안정형</td>
+                </tr>
+                <tr>
+                    <td>채권 100%</td>
+                    <td>2.82%</td>
+                    <td>~$17,000</td>
+                    <td>저수익, 저변동</td>
+                </tr>
+            </table>
+            
+            <div class="warning-box">
+                <p><strong>채권 2.82% 수익률의 의미</strong>: 인플레이션보다 낮은 성장률입니다. 실질 구매력이 오히려 감소합니다.</p>
+            </div>
+            
+            <h3>국민연금 사례의 교훈</h3>
+            <p>지난 10년간 주식이 4배 오를 때 채권 위주(60% 채권, 40% 주식)로 운용한 국민연금은 상대적으로 저조한 성과를 기록했습니다. <strong>채권 40% 이상 장기 보유</strong>는 기회비용이 큽니다.</p>
+        </section>
+
+        <!-- 은퇴자 포트폴리오 전략 -->
+        <section>
+            <h2><span class="icon">🏖️</span> 은퇴자 포트폴리오 전략</h2>
+            
+            <h3>핵심: 연간 필요 현금 기준으로 설계</h3>
+            <p>은퇴 후에도 주식 투자는 필요하지만, <strong>전 재산을 주식에 투자하면 안 됩니다.</strong> 매년 필요한 현금 규모에 따라 포트폴리오를 설계해야 합니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">은퇴 포트폴리오별 변동성</div>
+                <canvas id="volatilityChart"></canvas>
+            </div>
+            
+            <table>
+                <tr>
+                    <th>유형</th>
+                    <th>주식 비중</th>
+                    <th>좋은 해</th>
+                    <th>나쁜 해</th>
+                </tr>
+                <tr>
+                    <td><strong>공격형(Moderate)</strong></td>
+                    <td>70%+</td>
+                    <td>+31%</td>
+                    <td>-21%</td>
+                </tr>
+                <tr>
+                    <td><strong>중립형</strong></td>
+                    <td>50-60%</td>
+                    <td>+27%</td>
+                    <td>-13%</td>
+                </tr>
+                <tr>
+                    <td><strong>보수형(Conservative)</strong></td>
+                    <td>30-40%</td>
+                    <td>+23%</td>
+                    <td>-10%</td>
+                </tr>
+            </table>
+            
+            <h3>폭락장 대응 전략</h3>
+            <div class="highlight-box">
+                <p><strong>시나리오</strong>: $100,000 투자 → 폭락으로 $70,000으로 감소</p>
+                <p>이 해에 $70,000 전액이 필요한 것이 아닙니다. 연간 필요 현금이 $5,000이라면, 2-3년간 회복을 기다릴 수 있습니다.</p>
+            </div>
+            
+            <div class="success-box">
+                <p><strong>미국 주식의 회복력</strong>: 반토막이 나더라도 2-3년 내 회복 확률 90%. 미국이 전쟁을 하더라도 회복합니다.</p>
+            </div>
+            
+            <h3>자산과 지출의 교차점</h3>
+            <p>은퇴 후 가장 중요한 것은 <strong>지출이 자산을 초과하는 시점</strong>을 최대한 늦추는 것입니다.</p>
+            
+            <div class="chart-container">
+                <div class="chart-title">은퇴 후 자산 vs 지출 추이</div>
+                <canvas id="crossoverChart"></canvas>
+            </div>
+            
+            <p>나이가 들수록 의료비, 요양 시설비, 약값 등이 증가합니다. 자산과 지출이 교차하는 시점이 오면 <strong>행복감이 급격히 하락</strong>합니다. 미국 주식 투자는 이 교차점을 3-10년 늦출 수 있습니다.</p>
+        </section>
+
+        <!-- 미국 중산층 은퇴자 수입원 -->
+        <section>
+            <h2><span class="icon">💵</span> 미국 대졸 중산층 은퇴자 수입원</h2>
+            
+            <p>동부/서부 대도시 기준, 대기업 근무 대졸자의 65세 은퇴 시 평균적인 수입원 구조입니다.</p>
+            
+            <div class="highlight-box">
+                <p><strong>기준</strong>: 평균 집값 $100만 이상 지역 (뉴욕, LA 등 동부/서부)</p>
+                <p>대졸 이상, 대기업 매니저급 이상, 25-30년 상근 근무</p>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">은퇴자 월 수입원 구성</div>
+                <canvas id="incomeChart"></canvas>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">1</div>
+                <div class="content">
+                    <div class="title">Social Security (소셜 시큐리티)</div>
+                    <div class="desc">25년 이상 납세 기록 + 대기업 연봉 수준 → 월 $2,500~$3,500 (사망 시까지)</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">2</div>
+                <div class="content">
+                    <div class="title">IRA (Individual Retirement Account)</div>
+                    <div class="desc">세금 유예 + 회사 매칭으로 30년간 $80만~$200만+ 축적</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">3</div>
+                <div class="content">
+                    <div class="title">부동산 임대 수입</div>
+                    <div class="desc">콘도/부동산 투자로 월 $500~$2,000</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">4</div>
+                <div class="content">
+                    <div class="title">여유자산 투자 수익</div>
+                    <div class="desc">30대 후반부터 축적한 여유자금, 60대에 $25만~$150만+</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">5</div>
+                <div class="content">
+                    <div class="title">보험 및 기타</div>
+                    <div class="desc">생명보험, 연금보험 등</div>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <p><strong>합계</strong>: 월 $8,000~$10,000 수준의 수입이 있어야 동부/서부 기준 안정적인 은퇴 생활이 가능합니다.</p>
+            </div>
+            
+            <h3>한국 역이민 전략</h3>
+            <p>미국에서 $2,500~3,000(약 300만원)은 생활하기 빠듯하지만, 한국에서 집만 있으면 충분히 생활 가능합니다. 미국에서 소셜 시큐리티를 받으며 한국에서 거주하는 은퇴자가 많습니다.</p>
+        </section>
+
+        <!-- 은퇴자 3대 위험 요소 -->
+        <section>
+            <h2><span class="icon">⚠️</span> 은퇴자의 3대 위험 요소</h2>
+            
+            <p>행복한 은퇴를 방해하는 적은 항상 <strong>가까이</strong>에 있습니다.</p>
+            
+            <div class="key-point">
+                <div class="number" style="background: linear-gradient(135deg, #ff6b6b, #ee5a5a);">1</div>
+                <div class="content">
+                    <div class="title">건강</div>
+                    <div class="desc">65세까지 잘 은퇴했어도 갑작스러운 건강 악화 시 $200만~$300만 자산도 10년 내 파산 가능. 미국 의료비는 치명적입니다.</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number" style="background: linear-gradient(135deg, #ffa502, #ff7f50);">2</div>
+                <div class="content">
+                    <div class="title">자식</div>
+                    <div class="desc">30세 이상 자녀에게 교육비, 생활비 지원이 지속되면 은퇴 자금이 고갈됩니다. 부모에게 의존하는 기간이 길어질수록 자립도는 떨어집니다.</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number" style="background: linear-gradient(135deg, #a55eea, #8854d0);">3</div>
+                <div class="content">
+                    <div class="title">배우자</div>
+                    <div class="desc">배우자의 과도한 지출이나 문제 행동은 은퇴 자금을 위협합니다.</div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <p><strong>"부모 등에 빨대 꽂아서 성공한 사람은 없다"</strong></p>
+                <p>30세 넘어 부모에게 의존하면 멘탈이 무너집니다. 배우자도 생기기 어렵고, 자녀를 키울 능력도 갖추기 어렵습니다. 자립이 미래를 위한 유일한 길입니다.</p>
+            </div>
+            
+            <h3>부모의 올바른 역할</h3>
+            <div class="success-box">
+                <p>자녀가 정말 힘들어서 바닥(Low Point)에 있을 때, 그때 손을 잡고 올려주는 것이 부모의 역할입니다. 매달 정기적으로 지원하는 것이 아닙니다.</p>
+            </div>
+        </section>
+
+        <!-- 투자 시사점 -->
+        <section>
+            <h2><span class="icon">💡</span> 미국 증시 투자 시사점</h2>
+            
+            <div class="key-point">
+                <div class="number">1</div>
+                <div class="content">
+                    <div class="title">12월 FOMC 이후 액션</div>
+                    <div class="desc">금리 결정에 따라 섹터 로테이션 실행. 스태그플레이션 시나리오 시 디펜시브 섹터 확대</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">2</div>
+                <div class="content">
+                    <div class="title">AI 대형주 유지</div>
+                    <div class="desc">구글, 메타 등 수익 창출 검증된 대형주는 30-40% 비중 유지</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">3</div>
+                <div class="content">
+                    <div class="title">성장주 선별 투자</div>
+                    <div class="desc">Affirm, Coinbase, Snowflake 등 검증된 성장주는 5% 이내로 관리</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">4</div>
+                <div class="content">
+                    <div class="title">현금 확보</div>
+                    <div class="desc">내년 2월까지 10-30% 현금 비중 확보로 유연성 확보</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">5</div>
+                <div class="content">
+                    <div class="title">인플레이션 헤지</div>
+                    <div class="desc">물가 상승기에는 가격 결정력(Pricing Power)이 있는 우량주 중심 투자</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <div class="number">6</div>
+                <div class="content">
+                    <div class="title">장기 관점 유지</div>
+                    <div class="desc">미국 주식은 폭락 시에도 2-3년 내 90% 확률로 회복. 단기 변동에 흔들리지 않기</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 주요 용어 정리 -->
+        <section>
+            <h2><span class="icon">📖</span> 주요 용어 정리</h2>
+            
+            <table>
+                <tr>
+                    <th>용어</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><strong>리밸런싱</strong></td>
+                    <td>포트폴리오 내 자산 비중을 목표에 맞게 재조정하는 것</td>
+                </tr>
+                <tr>
+                    <td><strong>섹터 로테이션</strong></td>
+                    <td>경기 사이클에 따라 유망 섹터로 자금을 이동시키는 전략</td>
+                </tr>
+                <tr>
+                    <td><strong>베타(β)</strong></td>
+                    <td>시장 대비 개별 주식의 변동성. 베타가 높으면 시장보다 더 크게 움직임</td>
+                </tr>
+                <tr>
+                    <td><strong>디펜시브 주식</strong></td>
+                    <td>경기 침체에도 수요가 안정적인 필수소비재, 유틸리티 등 방어적 섹터</td>
+                </tr>
+                <tr>
+                    <td><strong>스태그플레이션</strong></td>
+                    <td>경기 침체(Stagnation)와 물가 상승(Inflation)이 동시에 발생하는 상황</td>
+                </tr>
+                <tr>
+                    <td><strong>IRA</strong></td>
+                    <td>Individual Retirement Account. 미국의 개인 세금 유예 은퇴 계좌</td>
+                </tr>
+                <tr>
+                    <td><strong>Pricing Power</strong></td>
+                    <td>기업이 비용 상승분을 제품 가격에 전가할 수 있는 능력</td>
+                </tr>
+            </table>
+        </section>
+
+        <footer>
+            <p>본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+            <p>투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Chart.js 기본 설정
+        Chart.defaults.color = '#aaa';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+        
+        // FOMC 결과별 투자 전략 차트
+        const fomcCtx = document.getElementById('fomcChart').getContext('2d');
+        new Chart(fomcCtx, {
+            type: 'bar',
+            data: {
+                labels: ['금리 인하', '금리 동결', '금리 인상'],
+                datasets: [
+                    {
+                        label: '성장주 비중',
+                        data: [40, 30, 15],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    },
+                    {
+                        label: '디펜시브 비중',
+                        data: [15, 25, 40],
+                        backgroundColor: 'rgba(81, 207, 102, 0.8)',
+                    },
+                    {
+                        label: '현금 비중',
+                        data: [10, 20, 30],
+                        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 연령대별 자산 배분 차트
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+            type: 'bar',
+            data: {
+                labels: ['30대', '40대', '50대', '60대', '70대+'],
+                datasets: [
+                    {
+                        label: '주식',
+                        data: [85, 75, 65, 55, 45],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    },
+                    {
+                        label: '채권/현금',
+                        data: [15, 25, 35, 45, 55],
+                        backgroundColor: 'rgba(168, 192, 255, 0.6)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 20년 수익률 차트
+        const returnCtx = document.getElementById('returnChart').getContext('2d');
+        new Chart(returnCtx, {
+            type: 'bar',
+            data: {
+                labels: ['주식 100%', '주식 70%', '주식 50%', '채권 100%'],
+                datasets: [{
+                    label: '20년 후 자산 가치 ($)',
+                    data: [42000, 32000, 27000, 17000],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(168, 192, 255, 0.8)',
+                        'rgba(200, 200, 200, 0.6)'
+                    ],
+                    borderRadius: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 변동성 차트
+        const volatilityCtx = document.getElementById('volatilityChart').getContext('2d');
+        new Chart(volatilityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['공격형 (70%+)', '중립형 (50-60%)', '보수형 (30-40%)'],
+                datasets: [
+                    {
+                        label: '좋은 해 수익률',
+                        data: [31, 27, 23],
+                        backgroundColor: 'rgba(81, 207, 102, 0.8)',
+                    },
+                    {
+                        label: '나쁜 해 손실률',
+                        data: [-21, -13, -10],
+                        backgroundColor: 'rgba(255, 107, 107, 0.8)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 자산 vs 지출 교차점 차트
+        const crossoverCtx = document.getElementById('crossoverChart').getContext('2d');
+        new Chart(crossoverCtx, {
+            type: 'line',
+            data: {
+                labels: ['65세', '70세', '75세', '80세', '85세', '90세', '95세', '100세'],
+                datasets: [
+                    {
+                        label: '투자 자산',
+                        data: [100, 95, 85, 70, 55, 40, 25, 10],
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: '누적 지출',
+                        data: [10, 25, 45, 65, 80, 90, 95, 100],
+                        borderColor: 'rgba(255, 107, 107, 1)',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    annotation: {
+                        annotations: {}
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 110,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 수입원 구성 차트
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        new Chart(incomeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Social Security', 'IRA 인출', '부동산 임대', '투자 수익', '기타'],
+                datasets: [{
+                    data: [35, 30, 15, 15, 5],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(81, 207, 102, 0.8)',
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(168, 192, 255, 0.6)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

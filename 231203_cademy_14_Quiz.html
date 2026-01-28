@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 14회: 시험문제</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .meta {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.5);
+        }
+        
+        .question-block {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .difficulty {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255,193,7,0.2);
+            color: #ffc107;
+        }
+        
+        .difficulty.easy {
+            background: rgba(81,207,102,0.2);
+            color: #51cf66;
+        }
+        
+        .difficulty.hard {
+            background: rgba(255,107,107,0.2);
+            color: #ff6b6b;
+        }
+        
+        .type-tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(102,126,234,0.2);
+            color: #a8c0ff;
+        }
+        
+        .question-text {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: rgba(255,255,255,0.03);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background: rgba(102,126,234,0.15);
+            color: #fff;
+        }
+        
+        .blank-box {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px dashed #667eea;
+            margin: 0 4px;
+            padding: 0 8px;
+        }
+        
+        .answer-space {
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            min-height: 60px;
+            color: #888;
+            font-size: 13px;
+        }
+        
+        .answer-block {
+            background: rgba(81,207,102,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #51cf66;
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .answer-number {
+            background: linear-gradient(135deg, #51cf66, #40c057);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .correct-answer {
+            font-size: 16px;
+            font-weight: 700;
+            color: #51cf66;
+        }
+        
+        .explanation {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.7;
+        }
+        
+        .explanation strong {
+            color: #fff;
+        }
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            section {
+                padding: 20px 16px;
+            }
+            
+            .question-block, .answer-block {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">투자 아카데미 14회</div>
+            <h1>12월 포트폴리오 조정 방향과 은퇴 전략<br>📋 시험문제</h1>
+            <p class="meta">총 10문제 | 객관식, 단답형, OX, 빈칸채우기, 서술형</p>
+        </header>
+
+        <!-- 문제지 섹션 -->
+        <section>
+            <h2>📋 시험문제 (총 10문제)</h2>
+            
+            <!-- 문제 1 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-meta">
+                        <span class="difficulty easy">⭐ 쉬움</span>
+                        <span class="type-tag">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에서 언급된 FOMC 회의 예정일은 언제인가?
+                </div>
+                <div class="options">
+                    <div class="option">① 12월 5-6일</div>
+                    <div class="option">② 12월 12-13일</div>
+                    <div class="option">③ 12월 18-19일</div>
+                    <div class="option">④ 12월 20-21일</div>
+                </div>
+            </div>
+            
+            <!-- 문제 2 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-meta">
+                        <span class="difficulty easy">⭐ 쉬움</span>
+                        <span class="type-tag">OX문제</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에 따르면, 검증된 성장주(Affirm, Coinbase, Snowflake 등)는 전체 포트폴리오의 20% 이상 보유하는 것이 권장된다. (O/X)
+                </div>
+            </div>
+            
+            <!-- 문제 3 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">단답형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    2002년 $10,000을 투자했을 때, 주식 펀드의 연평균 수익률은 몇 퍼센트인가?
+                </div>
+                <div class="answer-space">정답 입력란</div>
+            </div>
+            
+            <!-- 문제 4 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">빈칸채우기</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    연준이 금리를 추가 인상할 경우, 모든 것이 비싸지만 살 사람이 없는 <span class="blank-box"></span> 상황이 발생할 가능성이 높아진다.
+                </div>
+            </div>
+            
+            <!-- 문제 5 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에서 권장하는 내년 2월까지의 현금 확보 비중으로 가장 적절한 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 5% 이하</div>
+                    <div class="option">② 10~30%</div>
+                    <div class="option">③ 40~50%</div>
+                    <div class="option">④ 60% 이상</div>
+                </div>
+            </div>
+            
+            <!-- 문제 6 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    물가 상승기에 비중을 늘려야 하는 자산으로 영상에서 언급된 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 채권, 국채</div>
+                    <div class="option">② 우량주, 대형 성장주</div>
+                    <div class="option">③ 텔레콤, 배당주</div>
+                    <div class="option">④ 현금, 예금</div>
+                </div>
+            </div>
+            
+            <!-- 문제 7 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">단답형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    나이가 들수록 포트폴리오의 변동성(리스크)을 줄여야 한다고 했을 때, 이 변동성을 나타내는 투자 지표의 이름은 무엇인가? (그리스 문자 사용)
+                </div>
+                <div class="answer-space">정답 입력란</div>
+            </div>
+            
+            <!-- 문제 8 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">8</div>
+                    <div class="question-meta">
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="type-tag">서술형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에서 언급된 '가격 결정력(Pricing Power)'의 개념을 설명하고, 인플레이션 환경에서 이러한 능력을 가진 기업의 주식에 투자하는 것이 유리한 이유를 서술하시오.
+                </div>
+                <div class="answer-space">서술형 답안 작성란</div>
+            </div>
+            
+            <!-- 문제 9 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">9</div>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐⭐ 보통</span>
+                        <span class="type-tag">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에서 언급된 '은퇴자의 3대 위험 요소'에 해당하지 않는 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 건강</div>
+                    <div class="option">② 자식</div>
+                    <div class="option">③ 인플레이션</div>
+                    <div class="option">④ 배우자</div>
+                </div>
+            </div>
+            
+            <!-- 문제 10 -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">10</div>
+                    <div class="question-meta">
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="type-tag">서술형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    영상에 따르면, 미국 주식은 폭락 시에도 2-3년 내에 회복될 확률이 90%라고 했다. 이러한 특성을 고려할 때, 은퇴자가 폭락장에서 포트폴리오를 관리하는 방법과, 100% 채권 포트폴리오가 권장되지 않는 이유를 함께 서술하시오.
+                </div>
+                <div class="answer-space">서술형 답안 작성란</div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- 정답지 섹션 -->
+        <section>
+            <h2>📝 정답 및 해설</h2>
+            
+            <!-- 정답 1 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">1</div>
+                    <div class="correct-answer">정답: ② 12월 12-13일</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서는 "12월 12, 13일날 발표가 될 것 같다", "12월 13일날 FOMC 발표 이후에 섹터 로테이션이 반드시 필요하다"고 명시하였습니다. 이 시점을 기준으로 내년 시장 방향이 결정되므로 투자자들에게 중요한 날짜입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 2 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">2</div>
+                    <div class="correct-answer">정답: X (아니오)</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서는 검증된 성장주(Affirm, Coinbase, Snowflake 등)의 비중을 <strong>5% 이하</strong>로 유지하라고 권고했습니다. 또한 전체 성장주 비중은 <strong>10%를 넘으면 안 된다</strong>고 명시했습니다. 이들 종목은 등락폭이 크기 때문에 소량만 보유하는 것이 리스크 관리에 적합합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 3 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">3</div>
+                    <div class="correct-answer">정답: 7.41%</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서 "스탁 펀드에요. 스탁을 가지고 있는 경우는 에버지 리턴이 7.41%입니다"라고 명확히 언급했습니다. 이는 채권의 연평균 수익률 2.82%와 비교하면 약 2.6배 높은 수치입니다. 7%대 수익률은 약 10년에 2배, 20년에 4배의 자산 증식을 의미합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 4 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">4</div>
+                    <div class="correct-answer">정답: 스태그플레이션 (Stagflation)</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 스태그플레이션은 경기 침체(Stagnation)와 물가 상승(Inflation)이 동시에 발생하는 현상입니다. 영상에서는 "금리를 한 차례 더 올리면 스태그네이션이에요. 모든 게 다 비싼데 살 사람은 없는 거예요"라고 설명했습니다. 이 경우 디펜시브 주식 비중을 늘려야 합니다.
+                </div>
+            </div>
+            
+            <!-- 정답 5 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">5</div>
+                    <div class="correct-answer">정답: ② 10~30%</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서 "개인에 따라서 한 2월 전, 내년 2월 전까지는 현금 확보를 지금보다 한 10%에서 많게는 한 30% 확보를 해야 됩니다"라고 명시했습니다. 이는 FOMC 발표 이후 섹터 로테이션에 대응하고, 불확실한 시장 환경에서 유연성을 확보하기 위함입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 6 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">6</div>
+                    <div class="correct-answer">정답: ② 우량주, 대형 성장주</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서 "물가가 높으면 높을수록 주식, 우량주, 대형 성장주"를 보유하라고 했습니다. 반대로 "물가가 낮아질수록 텔레콤 배당주를 늘려야 합니다"라고 언급했습니다. 이는 인플레이션 환경에서 가격 결정력이 있는 우량 기업이 비용 상승분을 제품 가격에 전가할 수 있기 때문입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 7 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">7</div>
+                    <div class="correct-answer">정답: 베타(β, Beta)</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서 "보수적인 것은 리스크를 줄이는 거에요. 리스크를 줄인다는 얘기는 베타를 줄인다는 얘기입니다"라고 설명했습니다. 베타(β)는 시장 대비 개별 주식 또는 포트폴리오의 변동성을 나타내는 지표입니다. 베타가 1보다 크면 시장보다 변동성이 크고, 1보다 작으면 시장보다 안정적입니다.
+                </div>
+            </div>
+            
+            <!-- 정답 8 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">8</div>
+                    <div class="correct-answer">정답: (서술형 모범답안)</div>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>가격 결정력(Pricing Power)의 개념:</strong> 기업이 원가 상승분을 제품이나 서비스 가격에 전가하여 고객에게 부담시킬 수 있는 능력을 말한다. 경쟁력 있는 제품과 서비스를 보유한 기업일수록 가격 인상에도 고객 이탈이 적어 이러한 능력이 강하다.<br><br>
+                    <strong>인플레이션 환경에서 유리한 이유:</strong><br>
+                    1) 물가가 10% 상승해도 개인의 임금은 10% 오르지 않지만, 가격 결정력이 있는 기업은 제품 가격에 인플레이션을 그대로 반영(×1.08 등)할 수 있다.<br>
+                    2) 영상의 실제 사례처럼 3년간 식당 가격이 $110에서 $190(약 73%)으로 상승한 것은 기업이 비용을 고객에게 전가한 사례이다.<br>
+                    3) 따라서 인플레이션 시기에 가격 결정력이 강한 우량 기업의 주식을 보유하면, 기업의 매출과 이익이 물가 상승분을 흡수하여 주가 상승으로 이어질 수 있다.
+                </div>
+            </div>
+            
+            <!-- 정답 9 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">9</div>
+                    <div class="correct-answer">정답: ③ 인플레이션</div>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 영상에서 언급된 '은퇴자의 3대 위험 요소'는 <strong>건강, 자식, 배우자</strong>입니다. "행복한 은퇴에 방해되는 적은 항상 가까이 있다"고 했으며, 이들은 모두 가까운 관계에서 발생하는 위험입니다. 인플레이션은 외부 경제 요인으로, 3대 위험 요소에 포함되지 않습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 10 -->
+            <div class="answer-block">
+                <div class="answer-header">
+                    <div class="answer-number">10</div>
+                    <div class="correct-answer">정답: (서술형 모범답안)</div>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>폭락장에서 포트폴리오 관리 방법:</strong><br>
+                    1) 전 재산을 주식에 투자하지 않고, 연간 필요 현금을 기준으로 포트폴리오를 설계해야 한다.<br>
+                    2) 예를 들어, $100,000 투자 시 폭락으로 $70,000이 되어도 해당 해에 필요한 현금이 $5,000이라면 2-3년간 회복을 기다릴 수 있다.<br>
+                    3) 미국 주식은 폭락 시에도 2-3년 내 회복 확률이 90%이므로, 단기 현금 필요분만 별도로 확보하면 우량주는 보유를 유지하는 것이 유리하다.<br><br>
+                    <strong>100% 채권 포트폴리오가 권장되지 않는 이유:</strong><br>
+                    1) 채권의 연평균 수익률(2.82%)은 인플레이션보다 낮아 실질 구매력이 오히려 감소한다.<br>
+                    2) 20년간 $10,000 투자 시 채권은 $17,000밖에 안 되지만, 주식은 약 $42,000으로 성장한다.<br>
+                    3) 국민연금 사례처럼 채권 40% 이상 장기 보유 시 주식 상승분을 놓쳐 기회비용이 크다.<br>
+                    4) 따라서 은퇴 후에도 적정 비율의 주식을 유지하되, 연간 필요 현금에 따라 보수적으로 조정하는 것이 바람직하다.
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>본 시험문제는 교육 목적으로 작성되었습니다.</p>
+            <p>투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+        </footer>
+    </div>
+</body>
+</html>
