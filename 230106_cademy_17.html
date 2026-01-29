@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 목적 7가지와 미국 투자 선진화 4단계 - 미국 증시 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header .meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #1a237e;
+            margin: 28px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8eaf6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 {
+            font-size: 1.05rem;
+            color: #303f9f;
+            margin: 20px 0 12px 0;
+        }
+        h4 {
+            font-size: 0.95rem;
+            color: #5c6bc0;
+            margin: 16px 0 10px 0;
+        }
+        p {
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-left: 4px solid #3949ab;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .highlight-box.warning {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left-color: #ff9800;
+        }
+        .highlight-box.danger {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left-color: #f44336;
+        }
+        .highlight-box.success {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #4caf50;
+        }
+        .highlight-box h4 {
+            margin-top: 0;
+            color: inherit;
+        }
+        strong {
+            color: #1a237e;
+            font-weight: 600;
+        }
+        .keyword {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .chart-container {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+        .chart-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #424242;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #3949ab;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .stage-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stage-card .stage-num {
+            display: inline-block;
+            background: #3949ab;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 8px;
+        }
+        .stage-card .stage-title {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 1rem;
+        }
+        .stage-card .stage-period {
+            color: #757575;
+            font-size: 0.8rem;
+            margin-left: 36px;
+            margin-top: 4px;
+        }
+        .stage-card .stage-desc {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #424242;
+        }
+        ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .purpose-grid {
+            display: grid;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .purpose-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .purpose-item .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #3949ab;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .purpose-item .title {
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .purpose-item .eng {
+            color: #757575;
+            font-size: 0.8rem;
+        }
+        .purpose-item .desc {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #424242;
+        }
+        .comparison-table {
+            overflow-x: auto;
+        }
+        .footer {
+            background: #263238;
+            color: #b0bec5;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .summary-box h3 {
+            color: white;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        .summary-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .summary-box li {
+            color: rgba(255,255,255,0.95);
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c5cae9, transparent);
+            margin: 24px 0;
+        }
+        .icon {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 투자 목적 7가지와 미국 투자 선진화 4단계</h1>
+            <div class="meta">투자아카데미 17회 | 미국 증시 관점 분석</div>
+        </div>
+
+        <div class="content">
+            <!-- 핵심 요약 -->
+            <div class="summary-box">
+                <h3>📌 핵심 요약</h3>
+                <ul>
+                    <li>투자 목적은 7가지로 구분되며, 목적에 따라 수익률과 리스크가 다름</li>
+                    <li>한국은 미국의 1960년대 수준(주식 중심 투기)에 머물러 있음</li>
+                    <li>선진 투자: 포트폴리오 구성 → 섹터 로테이션 → 리밸런싱</li>
+                    <li>궁극적 목표: Total Financial Planning (요람에서 무덤까지)</li>
+                </ul>
+            </div>
+
+            <!-- 투자 목적 7가지 -->
+            <h2><span class="icon">🎯</span> 투자 목적 7가지</h2>
+            
+            <p><strong>투자의 모든 활동은 목적성을 가져야</strong> 합니다. 목적 없는 투자는 마치 복무 없는 군인과 같습니다. 목적이 다르면 기대 수익률도, 리스크 허용 범위도 달라지므로 다른 투자자와 단순 비교는 무의미합니다.</p>
+
+            <div class="purpose-grid">
+                <div class="purpose-item">
+                    <span class="num">1</span>
+                    <span class="title">성장</span>
+                    <span class="eng">Growth</span>
+                    <div class="desc">
+                        주가 상승을 통한 <strong>자본 이득(Capital Gain)</strong> 추구. S&P 500 편입 종목 수준의 안정적 대형주 중심 투자 권장. 밈 주식(Meme Stock)이나 고위험 소형주는 해당되지 않음.
+                    </div>
+                </div>
+
+                <div class="purpose-item">
+                    <span class="num">2</span>
+                    <span class="title">인컴</span>
+                    <span class="eng">Income</span>
+                    <div class="desc">
+                        정기적인 <strong>이자·배당금 수익</strong>으로 현금 흐름 창출. 현재 미국 시장에서 6~9% 배당 수익 상품 존재. 은퇴자 또는 조기 은퇴자(운동선수 등)에게 적합. 배당주 + 채권 조합.
+                    </div>
+                </div>
+
+                <div class="purpose-item">
+                    <span class="num">3</span>
+                    <span class="title">토탈 리턴</span>
+                    <span class="eng">Total Return</span>
+                    <div class="desc">
+                        1번(성장)과 2번(인컴)의 결합. <strong>블루칩 배당주 + 투자등급 채권(BBB 이상)</strong> 조합. 가치주 위주의 안정적 성장과 현금 흐름 동시 추구.
+                    </div>
+                </div>
+
+                <div class="purpose-item">
+                    <span class="num">4</span>
+                    <span class="title">자본 보전</span>
+                    <span class="eng">Preservation of Capital</span>
+                    <div class="desc">
+                        원금 손실 최소화가 최우선. <strong>Treasury Bills, 10년 국채, Money Market Fund</strong> 등 초보수적 상품. 자산 규모가 큰 투자자가 리스크 회피 목적으로 활용.
+                    </div>
+                </div>
+
+                <div class="purpose-item">
+                    <span class="num">5</span>
+                    <span class="title">세금 절감</span>
+                    <span class="eng">Tax Reduction</span>
+                    <div class="desc">
+                        자산 규모가 클수록 Capital Gain Tax 부담 증가(15~20%). <strong>Municipal Bond(지방채)</strong>는 연방세 면제로 5% 수익률이 7% 효과. 529 Plan(학자금), Trust Account(신탁), 1039 Exchange(부동산) 등 절세 수단 활용.
+                    </div>
+                </div>
+
+                <div class="purpose-item" style="border-color: #f44336;">
+                    <span class="num" style="background: #f44336;">6</span>
+                    <span class="title" style="color: #c62828;">투기</span>
+                    <span class="eng">Speculation</span>
+                    <div class="desc" style="color: #c62828;">
+                        <strong>⚠️ 99%가 실패하는 영역.</strong> 페니스탁, 소형 성장주, 기술적 분석 기반 단기 매매. 다른 투자자의 손실이 나의 이익이 되는 제로섬 게임. 리스크 정보 없이 수익률만 강조하는 것은 위험.
+                    </div>
+                </div>
+
+                <div class="purpose-item">
+                    <span class="num">7</span>
+                    <span class="title">유동성</span>
+                    <span class="eng">Liquidity</span>
+                    <div class="desc">
+                        급전 필요 시 <strong>즉시 현금화</strong> 가능해야 함. 2년 내 집 구매, 결혼 자금 등 단기 목적 자금은 주식 투자 부적합. 보수적 상품으로 운용 필수.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">투자 목적별 리스크-수익률 관계</div>
+                <canvas id="riskReturnChart"></canvas>
+            </div>
+
+            <div class="highlight-box warning">
+                <h4>⚠️ 한국 투자 문화의 문제점</h4>
+                <p style="margin-bottom: 0;">언론에서 "몇 배 수익" 강조 시 <strong>리스크 정보는 누락</strong>됨. 투기(6번)가 마치 전체 투자인 것처럼 인식되는 후진적 현상. 선진국에서는 수익률과 함께 리스크를 반드시 명시.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 미국 투자 선진화 4단계 -->
+            <h2><span class="icon">📈</span> 미국 투자 선진화 4단계</h2>
+            
+            <p>미국은 투자 선진화에 <strong>100년</strong>이 걸렸습니다. 한국은 현재 1단계 수준에 머물러 있으나, 약 20년이면 선진화될 수 있습니다.</p>
+
+            <div class="stage-card">
+                <span class="stage-num">1</span>
+                <span class="stage-title">주식 중심 투자</span>
+                <div class="stage-period">📅 1929년 ~ 1960년대</div>
+                <div class="stage-desc">
+                    <strong>Stock Picking</strong> 시대. 개별 종목 선택에만 집중. 대공황(1929) 이후 5~6년간 주가 회복 불가 → 분산 투자 개념 부재로 대규모 손실 발생.
+                    <br><br>
+                    <span style="color: #c62828;">🇰🇷 <strong>한국의 현재 수준:</strong> "어떤 주식이 좋을까?"에만 집중. 방송도 주식 추천 일색.</span>
+                </div>
+            </div>
+
+            <div class="stage-card">
+                <span class="stage-num">2</span>
+                <span class="stage-title">투자 위험 분산</span>
+                <div class="stage-period">📅 1970년대</div>
+                <div class="stage-desc">
+                    <strong>1973년 오일 쇼크</strong> 이후 섹터(Sector) 개념 등장. 에너지·산업재는 급등하나 소비재는 급락하는 현상 관측 → <strong>11개 섹터 분류 체계</strong> 수립. 섹터별 분산 투자로 리스크 관리 시작.
+                </div>
+            </div>
+
+            <div class="stage-card">
+                <span class="stage-num">3</span>
+                <span class="stage-title">포트폴리오 구성 & 섹터 로테이션</span>
+                <div class="stage-period">📅 1990년대 ~ 2000년대 초</div>
+                <div class="stage-desc">
+                    인터넷 혁명기. Microsoft, FedEx 등 <strong>기하급수적 성장 기업</strong> 등장. 포트폴리오 구성 → 섹터 로테이션 → 리밸런싱 개념 정립.
+                    <br><br>
+                    <span style="color: #1a237e;">✅ <strong>핵심 전략:</strong> 거시경제 지표 분석 → 유망 섹터 발굴 → 해당 섹터 내 우량주 선별 → 폭락 시 매입</span>
+                </div>
+            </div>
+
+            <div class="stage-card" style="border: 2px solid #3949ab;">
+                <span class="stage-num" style="background: linear-gradient(135deg, #1a237e, #3949ab);">4</span>
+                <span class="stage-title">Total Financial Planning</span>
+                <div class="stage-period">📅 현재 ~ 미래</div>
+                <div class="stage-desc">
+                    <strong>"요람에서 무덤까지(Cradle to Grave)"</strong> 전 생애 재무 설계.
+                    <ul style="margin-top: 10px;">
+                        <li>출생 시: 투자 계좌 개설</li>
+                        <li>성장기: 529 Plan(학자금) 운용, 세금 이연</li>
+                        <li>20대: 은퇴 계좌 운영 시작 (401k 등)</li>
+                        <li>30~50대: 집 장만, 결혼, 자녀 교육</li>
+                        <li>50~60대: 신탁 계좌(Trust Account) 설립</li>
+                        <li>노년: Long-term Care, 장례 비용까지 계획</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">미국 투자 선진화 단계별 시간축</div>
+                <canvas id="timelineChart"></canvas>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Total Financial Planning 필요성 -->
+            <h2><span class="icon">💡</span> Total Financial Planning이 필요한 이유</h2>
+
+            <h3>1. 노동 소득 vs 투자 수익 격차 확대</h3>
+            <p>1990년대 이후 <strong>인터넷·3차 산업혁명</strong>으로 투자 수익은 기하급수적 성장, 임금 상승은 인플레이션 수준에 그침.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">노동소득 vs 투자수익 vs 인플레이션 추이</div>
+                <canvas id="wageChart"></canvas>
+            </div>
+
+            <div class="highlight-box">
+                <h4>📊 핵심 포인트</h4>
+                <p style="margin-bottom: 0;">노동 소득만으로는 인플레이션을 따라잡지 못함. 이 격차를 메우려면 <strong>저축이 아닌 투자</strong>가 필수. 저축 세대는 이미 끝났음.</p>
+            </div>
+
+            <h3>2. 평생 직장의 소멸</h3>
+            <ul>
+                <li>1990년대부터 글로벌 경쟁으로 <strong>대량 해고</strong> 만연</li>
+                <li>2024년에도 빅테크 기업들의 대규모 구조조정 지속</li>
+                <li>노동 소득의 기간은 길어야 <strong>30년</strong></li>
+            </ul>
+
+            <h3>3. 100세 시대의 도래</h3>
+            <p>한국 평균 수명 86~87세, 100세 시대 진입. 은퇴 후 <strong>40년</strong>을 저축만으로 연명 불가능.</p>
+
+            <h3>4. 4차 산업혁명과 AI</h3>
+            <div class="highlight-box danger">
+                <h4>🤖 AI로 대체될 일자리</h4>
+                <ul style="margin-bottom: 0;">
+                    <li>단순 실행(Execution) 업무</li>
+                    <li>창조성이 필요 없는 업무</li>
+                    <li>인간 간 유대관계가 불필요한 업무</li>
+                    <li>"적당히 똑똑한" 화이트칼라 노동자</li>
+                </ul>
+            </div>
+
+            <p>미국 일부에서는 <strong>AI 사용세</strong> 법안 및 기본소득(UBI) 논의 중. 인간의 노동권 침해에 대한 사회적 안전망 필요성 대두.</p>
+
+            <div class="divider"></div>
+
+            <!-- 포트폴리오 운영 원칙 -->
+            <h2><span class="icon">⚖️</span> 선진 포트폴리오 운영 원칙</h2>
+
+            <h3>333 법칙 (선진국형 자산 배분)</h3>
+            <div class="chart-container">
+                <div class="chart-title">선진국형 자산 배분 (333 법칙)</div>
+                <canvas id="assetAllocationChart"></canvas>
+            </div>
+
+            <table>
+                <tr>
+                    <th>자산 유형</th>
+                    <th>비중</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><strong>주식</strong></td>
+                    <td>30%</td>
+                    <td>성장 추구</td>
+                </tr>
+                <tr>
+                    <td><strong>부동산</strong></td>
+                    <td>30%</td>
+                    <td>실물 자산</td>
+                </tr>
+                <tr>
+                    <td><strong>대체투자 등</strong></td>
+                    <td>30%</td>
+                    <td>채권, 대체자산</td>
+                </tr>
+                <tr>
+                    <td><strong>현금</strong></td>
+                    <td>10%</td>
+                    <td>유동성 확보</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box warning">
+                <h4>🇰🇷 한국의 현실</h4>
+                <p style="margin-bottom: 0;">자산의 <strong>90% 이상이 부동산</strong>에 집중. 특히 50~60대 이상 세대. 고도 성장기·인구 증가기에는 유효했으나, 현재는 다변화 필요.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 투자 시사점 -->
+            <h2><span class="icon">🎯</span> 미국 증시 투자 시사점</h2>
+
+            <h3>올바른 질문 방식</h3>
+            <table>
+                <tr>
+                    <th>❌ 잘못된 질문</th>
+                    <th>✅ 올바른 질문</th>
+                </tr>
+                <tr>
+                    <td>"수익률이 어떻게 돼요?"</td>
+                    <td>"같은 6% 수익률이라면 어디가 리스크가 적어요?"</td>
+                </tr>
+                <tr>
+                    <td>"어떤 주식이 오를까요?"</td>
+                    <td>"이 섹터의 리스크 대비 기대수익은?"</td>
+                </tr>
+            </table>
+
+            <h3>투자 선진화를 위한 개인의 역할</h3>
+            <div class="purpose-grid">
+                <div class="highlight-box success">
+                    <h4>✅ 실천 사항</h4>
+                    <ul style="margin-bottom: 0;">
+                        <li>투자 목적 명확히 설정</li>
+                        <li>목적에 맞는 포트폴리오 구성</li>
+                        <li>섹터 로테이션 & 리밸런싱 학습</li>
+                        <li>거시경제 지표 모니터링</li>
+                        <li>장기적 관점의 재무 계획 수립</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 5년 전 추천 포트폴리오 검증 -->
+            <h2><span class="icon">📋</span> 과거 추천 종목 검증 (참고)</h2>
+            
+            <p>영상에서 언급된 5년 전(2019년경) 추천 종목들:</p>
+
+            <table>
+                <tr>
+                    <th>종목</th>
+                    <th>당시 상황</th>
+                    <th>결과</th>
+                </tr>
+                <tr>
+                    <td>NVIDIA</td>
+                    <td>AI 수혜 예상</td>
+                    <td>대폭 상승</td>
+                </tr>
+                <tr>
+                    <td>Meta (Facebook)</td>
+                    <td>PSA 포함</td>
+                    <td>상승</td>
+                </tr>
+                <tr>
+                    <td>Broadcom (Avago)</td>
+                    <td>반도체 핵심</td>
+                    <td>상승</td>
+                </tr>
+                <tr>
+                    <td>Booking Holdings</td>
+                    <td>여행 플랫폼</td>
+                    <td>상승</td>
+                </tr>
+                <tr>
+                    <td>Texas Instruments</td>
+                    <td>아날로그 반도체</td>
+                    <td>상승</td>
+                </tr>
+            </table>
+
+            <p><strong>시사점:</strong> 장기 보유 시 3~5배 수익 실현 가능. 이는 투기가 아닌 <strong>포트폴리오 기반 투자</strong>의 결과.</p>
+
+            <div class="divider"></div>
+
+            <!-- 결론 -->
+            <div class="summary-box">
+                <h3>📝 결론: 투자 선진화의 핵심</h3>
+                <ul>
+                    <li><strong>목적 설정:</strong> 7가지 투자 목적 중 자신에게 맞는 것 선택</li>
+                    <li><strong>비교 금지:</strong> 목적이 다른 투자자와 수익률 비교 무의미</li>
+                    <li><strong>투기 경계:</strong> 스펙큘레이션은 99%가 실패하는 영역</li>
+                    <li><strong>선진화:</strong> 주식 중심 → 포트폴리오 → Total Financial Planning</li>
+                    <li><strong>장기 관점:</strong> 씀씀이 조절 + 꾸준한 투자 = 복리 효과</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>투자아카데미 17회 분석 | 원본 영상: 투자하는인생TV</p>
+            <p style="margin-top: 8px;">⚠️ 본 자료는 교육 목적이며 투자 권유가 아닙니다</p>
+        </div>
+    </div>
+
+    <script>
+        // 리스크-수익률 차트
+        const riskReturnCtx = document.getElementById('riskReturnChart').getContext('2d');
+        new Chart(riskReturnCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: '투자 목적별 위치',
+                    data: [
+                        {x: 1, y: 2, label: '자본보전'},
+                        {x: 2, y: 3, label: '유동성'},
+                        {x: 3, y: 4, label: '인컴'},
+                        {x: 4, y: 5.5, label: '토탈리턴'},
+                        {x: 5, y: 4, label: '세금절감'},
+                        {x: 6, y: 8, label: '성장'},
+                        {x: 9, y: 15, label: '투기'}
+                    ],
+                    backgroundColor: [
+                        '#4caf50', '#2196f3', '#9c27b0', 
+                        '#ff9800', '#00bcd4', '#3f51b5', '#f44336'
+                    ],
+                    pointRadius: 12,
+                    pointHoverRadius: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const labels = ['자본보전', '유동성', '인컴', '토탈리턴', '세금절감', '성장', '투기'];
+                                return labels[context.dataIndex] + ': 리스크 ' + context.parsed.x + ', 수익률 ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: '리스크 수준 →', font: { weight: 'bold' } },
+                        min: 0, max: 10
+                    },
+                    y: {
+                        title: { display: true, text: '기대 수익률(%) →', font: { weight: 'bold' } },
+                        min: 0, max: 20
+                    }
+                }
+            }
+        });
+
+        // 타임라인 차트
+        const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+        new Chart(timelineCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1단계\n주식중심', '2단계\n위험분산', '3단계\n포트폴리오', '4단계\nTotal Planning'],
+                datasets: [{
+                    label: '기간',
+                    data: [30, 20, 20, 30],
+                    backgroundColor: ['#ffcdd2', '#fff9c4', '#c8e6c9', '#bbdefb'],
+                    borderColor: ['#f44336', '#ffc107', '#4caf50', '#2196f3'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.8,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const periods = ['1929-1960년대', '1970년대', '1990-2000년대', '현재-미래'];
+                                return periods[context.dataIndex];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 노동소득 vs 투자수익 차트
+        const wageCtx = document.getElementById('wageChart').getContext('2d');
+        new Chart(wageCtx, {
+            type: 'line',
+            data: {
+                labels: ['1990', '2000', '2010', '2020', '2024'],
+                datasets: [
+                    {
+                        label: '투자 수익',
+                        data: [100, 180, 280, 450, 600],
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: '인플레이션',
+                        data: [100, 130, 155, 185, 210],
+                        borderColor: '#ff9800',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: '노동 소득',
+                        data: [100, 120, 140, 160, 175],
+                        borderColor: '#f44336',
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: '지수 (1990=100)' },
+                        min: 50
+                    }
+                }
+            }
+        });
+
+        // 자산 배분 차트
+        const assetCtx = document.getElementById('assetAllocationChart').getContext('2d');
+        new Chart(assetCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['주식 30%', '부동산 30%', '대체투자 등 30%', '현금 10%'],
+                datasets: [{
+                    data: [30, 30, 30, 10],
+                    backgroundColor: ['#3f51b5', '#ff9800', '#4caf50', '#9e9e9e'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
