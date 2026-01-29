@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>섹터 로테이션 투자 전략 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .header .meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        h2 {
+            color: #1a237e;
+            font-size: 1.2rem;
+            margin: 28px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3949ab;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 {
+            color: #303f9f;
+            font-size: 1.05rem;
+            margin: 20px 0 12px 0;
+        }
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-left: 4px solid #3949ab;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .highlight-box.warning {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left-color: #f57c00;
+        }
+        .highlight-box.success {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #43a047;
+        }
+        .highlight-box.danger {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left-color: #e53935;
+        }
+        .key-point {
+            font-weight: 600;
+            color: #1a237e;
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #3949ab;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        tr:hover {
+            background: #e8eaf6;
+        }
+        .cycle-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .cycle-phase {
+            flex: 1 1 calc(50% - 6px);
+            min-width: 140px;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .cycle-phase.trough {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+        .cycle-phase.expansion {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+        .cycle-phase.peak {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+        }
+        .cycle-phase.recession {
+            background: #ffebee;
+            border: 2px solid #f44336;
+        }
+        .cycle-phase .phase-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .cycle-phase .phase-desc {
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .sector-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .sector-item {
+            background: #f5f5f5;
+            padding: 12px 16px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sector-item .number {
+            background: #3949ab;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .important {
+            color: #c62828;
+            font-weight: 600;
+        }
+        .quote-box {
+            background: #fafafa;
+            border-left: 3px solid #9e9e9e;
+            padding: 14px 16px;
+            margin: 16px 0;
+            font-style: italic;
+            color: #555;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .summary-card h3 {
+            color: white;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        .summary-card ul {
+            margin: 12px 0 0 20px;
+        }
+        .summary-card li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            background: #f5f5f5;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        .flow-arrow {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #3949ab;
+            margin: 8px 0;
+        }
+        @media (max-width: 400px) {
+            .cycle-phase {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 섹터 로테이션 투자 전략</h1>
+            <div class="meta">투자 아카데미 15회 | 2026년 1월 29일</div>
+            <div class="meta">미국 증시 및 경제적 관점 분석</div>
+        </div>
+        
+        <div class="content">
+            <!-- 핵심 요약 -->
+            <div class="highlight-box">
+                <strong>📌 핵심 메시지:</strong> 섹터 로테이션은 미국 투자의 필수 전략이다. 경제 사이클에 따라 각 섹터의 성과가 달라지므로, 포트폴리오를 시의적절하게 조정해야 리스크를 줄이고 수익을 극대화할 수 있다.
+            </div>
+
+            <h2>🎯 섹터 로테이션이란?</h2>
+            <p><span class="key-point">섹터 로테이션(Sector Rotation)</span>은 경제 사이클의 변화에 따라 투자 포트폴리오 내 섹터 비중을 조정하는 투자 전략이다. 미국 주식시장은 <strong>11개 섹터</strong>로 구성되어 있으며, 각 섹터는 경제 환경에 따라 서로 다른 성과를 보인다.</p>
+
+            <h3>미국 시장 11개 섹터</h3>
+            <div class="sector-list">
+                <div class="sector-item"><span class="number">1</span> 정보기술 (Information Technology)</div>
+                <div class="sector-item"><span class="number">2</span> 헬스케어 (Healthcare)</div>
+                <div class="sector-item"><span class="number">3</span> 금융 (Financials)</div>
+                <div class="sector-item"><span class="number">4</span> 임의소비재 (Consumer Discretionary)</div>
+                <div class="sector-item"><span class="number">5</span> 통신서비스 (Communication Services)</div>
+                <div class="sector-item"><span class="number">6</span> 산업재 (Industrials)</div>
+                <div class="sector-item"><span class="number">7</span> 필수소비재 (Consumer Staples)</div>
+                <div class="sector-item"><span class="number">8</span> 에너지 (Energy)</div>
+                <div class="sector-item"><span class="number">9</span> 유틸리티 (Utilities)</div>
+                <div class="sector-item"><span class="number">10</span> 소재 (Materials)</div>
+                <div class="sector-item"><span class="number">11</span> 부동산 (Real Estate)</div>
+            </div>
+
+            <div class="highlight-box warning">
+                <strong>⚠️ 투자 전 필수 확인:</strong> 개별 주식에 투자하기 전에 ① 해당 기업이 속한 섹터, ② Sub-Industry(세부 산업), ③ 시가총액 규모(대형/중형/소형), ④ 투자 스타일(가치주/성장주)를 반드시 파악해야 한다.
+            </div>
+
+            <h2>📈 경제 사이클 vs 시장 사이클</h2>
+            
+            <p>주가와 기업 실적은 경제 사이클에 따라 변화한다. 여기서 중요한 점은 <span class="important">경제 사이클이 시장 사이클을 선행(先行)</span>한다는 것이다. 시장 사이클은 경제 사이클을 "미러링(Mirroring)"하며 따라간다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">경제 사이클 4단계</div>
+                <canvas id="cycleChart"></canvas>
+            </div>
+
+            <div class="cycle-diagram">
+                <div class="cycle-phase trough">
+                    <div class="phase-name">📉 Trough (저점)</div>
+                    <div class="phase-desc">경기 침체의 바닥<br>회복 준비 단계</div>
+                </div>
+                <div class="cycle-phase expansion">
+                    <div class="phase-name">📈 Expansion (확장)</div>
+                    <div class="phase-desc">경기 회복 및 성장<br>고용·소비 증가</div>
+                </div>
+                <div class="cycle-phase peak">
+                    <div class="phase-name">🔝 Peak (정점)</div>
+                    <div class="phase-desc">경기 과열 구간<br>인플레이션 우려</div>
+                </div>
+                <div class="cycle-phase recession">
+                    <div class="phase-name">📉 Recession (침체)</div>
+                    <div class="phase-desc">경기 수축 국면<br>성장률 둔화</div>
+                </div>
+            </div>
+
+            <h3>🔍 현재 시장 위치 분석</h3>
+            <div class="highlight-box danger">
+                <strong>현재 상황 진단:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>미국 경제는 약 <strong>12년간 Expansion</strong> 국면을 지속</li>
+                    <li>현재는 <strong>Peak(정점) 근처</strong>로 판단</li>
+                    <li>Recession은 아니지만, <strong>경기 둔화 전 단계</strong></li>
+                    <li>성장률이 둔화되는 구간에 진입</li>
+                </ul>
+            </div>
+
+            <h2>🔄 시장 사이클의 4단계</h2>
+
+            <div class="chart-container">
+                <div class="chart-title">시장 사이클 단계별 특징</div>
+                <canvas id="marketCycleChart"></canvas>
+            </div>
+
+            <table>
+                <tr>
+                    <th>단계</th>
+                    <th>특징</th>
+                    <th>주요 투자자</th>
+                </tr>
+                <tr>
+                    <td><strong>① Accumulation<br>(축적기)</strong></td>
+                    <td>저평가 구간<br>PE 낮음, 공포 극심</td>
+                    <td>기업 내부자<br>기관투자자<br>역발상 투자자</td>
+                </tr>
+                <tr>
+                    <td><strong>② Markup<br>(상승기)</strong></td>
+                    <td>지속적 상승<br>기업 실적 개선</td>
+                    <td>기술적 분석가<br>개인투자자 진입</td>
+                </tr>
+                <tr>
+                    <td><strong>③ Distribution<br>(분배기)</strong></td>
+                    <td>고점 근처<br>거래량 급증</td>
+                    <td>초기 투자자 매도<br>개미 투자자 대거 유입</td>
+                </tr>
+                <tr>
+                    <td><strong>④ Decline<br>(하락기)</strong></td>
+                    <td>급격한 하락<br>2~4주 내 30% 급락 가능</td>
+                    <td>패닉 셀링<br>손실 확정</td>
+                </tr>
+            </table>
+
+            <div class="quote-box">
+                "Try to catch a falling knife for a bargain" - 떨어지는 칼을 잡으려 하지 마라. 하락장에서 저점을 맞추려는 시도는 큰 손실로 이어질 수 있다.
+            </div>
+
+            <h2>📊 경제 사이클별 유망 섹터</h2>
+
+            <div class="chart-container">
+                <div class="chart-title">경제 사이클별 섹터 로테이션 전략</div>
+                <canvas id="sectorRotationChart"></canvas>
+            </div>
+
+            <table>
+                <tr>
+                    <th>경제 사이클</th>
+                    <th>유망 섹터</th>
+                </tr>
+                <tr>
+                    <td><strong>Full Recession<br>(완전 침체)</strong></td>
+                    <td>기술주(Technology)<br>산업재(Industrials)</td>
+                </tr>
+                <tr>
+                    <td><strong>Early Recovery<br>(초기 회복)</strong></td>
+                    <td>산업재, 소재(Basic Materials)<br>에너지(Energy)</td>
+                </tr>
+                <tr>
+                    <td><strong>Late Recovery<br>(후기 회복)</strong></td>
+                    <td>에너지, 필수소비재<br>서비스 섹터</td>
+                </tr>
+                <tr>
+                    <td><strong>Early Recession<br>(초기 침체)</strong></td>
+                    <td>유틸리티(Utilities)<br>경기방어 섹터</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <strong>💡 수익률 곡선 역전(Yield Curve Inversion):</strong> 2년물 국채 금리가 10년물보다 높아지는 현상으로, <span class="important">경기침체의 선행지표</span>로 인식된다. 현재 미국 국채 수익률 곡선이 역전된 상태이며, 이는 향후 경기 둔화 가능성을 시사한다.
+            </div>
+
+            <h2>⚡ 경제 사이클 변화의 6가지 핵심 요인</h2>
+
+            <div class="chart-container">
+                <div class="chart-title">경제 사이클 영향 요인</div>
+                <canvas id="factorsChart"></canvas>
+            </div>
+
+            <div class="sector-list">
+                <div class="sector-item">
+                    <span class="number">1</span>
+                    <div><strong>인플레이션</strong> - 물가 상승률과 Fed 정책 방향</div>
+                </div>
+                <div class="sector-item">
+                    <span class="number">2</span>
+                    <div><strong>노동시장</strong> - 실업률, 실업수당 신청건수<br><small style="color:#666;">*현재 4%대로 상승 전망</small></div>
+                </div>
+                <div class="sector-item">
+                    <span class="number">3</span>
+                    <div><strong>원자재 수급</strong> - 공급망 이슈, 원자재 가격 변동</div>
+                </div>
+                <div class="sector-item">
+                    <span class="number">4</span>
+                    <div><strong>금리 정책</strong> - 중앙은행 금리, 재정정책 변화</div>
+                </div>
+                <div class="sector-item">
+                    <span class="number">5</span>
+                    <div><strong>수요·공급</strong> - 전반적인 경제 활동 수준</div>
+                </div>
+                <div class="sector-item">
+                    <span class="number">6</span>
+                    <div><strong>신기술 사이클</strong> - AI, 데이터센터, 챗봇 등<br><small style="color:#666;">*AI 섹터가 현재 핵심 성장 동력</small></div>
+                </div>
+            </div>
+
+            <h2>🤖 AI 섹터 투자 시사점</h2>
+
+            <p>현재 경제 사이클에서 <span class="key-point">AI(인공지능)</span>는 핵심 성장 동력이다. 올해의 핵심 투자 테마는 <strong>데이터센터</strong>였으며, 내년에는 <strong>챗봇</strong>이 중요한 투자 테마가 될 전망이다.</p>
+
+            <div class="highlight-box success">
+                <strong>AI 투자 체인:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>데이터센터 구축 → 데이터 저장·운반·공급 인프라</li>
+                    <li>사이버 보안 (CrowdStrike, 등)</li>
+                    <li>AI 활용 기업 (Meta, Google, Microsoft)</li>
+                    <li>반도체 (NVIDIA 등 AI 칩 제조)</li>
+                </ul>
+            </div>
+
+            <h2>📋 성공적인 투자를 위한 3대 핵심 역량</h2>
+
+            <div class="chart-container">
+                <div class="chart-title">투자 성공의 3대 요소</div>
+                <canvas id="successChart"></canvas>
+            </div>
+
+            <table>
+                <tr>
+                    <th>역량</th>
+                    <th>세부 내용</th>
+                </tr>
+                <tr>
+                    <td><strong>① 거시경제 이해</strong></td>
+                    <td>경제 사이클, 금리, 인플레이션<br>GDP 성장률, 고용지표 분석</td>
+                </tr>
+                <tr>
+                    <td><strong>② 펀더멘털 분석</strong></td>
+                    <td>재무제표 분석 (10-K 리포트)<br>Balance Sheet, Income Statement<br>Cash Flow 분석</td>
+                </tr>
+                <tr>
+                    <td><strong>③ 투자 심리 파악</strong></td>
+                    <td>기관투자자 센티멘트 변화<br>시장 참여자들의 투자 심리</td>
+                </tr>
+            </table>
+
+            <h2>⚠️ 2026년 시장 전망 및 투자 전략</h2>
+
+            <div class="highlight-box danger">
+                <strong>🚨 주의사항:</strong> 올해 시장은 "Bumpy Road(울퉁불퉁한 길)"가 예상된다. 연준이 금리 인하를 단행하지 않았고, 인플레이션 하락 속도가 불확실하여 시장 예측이 매우 어려운 상황이다.
+            </div>
+
+            <h3>포트폴리오 현금 비중 가이드</h3>
+            <table>
+                <tr>
+                    <th>투자 기간</th>
+                    <th>권장 현금 비중</th>
+                </tr>
+                <tr>
+                    <td>10년 이상 장기투자</td>
+                    <td><strong>20%</strong> 현금 유지</td>
+                </tr>
+                <tr>
+                    <td>3~4년 중기투자</td>
+                    <td><strong>40%</strong> 현금 확보</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box warning">
+                <strong>핵심 전망:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>올해 수익률은 작년보다 <strong>확실히 감소</strong> 예상</li>
+                    <li>S&P 500 성장률 둔화 전망</li>
+                    <li>나스닥도 마찬가지로 조정 예상</li>
+                    <li><strong>보수적 투자 전략</strong> 권장</li>
+                </ul>
+            </div>
+
+            <h2>🎓 핵심 투자 원칙</h2>
+
+            <div class="summary-card">
+                <h3>✅ 섹터 로테이션 투자 원칙</h3>
+                <ul>
+                    <li>경제 사이클이 시장 사이클을 선행한다</li>
+                    <li>한 섹터에 올인하지 말고 분산투자 필수</li>
+                    <li>기관은 3~6개월 선행하여 포트폴리오 조정</li>
+                    <li>미래란 3개월~1년 수준 - 그 이후는 예측 불가</li>
+                    <li><strong>투자 앞에서는 항상 겸손하라</strong></li>
+                </ul>
+            </div>
+
+            <div class="quote-box">
+                "주식 전문가는 없다. 미래를 예측할 수 없기 때문에 포트폴리오를 짜는 것이다. 불확실성의 시대에 살기 때문에, 다양한 가능성이 큰 기업들, 리스크가 적은 기업들을 섞어서 투자 리스크를 줄여야 한다."
+            </div>
+
+            <h2>📌 실전 투자 체크리스트</h2>
+
+            <div class="sector-list">
+                <div class="sector-item">☑️ 투자 기업이 속한 <strong>섹터</strong> 확인</div>
+                <div class="sector-item">☑️ <strong>Sub-Industry</strong> (세부 산업) 파악</div>
+                <div class="sector-item">☑️ <strong>시가총액</strong> 규모 확인 (대형/중형/소형)</div>
+                <div class="sector-item">☑️ <strong>가치주 vs 성장주</strong> 구분</div>
+                <div class="sector-item">☑️ 현재 <strong>경제 사이클</strong> 위치 파악</div>
+                <div class="sector-item">☑️ <strong>펀더멘털</strong> 분석 (10-K 리포트)</div>
+                <div class="sector-item">☑️ 포트폴리오 내 <strong>섹터 분산</strong> 확인</div>
+                <div class="sector-item">☑️ 적정 <strong>현금 비중</strong> 유지</div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>📺 원본 출처: NOVA Real Invest - 투자 아카데미 15회</p>
+            <p>본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 경제 사이클 차트
+        const cycleCtx = document.getElementById('cycleChart').getContext('2d');
+        new Chart(cycleCtx, {
+            type: 'line',
+            data: {
+                labels: ['Trough', 'Early Expansion', 'Mid Expansion', 'Late Expansion', 'Peak', 'Early Recession', 'Mid Recession', 'Late Recession'],
+                datasets: [{
+                    label: '경제 사이클',
+                    data: [20, 40, 60, 80, 100, 80, 50, 30],
+                    borderColor: '#3949ab',
+                    backgroundColor: 'rgba(57, 73, 171, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#3949ab',
+                    pointRadius: 5
+                }, {
+                    label: '시장 사이클 (후행)',
+                    data: [30, 35, 55, 75, 95, 85, 60, 40],
+                    borderColor: '#f57c00',
+                    backgroundColor: 'rgba(245, 124, 0, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: '#f57c00',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 110,
+                        title: {
+                            display: true,
+                            text: '성장 수준'
+                        }
+                    }
+                }
+            }
+        });
+
+        // 시장 사이클 차트
+        const marketCtx = document.getElementById('marketCycleChart').getContext('2d');
+        new Chart(marketCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Accumulation (축적기)', 'Markup (상승기)', 'Distribution (분배기)', 'Decline (하락기)'],
+                datasets: [{
+                    data: [25, 35, 20, 20],
+                    backgroundColor: ['#2196f3', '#4caf50', '#ff9800', '#f44336'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 섹터 로테이션 차트
+        const sectorCtx = document.getElementById('sectorRotationChart').getContext('2d');
+        new Chart(sectorCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Full Recession', 'Early Recovery', 'Late Recovery', 'Early Recession'],
+                datasets: [{
+                    label: '기술주',
+                    data: [90, 40, 30, 50],
+                    backgroundColor: '#3949ab'
+                }, {
+                    label: '산업재',
+                    data: [70, 85, 50, 30],
+                    backgroundColor: '#43a047'
+                }, {
+                    label: '에너지',
+                    data: [20, 70, 90, 40],
+                    backgroundColor: '#f57c00'
+                }, {
+                    label: '유틸리티',
+                    data: [40, 30, 60, 85],
+                    backgroundColor: '#7b1fa2'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 10 } }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: '투자 매력도'
+                        }
+                    }
+                }
+            }
+        });
+
+        // 경제 사이클 영향 요인 차트
+        const factorsCtx = document.getElementById('factorsChart').getContext('2d');
+        new Chart(factorsCtx, {
+            type: 'radar',
+            data: {
+                labels: ['인플레이션', '노동시장', '원자재 수급', '금리 정책', '수요·공급', '신기술'],
+                datasets: [{
+                    label: '현재 영향도',
+                    data: [75, 85, 50, 90, 65, 95],
+                    backgroundColor: 'rgba(57, 73, 171, 0.2)',
+                    borderColor: '#3949ab',
+                    pointBackgroundColor: '#3949ab',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 투자 성공 요소 차트
+        const successCtx = document.getElementById('successChart').getContext('2d');
+        new Chart(successCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['거시경제 이해', '펀더멘털 분석', '투자 심리 파악'],
+                datasets: [{
+                    data: [35, 40, 25],
+                    backgroundColor: ['rgba(33, 150, 243, 0.7)', 'rgba(76, 175, 80, 0.7)', 'rgba(255, 152, 0, 0.7)'],
+                    borderColor: ['#2196f3', '#4caf50', '#ff9800'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
