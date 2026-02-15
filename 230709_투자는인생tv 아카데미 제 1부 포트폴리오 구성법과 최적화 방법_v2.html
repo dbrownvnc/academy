@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오 구성법과 최적화 방법 - 미국 증시/경제 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        .header .date {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .content {
+            padding: 40px;
+        }
+        h2 {
+            color: #1a1a2e;
+            font-size: 22px;
+            margin: 35px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h3 {
+            color: #16213e;
+            font-size: 18px;
+            margin: 25px 0 15px 0;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffefdc 100%);
+            border-left: 5px solid #ff9800;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .key-point {
+            background: linear-gradient(135deg, #e8fff0 0%, #d4f5e0 100%);
+            border-left: 5px solid #4caf50;
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .chart-container {
+            background: #fafbff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        canvas {
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        th {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        tr:hover {
+            background: #e8ecff;
+        }
+        .emphasis {
+            color: #667eea;
+            font-weight: 700;
+        }
+        .red-emphasis {
+            color: #e53935;
+            font-weight: 700;
+        }
+        .number-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 40px 0;
+        }
+        .summary-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .card-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+        .card-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        ul {
+            margin: 15px 0 15px 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 포트폴리오 구성법과 최적화 방법</h1>
+            <div class="subtitle">미국 증시 및 경제적 관점 분석 보고서</div>
+            <div class="date">원본: 투자는인생tv 아카데미 | 분석일: 2025년 12월 3일</div>
+        </div>
+        
+        <div class="content">
+            <h2>📌 1. 핵심 요약 (Executive Summary)</h2>
+            
+            <p>본 영상은 <span class="emphasis">미국식 투자 문화</span>와 <span class="emphasis">포트폴리오 구성 원칙</span>에 대한 교육 콘텐츠입니다. 강연자는 미국 금융업계 종사자로서 한국과 미국의 투자 문화 차이를 설명하며, 올바른 자산 배분과 리스크 관리의 중요성을 강조합니다.</p>
+            
+            <div class="summary-card">
+                <div class="card">
+                    <span class="card-number">10.4%+</span>
+                    <span class="card-label">S&P 500 연평균 수익률</span>
+                </div>
+                <div class="card">
+                    <span class="card-number">30개</span>
+                    <span class="card-label">적정 관리 종목 수</span>
+                </div>
+                <div class="card">
+                    <span class="card-number">5%</span>
+                    <span class="card-label">고위험 자산 상한선</span>
+                </div>
+                <div class="card">
+                    <span class="card-number">60세+</span>
+                    <span class="card-label">강화된 투자자 보호 연령</span>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>🇺🇸 2. 미국 투자 문화의 특징</h2>
+            
+            <h3>2.1 디스클레이머(Disclaimer)의 중요성</h3>
+            <p>미국 금융시장에서는 <span class="emphasis">법적 면책조항(Disclaimer)</span>이 모든 투자 관련 커뮤니케이션의 기본입니다. 이는 단순한 형식이 아니라 투자자 보호를 위한 핵심 제도로, 다음과 같은 원칙을 포함합니다.</p>
+            
+            <div class="highlight-box">
+                <strong>📋 미국 투자 디스클레이머의 핵심 원칙</strong>
+                <ul>
+                    <li><strong>모든 투자에는 리스크가 존재</strong> - 투자 원금 전액 손실 가능성 항상 존재</li>
+                    <li><strong>과거 성과 ≠ 미래 수익 보장</strong> - AI, 데이터 분석 결과도 마찬가지</li>
+                    <li><strong>투자 책임은 본인에게 귀속</strong> - 어떤 추천도 결과를 보장하지 않음</li>
+                    <li><strong>최악의 시나리오 이해 필수</strong> - "Worst Case Scenario" 인지 후 투자</li>
+                </ul>
+            </div>
+
+            <h3>2.2 한국과 미국의 투자 문화 비교</h3>
+            
+            <table>
+                <tr>
+                    <th>구분</th>
+                    <th>🇰🇷 한국</th>
+                    <th>🇺🇸 미국</th>
+                </tr>
+                <tr>
+                    <td><strong>투자 성향</strong></td>
+                    <td>군중 심리, 따라하기 경향</td>
+                    <td>개별화된 투자 판단</td>
+                </tr>
+                <tr>
+                    <td><strong>리스크 인식</strong></td>
+                    <td>상승 가능성에 집중</td>
+                    <td>손실 가능성 먼저 고려</td>
+                </tr>
+                <tr>
+                    <td><strong>개인정보</strong></td>
+                    <td>포트폴리오 공개에 거부감 적음</td>
+                    <td>철저한 프라이버시 보호</td>
+                </tr>
+                <tr>
+                    <td><strong>어드바이저 역할</strong></td>
+                    <td>추천 종목 요청</td>
+                    <td>리스크 설명 및 교육</td>
+                </tr>
+                <tr>
+                    <td><strong>고령 투자자 보호</strong></td>
+                    <td>상대적으로 느슨</td>
+                    <td>60세+ 강화된 보호 규정</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ 투자자 보호 강화 대상</strong><br>
+                미국에서는 <span class="red-emphasis">60세 이상</span> 투자자에게 투자 자산을 받을 때 더욱 광범위하고 까다로운 절차를 적용합니다. 이는 고령 투자자의 재정적 취약성을 보호하기 위한 SEC(증권거래위원회)와 FINRA(금융산업규제기관)의 규정에 따른 것입니다.
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>📈 3. 포트폴리오 구성 원칙</h2>
+
+            <h3>3.1 투자 전 필수 단계: 저축</h3>
+            <p>강연자는 포트폴리오 구성 이전에 <span class="emphasis">충분한 시드머니 확보</span>의 중요성을 강조합니다. 적은 자본으로 분산투자를 시도하는 것은 비효율적이며, 먼저 체계적인 저축을 통해 투자 가능한 자본을 마련해야 합니다.</p>
+
+            <div class="key-point">
+                <strong>💡 핵심 메시지</strong><br>
+                "태평양을 건너야 하는데 쪽배 타고 올 순 없다" - 몇백만 원의 소액으로는 제대로 된 분산투자가 어렵습니다. 비행기값(약 3,000달러)도 안 되는 금액으로 미국 주식 포트폴리오를 구성하려는 것은 현실적이지 않습니다.
+            </div>
+
+            <h3>3.2 자산 다각화의 원칙</h3>
+            <p><span class="emphasis">주식에만 몰빵하지 말라</span>는 것이 핵심입니다. 포트폴리오는 주식시장 내부뿐만 아니라 다양한 자산군을 포함해야 합니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">【그림 1】 권장 자산 배분 구조</div>
+                <canvas id="assetAllocationChart"></canvas>
+            </div>
+
+            <h3>3.3 개인 맞춤형 포트폴리오 설계</h3>
+            <p>포트폴리오는 다음 요소에 따라 <span class="emphasis">개인별로 완전히 다르게</span> 구성되어야 합니다.</p>
+
+            <table>
+                <tr>
+                    <th>고려 요소</th>
+                    <th>영향</th>
+                    <th>예시</th>
+                </tr>
+                <tr>
+                    <td><strong>투자 목적</strong></td>
+                    <td>수익 추구 vs 자산 보전</td>
+                    <td>은퇴 자금 vs 단기 수익</td>
+                </tr>
+                <tr>
+                    <td><strong>투자 기간</strong></td>
+                    <td>장기 vs 단기 전략</td>
+                    <td>5년 후 주택 구입 계획</td>
+                </tr>
+                <tr>
+                    <td><strong>위험 감내력</strong></td>
+                    <td>변동성 수용 정도</td>
+                    <td>50% 손실 감내 가능 여부</td>
+                </tr>
+                <tr>
+                    <td><strong>나이</strong></td>
+                    <td>회복 시간 및 소득 기간</td>
+                    <td>30대 vs 60대</td>
+                </tr>
+                <tr>
+                    <td><strong>총 자산 규모</strong></td>
+                    <td>리스크 분산 범위</td>
+                    <td>이 투자금 외 다른 자산 유무</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ 맹목적 따라하기의 위험</strong><br>
+                "간이 안 좋은 사람한테 위장약을 줄 필요가 없다" - A에게 맞는 투자가 B에게는 적합하지 않을 수 있습니다. 아마존(AMZN)이 A의 포트폴리오에 적합하더라도, B의 상황에서는 부적합할 수 있습니다.
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>⚖️ 4. 포트폴리오 최적화 (Portfolio Optimization)</h2>
+
+            <h3>4.1 최적화의 개념</h3>
+            <p><span class="emphasis">포트폴리오 최적화(Portfolio Optimization)</span>란 "먼 바다에서 목표점을 잃지 않고 계속 방향을 조정하는 것"과 같습니다. 바람의 방향이 바뀌면 항해 방향도 조정해야 목적지에 도달할 수 있듯이, 시장 상황 변화에 따라 포트폴리오도 지속적으로 조정해야 합니다.</p>
+
+            <h3>4.2 복리(Compound Interest)의 힘</h3>
+            <p>주식 투자의 핵심 장점은 <span class="emphasis">복리 효과</span>입니다. 단리(Simple Interest)와 달리 복리(Compounding)는 수익이 재투자되어 기하급수적 성장을 가능하게 합니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">【그림 2】 단리 vs 복리 성장 비교 (연 10% 수익률 기준)</div>
+                <canvas id="compoundChart"></canvas>
+            </div>
+
+            <div class="highlight-box">
+                <strong>📊 S&P 500 연평균 수익률</strong><br>
+                영상에서 언급된 S&P 500의 연평균 수익률은 <span class="number-highlight">10.4% 이상</span>입니다. 이는 배당 재투자를 포함한 총수익률(Total Return) 기준으로, 장기 투자 시 복리 효과가 극대화됩니다.
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>🎯 5. 종형(Bell-shaped) 포트폴리오 구조</h2>
+
+            <h3>5.1 종형 포트폴리오란?</h3>
+            <p>강연자가 제안하는 <span class="emphasis">종형 포트폴리오</span>는 리스크와 수익률에 따라 자산을 계층적으로 배분하는 전략입니다. 중심에는 안정적인 대형 가치주를, 외곽에는 소량의 고위험 성장주를 배치합니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">【그림 3】 종형 포트폴리오 구조 (권장 비율)</div>
+                <canvas id="bellPortfolioChart"></canvas>
+            </div>
+
+            <h3>5.2 계층별 자산 특성</h3>
+
+            <table>
+                <tr>
+                    <th>계층</th>
+                    <th>비중</th>
+                    <th>자산 유형</th>
+                    <th>특징</th>
+                </tr>
+                <tr>
+                    <td><strong>핵심 (Core)</strong></td>
+                    <td>50-60%</td>
+                    <td>대형 가치주, S&P 500 ETF</td>
+                    <td>안정적, 하락장 방어력</td>
+                </tr>
+                <tr>
+                    <td><strong>중간 (Satellite)</strong></td>
+                    <td>30-40%</td>
+                    <td>섹터 ETF, 성장주</td>
+                    <td>시즌별 순환 투자</td>
+                </tr>
+                <tr>
+                    <td><strong>외곽 (Speculative)</strong></td>
+                    <td><span class="red-emphasis">5% 이내</span></td>
+                    <td>초기 성장주, 투기성 자산</td>
+                    <td>고위험/고수익</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ 캐시 우드(Cathie Wood) 사례 경고</strong><br>
+                강연자는 ARK Invest의 캐시 우드를 예로 들며 경고합니다. 고성장주에 과도하게 집중한 결과 2021년 고점 이후 아직까지 회복하지 못하고 있습니다. <span class="red-emphasis">외곽 자산에 80% 이상 몰빵</span>하는 것은 종형 포트폴리오 원칙에 정면으로 위배됩니다.
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>📊 6. 섹터별 투자 전략</h2>
+
+            <h3>6.1 11개 섹터의 순환</h3>
+            <p>미국 증시의 11개 섹터(GICS 기준) 중 <span class="emphasis">특정 시즌에는 2-3개 섹터</span>가 나머지보다 현저히 우수한 성과를 보입니다. 이러한 섹터 순환(Sector Rotation)을 이해하고 활용하는 것이 액티브 운용의 핵심입니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">【그림 4】 S&P 500 11개 섹터 구성</div>
+                <canvas id="sectorChart"></canvas>
+            </div>
+
+            <h3>6.2 액티브 매니지먼트의 역할</h3>
+            <p>강연자는 <span class="emphasis">액티브 매니저</span>의 역할을 강조합니다. 패시브 인덱스 투자와 달리, 시장 상황에 따라 포트폴리오를 30%까지 교체하며 최적화를 추구합니다. 특히 30개 종목을 선정하여 관리하며, 실적이 저조한 종목은 과감하게 교체합니다.</p>
+
+            <div class="key-point">
+                <strong>💡 30개 종목 관리 원칙</strong>
+                <ul>
+                    <li>100개는 마케팅용, 실질 관리 가능 종목은 <span class="number-highlight">30개</span></li>
+                    <li>분기별 또는 연간 리밸런싱</li>
+                    <li>성과 부진 종목은 과감히 교체</li>
+                    <li>개인 투자자 자금 규모에 적합한 수준</li>
+                </ul>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>🔍 7. 투자 시사점 및 전략적 관점</h2>
+
+            <h3>7.1 연준(Fed) 정책과의 연관성</h3>
+            <p>영상에서 직접 언급되지는 않았으나, 포트폴리오 최적화와 섹터 순환 전략은 연준의 금리 정책과 밀접한 관련이 있습니다.</p>
+            
+            <table>
+                <tr>
+                    <th>금리 환경</th>
+                    <th>유리한 섹터</th>
+                    <th>불리한 섹터</th>
+                </tr>
+                <tr>
+                    <td><strong>금리 인상기</strong></td>
+                    <td>금융, 에너지, 가치주</td>
+                    <td>기술, 부동산, 성장주</td>
+                </tr>
+                <tr>
+                    <td><strong>금리 인하기</strong></td>
+                    <td>기술, 부동산, 유틸리티</td>
+                    <td>금융, 경기방어주</td>
+                </tr>
+                <tr>
+                    <td><strong>금리 동결기</strong></td>
+                    <td>실적 기반 개별 종목</td>
+                    <td>매크로 민감 종목</td>
+                </tr>
+            </table>
+
+            <h3>7.2 거시경제 지표 활용</h3>
+            <p>강연자는 거시경제 데이터(CPI 등)가 <span class="emphasis">미국 주식시장에 미치는 영향</span>을 분석하는 것이 핵심이라고 강조합니다. 단순히 거시경제 수치 자체보다 그것이 시장에 어떤 의미를 갖는지 해석하는 능력이 중요합니다.</p>
+
+            <h3>7.3 시장 심리 및 전망</h3>
+            <div class="highlight-box">
+                <strong>📌 핵심 투자 철학 요약</strong>
+                <ul>
+                    <li><strong>리스크 우선 사고</strong> - 수익 가능성보다 손실 가능성 먼저 고려</li>
+                    <li><strong>개인화된 전략</strong> - 타인의 포트폴리오 맹목적 복제 금지</li>
+                    <li><strong>장기 복리 투자</strong> - S&P 500 기준 연 10.4%+ 기대 수익</li>
+                    <li><strong>동적 최적화</strong> - 시장 상황에 따른 지속적 리밸런싱</li>
+                    <li><strong>분산의 원칙</strong> - 종형 구조로 리스크 계층화</li>
+                </ul>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>📝 8. 결론</h2>
+
+            <p>본 영상은 미국 금융시장의 투자 문화와 포트폴리오 구성 원칙에 대한 기초 교육을 제공합니다. <span class="emphasis">디스클레이머의 중요성, 개인 맞춤형 포트폴리오 설계, 종형 자산 배분, 그리고 지속적인 최적화</span>가 핵심 메시지입니다.</p>
+
+            <p>특히 미국 투자자 보호 문화(60세 이상 강화 규정)와 한국의 "따라하기" 투자 문화의 차이를 지적하며, 각자의 상황에 맞는 투자 전략 수립의 필요성을 강조합니다. S&P 500의 연평균 10.4% 이상 수익률은 복리 효과와 결합할 때 장기적으로 강력한 자산 증식 수단이 됨을 보여줍니다.</p>
+
+            <p>궁극적으로, 투자는 "최악의 시나리오를 완전히 이해한 후에만" 진행해야 하며, 어떤 전문가의 조언도 결과를 보장하지 않는다는 점을 명심해야 합니다.</p>
+
+        </div>
+
+        <div class="footer">
+            ※ 본 분석은 교육 목적으로 작성되었으며, 특정 투자 권유가 아닙니다.<br>
+            모든 투자 결정에 대한 책임은 투자자 본인에게 있습니다.
+        </div>
+    </div>
+
+    <script>
+        // 자산 배분 차트
+        const assetCtx = document.getElementById('assetAllocationChart').getContext('2d');
+        new Chart(assetCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['주식 (Equities)', '채권 (Bonds)', '부동산 (Real Estate)', '금/원자재 (Commodities)', '현금성 자산 (Cash)'],
+                datasets: [{
+                    data: [50, 25, 10, 10, 5],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { size: 12 }, padding: 15 }
+                    }
+                }
+            }
+        });
+
+        // 복리 성장 차트
+        const compoundCtx = document.getElementById('compoundChart').getContext('2d');
+        const years = [0, 5, 10, 15, 20, 25, 30];
+        const simpleInterest = years.map(y => 100 + (100 * 0.10 * y));
+        const compoundInterest = years.map(y => 100 * Math.pow(1.10, y));
+        
+        new Chart(compoundCtx, {
+            type: 'line',
+            data: {
+                labels: years.map(y => y + '년'),
+                datasets: [{
+                    label: '단리 (Simple)',
+                    data: simpleInterest,
+                    borderColor: '#f5576c',
+                    backgroundColor: 'rgba(245, 87, 108, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }, {
+                    label: '복리 (Compound)',
+                    data: compoundInterest,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '자산 가치 ($)' }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // 종형 포트폴리오 차트
+        const bellCtx = document.getElementById('bellPortfolioChart').getContext('2d');
+        new Chart(bellCtx, {
+            type: 'bar',
+            data: {
+                labels: ['핵심(Core)\n대형 가치주', '중간(Satellite)\n섹터/성장주', '외곽(Speculative)\n고위험 자산'],
+                datasets: [{
+                    label: '권장 비중 (%)',
+                    data: [55, 40, 5],
+                    backgroundColor: ['#4caf50', '#ff9800', '#e53935'],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 60,
+                        title: { display: true, text: '비중 (%)' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 섹터 차트
+        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+        new Chart(sectorCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['기술', '헬스케어', '금융', '임의소비재', '통신서비스', '산업재', '필수소비재', '에너지', '유틸리티', '부동산', '소재'],
+                datasets: [{
+                    data: [29, 13, 13, 11, 9, 8, 6, 4, 3, 2, 2],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(245, 87, 108, 0.8)',
+                        'rgba(79, 172, 254, 0.8)',
+                        'rgba(67, 206, 162, 0.8)',
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(255, 152, 0, 0.8)',
+                        'rgba(156, 39, 176, 0.8)',
+                        'rgba(0, 150, 136, 0.8)',
+                        'rgba(96, 125, 139, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { size: 11 }, padding: 8 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
