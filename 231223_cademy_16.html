@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 포트폴리오의 종류와 리스크 - 미국 증시 관점 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 20px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.6rem;
+            color: #00d4ff;
+            text-align: center;
+            padding: 25px 15px;
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a4e 100%);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #00d4ff33;
+            text-shadow: 0 0 20px #00d4ff44;
+        }
+        .meta-info {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .meta-info a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        h2 {
+            font-size: 1.3rem;
+            color: #ffd93d;
+            margin: 30px 0 15px 0;
+            padding: 12px 15px;
+            background: linear-gradient(90deg, #2d2d5a 0%, transparent 100%);
+            border-left: 4px solid #ffd93d;
+            border-radius: 0 10px 10px 0;
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: #6bcf7f;
+            margin: 20px 0 12px 0;
+            padding-left: 10px;
+            border-left: 3px solid #6bcf7f;
+        }
+        p {
+            margin-bottom: 15px;
+            padding: 0 5px;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d253d 100%);
+            border: 1px solid #00d4ff44;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #5a1e1e 0%, #3d0d0d 100%);
+            border: 1px solid #ff6b6b44;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 20px 0;
+        }
+        .warning-box h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #1e5a2e 0%, #0d3d1a 100%);
+            border: 1px solid #6bcf7f44;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 20px 0;
+        }
+        .key-point {
+            background: rgba(255, 217, 61, 0.1);
+            border-left: 4px solid #ffd93d;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .key-point strong {
+            color: #ffd93d;
+        }
+        ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        li::marker {
+            color: #00d4ff;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a4e 100%);
+            color: #00d4ff;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ffffff11;
+            text-align: center;
+        }
+        tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        .formula-box {
+            background: #1a1a3e;
+            border: 2px dashed #00d4ff44;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.3rem;
+            color: #00d4ff;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .emoji-badge {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 15px;
+            margin-right: 5px;
+            font-size: 0.85rem;
+        }
+        .risk-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .risk-low { background: #1e5a2e; color: #6bcf7f; }
+        .risk-medium { background: #5a4a1e; color: #ffd93d; }
+        .risk-high { background: #5a1e1e; color: #ff6b6b; }
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff44, transparent);
+            margin: 30px 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a4e 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #00d4ff22;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-item .value {
+            font-size: 1.5rem;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        .stat-item .label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        strong {
+            color: #00d4ff;
+        }
+        .conclusion {
+            background: linear-gradient(135deg, #1a3a5a 0%, #0d2540 100%);
+            border: 2px solid #00d4ff44;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .conclusion h2 {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 투자 포트폴리오의 종류와 리스크<br><span style="font-size: 0.7em; color: #888;">개인투자자를 위한 구성 기본방법</span></h1>
+        
+        <div class="meta-info">
+            📺 투자아카데미 16회 | 📅 2026년 1월 29일<br>
+            <a href="https://www.youtube.com/watch?v=veRWIrIhBKk&t=392s" target="_blank">원본 영상 보기 →</a>
+        </div>
+
+        <!-- 핵심 요약 -->
+        <div class="summary-card">
+            <h3 style="border: none; padding: 0; margin-bottom: 15px;">📌 핵심 요약</h3>
+            <p style="margin-bottom: 10px;">미국 120년 투자 역사에서 검증된 <strong>선진국형 포트폴리오 구성법</strong>을 다룹니다. 리스크와 리워드의 균형을 이해하고, 개인의 투자 목적과 기간에 맞는 자산배분 전략을 수립하는 것이 핵심입니다.</p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="value">3가지</div>
+                    <div class="label">기본 자산 유형</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value">5가지</div>
+                    <div class="label">포트폴리오 유형</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>1️⃣ 포트폴리오의 3대 구성요소</h2>
+        
+        <p>투자 포트폴리오를 구성하기 위해 반드시 이해해야 할 <strong>세 가지 기본 자산 유형</strong>이 있습니다.</p>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">📈 주식 (Stock)</h4>
+            <ul>
+                <li>미국 시장에서 관리하는 종목만 <strong>6,500~6,600개</strong> 수준</li>
+                <li>S&P 500 외에도 다양한 투자 대상 존재</li>
+                <li><strong>변동성 리스크</strong>: 100달러 → 50달러~300달러 변동 가능</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">📜 채권 (Bond)</h4>
+            <p><strong>3가지 주요 채권 유형:</strong></p>
+            <ul>
+                <li><strong>정부 채권</strong>: 가장 안전, 현재 4~5% 금리</li>
+                <li><strong>기업 채권</strong>: BBB급 파산 확률 <strong>4% 이상</strong></li>
+                <li><strong>지방정부 채권</strong>: 정부 채권보다 리스크 높지만, 기업 채권보다 안전</li>
+            </ul>
+            <p style="margin-top: 10px; color: #ffd93d;">⚠️ BBB급 이하 채권은 파산 확률 7% 이상</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">💵 현금 (Cash)</h4>
+            <ul>
+                <li><strong>인플레이션 리스크</strong>: 구매력 하락</li>
+                <li>미국 현재 인플레이션: <strong>약 8.5%</strong> (영상 기준 시점)</li>
+                <li>1월 1,000만원 → 12월 동일 금액이지만 <strong>실질 가치 하락</strong></li>
+            </ul>
+        </div>
+
+        <div class="key-point">
+            <strong>💡 핵심 인사이트:</strong> 현금도 투자 리스크가 있습니다. 현금을 다량 보유하는 것은 인플레이션으로 인해 자산 가치가 지속적으로 하락하는 것을 의미합니다. 자산 규모가 클수록 현금 보유의 기회비용은 더욱 커집니다.
+        </div>
+
+        <h2>2️⃣ 리스크와 리워드의 관계</h2>
+        
+        <p>투자에서 가장 중요한 개념은 <strong>리스크(Risk)와 리워드(Reward)의 상관관계</strong>입니다.</p>
+
+        <div class="formula-box">
+            <p>투자의 기본 원칙</p>
+            <div class="formula">리스크 ↑ = 리워드 ↑</div>
+            <div class="formula">리스크 ↓ = 리워드 ↓</div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="riskRewardChart"></canvas>
+        </div>
+
+        <div class="warning-box">
+            <h4>⚠️ 한국 투자자의 흔한 실수</h4>
+            <p><strong>리워드만 보고 리스크는 무시합니다.</strong></p>
+            <p style="margin-top: 10px;">"메타를 1월에 100달러에 투자했으면 지금 330달러니까 3배 올랐잖아요"</p>
+            <p>→ 이 뒤에 숨겨진 <strong>변동성 리스크</strong>를 보지 않는 것이 문제입니다.</p>
+        </div>
+
+        <h3>포트폴리오의 핵심 목적</h3>
+        
+        <div class="chart-container">
+            <canvas id="frontierChart"></canvas>
+        </div>
+
+        <p>포트폴리오의 역할은 <strong>Efficient Frontier(효율적 투자선)</strong>를 찾는 것입니다. 즉, <strong>리스크는 최소화하면서 리워드는 최대화</strong>하는 최적점을 찾는 것이 목표입니다.</p>
+
+        <h2>3️⃣ 주식 종류별 투자 리스크</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>주식 유형</th>
+                    <th>리스크 수준</th>
+                    <th>특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>대형 가치주</td>
+                    <td><span class="risk-level risk-low">낮음</span></td>
+                    <td>펀더멘털 강함, 배당금 지급</td>
+                </tr>
+                <tr>
+                    <td>대형 성장주</td>
+                    <td><span class="risk-level risk-medium">중간</span></td>
+                    <td>미래 가치 반영, 베타 1.2 이상</td>
+                </tr>
+                <tr>
+                    <td>중소형 가치주</td>
+                    <td><span class="risk-level risk-high">높음</span></td>
+                    <td>성장 잠재력, 변동성 큼</td>
+                </tr>
+                <tr>
+                    <td>중소형 성장주</td>
+                    <td><span class="risk-level risk-high">매우 높음</span></td>
+                    <td>고변동성, 급등락 가능</td>
+                </tr>
+                <tr>
+                    <td>IPO/마이크로캡</td>
+                    <td><span class="risk-level risk-high">극히 높음</span></td>
+                    <td>$5 이하 종목, 극단적 변동</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <canvas id="stockRiskChart"></canvas>
+        </div>
+
+        <div class="key-point">
+            <strong>💡 가치주 vs 성장주:</strong><br>
+            • <strong>가치주</strong>: 현재 펀더멘털(대차대조표, 손익계산서, 현금흐름)이 강하고 배당금 지급<br>
+            • <strong>성장주</strong>: 배당 없이 미래 가치에 투자, 기업 가치가 실적 대비 높게 형성
+        </div>
+
+        <h2>4️⃣ 핵심 투자 법칙</h2>
+
+        <div class="formula-box" style="background: linear-gradient(135deg, #2a1e5a 0%, #1a0d3d 100%);">
+            <h4 style="color: #ffd93d;">525 법칙</h4>
+            <div class="formula" style="font-size: 1.1rem;">아무리 좋은 대형주라도 <span style="color: #ff6b6b;">25%</span> 이상 보유 금지</div>
+            <div class="formula" style="font-size: 1.1rem;">아무리 유망한 중소형주라도 <span style="color: #ff6b6b;">5%</span> 이상 보유 금지</div>
+        </div>
+
+        <div class="formula-box" style="background: linear-gradient(135deg, #1e5a2a 0%, #0d3d1a 100%);">
+            <h4 style="color: #6bcf7f;">333 법칙 (자산 분산)</h4>
+            <p style="margin-bottom: 15px;">전 재산을 한 곳에 집중하지 마라</p>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">부동산 30%</div>
+                <div style="background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">주식 30%</div>
+                <div style="background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">기타 30%</div>
+                <div style="background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px;">현금 10%</div>
+            </div>
+        </div>
+
+        <h2>5️⃣ 포트폴리오 구성의 2가지 핵심 요소</h2>
+
+        <div class="stat-grid">
+            <div class="highlight-box" style="margin: 0;">
+                <h4 style="color: #00d4ff; text-align: center;">🎯 Risk Tolerance<br>(리스크 허용도)</h4>
+                <p style="font-size: 0.9rem; margin-top: 10px;">개인의 성향에 따라 리스크 수용 수준이 다릅니다. 나이와 관계없이 본인의 투자 성향을 파악해야 합니다.</p>
+            </div>
+            <div class="highlight-box" style="margin: 0;">
+                <h4 style="color: #00d4ff; text-align: center;">⏰ Time Horizon<br>(투자 기간)</h4>
+                <p style="font-size: 0.9rem; margin-top: 10px;">돈이 언제 필요한지에 따라 투자 전략이 달라집니다. 은퇴 목적이면서 데이트레이딩을 하면 100% 망합니다.</p>
+            </div>
+        </div>
+
+        <div class="warning-box" style="margin-top: 20px;">
+            <h4>⚠️ 남과 비교하지 마라</h4>
+            <p>투자 성향이 다른 사람과 수익률을 비교하는 것은 무의미합니다.</p>
+            <ul style="margin-top: 10px;">
+                <li>리스크가 높은 투자자 vs 보수적 투자자는 비교 대상이 아님</li>
+                <li>채권만 보유한 포트폴리오 vs 100% 주식 포트폴리오 비교 불가</li>
+                <li><strong>투자의 과정도 결과도 행복해야 합니다</strong></li>
+            </ul>
+        </div>
+
+        <h2>6️⃣ 포트폴리오 종류</h2>
+
+        <div class="chart-container">
+            <canvas id="portfolioTypesChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>유형</th>
+                    <th>특징</th>
+                    <th>구성 비율</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Aggressive<br>(공격적)</strong></td>
+                    <td>고위험·고수익 추구</td>
+                    <td>성장주 70-80%</td>
+                </tr>
+                <tr>
+                    <td><strong>Defensive<br>(방어적)</strong></td>
+                    <td>안정성 중시</td>
+                    <td>채권 60%+, 대형 가치주</td>
+                </tr>
+                <tr>
+                    <td><strong>Income<br>(수입형)</strong></td>
+                    <td>정기적 현금흐름</td>
+                    <td>배당주, 채권 중심</td>
+                </tr>
+                <tr>
+                    <td><strong>Speculative<br>(투기적)</strong></td>
+                    <td>초고위험 투자</td>
+                    <td>예: ARK Invest 스타일<br>⚠️ 80-90% 손실 가능</td>
+                </tr>
+                <tr>
+                    <td><strong>Hybrid<br>(혼합형)</strong></td>
+                    <td>다양한 자산 클래스</td>
+                    <td>부동산(REITs) 포함</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>7️⃣ 투자 목적별 전략</h2>
+
+        <div class="highlight-box">
+            <h4 style="color: #ffd93d;">🎯 은퇴 목적</h4>
+            <p>나이에 따라 리스크를 점진적으로 줄여야 합니다.</p>
+            <p style="margin-top: 10px;"><strong>30대</strong>: 리스크 높음 → <strong>40대</strong>: 중간 → <strong>50대</strong>: 낮춤 → <strong>60-70대</strong>: 보수적</p>
+            <p style="margin-top: 10px; color: #888;">단, 자산 규모에 따라 조정 가능</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #ffd93d;">🏠 주택구입 목적</h4>
+            <p><strong>보수적으로 투자해야 합니다.</strong></p>
+            <p style="margin-top: 10px;">예시: 2020년에 2억 투자 → 2022년 주택 구입 예정<br>
+            ⚠️ 2022년에 1억 1천만원으로 하락 시 주택 구입 불가</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #ffd93d;">📚 학자금 목적</h4>
+            <p><strong>더 보수적으로 투자</strong></p>
+            <p style="margin-top: 10px;">미국의 529 플랜: 어릴 때부터 보수적으로 운용</p>
+        </div>
+
+        <div class="warning-box">
+            <h4>💼 사업자금</h4>
+            <p><strong>주식에 투자해서는 절대 안 됩니다!</strong></p>
+            <p style="margin-top: 10px;">파산 위험 존재. 일부 자금만 Treasury나 단기채권에 파킹 가능</p>
+        </div>
+
+        <h2>8️⃣ 한국 투자자의 흔한 실수와 실패 원인</h2>
+
+        <div class="warning-box">
+            <ol style="padding-left: 20px;">
+                <li style="margin-bottom: 15px;">
+                    <strong>목적 없이 투자</strong><br>
+                    "10억을 어떻게 빨리 올려봐" - 기회비용 손실 발생
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong>단기 성과 과도한 강조</strong><br>
+                    단기 성과만 추구하다 큰 자산 손실
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong>부부 간 합의 없는 투자</strong><br>
+                    한 명이 손해 → 급히 메꾸려다 더 큰 손실
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong>폭락장에서 매각</strong><br>
+                    보유했으면 회복됐을 자산을 50%로 실현 손실
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong>대박 사례 모방</strong><br>
+                    20-30배 번 사람처럼 투자하려는 욕심
+                </li>
+            </ol>
+        </div>
+
+        <div class="key-point">
+            <strong>💡 실제 사례:</strong> 하나의 종목에 올인해서 100만 달러까지 벌었지만, 현재 15만 달러로 하락한 대학교수 사례. 주식을 갬블링으로 생각해서는 안 됩니다.
+        </div>
+
+        <h2>9️⃣ 종횡(縱橫) 포트폴리오의 장점</h2>
+
+        <div class="success-box">
+            <h4 style="color: #6bcf7f; margin-bottom: 15px;">✅ 종횡 포트폴리오 특징</h4>
+            <ul>
+                <li><strong>키 높이 조절</strong>로 개인의 투자 리스크 조절 가능</li>
+                <li>소형주부터 대형주까지 <strong>다양하게 투자</strong> 가능</li>
+                <li><strong>525 법칙, 333 법칙</strong> 적용</li>
+                <li><strong>섹터 로테이션과 리밸런싱</strong> 용이</li>
+                <li>현금을 <strong>전략적으로 활용</strong> 가능</li>
+                <li>투자 리스크를 효과적으로 줄일 수 있음</li>
+            </ul>
+        </div>
+
+        <h3>종횡 포트폴리오 예시</h3>
+
+        <div class="chart-container">
+            <canvas id="conservativeChart"></canvas>
+            <p style="text-align: center; margin-top: 10px; color: #888;">보수적 포트폴리오 구성 예시</p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="aggressiveChart"></canvas>
+            <p style="text-align: center; margin-top: 10px; color: #888;">공격적 포트폴리오 구성 예시</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>🇺🇸 미국 증시 관점에서의 투자 시사점</h2>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">📊 S&P 500을 기준점으로</h4>
+            <p>모든 투자 성과는 S&P 500의 리스크를 기준점으로 평가해야 합니다. 100% 주식 투자 시 해당 리스크 대비 얼마나 초과 성과를 냈는지가 중요합니다.</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">💰 채권 시장 현황</h4>
+            <ul>
+                <li>정부 채권 금리: 4-5% 수준</li>
+                <li>BBB급 기업 채권 파산 확률: 4% 이상</li>
+                <li>BBB급 이하: 7% 이상 파산 위험</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <h4 style="color: #00d4ff; margin-bottom: 15px;">📈 미국 투자 철학의 핵심</h4>
+            <ul>
+                <li>미국 120년 투자 역사에서 검증된 방법론</li>
+                <li>리스크와 리워드를 <strong>동시에</strong> 고려</li>
+                <li>분산투자를 통한 리스크 관리</li>
+                <li>목적과 기간에 맞는 전략 수립</li>
+            </ul>
+        </div>
+
+        <div class="conclusion">
+            <h2>📌 결론: 선진국형 투자의 핵심</h2>
+            <ol style="padding-left: 20px;">
+                <li style="margin-bottom: 12px;"><strong>리워드만 보지 말고 리스크를 먼저 파악</strong>하세요.</li>
+                <li style="margin-bottom: 12px;"><strong>투자 목적과 기간</strong>을 명확히 정의하세요.</li>
+                <li style="margin-bottom: 12px;"><strong>본인의 리스크 허용도</strong>를 정확히 파악하세요.</li>
+                <li style="margin-bottom: 12px;"><strong>525 법칙, 333 법칙</strong>으로 분산 투자하세요.</li>
+                <li style="margin-bottom: 12px;"><strong>남과 비교하지 말고</strong> 본인만의 전략을 유지하세요.</li>
+                <li style="margin-bottom: 12px;"><strong>선진국형 마음 편한 투자, 행복한 투자</strong>를 추구하세요.</li>
+            </ol>
+            <p style="margin-top: 20px; text-align: center; color: #ffd93d; font-weight: bold;">
+                "투자를 통해 장기적으로 자산을 증식시키는 방법은 이것밖에 없습니다"
+            </p>
+        </div>
+
+        <div class="meta-info" style="margin-top: 30px;">
+            📊 본 분석은 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.<br>
+            투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.
+        </div>
+    </div>
+
+    <script>
+        // 리스크-리워드 관계 차트
+        new Chart(document.getElementById('riskRewardChart'), {
+            type: 'line',
+            data: {
+                labels: ['낮음', '', '중간', '', '높음'],
+                datasets: [{
+                    label: '리워드',
+                    data: [2, 4, 6, 7.5, 8],
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#00d4ff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '리스크와 리워드의 관계',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: '리스크 →', color: '#888' },
+                        ticks: { color: '#888' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        title: { display: true, text: '리워드 →', color: '#888' },
+                        ticks: { color: '#888' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Efficient Frontier 차트
+        new Chart(document.getElementById('frontierChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: '효율적 투자선',
+                    data: [
+                        {x: 1, y: 2},
+                        {x: 2, y: 4},
+                        {x: 3, y: 5.5},
+                        {x: 4, y: 6.5},
+                        {x: 5, y: 7.2},
+                        {x: 6, y: 7.6},
+                        {x: 7, y: 7.8},
+                        {x: 8, y: 7.9}
+                    ],
+                    borderColor: '#ffd93d',
+                    backgroundColor: '#ffd93d',
+                    showLine: true,
+                    tension: 0.4,
+                    pointRadius: 6
+                }, {
+                    label: '최적 포트폴리오',
+                    data: [{x: 4, y: 6.5}],
+                    borderColor: '#ff6b6b',
+                    backgroundColor: '#ff6b6b',
+                    pointRadius: 12,
+                    pointStyle: 'star'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Efficient Frontier (효율적 투자선)',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        labels: { color: '#888' }
+                    },
+                    annotation: {
+                        annotations: {
+                            point1: {
+                                type: 'label',
+                                xValue: 4.5,
+                                yValue: 5.8,
+                                content: '← 최적점',
+                                color: '#ff6b6b',
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: '리스크 →', color: '#888' },
+                        ticks: { color: '#888' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        title: { display: true, text: '리워드 →', color: '#888' },
+                        ticks: { color: '#888' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+
+        // 주식 종류별 리스크 차트
+        new Chart(document.getElementById('stockRiskChart'), {
+            type: 'bar',
+            data: {
+                labels: ['대형 가치주', '대형 성장주', '중소형 가치주', '중소형 성장주', 'IPO/마이크로캡'],
+                datasets: [{
+                    label: '리스크 수준',
+                    data: [2, 4, 6, 8, 10],
+                    backgroundColor: [
+                        '#6bcf7f',
+                        '#ffd93d',
+                        '#ffa500',
+                        '#ff6b6b',
+                        '#ff3333'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '주식 종류별 투자 리스크',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: '리스크 수준 →', color: '#888' },
+                        ticks: { color: '#888' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        max: 12
+                    },
+                    y: {
+                        ticks: { color: '#e8e8e8', font: { size: 11 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 포트폴리오 유형별 리스크-리워드
+        new Chart(document.getElementById('portfolioTypesChart'), {
+            type: 'radar',
+            data: {
+                labels: ['리스크', '성장성', '안정성', '수익성', '유동성'],
+                datasets: [{
+                    label: 'Aggressive',
+                    data: [9, 9, 2, 8, 6],
+                    borderColor: '#ff6b6b',
+                    backgroundColor: 'rgba(255, 107, 107, 0.2)'
+                }, {
+                    label: 'Defensive',
+                    data: [2, 3, 9, 4, 7],
+                    borderColor: '#6bcf7f',
+                    backgroundColor: 'rgba(107, 207, 127, 0.2)'
+                }, {
+                    label: 'Income',
+                    data: [3, 4, 7, 6, 5],
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'rgba(0, 212, 255, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '포트폴리오 유형별 특성 비교',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        labels: { color: '#888' }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255,255,255,0.1)' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        pointLabels: { color: '#e8e8e8' },
+                        ticks: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 보수적 포트폴리오
+        new Chart(document.getElementById('conservativeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['대형 가치주', '블렌드(인덱스)', '대형 성장주', '현금'],
+                datasets: [{
+                    data: [50, 30, 10, 10],
+                    backgroundColor: ['#6bcf7f', '#00d4ff', '#ffd93d', '#888'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '보수적 포트폴리오 예시',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#e8e8e8', padding: 15 }
+                    }
+                }
+            }
+        });
+
+        // 공격적 포트폴리오
+        new Chart(document.getElementById('aggressiveChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['대형 성장주', '중형주', '소형 성장주', '스페큘러티브', '현금'],
+                datasets: [{
+                    data: [50, 20, 15, 10, 5],
+                    backgroundColor: ['#ffd93d', '#00d4ff', '#ffa500', '#ff6b6b', '#888'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '공격적 포트폴리오 예시',
+                        color: '#fff',
+                        font: { size: 14 }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#e8e8e8', padding: 15 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

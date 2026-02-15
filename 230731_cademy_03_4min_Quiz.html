@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>미국 은퇴 재정 전략 - 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            font-size: 1.4em;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            color: #a8d8ea;
+            font-size: 0.9em;
+        }
+        .divider {
+            text-align: center;
+            padding: 30px 0;
+            font-size: 1.1em;
+            color: #e94560;
+            font-weight: bold;
+            border-top: 2px dashed rgba(233,69,96,0.3);
+            border-bottom: 2px dashed rgba(233,69,96,0.3);
+            margin: 30px 0;
+            background: rgba(233,69,96,0.05);
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e94560;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .question {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4ecca3;
+        }
+        .question.medium { border-left-color: #ff9800; }
+        .question.hard { border-left-color: #e94560; }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1em;
+        }
+        .question-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .difficulty {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(78,204,163,0.2);
+            color: #4ecca3;
+        }
+        .difficulty.medium {
+            background: rgba(255,152,0,0.2);
+            color: #ff9800;
+        }
+        .difficulty.hard {
+            background: rgba(233,69,96,0.2);
+            color: #e94560;
+        }
+        .question-type {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(0,184,212,0.2);
+            color: #00b8d4;
+        }
+        .question-text {
+            color: #ddd;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        .options {
+            margin-top: 12px;
+        }
+        .option {
+            padding: 10px 12px;
+            margin: 6px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            color: #ccc;
+            font-size: 0.9em;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .blank-space {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid #4ecca3;
+            margin: 0 4px;
+        }
+        .answer-section {
+            background: rgba(78,204,163,0.1);
+            border: 1px solid rgba(78,204,163,0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .answer-number {
+            font-weight: bold;
+            color: #4ecca3;
+        }
+        .answer-value {
+            background: #4ecca3;
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .explanation {
+            color: #bbb;
+            font-size: 0.9em;
+            line-height: 1.7;
+        }
+        .explanation strong {
+            color: #fff;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 20px;
+        }
+        .info-box {
+            background: rgba(0,184,212,0.1);
+            border: 1px solid rgba(0,184,212,0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .info-box h3 {
+            color: #00b8d4;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .info-box p {
+            color: #aaa;
+            font-size: 0.85em;
+        }
+        .ox-options {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .ox-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            font-size: 1.2em;
+        }
+        .writing-space {
+            margin-top: 12px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            min-height: 80px;
+            color: #666;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>📝 미국 은퇴 재정 전략 시험</h1>
+            <p class="subtitle">아카데미 3회 - 은퇴 후 삶의 경제적 관점</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📋 시험 안내</h3>
+            <p>총 10문제 | 난이도: ⭐ 쉬움 30% / ⭐⭐ 보통 50% / ⭐⭐⭐ 어려움 20%</p>
+            <p>유형: 객관식, 단답형, OX문제, 빈칸채우기, 서술형</p>
+        </div>
+
+        <!-- ========== 문제지 ========== -->
+        <div class="divider">
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+            📋 시험문제 (총 10문제)<br>
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </div>
+
+        <div class="section">
+            <!-- 문제 1 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 1]</span>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐ 쉬움</span>
+                        <span class="question-type">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 언급한 미국의 은퇴 후 건강 문제로 인해 발생할 수 있는 예상 비용은 얼마인가?
+                </div>
+                <div class="options">
+                    <div class="option">① $10만~$20만</div>
+                    <div class="option">② $50만~$80만</div>
+                    <div class="option">③ $100만~$200만</div>
+                    <div class="option">④ $500만 이상</div>
+                </div>
+            </div>
+
+            <!-- 문제 2 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 2]</span>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐ 쉬움</span>
+                        <span class="question-type">OX문제</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 "Retirement"의 의미를 "re-tire", 즉 타이어를 갈아 끼우는 것으로 해석하며, 이는 은퇴 후에도 멈추지 않고 계속 달리되 방향을 바꾸는 삶을 의미한다고 설명했다.
+                </div>
+                <div class="ox-options">
+                    <div class="ox-option">⭕ O</div>
+                    <div class="ox-option">❌ X</div>
+                </div>
+            </div>
+
+            <!-- 문제 3 -->
+            <div class="question medium">
+                <div class="question-header">
+                    <span class="question-number">[문제 3]</span>
+                    <div class="question-meta">
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="question-type">단답형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 은퇴 후 재정적 안정을 위해 젊을 때부터 준비해야 한다고 강조한 것은 무엇인가? (강의에서 "프로페셔널 할 정도로 만들어 놔야 된다"고 언급한 것)
+                </div>
+                <div class="writing-space">답: _______________</div>
+            </div>
+
+            <!-- 문제 4 -->
+            <div class="question medium">
+                <div class="question-header">
+                    <span class="question-number">[문제 4]</span>
+                    <div class="question-meta">
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="question-type">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    미국의 은퇴 포트폴리오 전략에서 60대의 일반적으로 권장되는 주식:채권 비율에 가장 가까운 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 80:20 (주식:채권)</div>
+                    <div class="option">② 60:40 (주식:채권)</div>
+                    <div class="option">③ 40~50:50~60 (주식:채권)</div>
+                    <div class="option">④ 20:80 (주식:채권)</div>
+                </div>
+            </div>
+
+            <!-- 문제 5 -->
+            <div class="question medium">
+                <div class="question-header">
+                    <span class="question-number">[문제 5]</span>
+                    <div class="question-meta">
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="question-type">빈칸채우기</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 성인 자녀와의 관계에 대해 "Let them go. Let them live their <span class="blank-space"></span>."라고 표현하며 세대 간 <span class="blank-space"></span> 독립의 중요성을 강조했다.
+                </div>
+                <div class="writing-space">첫 번째 빈칸: _______________<br>두 번째 빈칸: _______________</div>
+            </div>
+
+            <!-- 문제 6 -->
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">[문제 6]</span>
+                    <div class="question-meta">
+                        <span class="difficulty">⭐ 쉬움</span>
+                        <span class="question-type">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 친구 관계에 대해 어떤 조언을 했는가?
+                </div>
+                <div class="options">
+                    <div class="option">① 같은 나이의 동년배와만 친구가 되어야 한다</div>
+                    <div class="option">② 나이에 관계없이 관심사와 케미스트리가 맞는 사람과 친구가 될 수 있다</div>
+                    <div class="option">③ 직장 동료와만 친구 관계를 유지해야 한다</div>
+                    <div class="option">④ 온라인에서만 친구를 사귀어야 한다</div>
+                </div>
+            </div>
+
+            <!-- 문제 7 -->
+            <div class="question medium">
+                <div class="question-header">
+                    <span class="question-number">[문제 7]</span>
+                    <div class="question-meta">
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="question-type">객관식</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    미국에서 취미나 전문성을 활용한 부업이 활성화된 경제 현상을 무엇이라고 하는가?
+                </div>
+                <div class="options">
+                    <div class="option">① 셰어링 이코노미(Sharing Economy)</div>
+                    <div class="option">② 긱 이코노미(Gig Economy)</div>
+                    <div class="option">③ 그린 이코노미(Green Economy)</div>
+                    <div class="option">④ 서큘러 이코노미(Circular Economy)</div>
+                </div>
+            </div>
+
+            <!-- 문제 8 -->
+            <div class="question medium">
+                <div class="question-header">
+                    <span class="question-number">[문제 8]</span>
+                    <div class="question-meta">
+                        <span class="difficulty medium">⭐⭐ 보통</span>
+                        <span class="question-type">OX문제</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 자녀에게 조언을 해주는 가장 좋은 시점은 "내가 원할 때 언제든지"라고 말했다.
+                </div>
+                <div class="ox-options">
+                    <div class="ox-option">⭕ O</div>
+                    <div class="ox-option">❌ X</div>
+                </div>
+            </div>
+
+            <!-- 문제 9 -->
+            <div class="question hard">
+                <div class="question-header">
+                    <span class="question-number">[문제 9]</span>
+                    <div class="question-meta">
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="question-type">서술형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 언급한 "4차 산업혁명"이 세대 간 투자 조언에 미치는 영향에 대해 설명하시오. 부모 세대의 경험이 자녀 세대에게 직접적인 도움이 되기 어려운 이유를 포함하여 서술하시오.
+                </div>
+                <div class="writing-space">
+                    (답안 작성란)<br><br><br><br>
+                </div>
+            </div>
+
+            <!-- 문제 10 -->
+            <div class="question hard">
+                <div class="question-header">
+                    <span class="question-number">[문제 10]</span>
+                    <div class="question-meta">
+                        <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                        <span class="question-type">서술형</span>
+                    </div>
+                </div>
+                <div class="question-text">
+                    강의에서 "자녀에게 가장 큰 교육은 내가 어떻게 살고 있는가를 보여주는 것"이라고 했다. 이를 은퇴 재정 계획 관점에서 해석하고, 부모의 건전한 재정 관리가 자녀에게 어떤 메시지를 전달할 수 있는지 설명하시오.
+                </div>
+                <div class="writing-space">
+                    (답안 작성란)<br><br><br><br>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 정답지 ========== -->
+        <div class="divider">
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+            📝 정답 및 해설<br>
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </div>
+
+        <div class="section">
+            <!-- 정답 1 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 1]</span>
+                    <span class="answer-value">정답: ③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "미국에서는 건강이 무너지면 오래 아프면 오래 아플수록 100만불 200만불 그냥 깨집니다"라고 직접 언급했습니다. 이는 미국의 높은 의료비 현실을 반영한 것으로, 건강 관리의 중요성을 강조한 부분입니다.
+                </div>
+            </div>
+
+            <!-- 정답 2 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 2]</span>
+                    <span class="answer-value">정답: O</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "retirement을 영어로 해석하면 re-tire, 다시 가서 지금까지 달리던 타이어를 갈아 끼우는 의미이지 가는 길을 멈추는 삶이 아닌거에요. 타이어가 바꾼다는 의미에요 또 달리는거에요 천천히 가지만"이라고 설명했습니다. 은퇴는 멈춤이 아닌 방향 전환을 의미합니다.
+                </div>
+            </div>
+
+            <!-- 정답 3 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 3]</span>
+                    <span class="answer-value">정답: 취미 (또는 취미생활, 취미의 전문화)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "내가 좋아하는 일을 평소에 매일 또는 매주 몇시간씩 해놓으세요. 그 취미가 어느정도 프로페셔널 할 정도로 만들어 놔야 되요"라고 강조했습니다. 취미를 전문가 수준으로 발전시키면 은퇴 후 소득원이 될 수 있다는 의미입니다.
+                </div>
+            </div>
+
+            <!-- 정답 4 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 4]</span>
+                    <span class="answer-value">정답: ③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 분석 문서에서 60대의 일반적인 포트폴리오 배분은 주식 40-50%, 채권/현금 50-60%로 제시되었습니다. 이는 성장보다 자본 보존과 안정적인 인컴(배당, 이자)을 중시하는 전략입니다. 연령이 높아질수록 변동성이 낮은 자산의 비중을 높이는 것이 일반적입니다.
+                </div>
+            </div>
+
+            <!-- 정답 5 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 5]</span>
+                    <span class="answer-value">정답: lives / 재정적(또는 경제적)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "Let them go. Let them live their lives. 그냥 걔네들 살 수 있게 놔두고 지켜보는 것이 좋겠어요"라고 말하며, "나의 삶은 내 삶이고 지 삶은 지 삶인거에요"라고 강조했습니다. 이는 성인 자녀와의 재정적 독립 및 분리의 중요성을 강조한 것입니다.
+                </div>
+            </div>
+
+            <!-- 정답 6 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 6]</span>
+                    <span class="answer-value">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "친구 나이 따라서 사귀지 마십시오... 친구는 같은 길 좋아하는 것이 비슷할 수도 있는 거고... 서로 핏이 맞고 화학적인 케미스트리가 잘 맞는 그런 사람을 똑같은 나이에 찾을 수가 없어요"라고 말했습니다. 나이보다 공통 관심사와 케미가 중요하다는 의미입니다.
+                </div>
+            </div>
+
+            <!-- 정답 7 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 7]</span>
+                    <span class="answer-value">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> <strong>긱 이코노미(Gig Economy)</strong>는 프리랜서, 계약직, 파트타임 등 유연한 고용 형태를 기반으로 한 경제를 말합니다. 강의에서 취미를 전문화하여 소득을 창출하라는 조언은 이 긱 이코노미 트렌드와 일맥상통합니다. 미국에서는 약 7,350만 명이 프리랜서로 활동 중입니다.
+                </div>
+            </div>
+
+            <!-- 정답 8 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 8]</span>
+                    <span class="answer-value">정답: X</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 강의에서 "조언은 언제 한다 물어봤을 때 조언을 하는 거예요. 내가 물어보지 않았는데 내가 조언이라고 하는 것이 그거는 독이 될 수가 있습니다"라고 명확히 말했습니다. 자녀가 먼저 물어볼 때 조언하는 것이 효과적이라는 의미입니다.
+                </div>
+            </div>
+
+            <!-- 정답 9 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 9]</span>
+                    <span class="answer-value">정답: (서술형)</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    4차 산업혁명으로 인해 경제 환경과 직업 구조가 급격히 변화하면서, 부모 세대의 경험이 자녀 세대에게 직접적으로 적용되기 어려워졌다.<br><br>
+                    <strong>핵심 포인트:</strong><br>
+                    1. 강의에서 "우리가 커왔던 거랑 얘네 지금 크고 있는 거랑 아젠다가 너무 틀리다"고 언급<br>
+                    2. 기술 변화 속도가 빨라 과거의 투자 전략이나 커리어 조언이 현재에 맞지 않을 수 있음<br>
+                    3. AI, 클라우드, 암호화폐 등 새로운 투자 테마는 기성세대의 경험 범위를 벗어남<br>
+                    4. 따라서 직접적인 조언보다 "내가 어떻게 살고 있는가를 보여주는 것"이 더 효과적인 교육이 됨<br><br>
+                    결론적으로, 세대 간 투자 조언에서는 구체적인 방법보다 원칙과 태도를 전달하는 것이 더 유효하다.
+                </div>
+            </div>
+
+            <!-- 정답 10 -->
+            <div class="answer-section">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 10]</span>
+                    <span class="answer-value">정답: (서술형)</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    "자녀에게 가장 큰 교육은 내가 어떻게 살고 있는가를 보여주는 것"이라는 말은 은퇴 재정 계획 관점에서 다음과 같이 해석할 수 있다.<br><br>
+                    <strong>부모의 건전한 재정 관리가 전달하는 메시지:</strong><br>
+                    1. <strong>저축과 투자 습관:</strong> 부모가 꾸준히 저축하고 장기 투자하는 모습은 자녀에게 재정적 규율의 중요성을 자연스럽게 보여줌<br>
+                    2. <strong>재정적 독립:</strong> 부모가 자녀에게 과도하게 의존하지 않고 자신의 은퇴 자금을 준비하는 모습은 재정적 자립의 가치를 전달<br>
+                    3. <strong>균형 잡힌 소비:</strong> 현명한 소비 습관은 말보다 효과적인 금융 교육이 됨<br>
+                    4. <strong>건강 투자:</strong> 강의에서 강조한 건강 관리 역시 장기적 재정 보호 전략임을 행동으로 보여줌<br><br>
+                    결론적으로, 말로 하는 조언보다 부모의 실제 재정 행동이 자녀에게 더 강력한 교육 효과를 발휘한다. 이는 "Do as I do"가 "Do as I say"보다 효과적이라는 교육 원리와 일치한다.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📝 미국 은퇴 재정 전략 시험문제</p>
+            <p>원본: 아카데미 3회 4분재방 (2026.01.16)</p>
+        </div>
+    </div>
+</body>
+</html>

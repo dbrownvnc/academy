@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>미국 은퇴 재정 전략 분석 - 아카데미 3회</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            font-size: 1.5em;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            color: #a8d8ea;
+            font-size: 0.9em;
+        }
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .meta-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #ddd;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #e94560;
+        }
+        .section.green { border-left-color: #4ecca3; }
+        .section.blue { border-left-color: #00b8d4; }
+        .section.purple { border-left-color: #9c27b0; }
+        .section.orange { border-left-color: #ff9800; }
+        .section h2 {
+            font-size: 1.2em;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section h3 {
+            font-size: 1.05em;
+            color: #a8d8ea;
+            margin: 16px 0 12px 0;
+        }
+        p {
+            margin-bottom: 12px;
+            color: #ccc;
+            font-size: 0.95em;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(233,69,96,0.2) 0%, rgba(233,69,96,0.1) 100%);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid rgba(233,69,96,0.3);
+        }
+        .highlight-box.green {
+            background: linear-gradient(135deg, rgba(78,204,163,0.2) 0%, rgba(78,204,163,0.1) 100%);
+            border-color: rgba(78,204,163,0.3);
+        }
+        .highlight-box.blue {
+            background: linear-gradient(135deg, rgba(0,184,212,0.2) 0%, rgba(0,184,212,0.1) 100%);
+            border-color: rgba(0,184,212,0.3);
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #e94560;
+            display: block;
+        }
+        .stat-value.green { color: #4ecca3; }
+        .stat-value.blue { color: #00b8d4; }
+        .stat-label {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 4px;
+        }
+        .key-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .key-point:last-child {
+            border-bottom: none;
+        }
+        .key-point .icon {
+            font-size: 1.2em;
+            min-width: 30px;
+            text-align: center;
+        }
+        .key-point .content {
+            flex: 1;
+        }
+        .key-point .title {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .key-point .desc {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        .quote-box {
+            background: rgba(156,39,176,0.15);
+            border-left: 3px solid #9c27b0;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            color: #ddd;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .chart-title {
+            font-size: 0.9em;
+            color: #a8d8ea;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.85em;
+        }
+        th {
+            background: rgba(233,69,96,0.3);
+            color: #fff;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+        }
+        tr:hover td {
+            background: rgba(255,255,255,0.05);
+        }
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255,152,0,0.2) 0%, rgba(255,152,0,0.1) 100%);
+            border: 1px solid rgba(255,152,0,0.4);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .warning-box .title {
+            color: #ff9800;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .etf-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 14px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .etf-name {
+            font-weight: bold;
+            color: #fff;
+        }
+        .etf-desc {
+            font-size: 0.8em;
+            color: #999;
+        }
+        .etf-category {
+            background: rgba(78,204,163,0.2);
+            color: #4ecca3;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #e94560, #4ecca3, #00b8d4);
+        }
+        .timeline-item {
+            position: relative;
+            padding: 12px 0 12px 16px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 16px;
+            width: 12px;
+            height: 12px;
+            background: #e94560;
+            border-radius: 50%;
+            border: 2px solid #1a1a2e;
+        }
+        .timeline-item:nth-child(2)::before { background: #4ecca3; }
+        .timeline-item:nth-child(3)::before { background: #00b8d4; }
+        .timeline-item:nth-child(4)::before { background: #9c27b0; }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 20px;
+        }
+        .summary-list {
+            margin: 12px 0;
+        }
+        .summary-item {
+            padding: 10px 12px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .summary-item .num {
+            background: #e94560;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .emphasis {
+            color: #e94560;
+            font-weight: bold;
+        }
+        .emphasis.green { color: #4ecca3; }
+        .emphasis.blue { color: #00b8d4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🏦 미국 은퇴 재정 전략 분석</h1>
+            <p class="subtitle">아카데미 3회 4분재방 - 은퇴 후 삶의 경제적 관점</p>
+            <div class="meta-info">
+                <span class="meta-badge">📅 2026.01.16</span>
+                <span class="meta-badge">💰 재정 전략</span>
+                <span class="meta-badge">🇺🇸 미국 시장</span>
+            </div>
+        </div>
+
+        <!-- 핵심 요약 -->
+        <div class="section">
+            <h2>📌 핵심 요약: 은퇴 재정의 5대 원칙</h2>
+            <div class="summary-list">
+                <div class="summary-item">
+                    <span class="num">1</span>
+                    <span><span class="emphasis">건강</span>이 최우선 자산 - 미국 의료비 $100만~$200만 리스크</span>
+                </div>
+                <div class="summary-item">
+                    <span class="num">2</span>
+                    <span><span class="emphasis green">취미의 소득화</span> - 전문성 기반 추가 수입원 확보</span>
+                </div>
+                <div class="summary-item">
+                    <span class="num">3</span>
+                    <span><span class="emphasis blue">Re-tire 마인드셋</span> - 은퇴는 멈춤이 아닌 방향 전환</span>
+                </div>
+                <div class="summary-item">
+                    <span class="num">4</span>
+                    <span>자녀 경제적 <span class="emphasis">독립</span> - 재정적 분리 원칙</span>
+                </div>
+                <div class="summary-item">
+                    <span class="num">5</span>
+                    <span>세대 간 <span class="emphasis green">네트워킹</span> - 나이를 초월한 인적 자산 구축</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 미국 의료비 리스크 -->
+        <div class="section">
+            <h2>🏥 핵심 원칙 1: 건강 = 최대 자산</h2>
+            
+            <div class="highlight-box">
+                <p><strong>"미국에서는 건강이 무너지면 오래 아프면 오래 아플수록 <span class="emphasis">$100만불, $200만불</span> 그냥 깨집니다"</strong></p>
+            </div>
+
+            <h3>💸 미국 의료비 현실</h3>
+            <p>미국의 의료비는 전 세계에서 가장 높은 수준으로, 은퇴 후 예상치 못한 건강 문제는 재정적 파산으로 직결될 수 있습니다.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-value">$315,000</span>
+                    <span class="stat-label">65세 부부 평균<br>예상 의료비 (Fidelity)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value green">66%</span>
+                    <span class="stat-label">미국 개인파산 중<br>의료비 관련 비율</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 미국 주요 의료 비용 현황</div>
+                <canvas id="medicalCostChart"></canvas>
+            </div>
+
+            <h3>📈 투자 시사점: 헬스케어 섹터</h3>
+            <p>고령화와 의료비 증가는 헬스케어 섹터의 구조적 성장을 뒷받침합니다.</p>
+            
+            <table>
+                <tr>
+                    <th>티커</th>
+                    <th>종목/ETF</th>
+                    <th>투자 포인트</th>
+                </tr>
+                <tr>
+                    <td><strong>XLV</strong></td>
+                    <td>Health Care Select</td>
+                    <td>대형 헬스케어 종합</td>
+                </tr>
+                <tr>
+                    <td><strong>VHT</strong></td>
+                    <td>Vanguard Health Care</td>
+                    <td>저비용 광범위 노출</td>
+                </tr>
+                <tr>
+                    <td><strong>UNH</strong></td>
+                    <td>UnitedHealth Group</td>
+                    <td>보험+서비스 통합</td>
+                </tr>
+                <tr>
+                    <td><strong>ABT</strong></td>
+                    <td>Abbott Laboratories</td>
+                    <td>의료기기+진단</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <div class="title">⚠️ 개인 재정 관점</div>
+                <p>HSA(Health Savings Account)와 Medicare 보충보험 가입은 은퇴 후 의료비 리스크를 줄이는 핵심 전략입니다. 운동을 통한 건강 유지가 "100만불 버는 것"이라는 표현은 실제 의료비 절감 효과를 고려하면 과장이 아닙니다.</p>
+            </div>
+        </div>
+
+        <!-- 취미의 소득화 -->
+        <div class="section green">
+            <h2>💼 핵심 원칙 2: 취미의 전문화 및 소득화</h2>
+            
+            <div class="quote-box">
+                "내가 좋아하는 일을 평소에 매일 또는 매주 몇시간씩 해놓으세요. 그 취미가 어느정도 프로페셔널 할 정도로 만들어 놔야 되요... 전문가 가까이 되면 항상 쓰임을 받을 때가 있습니다"
+            </div>
+
+            <h3>📊 긱 이코노미(Gig Economy) 현황</h3>
+            <p>미국에서는 은퇴 후에도 취미나 전문성을 활용한 부업이 활성화되어 있으며, 이는 <span class="emphasis green">긱 이코노미</span>의 핵심 구성원이 되고 있습니다.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-value blue">7,350만</span>
+                    <span class="stat-label">미국 프리랜서 수<br>(2023년 기준)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value green">50%+</span>
+                    <span class="stat-label">2027년 예상<br>노동인구 중 비중</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📈 미국 긱 이코노미 시장 규모 전망</div>
+                <canvas id="gigEconomyChart"></canvas>
+            </div>
+
+            <h3>📈 관련 투자 기회</h3>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">UBER</div>
+                    <div class="etf-desc">Uber Technologies - 플랫폼 경제 대표</div>
+                </div>
+                <span class="etf-category">플랫폼</span>
+            </div>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">FVRR</div>
+                    <div class="etf-desc">Fiverr - 프리랜서 마켓플레이스</div>
+                </div>
+                <span class="etf-category">긱 이코노미</span>
+            </div>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">UPWK</div>
+                    <div class="etf-desc">Upwork - 전문가 매칭 플랫폼</div>
+                </div>
+                <span class="etf-category">긱 이코노미</span>
+            </div>
+
+            <div class="highlight-box green">
+                <p><strong>핵심 메시지:</strong> 골프, 테니스, 후배 양성 등 어떤 분야든 전문가 수준으로 발전시키면 은퇴 후 추가 수입원이 됩니다. 이는 현대 긱 이코노미 트렌드와 정확히 일치합니다.</p>
+            </div>
+        </div>
+
+        <!-- Retirement의 재정의 -->
+        <div class="section blue">
+            <h2>🔄 핵심 원칙 3: Re-tire의 진정한 의미</h2>
+            
+            <div class="quote-box">
+                "Retirement을 영어로 해석하면 re-tire, 다시 가서 지금까지 달리던 타이어를 갈아 끼우는 의미이지 가는 길을 멈추는 삶이 아닌거에요"
+            </div>
+
+            <h3>🎯 재정적 관점에서의 Re-tire</h3>
+            <p>은퇴는 소득 활동의 종료가 아닌 <span class="emphasis blue">소득 구조의 재편</span>을 의미합니다.</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="title">Phase 1: 축적기 (30-50대)</div>
+                    <p>근로소득 중심, 자산 축적, 복리 효과 극대화</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="title">Phase 2: 전환기 (50-60대)</div>
+                    <p>포트폴리오 리밸런싱, 소득 다각화 준비</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="title">Phase 3: 은퇴기 (60대+)</div>
+                    <p>배당/이자 소득 중심, 자본 보존 전략</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="title">Phase 4: Re-tire기</div>
+                    <p>취미 소득화, 사회적 기여, 유산 계획</p>
+                </div>
+            </div>
+
+            <h3>📈 은퇴 포트폴리오 전략 변화</h3>
+            <table>
+                <tr>
+                    <th>연령대</th>
+                    <th>주식 비중</th>
+                    <th>채권/현금</th>
+                    <th>전략</th>
+                </tr>
+                <tr>
+                    <td>30-40대</td>
+                    <td>80-90%</td>
+                    <td>10-20%</td>
+                    <td>성장 중심</td>
+                </tr>
+                <tr>
+                    <td>50대</td>
+                    <td>60-70%</td>
+                    <td>30-40%</td>
+                    <td>균형</td>
+                </tr>
+                <tr>
+                    <td>60대</td>
+                    <td>40-50%</td>
+                    <td>50-60%</td>
+                    <td>보존 + 인컴</td>
+                </tr>
+                <tr>
+                    <td>70대+</td>
+                    <td>30-40%</td>
+                    <td>60-70%</td>
+                    <td>안정 + 유동성</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 세대 간 재정 독립 -->
+        <div class="section purple">
+            <h2>👨‍👩‍👧‍👦 핵심 원칙 4: 세대 간 재정 독립</h2>
+            
+            <div class="quote-box">
+                "자식은 애물단지라고 생각해야 됩니다... 나의 삶은 내 삶이고 지 삶은 지 삶인거에요. Let them go. Let them live their lives."
+            </div>
+
+            <h3>💰 미국식 재정 분리 원칙</h3>
+            <p>강의에서 강조하는 "자녀와의 적절한 거리두기"는 미국 문화에서 일반적인 <span class="emphasis">재정적 독립(Financial Independence)</span> 개념과 일맥상통합니다.</p>
+
+            <div class="key-point">
+                <span class="icon">🎓</span>
+                <div class="content">
+                    <div class="title">대학 학자금 한도 설정</div>
+                    <div class="desc">무제한 지원보다 529 플랜 등을 통한 계획적 지원이 양측에 유리</div>
+                </div>
+            </div>
+            <div class="key-point">
+                <span class="icon">🏠</span>
+                <div class="content">
+                    <div class="title">주거 독립 장려</div>
+                    <div class="desc">성인 자녀의 경제적 자립은 부모의 은퇴 자금 보호에 필수</div>
+                </div>
+            </div>
+            <div class="key-point">
+                <span class="icon">💳</span>
+                <div class="content">
+                    <div class="title">긴급 자금 vs 무상 지원</div>
+                    <div class="desc">지속적 재정 지원은 양측의 재정 건전성을 해칠 수 있음</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="title">⚠️ 미국 은퇴 자금 통계</div>
+                <p>미국인의 <strong>56%</strong>가 은퇴 저축이 부족하며, 많은 경우 성인 자녀 지원이 원인 중 하나입니다. "나의 삶하고는 관계없어요"라는 표현처럼, 은퇴 후 재정 보호를 위해서는 명확한 경계가 필요합니다.</p>
+            </div>
+        </div>
+
+        <!-- 4차 산업혁명과 세대 차이 -->
+        <div class="section orange">
+            <h2>🤖 핵심 원칙 5: 4차 산업혁명과 투자 환경 변화</h2>
+            
+            <div class="quote-box">
+                "특히 이렇게 4차 산업혁명이 진행이 되기 때문에 내가 한 경험을 어린 아이들한테 어떤 구체적인 도움이 될 수 있는 방법이 제안이 돼 있어요... 우리가 커왔던 거랑 얘네 지금 크고 있는 거랑 아젠다가 너무 틀리잖아요"
+            </div>
+
+            <h3>🔮 투자 환경의 패러다임 전환</h3>
+            <p>강의에서 언급한 "4차 산업혁명"은 투자 환경의 근본적 변화를 의미하며, 세대 간 투자 전략 차이가 벌어지고 있습니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 세대별 투자 선호도 비교</div>
+                <canvas id="generationChart"></canvas>
+            </div>
+
+            <h3>📈 4차 산업혁명 핵심 투자 테마</h3>
+            <table>
+                <tr>
+                    <th>테마</th>
+                    <th>대표 ETF</th>
+                    <th>핵심 기업</th>
+                </tr>
+                <tr>
+                    <td>AI/클라우드</td>
+                    <td>BOTZ, AIQ</td>
+                    <td>NVDA, MSFT, GOOGL</td>
+                </tr>
+                <tr>
+                    <td>전기차/배터리</td>
+                    <td>LIT, DRIV</td>
+                    <td>TSLA, PANW</td>
+                </tr>
+                <tr>
+                    <td>반도체</td>
+                    <td>SMH, SOXX</td>
+                    <td>NVDA, AMD, AVGO</td>
+                </tr>
+                <tr>
+                    <td>사이버보안</td>
+                    <td>HACK, CIBR</td>
+                    <td>CRWD, PANW</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box blue">
+                <p><strong>세대 초월 네트워킹:</strong> "친구 나이 따라서 사귀지 마십시오"라는 조언은 투자에서도 적용됩니다. 젊은 세대의 기술 트렌드 이해와 시니어 세대의 경험적 지혜를 결합하는 것이 현명한 투자 전략입니다.</p>
+            </div>
+        </div>
+
+        <!-- 투자 시사점 종합 -->
+        <div class="section">
+            <h2>💡 투자 시사점 종합</h2>
+
+            <h3>📊 은퇴 포트폴리오 추천 구성</h3>
+            <div class="chart-container">
+                <div class="chart-title">은퇴 자산 배분 예시 (60대 기준)</div>
+                <canvas id="portfolioChart"></canvas>
+            </div>
+
+            <h3>🎯 핵심 ETF 추천</h3>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">VYM</div>
+                    <div class="etf-desc">Vanguard High Dividend Yield - 고배당</div>
+                </div>
+                <span class="etf-category">배당</span>
+            </div>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">SCHD</div>
+                    <div class="etf-desc">Schwab US Dividend Equity - 배당성장</div>
+                </div>
+                <span class="etf-category">배당</span>
+            </div>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">BND</div>
+                    <div class="etf-desc">Vanguard Total Bond Market - 채권</div>
+                </div>
+                <span class="etf-category">채권</span>
+            </div>
+            <div class="etf-card">
+                <div>
+                    <div class="etf-name">XLV</div>
+                    <div class="etf-desc">Health Care Select - 헬스케어</div>
+                </div>
+                <span class="etf-category">헬스케어</span>
+            </div>
+
+            <div class="highlight-box green">
+                <h3 style="color: #4ecca3; margin-bottom: 12px;">✅ 행동 체크리스트</h3>
+                <div class="key-point">
+                    <span class="icon">1️⃣</span>
+                    <div class="content">HSA 계좌 최대 한도 납입 (2024년 가족 $8,300)</div>
+                </div>
+                <div class="key-point">
+                    <span class="icon">2️⃣</span>
+                    <div class="content">401(k)/IRA 매칭 최대 활용</div>
+                </div>
+                <div class="key-point">
+                    <span class="icon">3️⃣</span>
+                    <div class="content">취미/전문성 → 부업 가능성 탐색</div>
+                </div>
+                <div class="key-point">
+                    <span class="icon">4️⃣</span>
+                    <div class="content">배당 ETF 중심 포트폴리오 구축</div>
+                </div>
+                <div class="key-point">
+                    <span class="icon">5️⃣</span>
+                    <div class="content">자녀 재정 지원 한도 명확화</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결론 -->
+        <div class="section">
+            <h2>📝 결론: 은퇴는 Re-tire다</h2>
+            <p>이번 강의의 핵심은 은퇴(Retirement)를 단순한 종료가 아닌 <span class="emphasis">전환(Re-tire)</span>으로 바라보는 관점입니다.</p>
+            
+            <div class="highlight-box">
+                <p><strong>투자적 관점에서:</strong></p>
+                <p>1. <span class="emphasis">건강 투자</span>가 최고의 ROI - 의료비 절감이 곧 자산 보전</p>
+                <p>2. <span class="emphasis green">인적 자본의 지속적 활용</span> - 긱 이코노미 활용</p>
+                <p>3. <span class="emphasis blue">포트폴리오 리밸런싱</span> - 성장에서 인컴으로</p>
+                <p>4. <span class="emphasis">세대 간 재정 분리</span> - 은퇴 자금 보호</p>
+            </div>
+
+            <p style="margin-top: 16px; font-style: italic; color: #a8d8ea;">"온전히 나를 위한 삶"이라는 강연자의 메시지는 재정적으로도 가장 현명한 은퇴 전략입니다. 지금까지의 축적을 지키면서, 새로운 형태로 가치를 창출하는 것이 진정한 Re-tire입니다.</p>
+        </div>
+
+        <div class="footer">
+            <p>📊 미국 증시 및 경제 관점 분석</p>
+            <p>원본: 아카데미 3회 4분재방 (2026.01.16)</p>
+            <p>본 분석은 투자 조언이 아니며, 투자 결정은 본인 책임입니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 미국 의료비 차트
+        new Chart(document.getElementById('medicalCostChart'), {
+            type: 'bar',
+            data: {
+                labels: ['암 치료 (연간)', '심장 수술', '뇌졸중 치료', '당뇨 관리 (연간)', '장기 요양 (연간)'],
+                datasets: [{
+                    label: '평균 비용 ($)',
+                    data: [150000, 200000, 100000, 15000, 95000],
+                    backgroundColor: ['#e94560', '#ff6b6b', '#ffa502', '#4ecca3', '#00b8d4'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            color: '#999',
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#999', font: { size: 10 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 긱 이코노미 차트
+        new Chart(document.getElementById('gigEconomyChart'), {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025E', '2026E'],
+                datasets: [{
+                    label: '시장 규모 (십억$)',
+                    data: [204, 296, 401, 455, 510, 580, 650],
+                    borderColor: '#4ecca3',
+                    backgroundColor: 'rgba(78,204,163,0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: '#999' } }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: { color: '#999' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#999' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 세대별 투자 선호도 차트
+        new Chart(document.getElementById('generationChart'), {
+            type: 'bar',
+            data: {
+                labels: ['개별주식', 'ETF', '암호화폐', '부동산', '채권'],
+                datasets: [{
+                    label: 'MZ세대 (18-40)',
+                    data: [45, 35, 40, 25, 10],
+                    backgroundColor: '#e94560'
+                }, {
+                    label: 'X세대 (41-56)',
+                    data: [50, 45, 15, 40, 25],
+                    backgroundColor: '#4ecca3'
+                }, {
+                    label: '베이비부머 (57-75)',
+                    data: [55, 30, 5, 50, 45],
+                    backgroundColor: '#00b8d4'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: '#999' } }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 60,
+                        ticks: { 
+                            color: '#999',
+                            callback: function(value) { return value + '%'; }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#999' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 포트폴리오 배분 차트
+        new Chart(document.getElementById('portfolioChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['미국 주식 (배당)', '해외 주식', '미국 채권', '현금/단기', '대안투자'],
+                datasets: [{
+                    data: [35, 10, 35, 15, 5],
+                    backgroundColor: ['#e94560', '#ff6b6b', '#4ecca3', '#00b8d4', '#9c27b0']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#999', padding: 12 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
