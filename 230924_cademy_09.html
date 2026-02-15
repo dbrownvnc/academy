@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 아카데미 9회: RSI와 모멘텀으로 매입·매각 시점 찾기</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Malgun Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #16213e;
+            margin: 28px 0 14px;
+            padding-left: 12px;
+            border-left: 4px solid #4361ee;
+        }
+        h3 {
+            font-size: 1.05rem;
+            color: #333;
+            margin: 20px 0 10px;
+        }
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .highlight-box h3 {
+            color: #fff;
+            margin-top: 0;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #4361ee;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .key-point {
+            background: #f0f4ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        .key-point strong {
+            color: #4361ee;
+        }
+        strong {
+            color: #1a1a2e;
+        }
+        .analogy {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-style: italic;
+        }
+        .analogy::before {
+            content: "🥩 ";
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 20px 0;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #4361ee;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .formula {
+            background: #1a1a2e;
+            color: #4ade80;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            margin: 16px 0;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .signal-buy {
+            display: inline-block;
+            background: #28a745;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .signal-sell {
+            display: inline-block;
+            background: #dc3545;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .numbered-list {
+            counter-reset: item;
+            list-style: none;
+            padding-left: 0;
+        }
+        .numbered-list li {
+            counter-increment: item;
+            margin-bottom: 12px;
+            padding-left: 36px;
+            position: relative;
+        }
+        .numbered-list li::before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            width: 26px;
+            height: 26px;
+            background: #4361ee;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .comparison-card {
+            background: #f8f9fa;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .comparison-card.buy {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .comparison-card.sell {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .comparison-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .comparison-card .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #4361ee, #764ba2);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        .case-study {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .ticker {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        .summary-box h3 {
+            color: #4ade80;
+            margin-top: 0;
+        }
+        .takeaway-list {
+            list-style: none;
+            padding: 0;
+        }
+        .takeaway-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .takeaway-list li:last-child {
+            border-bottom: none;
+        }
+        .takeaway-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 투자 아카데미 9회: RSI와 모멘텀으로 매입·매각 시점 찾기</h1>
+        <div class="meta">
+            📅 2026년 1월 22일 | 🎬 투자 아카데미 | 🌐 미국 증시 관점 분석
+        </div>
+
+        <!-- 핵심 메시지 -->
+        <div class="highlight-box">
+            <h3>💡 핵심 메시지</h3>
+            <p style="margin-bottom:0"><strong>펀더멘털 분석이 최우선</strong>이며, 테크니컬 분석(RSI, 모멘텀)은 <strong>참고 도구</strong>일 뿐이다. 섹터 로테이션과 리밸런싱 시 진입·퇴출 시점을 판단하는 보조 수단으로 활용해야 한다.</p>
+        </div>
+
+        <!-- 목차 -->
+        <div class="info-box">
+            <strong>📑 목차</strong><br>
+            1. 펀더멘털 vs 테크니컬 분석<br>
+            2. 투자 전 체크리스트 6가지<br>
+            3. RSI 지표 이해와 활용<br>
+            4. 모멘텀 지표 이해와 활용<br>
+            5. 실제 종목 사례 분석<br>
+            6. 투자 시사점 & 결론
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 1: 펀더멘털 vs 테크니컬 -->
+        <h2>1. 펀더멘털 vs 테크니컬 분석</h2>
+
+        <div class="analogy">
+            <strong>비프 스테이크 비유:</strong> 펀더멘털 분석은 <strong>고기의 질·부위·양</strong>을 보는 것이고, 테크니컬 분석은 <strong>소금·후추의 양</strong>을 조절하는 것과 같다. 고기 품질이 좋으면 소금이 좀 많아도 괜찮지만, 고기가 나쁘면 양념으로 커버할 수 없다.
+        </div>
+
+        <h3>펀더멘털 분석 (기업의 본질)</h3>
+        <div class="key-point">
+            <ul class="numbered-list">
+                <li><strong>기업 실적</strong> - 매출과 이익의 방향성</li>
+                <li><strong>유동성</strong> - 현금흐름과 부채 상황</li>
+                <li><strong>R&D 투자</strong> - 제품 개발 역량</li>
+                <li><strong>부채 추이</strong> - 부채가 늘어나는지 줄어드는지</li>
+                <li><strong>이익률 변화</strong> - 매출 대비 마진율 추이</li>
+                <li><strong>경영진 변화</strong> - 리더십 안정성</li>
+            </ul>
+        </div>
+
+        <h3>테크니컬 분석의 한계</h3>
+        <div class="warning-box">
+            ⚠️ <strong>경고:</strong> 테크니컬 분석만 의존하면 위험하다. 이 방식은 주로 <strong>데이 트레이더</strong>, <strong>고위험 투자자</strong>에게 적합하며, 장기투자자에게는 부적합하다. 100% 맞는 지표는 없으며, <strong>확률의 문제</strong>일 뿐이다.
+        </div>
+
+        <!-- 차트: 펀더멘털 vs 테크니컬 중요도 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 투자 의사결정 시 분석 비중</div>
+            <canvas id="analysisChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 2: 투자 전 체크리스트 -->
+        <h2>2. 투자 전 체크리스트 6가지</h2>
+        <p>주식을 사거나 팔기 전에 반드시 검토해야 할 <strong>6가지 핵심 요소</strong>:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>요소</th>
+                    <th>핵심 질문</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>① Investment Process</strong></td>
+                    <td>나만의 의사결정 시스템이 있는가?</td>
+                </tr>
+                <tr>
+                    <td><strong>② Individual Goal</strong></td>
+                    <td>투자 목표가 명확한가?</td>
+                </tr>
+                <tr>
+                    <td><strong>③ Risk Tolerance</strong></td>
+                    <td>얼마나 손실을 감당할 수 있는가?</td>
+                </tr>
+                <tr>
+                    <td><strong>④ Time Horizon</strong></td>
+                    <td>은퇴까지 얼마나 남았는가?</td>
+                </tr>
+                <tr>
+                    <td><strong>⑤ Liquidity Needs</strong></td>
+                    <td>당장 현금이 필요한가?</td>
+                </tr>
+                <tr>
+                    <td><strong>⑥ Tax Implications</strong></td>
+                    <td>세금 영향을 고려했는가?</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="danger-box">
+            ❌ <strong>피해야 할 사고방식:</strong> "저 사람은 2배 벌었는데 나는 왜 50%밖에 못 벌었지?"<br>
+            → 그 사람은 <strong>리스크를 더 많이</strong> 감수한 것이다. 리스크가 크면 수익도 크지만, 손실도 크다.
+        </div>
+
+        <!-- 차트: 리스크와 수익 관계 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 리스크와 기대 수익의 관계</div>
+            <canvas id="riskReturnChart"></canvas>
+        </div>
+
+        <div class="success-box">
+            💡 <strong>핵심 원칙:</strong> 당장 현금이 필요하거나, 은퇴가 가까운 사람은 리스크를 <strong>보수적으로</strong> 관리해야 한다. 투자 기간이 길수록 리스크를 더 감수할 여유가 있다.
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 3: RSI 지표 -->
+        <h2>3. RSI (Relative Strength Index)</h2>
+        
+        <div class="key-point">
+            <strong>RSI란?</strong> 상대강도지수로, 주가의 과매수(Overbought) 또는 과매도(Oversold) 상태를 판단하는 지표. <strong>0~100</strong> 범위에서 움직인다.
+        </div>
+
+        <div class="comparison-grid">
+            <div class="comparison-card buy">
+                <h4>🟢 Buy Signal</h4>
+                <div class="value">RSI ≤ 30</div>
+                <p style="font-size:0.85rem;margin-top:8px">저평가 구간<br>매수 고려 시점</p>
+            </div>
+            <div class="comparison-card sell">
+                <h4>🔴 Sell Signal</h4>
+                <div class="value">RSI ≥ 70</div>
+                <p style="font-size:0.85rem;margin-top:8px">과매수 구간<br>매도 고려 시점</p>
+            </div>
+        </div>
+
+        <!-- RSI 개념 차트 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 RSI 시그널 구간 이해</div>
+            <canvas id="rsiZoneChart"></canvas>
+        </div>
+
+        <h3>RSI 활용 시 주의사항</h3>
+        <div class="warning-box">
+            ⚠️ <strong>100만 불짜리 경고:</strong>
+            <ul style="margin-top:8px;padding-left:20px">
+                <li>RSI를 100% 신뢰하면 <strong>큰 손실</strong> 발생 가능</li>
+                <li>두통약처럼 자주 쓰면 <strong>효과가 떨어짐</strong></li>
+                <li>섹터 로테이션, 리밸런싱 시 <strong>참고용</strong>으로만 활용</li>
+                <li>펀더멘털 분석과 <strong>병행</strong>해야 함</li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 4: 모멘텀 지표 -->
+        <h2>4. 모멘텀 (Momentum) 지표</h2>
+
+        <div class="key-point">
+            <strong>모멘텀이란?</strong> 주가의 상승/하락 <strong>기세</strong>를 측정하는 지표. 현재 가격과 과거 가격의 차이로 계산한다.
+        </div>
+
+        <div class="formula">
+            Momentum = 현재 주가 - 10일 전 주가
+        </div>
+
+        <div class="comparison-grid">
+            <div class="comparison-card buy">
+                <h4>🟢 Entry Point</h4>
+                <div class="value">0 상향 돌파</div>
+                <p style="font-size:0.85rem;margin-top:8px">상승 기류 시작<br>매수 진입 고려</p>
+            </div>
+            <div class="comparison-card sell">
+                <h4>🔴 Exit Point</h4>
+                <div class="value">0 하향 돌파</div>
+                <p style="font-size:0.85rem;margin-top:8px">하락 전환<br>매도 퇴출 고려</p>
+            </div>
+        </div>
+
+        <!-- 모멘텀 개념 차트 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 모멘텀 지표 신호 예시</div>
+            <canvas id="momentumChart"></canvas>
+        </div>
+
+        <h3>모멘텀의 한계</h3>
+        <div class="danger-box">
+            ❌ <strong>주요 한계:</strong>
+            <ul style="margin-top:8px;padding-left:20px">
+                <li><strong>과매수/과매도(Overbought/Oversold)</strong> 경향 발생</li>
+                <li><strong>거래 비용(Transaction Cost)</strong> 증가 - 시간과 수수료</li>
+                <li>자주 매매하면 장기투자 대비 수익률 <strong>60~70%</strong>로 감소</li>
+                <li>매일 확인하며 매매하는 것은 <strong>비효율적</strong></li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 5: 실제 종목 사례 -->
+        <h2>5. 실제 종목 사례 분석</h2>
+
+        <!-- S&P 500 -->
+        <div class="case-study">
+            <div class="case-study-header">
+                <span class="ticker">SPY</span>
+                <span>S&P 500 ETF</span>
+            </div>
+            <p>2022년 하락장에서 RSI가 30 이하로 떨어졌을 때 <span class="signal-buy">Buy Signal</span>, 이후 상승하여 70 이상에서 <span class="signal-sell">Sell Signal</span> 발생. 그러나 RSI만 따르면 <strong>4~5번의 불필요한 매매</strong>가 발생하여 수익률이 오히려 감소한다.</p>
+        </div>
+
+        <!-- SMCI -->
+        <div class="case-study">
+            <div class="case-study-header">
+                <span class="ticker">SMCI</span>
+                <span>Super Micro Computer</span>
+            </div>
+            <p>$90에 매수 후 장기 보유 시 → <strong>$235 (약 160% 상승)</strong><br>
+            RSI 시그널만 따라 매매 시 → 여러 번의 진입/퇴출로 수익률 대폭 감소<br>
+            <strong>결론:</strong> 펀더멘털이 강한 종목은 장기 보유가 유리</p>
+        </div>
+
+        <!-- Apple -->
+        <div class="case-study">
+            <div class="case-study-header">
+                <span class="ticker">AAPL</span>
+                <span>Apple Inc.</span>
+            </div>
+            <p>RSI 41 수준은 중립 구간. RSI 30 이하에서 <span class="signal-buy">Buy Signal</span>, 70 이상에서 <span class="signal-sell">Sell Signal</span>이 확인됨. 장기 투자자에게는 참고 지표로만 활용 권장.</p>
+        </div>
+
+        <!-- Costco -->
+        <div class="case-study">
+            <div class="case-study-header">
+                <span class="ticker">COST</span>
+                <span>Costco Wholesale</span>
+            </div>
+            <p>연간 RSI 30 이하 구간이 <strong>4번</strong> 발생. 섹터 로테이션 시 Costco를 줄여야 할 시점을 판단하는 데 유용. <strong>RSI + 모멘텀</strong>을 함께 보면 더 정확한 시점 포착 가능.</p>
+        </div>
+
+        <!-- Amazon -->
+        <div class="case-study">
+            <div class="case-study-header">
+                <span class="ticker">AMZN</span>
+                <span>Amazon.com</span>
+            </div>
+            <p>RSI와 모멘텀 지표의 <strong>신호가 서로 다른 경우</strong> 발생. 예: RSI는 Sell 신호인데 모멘텀은 Entry 신호 → <strong>한 지표만 100% 신뢰하면 안 됨</strong>. 다각적 분석(Weighted Analysis) 필요.</p>
+        </div>
+
+        <!-- RSI vs 모멘텀 비교 차트 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 RSI vs 모멘텀 신호 일치율</div>
+            <canvas id="signalMatchChart"></canvas>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 섹션 6: 투자 시사점 -->
+        <h2>6. 미국 증시 투자 시사점</h2>
+
+        <div class="summary-box">
+            <h3>🎯 핵심 투자 원칙</h3>
+            <ul class="takeaway-list">
+                <li><strong>펀더멘털 분석이 최우선</strong> - 기업의 실적, 재무상태, 성장성을 먼저 파악</li>
+                <li><strong>테크니컬 분석은 참고용</strong> - RSI, 모멘텀은 진입/퇴출 시점의 보조 지표</li>
+                <li><strong>장기투자 우선</strong> - 빈번한 매매는 수익률을 갉아먹는다</li>
+                <li><strong>분기별 1회 정도의 리밸런싱</strong> - 매일 확인하며 매매하지 말 것</li>
+                <li><strong>다각적 분석(Weighted)</strong> - 하나의 지표만 100% 신뢰 금지</li>
+                <li><strong>개인 상황 고려</strong> - 목표, 리스크 허용도, 투자 기간에 맞춤</li>
+            </ul>
+        </div>
+
+        <h3>실전 활용 가이드</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>상황</th>
+                    <th>권장 행동</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>RSI ≤ 30 + 펀더멘털 양호</td>
+                    <td><span class="signal-buy">매수 검토</span></td>
+                </tr>
+                <tr>
+                    <td>RSI ≥ 70 + 리밸런싱 시기</td>
+                    <td><span class="signal-sell">비중 축소 검토</span></td>
+                </tr>
+                <tr>
+                    <td>모멘텀 0 상향 돌파</td>
+                    <td>상승 추세 확인, 진입 고려</td>
+                </tr>
+                <tr>
+                    <td>RSI와 모멘텀 신호 불일치</td>
+                    <td>추가 분석 필요, 성급한 판단 금지</td>
+                </tr>
+                <tr>
+                    <td>펀더멘털 강한 종목 보유 중</td>
+                    <td>단기 신호 무시, 장기 보유 지속</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            📌 <strong>기억할 점:</strong> 주식시장에 <strong>"100% 보장"은 없다</strong>. 확률이 높고 낮을 뿐이다. 자신만의 투자 프로세스를 만들고, 꾸준히 학습하며 조정해 나가야 한다.
+        </div>
+
+        <!-- 최종 정리 차트 -->
+        <div class="chart-container">
+            <div class="chart-title">📊 투자 의사결정 체크리스트 완성도</div>
+            <canvas id="checklistChart"></canvas>
+        </div>
+
+        <footer>
+            <p>📚 투자 아카데미 9회 | 미국 증시 관점 분석 문서</p>
+            <p style="color:#999;font-size:0.8rem">본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 차트 1: 분석 비중
+        new Chart(document.getElementById('analysisChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['펀더멘털 분석', '테크니컬 분석 (참고)', '시장 환경 분석'],
+                datasets: [{
+                    data: [60, 25, 15],
+                    backgroundColor: ['#4361ee', '#ffc107', '#28a745'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 12 } }
+                    }
+                }
+            }
+        });
+
+        // 차트 2: 리스크-수익 관계
+        new Chart(document.getElementById('riskReturnChart'), {
+            type: 'line',
+            data: {
+                labels: ['매우 낮음', '낮음', '중간', '높음', '매우 높음'],
+                datasets: [{
+                    label: '기대 수익률',
+                    data: [3, 6, 10, 18, 30],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '잠재 손실률',
+                    data: [-2, -8, -15, -30, -50],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: '수익률 (%)' }
+                    },
+                    x: {
+                        title: { display: true, text: '리스크 수준' }
+                    }
+                }
+            }
+        });
+
+        // 차트 3: RSI 구간
+        new Chart(document.getElementById('rsiZoneChart'), {
+            type: 'bar',
+            data: {
+                labels: ['과매도 (0-30)', '중립 (30-70)', '과매수 (70-100)'],
+                datasets: [{
+                    label: 'RSI 구간',
+                    data: [30, 40, 30],
+                    backgroundColor: ['#28a745', '#6c757d', '#dc3545'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'RSI 범위' },
+                        max: 50
+                    }
+                }
+            }
+        });
+
+        // 차트 4: 모멘텀
+        new Chart(document.getElementById('momentumChart'), {
+            type: 'line',
+            data: {
+                labels: ['1일', '2일', '3일', '4일', '5일', '6일', '7일', '8일', '9일', '10일'],
+                datasets: [{
+                    label: '모멘텀 값',
+                    data: [-3, -2, -1, 0.5, 2, 3.5, 4, 3, 1, -0.5],
+                    borderColor: '#4361ee',
+                    backgroundColor: function(context) {
+                        const value = context.raw;
+                        return value >= 0 ? 'rgba(40, 167, 69, 0.5)' : 'rgba(220, 53, 69, 0.5)';
+                    },
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: function(context) {
+                        const value = context.raw;
+                        return value >= 0 ? '#28a745' : '#dc3545';
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 0,
+                                yMax: 0,
+                                borderColor: '#333',
+                                borderWidth: 2,
+                                borderDash: [5, 5]
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        title: { display: true, text: '모멘텀 값' }
+                    }
+                }
+            }
+        });
+
+        // 차트 5: 신호 일치율
+        new Chart(document.getElementById('signalMatchChart'), {
+            type: 'radar',
+            data: {
+                labels: ['S&P 500', 'SMCI', 'Apple', 'Costco', 'Amazon'],
+                datasets: [{
+                    label: 'RSI 정확도',
+                    data: [70, 65, 72, 75, 60],
+                    borderColor: '#4361ee',
+                    backgroundColor: 'rgba(67, 97, 238, 0.2)'
+                }, {
+                    label: '모멘텀 정확도',
+                    data: [65, 70, 68, 72, 55],
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255, 193, 7, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    r: {
+                        min: 40,
+                        max: 100,
+                        ticks: { stepSize: 20 }
+                    }
+                }
+            }
+        });
+
+        // 차트 6: 체크리스트
+        new Chart(document.getElementById('checklistChart'), {
+            type: 'polarArea',
+            data: {
+                labels: ['Investment Process', 'Individual Goal', 'Risk Tolerance', 'Time Horizon', 'Liquidity', 'Tax'],
+                datasets: [{
+                    data: [90, 85, 80, 85, 75, 70],
+                    backgroundColor: [
+                        'rgba(67, 97, 238, 0.7)',
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(220, 53, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(23, 162, 184, 0.7)',
+                        'rgba(108, 117, 125, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

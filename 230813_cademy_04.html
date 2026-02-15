@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 아카데미: 8K 보고서 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+            padding: 24px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(83, 52, 131, 0.3);
+        }
+        header h1 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        header .meta {
+            font-size: 0.85rem;
+            color: #b8b8d1;
+        }
+        .source-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #7dd3fc;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            color: #7dd3fc;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(125, 211, 252, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 {
+            color: #c4b5fd;
+            font-size: 1.05rem;
+            margin: 16px 0 12px 0;
+        }
+        p {
+            margin-bottom: 12px;
+            color: #d1d5db;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-left: 4px solid #8b5cf6;
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+        }
+        .highlight-box.warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.2) 100%);
+            border-left-color: #f59e0b;
+        }
+        .highlight-box.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+            border-left-color: #10b981;
+        }
+        .key-point {
+            background: rgba(139, 92, 246, 0.15);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+        .key-point strong {
+            color: #a78bfa;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background: rgba(99, 102, 241, 0.3);
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .chart-container {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .chart-title {
+            color: #c4b5fd;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .comparison-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .comparison-item h4 {
+            color: #7dd3fc;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+        .tag-positive {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+        .tag-negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+        .tag-neutral {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        li {
+            margin-bottom: 8px;
+            color: #d1d5db;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+            margin: 16px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #7dd3fc, #8b5cf6);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 16px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #7dd3fc;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        .emoji {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 투자 아카데미 4회</h1>
+            <p style="font-size: 1.1rem; color: #c4b5fd; margin: 8px 0;">8K 보고서 분석법과 실시간 투자 정보</p>
+            <div class="meta">2026년 1월 19일 | 투자하는 인생TV</div>
+            <a href="https://www.youtube.com/watch?v=BfE9GZq4LeM" class="source-link" target="_blank">📺 원본 영상 보기</a>
+        </header>
+
+        <!-- 핵심 요약 -->
+        <section>
+            <h2><span class="emoji">💡</span> 핵심 요약</h2>
+            <div class="highlight-box">
+                <strong>8K 보고서란?</strong><br>
+                미국 상장 기업이 주가에 중대한 영향을 미칠 수 있는 중요 정보(Material Information)를 발생일로부터 <strong>4일 이내</strong>에 SEC에 즉각 보고하는 기업 공시 문서입니다.
+            </div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-value">4일</div>
+                    <div class="stat-label">보고 기한</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1934년</div>
+                    <div class="stat-label">증권거래법 제정</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 보고서 체계 비교 -->
+        <section>
+            <h2><span class="emoji">📋</span> SEC 보고서 체계 비교</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>📅 10-K (Annual Report)</h4>
+                    <p>연간 보고서로, 회계연도 종료 후 60~90일 이내 제출. 기업의 전체적인 재무상태, 사업 개요, 리스크 요인 등을 종합적으로 담고 있습니다.</p>
+                    <span class="tag tag-neutral">연 1회</span>
+                </div>
+                <div class="comparison-item">
+                    <h4>📊 10-Q (Quarterly Report)</h4>
+                    <p>분기별 실적 보고서로, 분기 종료 후 40~45일 이내 제출. 분기 재무제표와 경영진 분석이 포함됩니다.</p>
+                    <span class="tag tag-neutral">분기별</span>
+                </div>
+                <div class="comparison-item">
+                    <h4>⚡ 8-K (Current Report)</h4>
+                    <p>중요 사건 발생 시 <strong>4일 이내</strong> 즉각 보고. 주가에 직접적 영향을 미치는 실시간 정보 공개.</p>
+                    <span class="tag tag-positive">실시간</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">SEC 보고서 제출 주기 비교</div>
+                <canvas id="reportCycleChart" height="200"></canvas>
+            </div>
+        </section>
+
+        <!-- 8K 보고 항목 -->
+        <section>
+            <h2><span class="emoji">📝</span> 8K 주요 보고 항목</h2>
+            
+            <h3>1. 임원진 변화 (Board/Executive Changes)</h3>
+            <p>CEO, CFO, COO 등 C-레벨 임원의 채용, 해고, 사임 정보. 임원의 이전 경력이 기업 평가에 중요한 단서가 됩니다.</p>
+            <div class="highlight-box warning">
+                <strong>⚠️ 실제 사례:</strong> 실리콘밸리뱅크(SVB)의 CFO가 리먼브라더스 출신이었다는 점은 사전 경고 신호였습니다. 파산한 기업의 임원 출신을 주요 직책에 배치하는 것은 리스크 신호로 해석될 수 있습니다.
+            </div>
+
+            <h3>2. 보너스 및 보상 (Executive Compensation)</h3>
+            <p>임원진에 대한 보너스 지급은 일반적으로 <span class="tag tag-positive">긍정적 신호</span>입니다. 회사의 실적이 양호하고 현금 흐름이 건전하다는 의미로 해석됩니다.</p>
+
+            <h3>3. M&A (인수합병)</h3>
+            <p>인수 또는 피인수 소식. 피인수 기업에는 통상적으로 프리미엄이 붙어 <span class="tag tag-positive">주가 상승 요인</span>이 됩니다.</p>
+
+            <h3>4. 파산 (Bankruptcy)</h3>
+            <p>Chapter 11 등 파산 절차 개시. <span class="tag tag-negative">주가 급락 요인</span></p>
+
+            <h3>5. 구조조정 (Corporate Restructuring)</h3>
+            <p>비용 절감, 인력 조정, 사업부 매각 등의 정보</p>
+
+            <h3>6. 회계법인 변경</h3>
+            <p>회계법인이 바뀌는 경우, 그 이유(실수, 누락 등)를 확인할 필요가 있습니다.</p>
+
+            <h3>7. Private Placement</h3>
+            <p>기존 발행 주식 외에 1% 이상의 사모 발행이 있을 경우, 추가 자금 필요성에 대한 검토가 필요합니다.</p>
+
+            <h3>8. 은행 대출 (Bank Loan)</h3>
+            <p>회전 대출(Revolving Loan) 등 채무 증가는 <span class="tag tag-negative">실적 악화 신호</span>일 수 있습니다.</p>
+
+            <h3>9. 정관 수정 (Article of Incorporation)</h3>
+            <p>기업 정관의 변경 사항</p>
+
+            <h3>10. Earnings Press Release</h3>
+            <p>분기 실적 발표 전 프레스 릴리즈. CEO/CFO의 어닝콜 내용이 기관 투자자들의 평가에 직접 영향을 미칩니다.</p>
+        </section>
+
+        <!-- 투자 시사점 -->
+        <section>
+            <h2><span class="emoji">🎯</span> 투자 시사점</h2>
+            
+            <div class="highlight-box success">
+                <strong>핵심 원칙:</strong> "주식에 투자하는 것이 아니라, 기업에 투자하는 것입니다. 주식은 투자의 형태일 뿐입니다."
+            </div>
+
+            <h3>8K 활용 전략</h3>
+            <ul>
+                <li><strong>선제적 정보 확보:</strong> 8K는 공개 정보(Public Information)이지만 일반 투자자의 95%가 확인하지 않습니다. 이 정보를 활용하면 기관 투자자와 동일한 정보 기반에서 판단할 수 있습니다.</li>
+                <li><strong>매수 타이밍:</strong> 우량주의 실적 발표(Earnings Report) 전후 일시적 하락 시 매수 기회로 활용</li>
+                <li><strong>장기 보유 전략:</strong> 펀더멘털이 탄탄한 기업은 단기 하락에도 장기적으로 회복</li>
+            </ul>
+
+            <div class="key-point">
+                <strong>내부자 거래 추적:</strong> CEO/CFO의 자사주 매입/매도는 공개 정보입니다. 예를 들어, CFO가 적극 매입 중이고 CEO가 매도 중이라면 그 의미를 분석할 필요가 있습니다.
+            </div>
+        </section>
+
+        <!-- 펩시코 사례 분석 -->
+        <section>
+            <h2><span class="emoji">🥤</span> 펩시코(PepsiCo) 8K 사례 분석</h2>
+            <p>7월 13일 발표된 펩시코의 8K 보고서를 바탕으로 한 실제 분석 사례입니다.</p>
+
+            <h3>📈 전체 실적 요약</h3>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-value">+10%</div>
+                    <div class="stat-label">Organic Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+93%</div>
+                    <div class="stat-label">EPS 성장</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$77억</div>
+                    <div class="stat-label">Total Cash Return</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$67억</div>
+                    <div class="stat-label">배당금 지급</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">펩시코 브랜드별 성장률 (%)</div>
+                <canvas id="pepsiChart" height="250"></canvas>
+            </div>
+
+            <h3>🌍 지역별 실적</h3>
+            <div class="chart-container">
+                <div class="chart-title">지역별 매출 성장률 (%)</div>
+                <canvas id="regionChart" height="220"></canvas>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>지역</th>
+                        <th>성장률</th>
+                        <th>평가</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>북미 (Frito-Lay)</td>
+                        <td>+14%</td>
+                        <td><span class="tag tag-positive">강세</span></td>
+                    </tr>
+                    <tr>
+                        <td>라틴아메리카</td>
+                        <td>+18%</td>
+                        <td><span class="tag tag-positive">최고 성장</span></td>
+                    </tr>
+                    <tr>
+                        <td>유럽</td>
+                        <td>+15%</td>
+                        <td><span class="tag tag-positive">양호</span></td>
+                    </tr>
+                    <tr>
+                        <td>아시아태평양</td>
+                        <td>+8%</td>
+                        <td><span class="tag tag-neutral">보통</span></td>
+                    </tr>
+                    <tr>
+                        <td>아프리카</td>
+                        <td>-5%</td>
+                        <td><span class="tag tag-negative">부진</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>💰 재무 건전성</h3>
+            <div class="highlight-box success">
+                <ul>
+                    <li><strong>장기 부채 감소:</strong> 비용 절감 진행 중</li>
+                    <li><strong>자사주 매입:</strong> $100억 규모</li>
+                    <li><strong>현금 보유량:</strong> 증가 추세</li>
+                    <li><strong>배당금:</strong> 지속적으로 지급 중</li>
+                </ul>
+            </div>
+
+            <h3>⚠️ 주의 사항</h3>
+            <ul>
+                <li><strong>Quaker Foods:</strong> +1% 성장에 그침 (인플레이션 감안 시 실질 역성장)</li>
+                <li><strong>환율 영향:</strong> 달러 강세로 해외 매출의 -2.5% 손실 발생</li>
+            </ul>
+        </section>
+
+        <!-- 매수 타이밍 전략 -->
+        <section>
+            <h2><span class="emoji">⏰</span> 우량주 매수 타이밍 전략</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>1단계: 실적 발표 직후</strong><br>
+                    어닝 리포트 발표 시 일시적 하락이 자주 발생합니다. 이때가 매수 기회입니다.
+                </div>
+                <div class="timeline-item">
+                    <strong>2단계: 2~3주 하락 구간</strong><br>
+                    대부분의 개인 투자자들이 2주 이상의 하락을 견디지 못하고 매도합니다.
+                </div>
+                <div class="timeline-item">
+                    <strong>3단계: 기관 매수 시작</strong><br>
+                    개인들이 매도할 때 기관들이 매수를 시작하며, 이후 주가가 반등합니다.
+                </div>
+                <div class="timeline-item">
+                    <strong>4단계: 상승 추세 전환</strong><br>
+                    매수 신호(Buy)가 연속으로 나타나며 주가가 회복됩니다.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <strong>펩시코 실제 사례:</strong> 2021년 $130 → 현재까지 꾸준한 상승. 대형주(Large Cap)도 2년 내 15~20% 이상 상승할 수 있습니다.
+            </div>
+
+            <div class="highlight-box warning">
+                <strong>한국 투자자들의 흔한 실수:</strong><br>
+                단기적 관점(Short-term)으로 인해 2주간의 하락장을 견디지 못하고 손절. 팔자마자 기관들의 매수로 주가 반등.
+            </div>
+        </section>
+
+        <!-- 정보 확인 방법 -->
+        <section>
+            <h2><span class="emoji">🔍</span> 정보 확인 방법</h2>
+            
+            <h3>1. SEC EDGAR</h3>
+            <p>미국 증권거래위원회 공식 웹사이트에서 모든 8K, 10K, 10Q 보고서 확인 가능</p>
+            
+            <h3>2. 회사 IR (Investor Relations) 페이지</h3>
+            <p>상장 기업의 웹사이트에는 반드시 Investor Relations 탭이 있으며, 여기서 Financial Information을 확인할 수 있습니다.</p>
+            
+            <h3>3. 추적해야 할 주요 정보</h3>
+            <ul>
+                <li>실적 발표 일정 (Earnings Calendar)</li>
+                <li>배당금 지급 현황 (Dividend History)</li>
+                <li>SEC 보고서 제출 내역</li>
+                <li>내부자 거래 현황 (Insider Trading)</li>
+            </ul>
+        </section>
+
+        <!-- 한국 기업 사례 경고 -->
+        <section>
+            <h2><span class="emoji">⚠️</span> 8K 위반 사례 교훈</h2>
+            <div class="highlight-box warning">
+                <strong>한국 기술 기업 나스닥 상장 폐지 사례:</strong><br><br>
+                약 10년 전, 코스닥 상장 기업이 나스닥에 상장 후 Material Information의 고의 누락으로 8K 보고 위반 혐의를 받았습니다. 결과적으로 투자자 소송과 함께 상장 폐지되었습니다.
+            </div>
+            
+            <div class="key-point">
+                <strong>핵심 교훈:</strong> 미국에서 "몰랐다"는 변명이 통하지 않습니다. 아는 것은 권리가 아니라 <strong>의무</strong>입니다. 고의든 실수든 누락은 비윤리적(Unethical) 행위로 간주됩니다.
+            </div>
+        </section>
+
+        <!-- 결론 -->
+        <section>
+            <h2><span class="emoji">✅</span> 결론 및 실행 과제</h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>📚 학습 과제</h4>
+                    <ul>
+                        <li>보유 주식의 8K 보고서 정기 확인</li>
+                        <li>SEC EDGAR 사이트 북마크</li>
+                        <li>어닝콜 일정 캘린더 관리</li>
+                    </ul>
+                </div>
+                <div class="comparison-item">
+                    <h4>💼 투자 원칙</h4>
+                    <ul>
+                        <li>기업 투자 관점 유지 (주식 ≠ 투기)</li>
+                        <li>단기 하락에 흔들리지 않기</li>
+                        <li>펀더멘털 기반 의사결정</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <strong>핵심 메시지:</strong> 8K 보고서는 공개 정보이지만 대부분의 개인 투자자가 확인하지 않습니다. 이 정보를 활용하면 기관 투자자와 동등한 정보력을 갖출 수 있습니다.
+            </div>
+        </section>
+
+        <footer>
+            <p>투자하는 인생TV 투자 아카데미 | 분석 문서</p>
+            <p style="margin-top: 8px;">본 자료는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 보고서 주기 차트
+        new Chart(document.getElementById('reportCycleChart'), {
+            type: 'bar',
+            data: {
+                labels: ['10-K', '10-Q', '8-K'],
+                datasets: [{
+                    label: '연간 제출 횟수',
+                    data: [1, 3, 12],
+                    backgroundColor: ['rgba(99, 102, 241, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
+                    borderColor: ['rgb(99, 102, 241)', 'rgb(139, 92, 246)', 'rgb(16, 185, 129)'],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const labels = {
+                                    '10-K': '연 1회 (연간 보고서)',
+                                    '10-Q': '연 3회 (분기 보고서)',
+                                    '8-K': '수시 (평균 12회 이상)'
+                                };
+                                return labels[context.label];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#9ca3af' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#9ca3af' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 펩시코 브랜드별 차트
+        new Chart(document.getElementById('pepsiChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Frito-Lay', 'PepsiCo Beverage', 'Latin America', 'Europe', 'Asia Pacific', 'Quaker Foods'],
+                datasets: [{
+                    label: '성장률 (%)',
+                    data: [14, 15, 18, 15, 8, 1],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(99, 102, 241, 0.7)',
+                        'rgba(239, 68, 68, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgb(16, 185, 129)',
+                        'rgb(16, 185, 129)',
+                        'rgb(16, 185, 129)',
+                        'rgb(16, 185, 129)',
+                        'rgb(99, 102, 241)',
+                        'rgb(239, 68, 68)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: '#9ca3af', callback: v => v + '%' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        ticks: { color: '#9ca3af', font: { size: 11 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 지역별 차트
+        new Chart(document.getElementById('regionChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['라틴아메리카 +18%', '유럽 +15%', 'Frito-Lay NA +14%', '아시아태평양 +8%', '아프리카 -5%'],
+                datasets: [{
+                    data: [18, 15, 14, 8, 5],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(99, 102, 241, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#9ca3af', padding: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

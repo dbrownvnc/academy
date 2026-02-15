@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 11회: 국채와 주식시장, 포트폴리오 이론 분석</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            line-height: 1.8;
+            padding: 20px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .meta {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .icon {
+            font-size: 1.4rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255,107,107,0.2) 0%, rgba(255,107,107,0.1) 100%);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            border-radius: 0 12px 12px 0;
+            margin: 15px 0;
+        }
+        .highlight-box.warning {
+            background: linear-gradient(135deg, rgba(255,193,7,0.2) 0%, rgba(255,193,7,0.1) 100%);
+            border-left-color: #ffc107;
+        }
+        .highlight-box.success {
+            background: linear-gradient(135deg, rgba(40,167,69,0.2) 0%, rgba(40,167,69,0.1) 100%);
+            border-left-color: #28a745;
+        }
+        .highlight-box.info {
+            background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(102,126,234,0.1) 100%);
+            border-left-color: #667eea;
+        }
+        .key-point {
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #a8a8a8;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            background: rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            color: #fff;
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .concept-card {
+            background: linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .concept-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+        .formula-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1rem;
+            color: #ffc107;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .comparison-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .comparison-item.left {
+            border-top: 3px solid #667eea;
+        }
+        .comparison-item.right {
+            border-top: 3px solid #ff6b6b;
+        }
+        .comparison-item h5 {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #a8a8a8;
+        }
+        .comparison-item .value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            counter-increment: step-counter;
+            padding: 12px 15px 12px 50px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            position: relative;
+        }
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+        .tag.risk-low { background: #28a745; color: white; }
+        .tag.risk-mid { background: #ffc107; color: #333; }
+        .tag.risk-high { background: #dc3545; color: white; }
+        .stock-example {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .stock-chip {
+            background: rgba(102,126,234,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(102,126,234,0.3);
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 20px 0;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, rgba(40,167,69,0.2) 0%, rgba(40,167,69,0.1) 100%);
+            border-radius: 16px;
+            padding: 25px 20px;
+            margin-top: 25px;
+        }
+        .summary-box h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 30px;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        li {
+            margin: 8px 0;
+        }
+        strong {
+            color: #ffc107;
+        }
+        .visual-diagram {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .bell-curve-text {
+            font-size: 0.9rem;
+            color: #a8a8a8;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 투자아카데미 11회</h1>
+            <p style="font-size: 1.1rem; margin: 10px 0;">국채와 주식시장, 포트폴리오 이론</p>
+            <div class="meta">
+                <p>📅 2023년 10월 21일 | 🎯 미국 증시 관점 분석</p>
+            </div>
+        </div>
+
+        <!-- 핵심 요약 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">🎯</span>
+                핵심 요약
+            </div>
+            <div class="highlight-box info">
+                <p>본 강의는 <strong>현대 포트폴리오 이론(MPT)</strong>과 <strong>포스트 모던 포트폴리오 이론(PMPT)</strong>의 차이를 설명하고, 10년 국채 금리와 기술주의 상관관계, 정규분포(종형) 포트폴리오 구성 방법을 다룹니다.</p>
+            </div>
+        </div>
+
+        <!-- 섹션 1: 10년 국채와 주식시장 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">📈</span>
+                10년 국채와 주식시장 상관관계
+            </div>
+            
+            <div class="highlight-box warning">
+                <p><span class="key-point">⚠️ 핵심 경고:</span> 10년 국채 금리가 <strong>5%를 넘으면</strong> 투자 리스크가 급격히 증가합니다.</p>
+            </div>
+
+            <p>강의 당시 10년 국채 금리는 <strong>4.99%</strong>까지 상승했다가 <strong>4.914%</strong>로 하락했습니다. 이는 위기 수준 직전에서 안정을 찾은 것으로 해석됩니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">10년 국채 금리 vs 위험 수준</div>
+                <canvas id="bondRateChart"></canvas>
+            </div>
+
+            <div class="concept-card">
+                <h4>🔗 국채 금리와 기술주의 관계</h4>
+                <p>국채 금리가 상승하면 <strong>기술주/성장주가 하락</strong>하는 경향이 있습니다. 이는 다음과 같은 매커니즘으로 작동합니다:</p>
+                <ul>
+                    <li>국채 금리 상승 → 안전자산 매력 증가</li>
+                    <li>기관 투자자들이 기술주 비중 축소</li>
+                    <li>T-Bill, T-Bond 등 국채로 자금 이동</li>
+                    <li>5% 가까운 무위험 수익률 확보 가능</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>💡 투자 전략:</strong> 국채 금리 5% 돌파 시, 성장주 비중을 줄이고 현금 비중을 <strong>40% 이상</strong>까지 확대 고려</p>
+            </div>
+        </div>
+
+        <!-- 섹션 2: 연준(Fed) 정책 우려 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">🏛️</span>
+                연준(Fed) 정책과 시장 불확실성
+            </div>
+
+            <p>강의에서는 당시 <strong>파월 의장의 갈팡질팡하는 리더십</strong>에 대한 우려를 표명했습니다:</p>
+
+            <div class="highlight-box warning">
+                <ul>
+                    <li>11월 또는 12월 금리 인상 가능성 언급</li>
+                    <li>명확한 방향성과 가이드라인 부재</li>
+                    <li>미국 경제는 "핫"하지만 인플레이션 미해결</li>
+                    <li>금리 인상에도 경제 영향 불확실</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4>📊 시장 영향</h4>
+                <p>연준의 불확실한 메시지 → 주식시장 변동성 확대 → 기술주 중심 3일 연속 하락</p>
+            </div>
+        </div>
+
+        <!-- 섹션 3: 종형 포트폴리오 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">📊</span>
+                종형(정규분포) 포트폴리오 구성
+            </div>
+
+            <p>포트폴리오를 <strong>정규분포(Normal Distribution)</strong> 형태로 구성하는 것이 핵심입니다.</p>
+
+            <div class="chart-container">
+                <div class="chart-title">이상적인 종형 포트폴리오 구조</div>
+                <canvas id="normalDistChart"></canvas>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>구간</th>
+                        <th>비중</th>
+                        <th>특성</th>
+                        <th>예시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>중앙 (68%)</td>
+                        <td><strong>60-80%</strong></td>
+                        <td>Average Performer</td>
+                        <td>Large/Mega Cap</td>
+                    </tr>
+                    <tr>
+                        <td>양측 (27%)</td>
+                        <td><strong>15-30%</strong></td>
+                        <td>High Performer</td>
+                        <td>성장주, Mid Cap</td>
+                    </tr>
+                    <tr>
+                        <td>극단 (5%)</td>
+                        <td><strong>5-10%</strong></td>
+                        <td>미래 투자</td>
+                        <td>Small Cap, 고성장주</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <p><span class="key-point">❌ 흔한 실수:</span> 테슬라, 슈퍼마이크로 같은 고변동성 종목을 중앙(Average Performer) 구간에 배치 → 포트폴리오 폭락 시 폭망</p>
+            </div>
+
+            <div class="concept-card">
+                <h4>✅ 중앙 구간 적합 종목 (가치주/Large Cap)</h4>
+                <div class="stock-example">
+                    <span class="stock-chip">Costco</span>
+                    <span class="stock-chip">Google</span>
+                    <span class="stock-chip">UnitedHealth (UNH)</span>
+                    <span class="stock-chip">Johnson & Johnson</span>
+                    <span class="stock-chip">Walmart</span>
+                    <span class="stock-chip">Lockheed Martin</span>
+                    <span class="stock-chip">Realty Income (O)</span>
+                </div>
+            </div>
+
+            <div class="concept-card">
+                <h4>⚡ 양측/극단 구간 적합 종목 (성장주/고변동성)</h4>
+                <div class="stock-example">
+                    <span class="stock-chip">Tesla</span>
+                    <span class="stock-chip">Super Micro</span>
+                    <span class="stock-chip">Shopify</span>
+                    <span class="stock-chip">Square</span>
+                    <span class="stock-chip">Snowflake</span>
+                    <span class="stock-chip">Fubo TV</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 섹션 4: 베타와 리스크 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">⚖️</span>
+                베타(Beta)와 투자 리스크
+            </div>
+
+            <div class="concept-card">
+                <h4>📐 베타(Beta)란?</h4>
+                <p>시장 대비 개별 주식의 변동성을 나타내는 지표입니다.</p>
+                <div class="formula-box">
+                    베타 = 1 → 시장과 동일한 변동성<br>
+                    베타 &lt; 1 → 시장보다 낮은 변동성<br>
+                    베타 &gt; 1 → 시장보다 높은 변동성
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">포트폴리오 형태에 따른 리스크 프로파일</div>
+                <canvas id="riskProfileChart"></canvas>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-item left">
+                    <h5>🏔️ 키 큰 종형</h5>
+                    <p class="value" style="color: #28a745;">보수적</p>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">상승/하락 속도 완만<br>베타 0.9~1.1</p>
+                </div>
+                <div class="comparison-item right">
+                    <h5>🏃 키 낮은 종형</h5>
+                    <p class="value" style="color: #dc3545;">공격적</p>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">상승/하락 속도 빠름<br>베타 1.2~2.0+</p>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>투자 성향</th>
+                        <th>중앙 비중</th>
+                        <th>양측 비중</th>
+                        <th>권장 베타</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="tag risk-low">보수적</span></td>
+                        <td>70-90%</td>
+                        <td>10-30%</td>
+                        <td>≤ 1.05</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag risk-mid">중립적</span></td>
+                        <td>60-70%</td>
+                        <td>30-40%</td>
+                        <td>1.0-1.2</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag risk-high">공격적</span></td>
+                        <td>40-60%</td>
+                        <td>40-60%</td>
+                        <td>1.2+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 섹션 5: MPT vs PMPT -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">🔄</span>
+                MPT vs PMPT: 포트폴리오 이론 비교
+            </div>
+
+            <div class="concept-card">
+                <h4>📚 현대 포트폴리오 이론 (MPT)</h4>
+                <p><strong>Modern Portfolio Theory</strong> - Harry Markowitz가 제안한 전통적 이론</p>
+                <ul>
+                    <li><strong>핵심 원칙 1:</strong> 같은 리스크에서 더 높은 리턴 추구</li>
+                    <li><strong>핵심 원칙 2:</strong> 같은 리턴에서 더 낮은 리스크 추구</li>
+                    <li><strong>운용 방식:</strong> 패시브(Passive) - 구성 후 유지</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="concept-card">
+                <h4>🚀 포스트 모던 포트폴리오 이론 (PMPT)</h4>
+                <p><strong>Post-Modern Portfolio Theory</strong> - 현대 시장에 맞는 진화된 이론</p>
+                <ul>
+                    <li><strong>핵심 특징:</strong> 액티브(Active) 운용</li>
+                    <li><strong>주요 전략:</strong> 리밸런싱 + 섹터 로테이션</li>
+                    <li><strong>목표:</strong> 알파(Alpha) 창출</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">MPT vs PMPT 핵심 비교</div>
+                <canvas id="mptPmptChart"></canvas>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>MPT</th>
+                        <th>PMPT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>운용 방식</td>
+                        <td>패시브</td>
+                        <td><strong>액티브</strong></td>
+                    </tr>
+                    <tr>
+                        <td>포트폴리오 변경</td>
+                        <td>거의 없음</td>
+                        <td><strong>적극적 조정</strong></td>
+                    </tr>
+                    <tr>
+                        <td>리밸런싱</td>
+                        <td>정기적/고정</td>
+                        <td><strong>시장 상황 반영</strong></td>
+                    </tr>
+                    <tr>
+                        <td>섹터 로테이션</td>
+                        <td>미적용</td>
+                        <td><strong>적극 활용</strong></td>
+                    </tr>
+                    <tr>
+                        <td>적합 환경</td>
+                        <td>안정적 시장</td>
+                        <td><strong>급변하는 시장</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 섹션 6: PMPT 실행 전략 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">⚡</span>
+                PMPT 실행 전략: 알파 투자
+            </div>
+
+            <div class="highlight-box success">
+                <p><strong>알파(Alpha) 투자:</strong> 시장 지수를 초과하는 수익률을 창출하기 위해 적극적으로 포트폴리오를 조정하는 투자 방식</p>
+            </div>
+
+            <h4 style="margin: 20px 0 15px; color: #667eea;">📋 핵심 실행 방법</h4>
+            
+            <ol class="step-list">
+                <li><strong>리밸런싱(Rebalancing):</strong> 목표 비중에서 벗어난 자산을 조정하여 원래 포트폴리오 구조 유지</li>
+                <li><strong>섹터 로테이션:</strong> 경기 사이클에 따라 유망 섹터로 비중 이동 (미국 11개 섹터 활용)</li>
+                <li><strong>시장 선행지표 모니터링:</strong> 국채 금리, 경제 지표 등을 통한 선제적 대응</li>
+            </ol>
+
+            <div class="concept-card">
+                <h4>💡 섹터 로테이션 예시</h4>
+                <p><strong>상황:</strong> 세계 경제 성장 둔화 + 유가 하락 예상</p>
+                <ul>
+                    <li>❌ 에너지 섹터 비중 축소/매도</li>
+                    <li>✅ 경기 방어주(Consumer Staples, Healthcare) 매입</li>
+                    <li>✅ 하이테크/AI 관련 섹터로 로테이션</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 섹션 7: 주의사항 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">⚠️</span>
+                투자 주의사항 및 경고
+            </div>
+
+            <div class="highlight-box">
+                <h4 style="color: #ff6b6b; margin-bottom: 10px;">🚫 사기 투자 경고</h4>
+                <p>강의에서 강조한 핵심 원칙:</p>
+                <div class="formula-box" style="color: #ff6b6b;">
+                    "리스크 제로, 리턴 100%인 투자는 존재하지 않는다"
+                </div>
+                <p style="margin-top: 10px;">비현실적인 수익률을 약속하는 투자는 <strong>100% 사기</strong>입니다. 예: "1억 투자하면 매달 2천만원 보장" → 연 240% 수익률은 불가능</p>
+            </div>
+
+            <div class="highlight-box warning">
+                <h4 style="color: #ffc107; margin-bottom: 10px;">⚡ 비중 조절 실패 패턴</h4>
+                <ul>
+                    <li>고변동성 종목(Tesla, Super Micro)을 중앙 구간에 배치</li>
+                    <li>가치주(UNH, J&J)를 극소 비중으로 보유</li>
+                    <li>Shopify 15-20% vs UNH 1% 같은 역비중</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 섹션 8: 미국 증시 투자 시사점 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">🇺🇸</span>
+                미국 증시 투자 시사점
+            </div>
+
+            <div class="concept-card">
+                <h4>1️⃣ 국채 금리 모니터링</h4>
+                <ul>
+                    <li>10년 국채 금리 <strong>5% 이상</strong> → 기술주 비중 축소</li>
+                    <li>현금 또는 단기 국채(T-Bill)로 안전 자산 확보</li>
+                    <li>금리 하락 시 성장주 재진입 기회</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4>2️⃣ 포트폴리오 구조화</h4>
+                <ul>
+                    <li>Large Cap/Mega Cap 중심의 중앙 구간 확보</li>
+                    <li>다우존스 구성 종목 활용 권장</li>
+                    <li>성장주는 전체의 20-30% 이내 제한</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4>3️⃣ 섹터 전략</h4>
+                <ul>
+                    <li>AI/기술 섹터: 경기 확장기 유리</li>
+                    <li>방어주(Healthcare, Consumer Staples): 불확실성 시기</li>
+                    <li>에너지: 유가 및 지정학적 리스크 연동</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4>4️⃣ 지정학적 리스크</h4>
+                <ul>
+                    <li>이스라엘-하마스 분쟁 → 시장 변동성 확대</li>
+                    <li>미국의 이스라엘 지원 → 재정 부담 증가</li>
+                    <li>중동 불안 → 에너지 가격 변동 가능성</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 핵심 요약 -->
+        <div class="summary-box">
+            <h3>✅ 핵심 실행 포인트</h3>
+            <ol class="step-list">
+                <li><strong>10년 국채 5% 경계선</strong>을 주시하고, 돌파 시 기술주 비중 축소</li>
+                <li><strong>종형 포트폴리오</strong> 구조 유지: 중앙 60-80%, 양측 20-40%</li>
+                <li><strong>고변동성 종목</strong>(Tesla 등)은 반드시 양측 구간에만 배치</li>
+                <li><strong>PMPT 방식</strong>으로 리밸런싱과 섹터 로테이션 적극 활용</li>
+                <li>투자 성향에 맞는 <strong>베타 관리</strong>로 리스크 조절</li>
+                <li><strong>"리스크 0, 리턴 100%"</strong>는 존재하지 않음을 명심</li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <p>📌 본 분석은 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+            <p>투자 결정은 본인의 판단과 책임하에 이루어져야 합니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 10년 국채 금리 차트
+        const bondCtx = document.getElementById('bondRateChart').getContext('2d');
+        new Chart(bondCtx, {
+            type: 'bar',
+            data: {
+                labels: ['안전 구간', '주의 구간', '당시 고점', '당시 종가', '위험 구간'],
+                datasets: [{
+                    label: '국채 금리 (%)',
+                    data: [4.0, 4.5, 4.99, 4.914, 5.0],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(255, 107, 107, 0.7)',
+                        'rgba(102, 126, 234, 0.7)',
+                        'rgba(220, 53, 69, 0.7)'
+                    ],
+                    borderColor: [
+                        '#28a745',
+                        '#ffc107',
+                        '#ff6b6b',
+                        '#667eea',
+                        '#dc3545'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 3.5,
+                        max: 5.5,
+                        ticks: { color: '#a8a8a8' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#a8a8a8', font: { size: 10 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 정규분포 포트폴리오 차트
+        const normalCtx = document.getElementById('normalDistChart').getContext('2d');
+        const normalData = [];
+        for (let i = -4; i <= 4; i += 0.2) {
+            normalData.push({
+                x: i,
+                y: Math.exp(-0.5 * i * i) / Math.sqrt(2 * Math.PI)
+            });
+        }
+        new Chart(normalCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: '포트폴리오 분포',
+                    data: normalData,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.3)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        display: true,
+                        ticks: { 
+                            color: '#a8a8a8',
+                            callback: function(value) {
+                                if (value === -2) return 'Low Performer';
+                                if (value === 0) return 'Average';
+                                if (value === 2) return 'High Performer';
+                                return '';
+                            }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 리스크 프로파일 차트
+        const riskCtx = document.getElementById('riskProfileChart').getContext('2d');
+        new Chart(riskCtx, {
+            type: 'radar',
+            data: {
+                labels: ['상승 속도', '하락 속도', '변동성', '베타', '리스크'],
+                datasets: [{
+                    label: '보수적 (키 큰 종형)',
+                    data: [3, 3, 2, 2, 2],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    borderWidth: 2
+                }, {
+                    label: '공격적 (키 낮은 종형)',
+                    data: [5, 5, 5, 4, 5],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#a8a8a8', font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    r: {
+                        ticks: { display: false },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        pointLabels: { color: '#a8a8a8', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // MPT vs PMPT 비교 차트
+        const mptCtx = document.getElementById('mptPmptChart').getContext('2d');
+        new Chart(mptCtx, {
+            type: 'bar',
+            data: {
+                labels: ['운용 적극성', '리밸런싱 빈도', '섹터 로테이션', '시장 대응력', '알파 창출'],
+                datasets: [{
+                    label: 'MPT',
+                    data: [2, 2, 1, 2, 2],
+                    backgroundColor: 'rgba(108, 117, 125, 0.7)',
+                    borderColor: '#6c757d',
+                    borderWidth: 1
+                }, {
+                    label: 'PMPT',
+                    data: [5, 5, 5, 5, 4],
+                    backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                    borderColor: '#667eea',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        labels: { color: '#a8a8a8' }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: { color: '#a8a8a8' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y: {
+                        ticks: { color: '#a8a8a8', font: { size: 10 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

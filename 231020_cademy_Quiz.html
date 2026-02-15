@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>급변하는 미국증권시장 - 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header .meta {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        .section-divider {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 16px 20px;
+            margin: 24px -20px;
+            text-align: center;
+            font-weight: 700;
+            color: #1565c0;
+            font-size: 1.1rem;
+            border-top: 2px solid #1976d2;
+            border-bottom: 2px solid #1976d2;
+        }
+        .question-box {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .question-number {
+            background: #1565c0;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        .difficulty.easy {
+            color: #4caf50;
+        }
+        .difficulty.medium {
+            color: #ff9800;
+        }
+        .difficulty.hard {
+            color: #f44336;
+        }
+        .question-type {
+            background: #e8eaf6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #3f51b5;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .options {
+            display: grid;
+            gap: 8px;
+        }
+        .option {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #1976d2;
+        }
+        .blank-line {
+            border-bottom: 2px solid #333;
+            display: inline-block;
+            min-width: 100px;
+            margin: 0 4px;
+        }
+        .answer-box {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .answer-label {
+            background: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .answer-text {
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 1rem;
+        }
+        .explanation {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #c8e6c9;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        .ox-options {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .ox-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .essay-space {
+            background: white;
+            border: 1px dashed #bdbdbd;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 80px;
+            margin-top: 8px;
+            color: #9e9e9e;
+            font-size: 0.9rem;
+        }
+        .print-button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #1565c0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .print-button:hover {
+            background: #0d47a1;
+        }
+        .footer {
+            background: #f5f5f5;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        @media print {
+            .print-button {
+                display: none;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 시험문제</h1>
+            <div class="meta">급변하는 미국증권시장 분석 (2023.10.19) | 총 10문제</div>
+        </div>
+        
+        <div class="content">
+            <!-- 문제지 섹션 -->
+            <div class="section-divider">━━━ 📋 시험문제 (총 10문제) ━━━</div>
+            
+            <!-- 문제 1 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 1</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    2023년 10월 기준, 미국 10년물 국채 금리가 어느 수준에 근접하여 2007년 이후 최고치를 기록했는가?
+                </div>
+                <div class="options">
+                    <div class="option">① 3%</div>
+                    <div class="option">② 4%</div>
+                    <div class="option">③ 5%</div>
+                    <div class="option">④ 6%</div>
+                </div>
+            </div>
+            
+            <!-- 문제 2 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 2</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">OX문제</span>
+                </div>
+                <div class="question-text">
+                    방송에서 권고한 포트폴리오 전략은 "소형주 위주로 포트폴리오를 구성하라"이다.
+                </div>
+                <div class="ox-options">
+                    <div class="ox-option">O</div>
+                    <div class="ox-option">X</div>
+                </div>
+            </div>
+            
+            <!-- 문제 3 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 3</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">단답형</span>
+                </div>
+                <div class="question-text">
+                    테슬라가 2023년 10월 19일 당일 하락한 주가 하락률은 약 몇 %인가?
+                </div>
+                <div class="essay-space">정답: _______________</div>
+            </div>
+            
+            <!-- 문제 4 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 4</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    다음 중 방송에서 향후 2년 내 대량 파산 위험이 있다고 경고한 분야는?
+                </div>
+                <div class="options">
+                    <div class="option">① 일반 주거용 부동산</div>
+                    <div class="option">② 상업용 부동산 (Commercial Real Estate)</div>
+                    <div class="option">③ 자동차 산업</div>
+                    <div class="option">④ 반도체 산업</div>
+                </div>
+            </div>
+            
+            <!-- 문제 5 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 5</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">빈칸채우기</span>
+                </div>
+                <div class="question-text">
+                    TSMC의 유일한 리스크 요인으로 언급된 것은 <span class="blank-line"></span> 리스크이다.
+                </div>
+            </div>
+            
+            <!-- 문제 6 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 6</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    방송에서 S&P 500 지수의 연말 전망 중 가장 높은 확률(70% 이상)로 예상한 레벨 범위는?
+                </div>
+                <div class="options">
+                    <div class="option">① 4,000 ~ 4,200</div>
+                    <div class="option">② 4,200 ~ 4,400</div>
+                    <div class="option">③ 4,500 ~ 4,600</div>
+                    <div class="option">④ 4,700 ~ 4,900</div>
+                </div>
+            </div>
+            
+            <!-- 문제 7 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 7</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <div class="question-text">
+                    ASML의 투자 리스크가 증가한 주요 원인으로 언급되지 않은 것은?
+                </div>
+                <div class="options">
+                    <div class="option">① 칩 판매량 42% 감소</div>
+                    <div class="option">② 대중국 매출 비중 50%</div>
+                    <div class="option">③ 다음 분기 실적 하락 예상</div>
+                    <div class="option">④ 미국 내 공장 폐쇄</div>
+                </div>
+            </div>
+            
+            <!-- 문제 8 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 8</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">서술형</span>
+                </div>
+                <div class="question-text">
+                    방송에서 10년물 국채 금리가 5%를 돌파할 경우 권고한 대응 전략을 설명하고, 그 이유를 서술하시오.
+                </div>
+                <div class="essay-space">
+                    (답안 작성란)
+                </div>
+            </div>
+            
+            <!-- 문제 9 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 9</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">단답형</span>
+                </div>
+                <div class="question-text">
+                    2023년 10월 기준 미국 30년 고정 모기지 금리는 약 몇 %에 근접했는가?
+                </div>
+                <div class="essay-space">정답: _______________</div>
+            </div>
+            
+            <!-- 문제 10 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 10</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">서술형</span>
+                </div>
+                <div class="question-text">
+                    방송에서 테슬라의 핵심 문제점으로 지적한 내용과, 권고한 포트폴리오 비중 전략을 설명하시오.
+                </div>
+                <div class="essay-space">
+                    (답안 작성란)
+                </div>
+            </div>
+            
+            <!-- 정답 및 해설 섹션 -->
+            <div class="section-divider">━━━ 📝 정답 및 해설 ━━━</div>
+            
+            <!-- 정답 1 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 1</span>
+                    <span class="answer-text">정답: ③ 5%</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서 10년물 국채 금리가 4.9%에 근접하여 5%를 향해 가고 있다고 언급했습니다. 이는 2007년 이후 최고 수준으로, 방송에서는 5%를 "마지노선"으로 표현하며 이를 돌파하면 심각한 시장 충격이 올 수 있다고 경고했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 2 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 2</span>
+                    <span class="answer-text">정답: X</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서는 정반대로 "대형주 위주로 포트폴리오를 구성하라"고 권고했습니다. 소형주는 리스크가 높고 하락세가 크므로 처분하거나 비중을 줄이고, 대형 성장주(Google, Microsoft, Meta, NVIDIA 등) 중심으로 포트폴리오를 재편할 것을 강조했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 3 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 3</span>
+                    <span class="answer-text">정답: 약 9% (9% 이상)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 테슬라는 3분기 실적이 예상치를 하회하면서 2023년 10월 19일 당일 약 9% 이상 폭락했습니다. 방송에서는 이를 "폭락장"이라고 표현하며, 테슬라 비중을 10% 이상 가지고 있던 투자자들에게 큰 충격이 됐을 것이라고 언급했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 4 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 4</span>
+                    <span class="answer-text">정답: ② 상업용 부동산 (Commercial Real Estate)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서는 향후 2년 내 약 2.5조 달러 규모의 상업용 부동산 대출이 리파이낸싱되어야 하는데, 기존 금리(2-5%)에서 신규 금리(7-9%)로 전환 시 이자 부담이 급증하여 대량 파산 위험이 있다고 경고했습니다. 2007년 위기가 주거용 부동산에서 시작됐다면, 이번에는 상업용 부동산에서 터질 가능성이 크다고 분석했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 5 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 5</span>
+                    <span class="answer-text">정답: 차이나(중국) 리스크</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> TSMC는 기술적 펀더멘탈이 탁월하고 2024년 23% 성장이 예상되는 우량 기업이지만, 중국의 대만 침공 가능성이라는 지정학적 리스크가 유일한 투자 리스크로 언급됐습니다. 방송에서는 "다른 리스크는 하나도 없는데 차이나 리스크가 너무 크다"고 표현했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 6 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 6</span>
+                    <span class="answer-text">정답: ③ 4,500 ~ 4,600</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서 S&P 500의 연말 전망을 분석하며, 가장 높은 확률(70% 이상)로 4,500~4,600 수준이 될 것으로 예상했습니다. 4,200 이하로 하락할 확률은 약 10%, 4,700 이상으로 상승할 확률도 약 10%로 예측했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 7 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 7</span>
+                    <span class="answer-text">정답: ④ 미국 내 공장 폐쇄</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서 ASML의 투자 리스크 요인으로 ① 칩 판매량 42% 감소, ② 대중국 매출 비중 50%, ③ 다음 분기(1월 발표) 실적 추가 하락 예상을 언급했습니다. "미국 내 공장 폐쇄"는 방송에서 언급되지 않은 내용입니다. ASML은 네덜란드 기업으로 미국 공장 폐쇄와 관련된 내용은 없습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 8 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 8</span>
+                    <span class="answer-text">정답: 아래 해설 참조</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>대응 전략:</strong> 10년물 국채 금리가 5%를 돌파하면 보유 자산의 30%를 매각(현금화)해야 한다.<br><br>
+                    <strong>이유:</strong> 
+                    <ol style="margin-top:8px; padding-left:20px;">
+                        <li>10년물 국채 금리 5%는 "마지노선"으로, 이를 돌파하면 금융시장에 심각한 스트레스가 발생할 수 있다.</li>
+                        <li>국채 금리는 선행지표로서, 5%를 넘으면 "버티다가 견딜 수 없는" 상황이 발생할 수 있다.</li>
+                        <li>상업용 부동산, 은행권 등 금리에 민감한 섹터에서 파산이 발생할 가능성이 높아진다.</li>
+                        <li>11월 전에 대량 매각 상황이 올 수 있으므로 사전 대비가 필요하다.</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- 정답 9 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 9</span>
+                    <span class="answer-text">정답: 8%</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 방송에서 30년 고정 모기지 금리가 8%에 근접했다고 언급했습니다. 이로 인해 주택 가격이 소폭 하락하고 있음에도 불구하고, 높은 대출 금리 부담으로 인해 매매 거래가 크게 위축되고 있다고 분석했습니다.
+                </div>
+            </div>
+            
+            <!-- 정답 10 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-label">문제 10</span>
+                    <span class="answer-text">정답: 아래 해설 참조</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>테슬라의 핵심 문제점:</strong>
+                    <ol style="margin-top:8px; padding-left:20px;">
+                        <li><strong>이익률(Profit Margin) 하락:</strong> 출고량은 유지되고 있으나 이익률이 지속적으로 하락하고 있어, 일반 자동차 제조사 수준의 펀더멘탈로 수렴 중이다.</li>
+                        <li><strong>3분기 출고량 감소:</strong> 전분기 46.6만 대에서 43만 대로 감소했다.</li>
+                        <li><strong>성장세 둔화:</strong> 고성장 테크 기업에서 일반 제조업 수준으로 평가가 조정되고 있다.</li>
+                    </ol>
+                    <br>
+                    <strong>권고 포트폴리오 비중 전략:</strong>
+                    <ul style="margin-top:8px; padding-left:20px;">
+                        <li>테슬라 비중은 전체 포트폴리오의 <strong>5% 이내</strong>로 제한해야 한다.</li>
+                        <li>절대 10% 이상 보유하지 말 것을 권고한다.</li>
+                        <li>리스크가 높아졌으므로 하락 시 충격을 최소화하기 위해 소량만 보유하는 것이 현명하다.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <button class="print-button" onclick="window.print()">🖨️ 인쇄하기</button>
+        </div>
+        
+        <div class="footer">
+            <p>급변하는 미국증권시장 분석 (2023.10.19) 시험문제</p>
+            <p>총 10문제 | 난이도: 쉬움 30%, 보통 50%, 어려움 20%</p>
+        </div>
+    </div>
+</body>
+</html>

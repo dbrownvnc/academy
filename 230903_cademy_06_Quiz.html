@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>리밸런싱 전략원론과 투자목적 - 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a365d;
+            border-bottom: 3px solid #3182ce;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #2c5282;
+            margin: 28px 0 16px;
+            padding: 10px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .question-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-number {
+            font-weight: 700;
+            color: #2c5282;
+            font-size: 1rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .easy {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        .medium {
+            background: #fefcbf;
+            color: #975a16;
+        }
+        .hard {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        .question-type {
+            font-size: 0.8rem;
+            background: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 8px;
+            color: #4a5568;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+        .options {
+            margin-left: 8px;
+        }
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #ebf8ff;
+            border-color: #4299e1;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid #4299e1;
+            margin: 0 4px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #4299e1, #48bb78, #ed8936);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+        .answer-box {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .answer-label {
+            font-weight: 700;
+            color: #276749;
+        }
+        .correct-answer {
+            background: #276749;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .explanation {
+            background: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid #48bb78;
+        }
+        .explanation-title {
+            font-weight: 600;
+            color: #2f855a;
+            margin-bottom: 6px;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #718096;
+            text-align: center;
+        }
+        .print-break {
+            page-break-before: always;
+        }
+        @media print {
+            .container {
+                box-shadow: none;
+                padding: 10px;
+            }
+            .question-box, .answer-box {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 시험문제 (총 10문제)</h1>
+        <p style="text-align:center; color:#718096; margin-bottom:20px;">리밸런싱 전략원론과 투자목적 | 투자아카데미 6회</p>
+
+        <!-- 문제 1 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 1]</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                리밸런싱을 수행하기 전에 투자자가 스스로에게 해야 할 <strong>4가지 질문</strong>에 해당하지 않는 것은?
+            </div>
+            <div class="options">
+                <label class="option">① 나의 투자 목적은 무엇인가?</label>
+                <label class="option">② 나의 투자 목표는 얼마인가?</label>
+                <label class="option">③ 현재 가장 인기 있는 종목은 무엇인가?</label>
+                <label class="option">④ 나의 리스크 성향 프로파일은 무엇인가?</label>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 2]</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                투자 목표(Goal)와 투자 목적(Purpose)은 같은 의미이며, "10만불을 20만불로 만드는 것"이 곧 투자 목적이다.
+            </div>
+            <div class="options">
+                <label class="option">⭕ 맞다</label>
+                <label class="option">❌ 틀리다</label>
+            </div>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 3]</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <div class="question-text">
+                대형주는 포트폴리오 전체의 <span class="blank"></span>%를 초과하면 안 되고, 소형주는 <span class="blank"></span>%를 초과하면 안 된다는 리밸런싱 규칙의 이름은 무엇인가?
+            </div>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 4]</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                홍길동님의 포트폴리오 사례에서, 초기 투자 시 테슬라와 메타의 비중은 각각 20%였다. 7개월 후 메타의 비중은 약 <strong>몇 %</strong>로 변경되었는가?
+            </div>
+            <div class="options">
+                <label class="option">① 22%</label>
+                <label class="option">② 27%</label>
+                <label class="option">③ 37%</label>
+                <label class="option">④ 40%</label>
+            </div>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 5]</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <div class="question-text">
+                "길을 잃은 자는 <span class="blank"></span>을/를 잃는다"라는 표현은 포트폴리오 관리의 중요성을 강조하는 말이다. 빈칸에 들어갈 단어는?
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 6]</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                기관투자자들이 가장 <strong>비용 효율적(Cost Effective)</strong>이라고 여기는 리밸런싱 방식은?
+            </div>
+            <div class="options">
+                <label class="option">① 커스텀 믹스 리밸런싱</label>
+                <label class="option">② 캘린더 리밸런싱 (분기별)</label>
+                <label class="option">③ 이벤트 드리븐 리밸런싱</label>
+                <label class="option">④ 코스트 베이스 리밸런싱</label>
+            </div>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 7]</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                소형주(Small Cap)는 상승할 때 급등하지만, 하락할 때도 급락하기 때문에 변동성이 큰 시기에는 비중을 줄이는 것이 권장된다.
+            </div>
+            <div class="options">
+                <label class="option">⭕ 맞다</label>
+                <label class="option">❌ 틀리다</label>
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 8]</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                <strong>코스트 베이스 리밸런싱(Cost Base Rebalancing)</strong>의 개념을 설명하고, 테슬라에서 $100,000 수익이 발생하고 소형주에서 $50,000 손실이 발생한 경우 이 전략을 어떻게 활용할 수 있는지 서술하시오.
+            </div>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 9]</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                홍길동님의 포트폴리오가 7개월 만에 $50,000에서 $81,000로 성장했다. 이때 포트폴리오의 <strong>변동성(베타)</strong>은 어떻게 변했는가?
+            </div>
+            <div class="options">
+                <label class="option">① 1.0에서 0.5로 감소 (50% 감소)</label>
+                <label class="option">② 1.0에서 1.5로 증가 (50% 증가)</label>
+                <label class="option">③ 변동성에 변화 없음</label>
+                <label class="option">④ 1.0에서 2.0으로 증가 (100% 증가)</label>
+            </div>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">[문제 10]</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                <strong>섹터 로테이션(Sector Rotation)</strong> 전략에 대해 설명하고, 리밸런싱 후 현금화된 자금의 10%~15%를 특정 섹터에 추가 배분하는 것이 왜 권장되는지 서술하시오.
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 정답 및 해설 -->
+        <h2 class="print-break">📝 정답 및 해설</h2>
+
+        <!-- 정답 1 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 1]</span>
+                <span class="correct-answer">정답: ③</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                리밸런싱 전 필수 4가지 질문은: (1) 나의 투자 목적, (2) 나의 투자 목표, (3) 나의 리스크 성향 프로파일, (4) 나의 투자 경험과 빈도입니다. "현재 가장 인기 있는 종목"은 남의 기준이며, 자신의 투자 전략과 무관합니다.
+            </div>
+        </div>
+
+        <!-- 정답 2 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 2]</span>
+                <span class="correct-answer">정답: ❌ 틀리다</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                투자 <strong>목표(Goal)</strong>는 금액의 증가(10만불→20만불)이고, 투자 <strong>목적(Purpose)</strong>은 그 돈을 어디에 쓸 것인지(은퇴, 자녀교육 등)입니다. 돈 자체가 목적이 되면 안 되며, 돈은 목적을 이루기 위한 수단입니다.
+            </div>
+        </div>
+
+        <!-- 정답 3 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 3]</span>
+                <span class="correct-answer">정답: 5.25 룰 (또는 5/25 룰)</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                <strong>5.25 룰</strong>은 대형주가 전체 포트폴리오의 <strong>25%</strong>를, 소형주가 <strong>5%</strong>를 초과하면 안 된다는 리밸런싱 규칙입니다. 이를 통해 특정 종목의 과도한 비중 증가로 인한 리스크 노출을 방지합니다.
+            </div>
+        </div>
+
+        <!-- 정답 4 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 4]</span>
+                <span class="correct-answer">정답: ③ 37%</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                메타의 초기 투자금 $10,000은 7개월 후 약 $30,000로 3배 성장했습니다. 전체 포트폴리오 $81,000 대비 $30,000은 약 <strong>37%</strong>입니다. 이는 초기 20%에서 17%p나 증가한 것으로, 5.25 룰에 위배됩니다.
+            </div>
+        </div>
+
+        <!-- 정답 5 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 5]</span>
+                <span class="correct-answer">정답: 돈 (또는 자산/재산)</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                "Way Lost Means Money Lost" - 길을 잃은 자는 돈을 잃는다. 자신의 포트폴리오가 무엇인지 모르는 상태로 투자하면 결국 재정적 손실로 이어진다는 의미입니다. 옛날 중동지역에서 양은 재산이었기에, 길 잃은 양은 곧 재산 손실이었습니다.
+            </div>
+        </div>
+
+        <!-- 정답 6 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 6]</span>
+                <span class="correct-answer">정답: ② 캘린더 리밸런싱</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                <strong>캘린더 리밸런싱</strong>은 분기별(1Q, 2Q, 3Q, 4Q)로 정기적으로 포트폴리오를 조정하는 방식입니다. 기관투자자들에게 가장 <strong>비용 효율적(Cost Effective)</strong>이며, 시간과 거래 비용이 적게 듭니다.
+            </div>
+        </div>
+
+        <!-- 정답 7 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 7]</span>
+                <span class="correct-answer">정답: ⭕ 맞다</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                소형주는 상승 시 급등하지만 하락 시에도 급락하는 특성이 있습니다. 따라서 5%가 마지노선이며, 특히 변동성이 큰 시기(9월, 10월 등)에는 소형주 비중을 <strong>50% 이상 줄이거나</strong> 전량 매도하는 것이 권장됩니다.
+            </div>
+        </div>
+
+        <!-- 정답 8 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 8]</span>
+                <span class="correct-answer">정답: 서술형 (아래 모범답안 참조)</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 모범답안</div>
+                <p><strong>코스트 베이스 리밸런싱</strong>은 세금 최적화를 위한 리밸런싱 전략으로, 주로 고자산가(Ultra High Net Worth)를 대상으로 합니다.</p>
+                <p style="margin-top:10px"><strong>적용 예시:</strong></p>
+                <p>- 테슬라에서 $100,000 수익 발생, 소형주에서 $50,000 손실 발생</p>
+                <p>- 두 종목을 동시에 매도하면 손익이 상계(Offset)됨</p>
+                <p>- 결과적으로 $50,000에 대해서만 과세됨</p>
+                <p>- 단기 양도소득세(Short-term Capital Gain Tax) 25% 이상을 절감 가능</p>
+                <p style="margin-top:10px">이 전략은 <strong>Tax Loss Harvesting</strong>이라고도 하며, 손실 종목을 전략적으로 활용하여 세금 부담을 줄입니다.</p>
+            </div>
+        </div>
+
+        <!-- 정답 9 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 9]</span>
+                <span class="correct-answer">정답: ② 1.0에서 1.5로 증가 (50% 증가)</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 해설</div>
+                초기에 보수적인 포트폴리오(베타 1.0)로 시작했으나, 테슬라와 메타의 비중이 급증하면서 변동성(베타)이 <strong>1.5로 50% 증가</strong>했습니다. 보수적 투자자가 의도치 않게 고위험 포트폴리오를 보유하게 된 상황입니다.
+            </div>
+        </div>
+
+        <!-- 정답 10 -->
+        <div class="answer-box">
+            <div class="answer-header">
+                <span class="answer-label">[문제 10]</span>
+                <span class="correct-answer">정답: 서술형 (아래 모범답안 참조)</span>
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">📖 모범답안</div>
+                <p><strong>섹터 로테이션(Sector Rotation)</strong>은 경기 사이클에 따라 유망한 섹터로 자금을 이동시키는 투자 전략입니다.</p>
+                <p style="margin-top:10px"><strong>권장 이유:</strong></p>
+                <p>1. 매 분기/해마다 성장성이 큰 섹터가 존재함</p>
+                <p>2. S&P 500의 11개 섹터 중 특정 섹터(예: IT섹터의 AI 관련주)가 시장을 주도함</p>
+                <p>3. 비중 조절이 잘 된 상태라면 현금의 10%~15%를 해당 섹터에 추가 배분하여 초과 수익 추구 가능</p>
+                <p style="margin-top:10px"><strong>핵심 조건:</strong> 기존 포트폴리오의 리스크가 잘 관리된 상태에서만 추가 리스크를 감수해야 하며, 5.25 룰을 위반하지 않는 범위 내에서 실행해야 합니다.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>📺 원본 영상: 투자는인생TV 투자아카데미 6회 (2023.09.02)</p>
+            <p>📊 난이도 배분: 쉬움(⭐) 30% | 보통(⭐⭐) 50% | 어려움(⭐⭐⭐) 20%</p>
+            <p>⚠️ 본 문서는 교육 목적으로 작성되었으며, 투자 권유가 아닙니다.</p>
+        </footer>
+    </div>
+</body>
+</html>

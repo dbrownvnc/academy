@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 12회: 시험문제</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #ed8936;
+            --warning: #c53030;
+            --success: #276749;
+            --bg-light: #f7fafc;
+            --bg-card: #ffffff;
+            --text-dark: #1a202c;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+            color: var(--text-dark);
+            line-height: 1.8;
+            padding: 16px;
+            max-width: 100%;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(26, 54, 93, 0.3);
+        }
+        
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .meta-info {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .question-box {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .question-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .difficulty {
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .difficulty-easy {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        
+        .difficulty-medium {
+            background: #feebc8;
+            color: #c05621;
+        }
+        
+        .difficulty-hard {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .question-type {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+        
+        .options {
+            margin-left: 8px;
+        }
+        
+        .option {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+        
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid var(--primary);
+            margin: 0 4px;
+        }
+        
+        /* 정답지 스타일 */
+        .answer-box {
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .answer-number {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+        }
+        
+        .answer-value {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .explanation {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+        
+        .explanation strong {
+            color: var(--success);
+        }
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            margin: 30px 0;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-box h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+        
+        .summary-item .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .summary-item .label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 400px) {
+            header h1 {
+                font-size: 1.15rem;
+            }
+            
+            .section {
+                padding: 20px 16px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 투자아카데미 12회: 시험문제</h1>
+            <div class="meta-info">ETF, Mutual Fund, Annuity | 총 10문제</div>
+        </header>
+
+        <!-- 난이도 안내 -->
+        <div class="summary-box">
+            <h3>📊 난이도 배분</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="number">3</div>
+                    <div class="label">⭐ 쉬움</div>
+                </div>
+                <div class="summary-item">
+                    <div class="number">5</div>
+                    <div class="label">⭐⭐ 보통</div>
+                </div>
+                <div class="summary-item">
+                    <div class="number">2</div>
+                    <div class="label">⭐⭐⭐ 어려움</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문제지 섹션 -->
+        <section class="section">
+            <h2 class="section-title">📋 시험문제 (총 10문제)</h2>
+
+            <!-- 문제 1 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 1]</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                </div>
+                <div class="question-type">객관식</div>
+                <div class="question-text">
+                    ETF(Exchange Traded Fund)는 다음 중 어떤 유형의 펀드에 속하는가?
+                </div>
+                <div class="options">
+                    <div class="option">① Open End Fund</div>
+                    <div class="option">② Closed End Fund</div>
+                    <div class="option">③ Hybrid Fund</div>
+                    <div class="option">④ Money Market Fund</div>
+                </div>
+            </div>
+
+            <!-- 문제 2 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 2]</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                </div>
+                <div class="question-type">OX문제</div>
+                <div class="question-text">
+                    Mutual Fund는 장중 언제든지 실시간으로 매매가 가능하다.
+                </div>
+                <div class="options">
+                    <div class="option">○ 맞다</div>
+                    <div class="option">✕ 틀리다</div>
+                </div>
+            </div>
+
+            <!-- 문제 3 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 3]</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                </div>
+                <div class="question-type">단답형</div>
+                <div class="question-text">
+                    Mutual Fund를 매도할 때 실제 결제(Settlement)까지 며칠이 소요되는가?
+                </div>
+                <div class="options">
+                    <div class="option">정답: <span class="blank"></span> 일</div>
+                </div>
+            </div>
+
+            <!-- 문제 4 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 4]</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                </div>
+                <div class="question-type">빈칸채우기</div>
+                <div class="question-text">
+                    ETF의 가격은 고정되어 있지 않고, <span class="blank"></span>(Net Asset Value)를 기준으로 수요와 공급에 따라 유동적으로 결정된다.
+                </div>
+            </div>
+
+            <!-- 문제 5 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 5]</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                </div>
+                <div class="question-type">객관식</div>
+                <div class="question-text">
+                    Variable Annuity(변액연금)를 판매하기 위해 반드시 필요한 라이선스는?
+                </div>
+                <div class="options">
+                    <div class="option">① 일반 보험 에이전트 라이선스</div>
+                    <div class="option">② 브로커 딜러 라이선스</div>
+                    <div class="option">③ 부동산 중개 라이선스</div>
+                    <div class="option">④ 라이선스 불필요</div>
+                </div>
+            </div>
+
+            <!-- 문제 6 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 6]</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                </div>
+                <div class="question-type">객관식</div>
+                <div class="question-text">
+                    $100만 불을 Variable Annuity에 일시납(Lump Sum)으로 투자할 경우, 보험업자에게 지급되는 커미션은 대략 얼마인가?
+                </div>
+                <div class="options">
+                    <div class="option">① 약 $1만 불 (1%)</div>
+                    <div class="option">② 약 $3만 불 (3%)</div>
+                    <div class="option">③ 약 $7만 불 (7%)</div>
+                    <div class="option">④ 약 $10만 불 (10%)</div>
+                </div>
+            </div>
+
+            <!-- 문제 7 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 7]</span>
+                    <span class="difficulty difficulty-easy">⭐ 쉬움</span>
+                </div>
+                <div class="question-type">OX문제</div>
+                <div class="question-text">
+                    Fixed Annuity(고정연금)는 100% 보험상품이며, 투자상품이 아니다.
+                </div>
+                <div class="options">
+                    <div class="option">○ 맞다</div>
+                    <div class="option">✕ 틀리다</div>
+                </div>
+            </div>
+
+            <!-- 문제 8 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 8]</span>
+                    <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움</span>
+                </div>
+                <div class="question-type">서술형</div>
+                <div class="question-text">
+                    미국 법상 금융상품 판매 시 "사기(Scam)"로 규정될 수 있는 행위 2가지를 서술하시오.
+                </div>
+                <div class="options">
+                    <div class="option" style="min-height: 80px;">
+                        1. <br><br>
+                        2.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 문제 9 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 9]</span>
+                    <span class="difficulty difficulty-medium">⭐⭐ 보통</span>
+                </div>
+                <div class="question-type">객관식</div>
+                <div class="question-text">
+                    Annuitization(연금화) 후 사망 시, 미수령 연금은 어떻게 되는가?
+                </div>
+                <div class="options">
+                    <div class="option">① 전액 유족에게 상속된다</div>
+                    <div class="option">② 국가에 귀속된다</div>
+                    <div class="option">③ 소멸되어 보험사에 귀속된다</div>
+                    <div class="option">④ 자동으로 새 계약이 체결된다</div>
+                </div>
+            </div>
+
+            <!-- 문제 10 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">[문제 10]</span>
+                    <span class="difficulty difficulty-hard">⭐⭐⭐ 어려움</span>
+                </div>
+                <div class="question-type">서술형</div>
+                <div class="question-text">
+                    1933년 미국 증권법(Securities Act)에서 규정하는 투자자 보호 3대 원칙을 서술하시오.
+                </div>
+                <div class="options">
+                    <div class="option" style="min-height: 100px;">
+                        1. <br><br>
+                        2. <br><br>
+                        3.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 구분선 -->
+        <div class="divider"></div>
+
+        <!-- 정답지 섹션 -->
+        <section class="section">
+            <h2 class="section-title">📝 정답 및 해설</h2>
+
+            <!-- 정답 1 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 1]</span>
+                    <span class="answer-value">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> ETF는 <strong>Closed End Fund</strong>에 속합니다. 반면 Mutual Fund는 Open End Fund입니다. Closed End Fund는 발행 주식 수가 고정되어 있고, 시장에서 주식처럼 거래됩니다.
+                </div>
+            </div>
+
+            <!-- 정답 2 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 2]</span>
+                    <span class="answer-value">정답: ✕ (틀리다)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Mutual Fund는 <strong>장 마감 후(뉴욕 시간 4시 이후)</strong>에만 거래가 가능합니다. 하루에 한 번만 거래할 수 있으며, 결제까지 3일이 소요됩니다. 장중 실시간 거래가 가능한 것은 ETF입니다.
+                </div>
+            </div>
+
+            <!-- 정답 3 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 3]</span>
+                    <span class="answer-value">정답: 3일</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Mutual Fund의 Settlement 기간은 <strong>3일</strong>입니다. 이로 인해 시장이 급락할 때 빠른 대응이 불가능합니다. 예를 들어 구글 주식이 하루에 9~10% 하락해도, Mutual Fund 내 구글 비중을 줄이려면 3일이 걸리므로 이미 손실이 확정된 후입니다.
+                </div>
+            </div>
+
+            <!-- 정답 4 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 4]</span>
+                    <span class="answer-value">정답: NAV</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> NAV(Net Asset Value)는 순자산가치로, ETF의 기준 가격을 의미합니다. 실제 거래가격은 NAV를 중심으로 수요와 공급에 따라 약간의 프리미엄 또는 할인이 적용됩니다. 예를 들어 NAV가 $100이면 실제 $99.10이나 $101에 거래될 수 있습니다.
+                </div>
+            </div>
+
+            <!-- 정답 5 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 5]</span>
+                    <span class="answer-value">정답: ②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Variable Annuity는 투자 인덱스에 연동되어 있기 때문에 <strong>브로커 딜러 라이선스</strong>가 필수입니다. 일반 보험 에이전트 라이선스만으로는 Variable Annuity를 판매할 수 없으며, 이를 위반할 경우 불법입니다. 이 시험은 합격률이 15~20%로 매우 어렵습니다.
+                </div>
+            </div>
+
+            <!-- 정답 6 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 6]</span>
+                    <span class="answer-value">정답: ③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Variable Annuity에 일시납(Lump Sum)으로 투자할 경우, <strong>약 7%</strong>가 보험업자 커미션으로 즉시 지급됩니다. $100만 불 투자 시 약 $7만 불이 커미션으로 빠지므로, 실제로는 $93만 불만 투자되는 셈입니다.
+                </div>
+            </div>
+
+            <!-- 정답 7 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 7]</span>
+                    <span class="answer-value">정답: ○ (맞다)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Fixed Annuity(고정연금)는 <strong>100% 보험상품</strong>입니다. 투자 요소가 전혀 없으며, 납입한 보험료 전액이 보험사의 General Account로 들어갑니다. 반면 Variable Annuity는 일부가 투자 계좌(Separate Account)로 들어가 인덱스에 연동됩니다.
+                </div>
+            </div>
+
+            <!-- 정답 8 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 8]</span>
+                    <span class="answer-value">정답: 예시 답안</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 미국 법상 금융상품 관련 "사기(Scam)"로 규정될 수 있는 행위:
+                    <br><br>
+                    <strong>1. Misrepresentation(허위표시):</strong> 보험상품을 투자상품으로 둔갑시키거나, 투자상품인 것처럼 뉘앙스를 풍기는 행위
+                    <br><br>
+                    <strong>2. Hidden Cost 은폐:</strong> 숨겨진 비용이나 수수료를 제대로 설명하지 않고 대충 넘어가거나, 고객의 이해 없이 서명만 받는 행위
+                    <br><br>
+                    ※ 미국에서는 "남의 돈을 훔치는 것"만이 사기가 아니라, 금융상품에 대한 정확한 정보를 제공하지 않는 것도 사기에 해당합니다.
+                </div>
+            </div>
+
+            <!-- 정답 9 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 9]</span>
+                    <span class="answer-value">정답: ③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> Annuitization(연금화) 이후 사망하면, <strong>미수령 연금은 소멸되어 보험사에 귀속</strong>됩니다. 예를 들어 원금 $30만 불로 장부상 $50만 불이 되었더라도, Annuitization 후 곧 사망하면 받지 못한 금액은 사라집니다. 이것이 보험사가 수익을 얻는 핵심 구조입니다.
+                </div>
+            </div>
+
+            <!-- 정답 10 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-number">[문제 10]</span>
+                    <span class="answer-value">정답: 예시 답안</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 1933년 미국 증권법(Securities Act)의 투자자 보호 3대 원칙:
+                    <br><br>
+                    <strong>1. 금융상품에 대한 정확한 인식과 이해 제공:</strong> 판매자는 고객이 금융상품을 완전히 이해할 수 있도록 정확한 정보를 제공해야 합니다.
+                    <br><br>
+                    <strong>2. 적절한 라이선스 보유:</strong> 금융상품을 판매하기 위해서는 해당 상품에 맞는 라이선스를 반드시 보유해야 합니다.
+                    <br><br>
+                    <strong>3. 적합성(Suitability) 검토:</strong> 판매자는 해당 금융상품이 고객에게 적합한지(Feasibility) 검토할 의무가 있습니다. 특히 65세 이상 고객에게는 완전한 이해가 될 때까지 판매할 수 없습니다.
+                </div>
+            </div>
+        </section>
+
+        <!-- 채점 기준 -->
+        <div class="summary-box">
+            <h3>📊 채점 기준</h3>
+            <div style="font-size: 0.9rem; line-height: 1.8; margin-top: 12px;">
+                • 객관식/OX문제: 각 10점 (4문제 = 40점)<br>
+                • 단답형/빈칸채우기: 각 10점 (2문제 = 20점)<br>
+                • 서술형: 각 20점 (2문제 = 40점)<br>
+                <strong>총점: 100점</strong>
+            </div>
+        </div>
+
+        <footer>
+            <p>📺 원본: 투자아카데미 12회</p>
+            <p>📅 출제일: 2026년 1월 22일</p>
+            <p style="margin-top: 8px; font-size: 0.8rem; color: #a0aec0;">본 시험문제는 교육 목적으로 작성되었습니다.</p>
+        </footer>
+    </div>
+</body>
+</html>

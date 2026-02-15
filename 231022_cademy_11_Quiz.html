@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 11회: 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            line-height: 1.8;
+            padding: 20px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(231, 76, 60, 0.3);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .header .meta {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid rgba(231, 76, 60, 0.3);
+            text-align: center;
+        }
+        .question-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .question-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        .difficulty.easy { color: #28a745; }
+        .difficulty.medium { color: #ffc107; }
+        .difficulty.hard { color: #dc3545; }
+        .question-type {
+            background: rgba(255,255,255,0.1);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: #a8a8a8;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .option {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .option:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        .blank-line {
+            border-bottom: 2px dashed rgba(255,255,255,0.3);
+            min-width: 150px;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .answer-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 20px;
+            margin-top: 40px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        .answer-section .section-title {
+            color: #28a745;
+            border-bottom-color: rgba(40, 167, 69, 0.3);
+        }
+        .answer-box {
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .answer-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .answer-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .explanation {
+            font-size: 0.95rem;
+            color: #c8c8c8;
+            line-height: 1.7;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 30px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 30px;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px dashed rgba(255,255,255,0.2);
+        }
+        .ox-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .ox-option {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        strong {
+            color: #ffc107;
+        }
+        .highlight {
+            background: rgba(102, 126, 234, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 시험문제</h1>
+            <p style="font-size: 1.1rem; margin: 10px 0;">투자아카데미 11회: 국채와 주식시장, 포트폴리오 이론</p>
+            <div class="meta">
+                <p>총 10문제 | ⭐ 쉬움 30% | ⭐⭐ 보통 50% | ⭐⭐⭐ 어려움 20%</p>
+            </div>
+        </div>
+
+        <!-- 문제지 섹션 -->
+        <div class="section">
+            <div class="section-title">━━━━━━━━━━━━━━━━━━━━━━━━━<br>📋 시험문제 (총 10문제)<br>━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+
+            <!-- 문제 1 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 1</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <p class="question-text">10년 국채 금리가 몇 %를 넘으면 투자 리스크가 급격히 증가한다고 강의에서 언급했는가?</p>
+                <div class="options">
+                    <div class="option">① 3%</div>
+                    <div class="option">② 4%</div>
+                    <div class="option">③ 5%</div>
+                    <div class="option">④ 6%</div>
+                </div>
+            </div>
+
+            <!-- 문제 2 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 2</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">OX문제</span>
+                </div>
+                <p class="question-text">국채 금리가 상승하면 기술주/성장주가 상승하는 경향이 있다.</p>
+                <div class="ox-options">
+                    <div class="ox-option">O</div>
+                    <div class="ox-option">X</div>
+                </div>
+            </div>
+
+            <!-- 문제 3 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 3</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">단답형</span>
+                </div>
+                <p class="question-text">MPT(Modern Portfolio Theory)의 운용 방식은 '패시브(Passive)'인 반면, PMPT(Post-Modern Portfolio Theory)의 운용 방식은 무엇인가?</p>
+                <p style="margin-top: 15px; color: #a8a8a8;">정답: <span class="blank-line"></span></p>
+            </div>
+
+            <!-- 문제 4 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 4</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <p class="question-text">종형(정규분포) 포트폴리오에서 <strong>중앙 구간(Average Performer)</strong>에 적합한 종목은?</p>
+                <div class="options">
+                    <div class="option">① Tesla, Super Micro Computer</div>
+                    <div class="option">② Shopify, Snowflake</div>
+                    <div class="option">③ Costco, Johnson & Johnson, Walmart</div>
+                    <div class="option">④ Fubo TV, Square</div>
+                </div>
+            </div>
+
+            <!-- 문제 5 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 5</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">빈칸채우기</span>
+                </div>
+                <p class="question-text">PMPT에서 시장 지수를 초과하는 수익률을 창출하기 위해 적극적으로 포트폴리오를 조정하는 투자 방식을 <span class="blank-line"></span> 투자라고 한다.</p>
+            </div>
+
+            <!-- 문제 6 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 6</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <p class="question-text">베타(Beta) 값이 1.3인 주식의 특성으로 옳은 것은?</p>
+                <div class="options">
+                    <div class="option">① 시장보다 변동성이 낮다</div>
+                    <div class="option">② 시장과 동일한 변동성을 가진다</div>
+                    <div class="option">③ 시장보다 변동성이 높다</div>
+                    <div class="option">④ 변동성과 관계가 없다</div>
+                </div>
+            </div>
+
+            <!-- 문제 7 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 7</span>
+                    <span class="difficulty easy">⭐ 쉬움</span>
+                    <span class="question-type">OX문제</span>
+                </div>
+                <p class="question-text">MPT(현대 포트폴리오 이론)에 따르면, 같은 리스크 수준에서 더 높은 리턴을 제공하는 자산을 선택해야 한다.</p>
+                <div class="ox-options">
+                    <div class="ox-option">O</div>
+                    <div class="ox-option">X</div>
+                </div>
+            </div>
+
+            <!-- 문제 8 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 8</span>
+                    <span class="difficulty medium">⭐⭐ 보통</span>
+                    <span class="question-type">객관식</span>
+                </div>
+                <p class="question-text">PMPT에서 적극적 포트폴리오 운용을 위해 활용하는 두 가지 핵심 전략은?</p>
+                <div class="options">
+                    <div class="option">① 매수 후 보유(Buy & Hold), 분산투자</div>
+                    <div class="option">② 리밸런싱(Rebalancing), 섹터 로테이션(Sector Rotation)</div>
+                    <div class="option">③ 레버리지, 공매도</div>
+                    <div class="option">④ 배당 재투자, 적립식 투자</div>
+                </div>
+            </div>
+
+            <!-- 문제 9 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 9</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">서술형</span>
+                </div>
+                <p class="question-text">종형 포트폴리오에서 "키가 큰 종형"과 "키가 낮은 종형"의 차이를 리스크와 수익률 측면에서 설명하시오.</p>
+                <p style="margin-top: 15px; color: #a8a8a8; font-size: 0.9rem;">(3줄 이상 서술)</p>
+            </div>
+
+            <!-- 문제 10 -->
+            <div class="question-box">
+                <div class="question-header">
+                    <span class="question-number">문제 10</span>
+                    <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                    <span class="question-type">서술형</span>
+                </div>
+                <p class="question-text">강의에서 언급된 "비중 조절 실패" 사례를 설명하고, 올바른 포트폴리오 구성 방법을 제시하시오. (예: Tesla, UNH, Shopify 등의 종목 활용)</p>
+                <p style="margin-top: 15px; color: #a8a8a8; font-size: 0.9rem;">(4줄 이상 서술)</p>
+            </div>
+        </div>
+
+        <!-- 정답지 섹션 -->
+        <div class="page-break"></div>
+        
+        <div class="answer-section">
+            <div class="section-title">━━━━━━━━━━━━━━━━━━━━━━━━━<br>📝 정답 및 해설<br>━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+
+            <!-- 정답 1 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 1</span>
+                </div>
+                <p class="answer-text">정답: ③ 5%</p>
+                <p class="explanation"><strong>해설:</strong> 강의에서 10년 국채 금리가 <strong>5%를 넘으면</strong> 투자 리스크가 급격히 증가한다고 명시했습니다. 당시 4.99%까지 상승했다가 4.914%로 하락하여 "다행"이라고 표현했습니다. 5% 돌파 시 기술주 비중 축소와 현금 비중 40% 이상 확대를 권고했습니다.</p>
+            </div>
+
+            <!-- 정답 2 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 2</span>
+                </div>
+                <p class="answer-text">정답: X (오답)</p>
+                <p class="explanation"><strong>해설:</strong> 국채 금리가 상승하면 기술주/성장주는 <strong>하락</strong>하는 경향이 있습니다. 이는 기관 투자자들이 안전자산인 국채의 매력이 높아지면서 기술주 비중을 줄이고 T-Bill, T-Bond 등으로 자금을 이동시키기 때문입니다.</p>
+            </div>
+
+            <!-- 정답 3 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 3</span>
+                </div>
+                <p class="answer-text">정답: 액티브(Active)</p>
+                <p class="explanation"><strong>해설:</strong> MPT는 포트폴리오를 구성한 후 크게 변화 없이 유지하는 <strong>패시브(Passive)</strong> 운용 방식인 반면, PMPT는 리밸런싱과 섹터 로테이션을 통해 적극적으로 조정하는 <strong>액티브(Active)</strong> 운용 방식입니다.</p>
+            </div>
+
+            <!-- 정답 4 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 4</span>
+                </div>
+                <p class="answer-text">정답: ③ Costco, Johnson & Johnson, Walmart</p>
+                <p class="explanation"><strong>해설:</strong> 중앙 구간(Average Performer)에는 Large Cap 또는 Mega Cap의 <strong>가치주(Value Stock)</strong>가 적합합니다. 코스트코, 존슨앤존슨, 월마트, UNH, Google, Realty Income(O) 등이 해당됩니다. Tesla, Super Micro, Shopify 등 고변동성 성장주는 양측/극단 구간에 배치해야 합니다.</p>
+            </div>
+
+            <!-- 정답 5 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 5</span>
+                </div>
+                <p class="answer-text">정답: 알파(Alpha)</p>
+                <p class="explanation"><strong>해설:</strong> <strong>알파(Alpha) 투자</strong>는 시장 지수(벤치마크)를 초과하는 초과수익률을 창출하기 위해 적극적으로 포트폴리오를 조정하는 투자 방식입니다. PMPT의 핵심 목표이며, 리밸런싱과 섹터 로테이션을 통해 달성합니다.</p>
+            </div>
+
+            <!-- 정답 6 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 6</span>
+                </div>
+                <p class="answer-text">정답: ③ 시장보다 변동성이 높다</p>
+                <p class="explanation"><strong>해설:</strong> 베타(Beta)는 시장 대비 개별 주식의 변동성을 나타냅니다. 베타=1이면 시장과 동일, 베타&lt;1이면 시장보다 낮은 변동성, <strong>베타&gt;1이면 시장보다 높은 변동성</strong>을 의미합니다. 베타 1.3은 시장이 10% 움직일 때 해당 주식은 약 13% 움직인다는 것을 의미합니다.</p>
+            </div>
+
+            <!-- 정답 7 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 7</span>
+                </div>
+                <p class="answer-text">정답: O (정답)</p>
+                <p class="explanation"><strong>해설:</strong> MPT의 핵심 원칙 중 하나는 "같은 리스크에서 더 높은 리턴 추구"입니다. 예를 들어 두 주식 A, B가 모두 베타=1(같은 리스크)인데 A는 8% 리턴, B는 10% 리턴이면 B를 선택해야 합니다. 또 다른 원칙은 "같은 리턴에서 더 낮은 리스크 추구"입니다.</p>
+            </div>
+
+            <!-- 정답 8 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 8</span>
+                </div>
+                <p class="answer-text">정답: ② 리밸런싱(Rebalancing), 섹터 로테이션(Sector Rotation)</p>
+                <p class="explanation"><strong>해설:</strong> PMPT에서는 <strong>리밸런싱</strong>(목표 비중에서 벗어난 자산을 조정)과 <strong>섹터 로테이션</strong>(미국 11개 섹터 중 경기 사이클에 따라 유망 섹터로 비중 이동)을 통해 적극적으로 포트폴리오를 운용합니다. 이를 통해 투자 리스크를 감소시키고 리워드를 증가시킵니다.</p>
+            </div>
+
+            <!-- 정답 9 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 9</span>
+                </div>
+                <p class="answer-text">정답: (모범 답안)</p>
+                <p class="explanation"><strong>해설:</strong><br><br>
+                <strong>"키가 큰 종형" (보수적 포트폴리오)</strong><br>
+                - 중앙 구간(가치주, Large Cap) 비중이 70-90%로 높음<br>
+                - 베타가 0.9~1.05 수준으로 낮음<br>
+                - 상승 속도가 더디지만, 하락 속도도 완만함<br>
+                - 시장 하락 시 손실이 상대적으로 적음<br><br>
+                <strong>"키가 낮은 종형" (공격적 포트폴리오)</strong><br>
+                - 양측 구간(성장주, 고변동성 종목) 비중이 높음<br>
+                - 베타가 1.2~2.0 이상으로 높음<br>
+                - 상승 속도가 빠르지만, 하락 속도도 빠름<br>
+                - 시장 상승기에는 높은 수익, 하락기에는 큰 손실 가능성</p>
+            </div>
+
+            <!-- 정답 10 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="answer-badge">문제 10</span>
+                </div>
+                <p class="answer-text">정답: (모범 답안)</p>
+                <p class="explanation"><strong>해설:</strong><br><br>
+                <strong>비중 조절 실패 사례:</strong><br>
+                - Tesla, Super Micro 같은 고변동성 종목을 중앙 구간(Average Performer)에 20-30% 이상 배치<br>
+                - 가치주인 UNH(UnitedHealth)를 1-2%만 보유<br>
+                - Shopify를 15-20% 보유하면서 안정적인 종목 비중은 극히 적음<br>
+                - 결과: 시장 폭락 시 포트폴리오 전체가 폭망<br><br>
+                <strong>올바른 포트폴리오 구성:</strong><br>
+                - 중앙 구간(60-80%): UNH, Costco, Walmart, J&J, Google 등 Large Cap/가치주<br>
+                - 양측 구간(15-30%): Meta, 기술 성장주 등 베타 1.1~1.3 수준<br>
+                - 극단 구간(5-10%): Tesla, Super Micro, Shopify, Snowflake 등 고변동성 종목<br>
+                - 10만 달러 포트폴리오 예시: UNH 15%, Costco 15%, Walmart 10%, Google 15%, Meta 15%, Tesla 5%, Super Micro 5% 등</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📌 투자아카데미 11회 - 국채와 주식시장, 포트폴리오 이론</p>
+            <p>본 시험문제는 학습 목적으로 작성되었습니다.</p>
+        </div>
+    </div>
+</body>
+</html>

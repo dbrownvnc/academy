@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>WACC 계산법과 포트폴리오 구성 - 시험문제</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 24px 20px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #4a90d9;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0 20px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .question {
+            background: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .question-num {
+            background: #4a90d9;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .difficulty {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .easy {
+            background: #d4edda;
+            color: #155724;
+        }
+        .medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .question-type {
+            font-size: 0.8rem;
+            color: #666;
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .options {
+            margin-left: 8px;
+        }
+        .option {
+            padding: 8px 12px;
+            margin: 6px 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 2px solid #4a90d9;
+            margin: 0 4px;
+        }
+        
+        /* 정답지 스타일 */
+        .answer-section {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 24px 20px;
+            margin-top: 32px;
+        }
+        .answer-header {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .answer-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+        }
+        .answer-item:last-child {
+            border-bottom: none;
+        }
+        .answer-num {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+        .answer-badge {
+            background: #38a169;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .correct-answer {
+            font-weight: 700;
+            color: #2563eb;
+            font-size: 1rem;
+        }
+        .explanation {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 12px 16px;
+            margin-top: 8px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 3px double #4a90d9;
+        }
+        .print-note {
+            background: #e8f4fd;
+            border: 1px dashed #4a90d9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #2563eb;
+            text-align: center;
+        }
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .container { padding: 16px; }
+            h1 { font-size: 1.2rem; }
+            .question { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 WACC 계산법과 포트폴리오 구성</h1>
+        <div class="subtitle">투자아카데미 5회 시험문제 (총 10문제)</div>
+        
+        <div class="print-note">
+            💡 인쇄 시 문제지와 정답지가 분리됩니다
+        </div>
+
+        <div class="section-header">📋 시험문제 (총 10문제)</div>
+
+        <!-- 문제 1 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 1</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                포트폴리오를 구성하는 가장 근본적인 목적은 무엇인가?
+            </div>
+            <div class="options">
+                <div class="option">① 최대 수익률 달성</div>
+                <div class="option">② 투자 리스크 분산</div>
+                <div class="option">③ 세금 절감</div>
+                <div class="option">④ 단기 매매 수익 확보</div>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 2</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                베타(β)가 1.2인 주식은 S&P 500이 10% 상승할 때 약 12% 상승하고, 10% 하락할 때 약 12% 하락한다. (O / X)
+            </div>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 3</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <div class="question-text">
+                WACC의 영어 전체 명칭은 무엇인가?<br>
+                (힌트: W____ A_____ C___ of C______)
+            </div>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 4</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                다음 중 Corporate Event에 해당하지 않는 것은?
+            </div>
+            <div class="options">
+                <div class="option">① 실적 발표 (Earnings)</div>
+                <div class="option">② 주식 분할 (Stock Split)</div>
+                <div class="option">③ 일일 주가 변동</div>
+                <div class="option">④ CEO 교체</div>
+            </div>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 5</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <div class="question-text">
+                "장기 투자"라는 말의 의미는 "가만히 놔둬라"가 아니다. 최소 <span class="blank"></span> 또는 <span class="blank"></span>에 한 번은 포트폴리오를 리뷰하고 조정해야 한다.
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 6</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <div class="question-text">
+                은퇴자 또는 보수적인 투자자의 Large Cap 자산 비중은 얼마 이상이어야 하는가?
+            </div>
+            <div class="options">
+                <div class="option">① 30% 이상</div>
+                <div class="option">② 50% 이상</div>
+                <div class="option">③ 70% 이상</div>
+                <div class="option">④ 90% 이상</div>
+            </div>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 7</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">계산문제</span>
+            </div>
+            <div class="question-text">
+                투자금 $100,000을 보유한 투자자가 Apple에 30%, Google에 70%를 배분했다. Apple의 기대 수익률이 5%, Google의 기대 수익률이 7%일 때, 이 포트폴리오의 WACC(가중 평균 기대 수익률)는 얼마인가?
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 8</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                "You know what you're doing"이라는 표현이 포트폴리오 관리에서 의미하는 바를 Goal-Based Financial Planning 개념과 연결하여 설명하시오.
+            </div>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 9</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <div class="question-text">
+                한 투자자의 포트폴리오를 그대로 복사하여 다른 투자자에게 적용하는 것은 올바른 포트폴리오 구성 방법이다. (O / X)
+            </div>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question">
+            <div class="question-header">
+                <span class="question-num">문제 10</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <div class="question-text">
+                실리콘밸리뱅크(SVB) 사례를 통해 포트폴리오 분산 투자와 비중 조절의 중요성을 설명하시오. (포트폴리오 내 비중 1%와 40%의 차이점 포함)
+            </div>
+        </div>
+    </div>
+
+    <!-- 정답지 -->
+    <div class="page-break"></div>
+    
+    <div class="container answer-section">
+        <div class="answer-header">📝 정답 및 해설</div>
+
+        <!-- 정답 1 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 1</span>
+                <span class="correct-answer">정답: ②</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 포트폴리오 구성의 가장 근본적인 목적은 <strong>투자 리스크 분산</strong>입니다. 미래 증권 시장의 변화를 정확히 예측하는 것은 불가능하며, 어떤 기업이든 파산할 가능성이 있기 때문에 분산 투자를 통해 소수 주식의 급락에 크게 노출되는 것을 방지해야 합니다.
+            </div>
+        </div>
+
+        <!-- 정답 2 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 2</span>
+                <span class="correct-answer">정답: O</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 베타(β)는 S&P 500을 기준(β=1.0)으로 개별 주식의 변동성을 측정합니다. β=1.2는 시장 대비 20% 더 큰 변동성을 의미하므로, S&P 500이 10% 움직이면 해당 주식은 약 12% 움직입니다. 이는 상승장에서도 하락장에서도 동일하게 적용됩니다.
+            </div>
+        </div>
+
+        <!-- 정답 3 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 3</span>
+                <span class="correct-answer">정답: Weighted Average Cost of Capital</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> WACC은 "Weighted Average Cost of Capital"의 약자로, 직역하면 "가중 평균 자본 비용"입니다. 포트폴리오 관리에서는 각 주식의 기대 수익률에 비중을 곱하여 전체 포트폴리오의 예상 수익률을 계산하는 데 사용됩니다.
+            </div>
+        </div>
+
+        <!-- 정답 4 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 4</span>
+                <span class="correct-answer">정답: ③</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> Corporate Event는 기업의 중요한 이벤트로, 주가에 큰 영향을 미칩니다. 실적 발표, 주식 분할, M&A, CEO 교체 등이 포함됩니다. <strong>일일 주가 변동</strong>은 일반적인 시장 움직임으로, Corporate Event에 해당하지 않습니다. Corporate Event 발생 시 평소 베타가 낮은 주식도 변동성이 커질 수 있습니다.
+            </div>
+        </div>
+
+        <!-- 정답 5 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 5</span>
+                <span class="correct-answer">정답: 3개월, 1년</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 장기 투자는 "가만히 놔두는 것"이 아닙니다. <strong>최소 3개월 또는 1년에 한 번</strong>은 포트폴리오를 리뷰하여 저성과 종목을 교체하고 비중을 조절해야 합니다. 이것이 바로 액티브 매니지먼트의 핵심입니다.
+            </div>
+        </div>
+
+        <!-- 정답 6 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 6</span>
+                <span class="correct-answer">정답: ③</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 은퇴자나 보수적인 투자자의 경우 <strong>70% 이상</strong>을 Large Cap(대형주)에 배분해야 하며, 그 중에서도 Value Stock(가치주) 위주로 구성하는 것이 권장됩니다. 높은 변동성을 피하고 안정적인 배당과 성장을 추구하는 전략입니다.
+            </div>
+        </div>
+
+        <!-- 정답 7 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 7</span>
+                <span class="correct-answer">정답: 6.4%</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> WACC = Σ(비중 × 기대수익률)<br><br>
+                • Apple: 30% × 5% = 1.5%<br>
+                • Google: 70% × 7% = 4.9%<br>
+                • <strong>WACC = 1.5% + 4.9% = 6.4%</strong><br><br>
+                따라서 이 포트폴리오의 예상 연간 수익률은 6.4%입니다.
+            </div>
+        </div>
+
+        <!-- 정답 8 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 8</span>
+                <span class="correct-answer">정답: 예시 답안</span>
+            </div>
+            <div class="explanation">
+                <strong>모범 답안:</strong><br><br>
+                "You know what you're doing"은 <strong>자신의 투자 활동을 명확히 이해하고 있어야 한다</strong>는 의미입니다.<br><br>
+                Goal-Based Financial Planning과 연결하면:<br>
+                1. <strong>목표 설정</strong>: 투자의 최종 목표점(예: 10년 후 자산 가치)을 명확히 설정<br>
+                2. <strong>경로 추적</strong>: WACC을 통해 예상 수익률을 계산하고, 분기/연간으로 목표 경로와 실제 경과를 비교<br>
+                3. <strong>조정</strong>: 목표에서 벗어난 종목은 교체하여 경로 수정<br>
+                4. <strong>결과</strong>: 10년 후 목표의 90% 이상 달성 가능<br><br>
+                즉, 단순히 주식을 보유하는 것이 아니라, 왜 그 종목을 보유하는지, 전체 포트폴리오가 어디로 향하는지를 항상 인지해야 합니다.
+            </div>
+        </div>
+
+        <!-- 정답 9 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 9</span>
+                <span class="correct-answer">정답: X</span>
+            </div>
+            <div class="explanation">
+                <strong>해설:</strong> 포트폴리오는 개인의 <strong>투자 규모, 나이, 투자 성향(보수적/공격적), 은퇴까지 남은 시간(Time Horizon)</strong> 등에 따라 달라야 합니다. 남의 포트폴리오를 그대로 복사하는 것은 "무지의 소치"라고 할 수 있습니다. 베타와 비중 조절은 개인화되어야 합니다.
+            </div>
+        </div>
+
+        <!-- 정답 10 -->
+        <div class="answer-item">
+            <div class="answer-num">
+                <span class="answer-badge">문제 10</span>
+                <span class="correct-answer">정답: 예시 답안</span>
+            </div>
+            <div class="explanation">
+                <strong>모범 답안:</strong><br><br>
+                <strong>SVB 사례:</strong> 40~50년간 운영되던 실리콘밸리뱅크가 2023년 갑자기 파산하여 99.9%의 주가 손실이 발생했습니다.<br><br>
+                <strong>비중 1%의 경우:</strong><br>
+                • SVB 손실: 전체 포트폴리오의 약 1% 영향<br>
+                • 나머지 99%의 분산된 자산이 수익을 창출<br>
+                • 결과: 6개월간 포트폴리오 전체 <strong>36~37% 상승</strong><br><br>
+                <strong>비중 40%의 경우:</strong><br>
+                • SVB 손실로 포트폴리오의 40%가 거의 전멸<br>
+                • 나머지 60%의 수익으로도 손실 만회 불가능<br>
+                • 결과: 포트폴리오 "폭망"<br><br>
+                <strong>교훈:</strong><br>
+                1. 어떤 기업이든 파산 가능성이 있으므로 분산 투자 필수<br>
+                2. 단일 종목 비중은 10~20% 이내로 제한<br>
+                3. 비중 조절이 수익률의 40% 이상 차이를 만들 수 있음
+            </div>
+        </div>
+
+        <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; text-align: center; font-size: 0.85rem; color: #718096;">
+            <p>📺 출처: 투자아카데미 5회 (8월 19일)</p>
+            <p>⚠️ 본 시험문제는 학습 목적으로 작성되었습니다.</p>
+        </div>
+    </div>
+</body>
+</html>

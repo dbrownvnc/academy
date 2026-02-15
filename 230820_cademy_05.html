@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자아카데미 5회: WACC 계산법과 포트폴리오 구성</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 24px 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        h2 {
+            font-size: 1.25rem;
+            color: #16213e;
+            margin: 28px 0 16px 0;
+            padding-left: 12px;
+            border-left: 4px solid #4a90d9;
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin: 20px 0 12px 0;
+        }
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #fff3cd 0%, #fff3cd 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .key-concept {
+            background: #e8f4fd;
+            border-left: 4px solid #4a90d9;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .key-concept h4 {
+            color: #2563eb;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .warning {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning h4 {
+            color: #c53030;
+            margin-bottom: 8px;
+        }
+        .tip {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip h4 {
+            color: #276749;
+            margin-bottom: 8px;
+        }
+        .formula-box {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .formula-box .formula {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .formula-box .explanation {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            text-align: left;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 10px;
+            text-align: center;
+        }
+        th {
+            background: #4a90d9;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        .chart-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        ul, ol {
+            margin: 12px 0 12px 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        .summary-box h3 {
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .summary-box ul {
+            margin-left: 16px;
+        }
+        .example-calc {
+            background: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .example-calc h4 {
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .step-num {
+            background: #4a90d9;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .footer {
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+            font-size: 0.8rem;
+            color: #718096;
+            text-align: center;
+        }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .container { padding: 20px 16px; }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1.15rem; }
+            table { font-size: 0.8rem; }
+            th, td { padding: 8px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 완성된 포트폴리오를 위한 WACC 계산법</h1>
+        <div class="meta">
+            <strong>투자아카데미 5회</strong> | 2026년 1월 22일<br>
+            미국 증시 및 경제 관점 분석
+        </div>
+
+        <h2>1. 포트폴리오 구성의 목적</h2>
+        
+        <div class="key-concept">
+            <h4>💡 핵심 개념: 왜 포트폴리오를 구성하는가?</h4>
+            <p><strong>투자 리스크 분산</strong>이 가장 근본적인 목적입니다. 40~50년 동안 잘 운영되던 은행도 갑자기 파산할 수 있습니다 (예: 실리콘밸리뱅크 사례).</p>
+        </div>
+
+        <p>미국 시장에서는 <span class="highlight">"You may lose value 100%"</span>라는 경고가 모든 투자 상품에 붙어 있습니다. 어떤 기업이든 완전한 가치 상실의 가능성이 존재하기 때문입니다.</p>
+
+        <h3>📌 실제 사례: 실리콘밸리뱅크(SVB)</h3>
+        <p>한 투자자가 SVB 주식을 보유하고 있었는데, <strong>99.9%의 손실</strong>이 발생했습니다. 하지만 전체 포트폴리오의 <strong>1%만</strong> SVB에 배분했기 때문에, 6개월간 전체 포트폴리오는 오히려 <strong>36~37% 상승</strong>했습니다.</p>
+
+        <div class="warning">
+            <h4>⚠️ 만약 비중 조절을 잘못했다면?</h4>
+            <p>SVB에 40% 이상을 집중 투자했다면 포트폴리오 전체가 "폭망"했을 것입니다. 이것이 바로 분산 투자와 비중 조절의 중요성입니다.</p>
+        </div>
+
+        <h2>2. 베타(Beta) - 변동성의 이해</h2>
+
+        <div class="key-concept">
+            <h4>📈 베타(β)란?</h4>
+            <p><strong>S&P 500을 기준(β=1.0)</strong>으로 개별 주식의 변동성을 측정한 지표입니다. 펀더멘털 분석 시 반드시 확인해야 할 지표입니다.</p>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">베타 값에 따른 수익률 변동 비교</div>
+            <canvas id="betaChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>베타(β)</th>
+                    <th>S&P 500 +10%일 때</th>
+                    <th>S&P 500 -10%일 때</th>
+                    <th>특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>0.8</strong></td>
+                    <td>+8%</td>
+                    <td>-8%</td>
+                    <td>방어적, 낮은 변동성</td>
+                </tr>
+                <tr>
+                    <td><strong>1.0</strong></td>
+                    <td>+10%</td>
+                    <td>-10%</td>
+                    <td>시장 평균 (S&P 500)</td>
+                </tr>
+                <tr>
+                    <td><strong>1.2</strong></td>
+                    <td>+12%</td>
+                    <td>-12%</td>
+                    <td>공격적, 높은 변동성</td>
+                </tr>
+                <tr>
+                    <td><strong>1.4</strong></td>
+                    <td>+14%</td>
+                    <td>-14%</td>
+                    <td>매우 공격적</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="tip">
+            <h4>🐂 "소 같은 주식"을 중심에 두어라</h4>
+            <p>빠르게 오르는 주식은 빠르게 떨어집니다. <strong>꾸준하고 안정적인 주식</strong>을 포트폴리오의 중심에 배치하는 것이 장기 투자의 핵심입니다.</p>
+        </div>
+
+        <h3>📌 Corporate Event와 베타</h3>
+        <p>평소 베타가 0.8인 안정적인 주식도 다음과 같은 <strong>Corporate Event</strong> 발생 시 변동성이 급격히 커질 수 있습니다:</p>
+        <ul>
+            <li>실적 발표 (Earnings)</li>
+            <li>주식 분할 (Stock Split)</li>
+            <li>M&A 발표</li>
+            <li>CEO 교체</li>
+        </ul>
+
+        <h2>3. WACC (Weighted Average Cost of Capital)</h2>
+
+        <div class="formula-box">
+            <div class="formula">WACC = Σ(Ri × Wi)</div>
+            <div class="explanation">
+                <strong>Ri</strong> = 개별 주식의 기대 수익률 (과거 3~5년 평균)<br>
+                <strong>Wi</strong> = 해당 주식의 포트폴리오 내 비중 (가중치)
+            </div>
+        </div>
+
+        <div class="key-concept">
+            <h4>💡 WACC의 본질</h4>
+            <p>경영학에서 WACC은 자본 비용을 계산하는 데 사용되지만, <strong>포트폴리오 관리</strong>에서는 <span class="highlight">가중 평균 기대 수익률</span>을 계산하여 투자 목표를 설정하고 관리하는 데 활용합니다.</p>
+        </div>
+
+        <h3>📝 WACC 계산 3단계</h3>
+
+        <div class="example-calc">
+            <h4>📊 실제 계산 예시 (투자금: $100,000)</h4>
+            
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>개별 주식의 과거 평균 수익률(R) 계산</strong><br>
+                    <small>예: Apple 3년간 수익률 7%, -10%, 20% → 평균 약 6%</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>각 주식의 비중(W) 결정</strong><br>
+                    <small>모든 비중의 합 = 100% (소수점으로는 1.0)</small>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>WACC 산출</strong><br>
+                    <small>각 (수익률 × 비중)의 합계</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">포트폴리오 비중 배분 예시</div>
+            <canvas id="portfolioChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>종목</th>
+                    <th>비중(W)</th>
+                    <th>투자금액</th>
+                    <th>기대수익률(R)</th>
+                    <th>기여도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Apple</td>
+                    <td>20%</td>
+                    <td>$20,000</td>
+                    <td>5%</td>
+                    <td>1.0%</td>
+                </tr>
+                <tr>
+                    <td>Google</td>
+                    <td>20%</td>
+                    <td>$20,000</td>
+                    <td>6%</td>
+                    <td>1.2%</td>
+                </tr>
+                <tr>
+                    <td>Johnson & Johnson</td>
+                    <td>30%</td>
+                    <td>$30,000</td>
+                    <td>4%</td>
+                    <td>1.2%</td>
+                </tr>
+                <tr>
+                    <td>Broadcom (AVGO)</td>
+                    <td>30%</td>
+                    <td>$30,000</td>
+                    <td>7%</td>
+                    <td>2.1%</td>
+                </tr>
+                <tr style="background: #e8f4fd; font-weight: 600;">
+                    <td colspan="4">포트폴리오 WACC (예상 연간 수익률)</td>
+                    <td>5.5%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. Goal-Based Financial Planning</h2>
+
+        <div class="key-concept">
+            <h4>🎯 목표 지향적 투자</h4>
+            <p>WACC의 진정한 목적은 <strong>"내가 어디로 가고 있는지 아는 것"</strong>입니다. 영어로 표현하면 <span class="highlight">"You know what you're doing"</span> - 자신이 무엇을 하고 있는지 정확히 이해해야 합니다.</p>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">목표 기반 투자 경로 추적</div>
+            <canvas id="goalChart"></canvas>
+        </div>
+
+        <p>투자 목표를 설정하고, 분기 또는 연간으로 검토하여 목표 경로에서 벗어난 종목은 교체합니다. 예를 들어:</p>
+        <ul>
+            <li>Johnson & Johnson이 기대 수익률 5%인데 4%만 달성 → 교체 검토</li>
+            <li>5%에 근접하는 다른 종목으로 스위칭</li>
+            <li>10년 후 목표치의 90% 달성 가능</li>
+        </ul>
+
+        <h2>5. 액티브 매니지먼트의 필요성</h2>
+
+        <div class="warning">
+            <h4>⚠️ 장기 투자 ≠ 방치</h4>
+            <p>"장기 투자"는 "가만히 놔둬라"가 아닙니다. <strong>최소 3개월~1년에 한 번</strong>은 포트폴리오를 리뷰하고 필요시 조정해야 합니다.</p>
+        </div>
+
+        <h3>📌 액티브 vs 패시브 매니지먼트</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>액티브 매니지먼트</th>
+                    <th>패시브 매니지먼트</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>관리 방식</strong></td>
+                    <td>적극적 종목 교체 및 비중 조절</td>
+                    <td>인덱스 추종, 자동 운용</td>
+                </tr>
+                <tr>
+                    <td><strong>적합 상품</strong></td>
+                    <td>개별 주식 포트폴리오</td>
+                    <td>ETF, 뮤추얼펀드, TDF</td>
+                </tr>
+                <tr>
+                    <td><strong>리밸런싱</strong></td>
+                    <td>분기/연간 필수</td>
+                    <td>자동 또는 불필요</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="tip">
+            <h4>💡 3년 전 종목을 그대로?</h4>
+            <p>3년 전에 추천받은 10개 종목이 있다면, 현재 시장 상황에 맞게 <strong>최소 4개 정도는 교체</strong>되어야 합니다. 시장은 계속 변화하기 때문입니다.</p>
+        </div>
+
+        <h2>6. 투자자 유형별 포트폴리오 전략</h2>
+
+        <div class="chart-container">
+            <div class="chart-title">투자자 유형별 권장 자산 배분</div>
+            <canvas id="allocationChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>투자자 유형</th>
+                    <th>Large Cap 비중</th>
+                    <th>권장 베타</th>
+                    <th>특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>은퇴자/보수적</strong></td>
+                    <td>70% 이상</td>
+                    <td>0.8 이하</td>
+                    <td>Value Stock 중심</td>
+                </tr>
+                <tr>
+                    <td><strong>중립적</strong></td>
+                    <td>50~70%</td>
+                    <td>0.9~1.1</td>
+                    <td>균형 배분</td>
+                </tr>
+                <tr>
+                    <td><strong>공격적</strong></td>
+                    <td>30~50%</td>
+                    <td>1.2 이상</td>
+                    <td>Growth Stock 중심</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="key-concept">
+            <h4>📌 나이보다 중요한 것: Time Horizon</h4>
+            <p>30대도 보수적인 투자자가 있고, 50대도 공격적인 투자자가 있습니다. 중요한 것은 <strong>은퇴까지 남은 시간(Time Horizon)</strong>입니다.</p>
+            <ul>
+                <li>30대 보수적 투자자 → 한 단계 높은 리스크 고려</li>
+                <li>50대 공격적 투자자 → 한 단계 낮은 리스크 권장</li>
+            </ul>
+        </div>
+
+        <h2>7. 미국 vs 한국 투자 환경</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>미국</th>
+                    <th>한국</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>세금 혜택 계좌</strong></td>
+                    <td>IRA, 401(k), Pension 등</td>
+                    <td>제한적 (ISA 등)</td>
+                </tr>
+                <tr>
+                    <td><strong>은퇴 전 세금</strong></td>
+                    <td>이연 (Deferred)</td>
+                    <td>즉시 과세</td>
+                </tr>
+                <tr>
+                    <td><strong>양도소득세</strong></td>
+                    <td>Short-term: 24%<br>Long-term: 15.4%</td>
+                    <td>22% (대주주 등)</td>
+                </tr>
+                <tr>
+                    <td><strong>실시간 매매</strong></td>
+                    <td>정규장 시간</td>
+                    <td>야간 거래 필요</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warning">
+            <h4>⚠️ 한국 투자자 주의사항</h4>
+            <p>한국에서 미국 주식 투자 시 <strong>세제 혜택이 제한적</strong>입니다. 미국의 IRA나 401(k)와 같은 은퇴 계좌가 없어, 모든 거래가 과세 대상이 될 수 있습니다.</p>
+        </div>
+
+        <h2>8. 포트폴리오 운영 실패 사례</h2>
+
+        <h3>❌ 흔한 실패 패턴</h3>
+        <ol>
+            <li><strong>비중 조절 실패</strong>: 중위험 자산을 고위험 영역에 배치하여 최대 <span class="highlight">40% 수익률 차이</span> 발생</li>
+            <li><strong>띄엄띄엄 정보 습득</strong>: 40분 분석 중 5~10분만 시청하여 맥락 파악 실패</li>
+            <li><strong>액티브 매니지먼트 미실행</strong>: 3년 전 종목을 그대로 보유</li>
+            <li><strong>개인화 무시</strong>: 다른 사람의 포트폴리오를 그대로 복사</li>
+        </ol>
+
+        <div class="tip">
+            <h4>✅ 성공적인 포트폴리오 관리</h4>
+            <ul>
+                <li>정기적인 리뷰 (최소 분기 1회)</li>
+                <li>목표 수익률과 실제 수익률 비교</li>
+                <li>저성과 종목 교체</li>
+                <li>개인 상황에 맞는 비중 조절</li>
+            </ul>
+        </div>
+
+        <h2>9. 미국 증시 투자 시사점</h2>
+
+        <div class="summary-box">
+            <h3>🎯 핵심 투자 원칙</h3>
+            <ul>
+                <li><strong>분산 투자 필수</strong>: 단일 종목 비중 최대 10~20%</li>
+                <li><strong>베타 관리</strong>: 포트폴리오 전체 베타를 투자 성향에 맞게 조절</li>
+                <li><strong>WACC 활용</strong>: 목표 수익률 설정 및 추적</li>
+                <li><strong>액티브 관리</strong>: 최소 연 1회 리밸런싱</li>
+                <li><strong>Corporate Event 주시</strong>: 실적, M&A, 경영진 변화 모니터링</li>
+            </ul>
+        </div>
+
+        <h3>📊 섹터별 고려사항</h3>
+        <ul>
+            <li><strong>Large Cap Value</strong>: 은퇴자/보수적 투자자의 핵심 (PEP, JNJ 등)</li>
+            <li><strong>Large Cap Growth</strong>: 성장 추구 시 비중 확대 (AAPL, GOOGL 등)</li>
+            <li><strong>반도체/기술</strong>: 높은 베타, Corporate Event 빈번 (AVGO, NVDA 등)</li>
+        </ul>
+
+        <div class="key-concept">
+            <h4>🔑 최종 메시지: "You Know What You're Doing"</h4>
+            <p>자신의 투자가 어디로 향하고 있는지, 왜 그 종목을 보유하는지, 전체 포트폴리오가 어떤 리스크 수준인지를 <strong>항상 인지</strong>하고 있어야 합니다. 이것이 성공적인 장기 투자의 핵심입니다.</p>
+        </div>
+
+        <div class="footer">
+            <p>📺 출처: 투자아카데미 5회 (8월 19일)</p>
+            <p>⚠️ 본 문서는 교육 목적으로 작성되었으며, 투자 조언이 아닙니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 베타 비교 차트
+        const betaCtx = document.getElementById('betaChart').getContext('2d');
+        new Chart(betaCtx, {
+            type: 'bar',
+            data: {
+                labels: ['β=0.8', 'β=1.0 (S&P500)', 'β=1.2', 'β=1.4'],
+                datasets: [{
+                    label: '상승장 (+10%)',
+                    data: [8, 10, 12, 14],
+                    backgroundColor: 'rgba(72, 187, 120, 0.8)',
+                    borderColor: 'rgba(72, 187, 120, 1)',
+                    borderWidth: 1
+                }, {
+                    label: '하락장 (-10%)',
+                    data: [-8, -10, -12, -14],
+                    backgroundColor: 'rgba(245, 101, 101, 0.8)',
+                    borderColor: 'rgba(245, 101, 101, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '수익률 (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 포트폴리오 비중 차트
+        const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(portfolioCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Apple (20%)', 'Google (20%)', 'Johnson & Johnson (30%)', 'Broadcom (30%)'],
+                datasets: [{
+                    data: [20, 20, 30, 30],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                        'rgba(34, 197, 94, 0.8)',
+                        'rgba(251, 146, 60, 0.8)'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // 목표 기반 투자 경로 차트
+        const goalCtx = document.getElementById('goalChart').getContext('2d');
+        new Chart(goalCtx, {
+            type: 'line',
+            data: {
+                labels: ['현재', '1년', '2년', '3년', '4년', '5년', '6년', '7년', '8년', '9년', '10년'],
+                datasets: [{
+                    label: '목표 경로',
+                    data: [100, 105.5, 111.3, 117.4, 123.9, 130.7, 137.9, 145.5, 153.5, 161.9, 170.8],
+                    borderColor: 'rgba(99, 102, 241, 1)',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                }, {
+                    label: '실제 경로 (조정 후)',
+                    data: [100, 104, 112, 115, 125, 128, 140, 148, 155, 163, 168],
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: '자산가치 ($1,000)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '투자 기간'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 투자자 유형별 자산 배분 차트
+        const allocationCtx = document.getElementById('allocationChart').getContext('2d');
+        new Chart(allocationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['보수적', '중립적', '공격적'],
+                datasets: [{
+                    label: 'Large Cap Value',
+                    data: [50, 35, 20],
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                }, {
+                    label: 'Large Cap Growth',
+                    data: [20, 25, 40],
+                    backgroundColor: 'rgba(168, 85, 247, 0.8)'
+                }, {
+                    label: 'Mid/Small Cap',
+                    data: [10, 20, 30],
+                    backgroundColor: 'rgba(236, 72, 153, 0.8)'
+                }, {
+                    label: '채권/현금',
+                    data: [20, 20, 10],
+                    backgroundColor: 'rgba(156, 163, 175, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: '비중 (%)'
+                        },
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>투자 아카데미 9회: RSI와 모멘텀 시험문제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Malgun Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f8f9fa;
+            padding: 16px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.4rem;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            text-align: center;
+        }
+        .meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #4361ee;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            background: linear-gradient(135deg, #4361ee 0%, #764ba2 100%);
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 30px 0 20px;
+        }
+        .question-box {
+            background: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .question-number {
+            background: #4361ee;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            font-size: 0.85rem;
+        }
+        .difficulty.easy {
+            color: #28a745;
+        }
+        .difficulty.medium {
+            color: #ffc107;
+        }
+        .difficulty.hard {
+            color: #dc3545;
+        }
+        .question-type {
+            background: #e7f3ff;
+            color: #4361ee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+        .options {
+            padding-left: 8px;
+        }
+        .options p {
+            margin: 8px 0;
+            padding: 10px 14px;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        .blank-line {
+            border-bottom: 2px solid #333;
+            display: inline-block;
+            min-width: 100px;
+            margin: 0 4px;
+        }
+        .answer-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px dashed #4361ee;
+        }
+        .answer-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .answer-label {
+            background: #28a745;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .answer-text {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        .explanation {
+            background: #f0f4ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+        .explanation strong {
+            color: #4361ee;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+        .score-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .score-box h3 {
+            color: #4ade80;
+            margin-bottom: 10px;
+        }
+        @media print {
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 문제지 섹션 -->
+        <h1>📝 투자 아카데미 9회 시험문제</h1>
+        <div class="meta">
+            RSI와 모멘텀으로 매입·매각 시점 찾기 | 총 10문제
+        </div>
+
+        <div class="instructions">
+            📋 <strong>시험 안내</strong><br>
+            • 총 10문제 (객관식, 단답형, OX, 빈칸채우기, 서술형)<br>
+            • 난이도: ⭐ 쉬움 30% | ⭐⭐ 보통 50% | ⭐⭐⭐ 어려움 20%<br>
+            • 정답 및 해설은 문제 다음 섹션에 있습니다
+        </div>
+
+        <h2>━━━ 📋 시험문제 (총 10문제) ━━━</h2>
+
+        <!-- 문제 1 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 1</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <p class="question-text">RSI(Relative Strength Index)의 범위로 올바른 것은?</p>
+            <div class="options">
+                <p>① -100 ~ 100</p>
+                <p>② 0 ~ 50</p>
+                <p>③ 0 ~ 100</p>
+                <p>④ -50 ~ 50</p>
+            </div>
+        </div>
+
+        <!-- 문제 2 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 2</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <p class="question-text">펀더멘털 분석보다 테크니컬 분석이 더 중요하다. (O / X)</p>
+        </div>
+
+        <!-- 문제 3 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 3</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">단답형</span>
+            </div>
+            <p class="question-text">RSI가 30 이하일 때 발생하는 시그널의 이름은?</p>
+            <p style="margin-top:10px;color:#666">(영어 또는 한글로 작성)</p>
+        </div>
+
+        <!-- 문제 4 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 4</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <p class="question-text">모멘텀 지표의 계산 공식은 다음과 같다:<br><br>
+            <strong>Momentum = 현재 주가 - <span class="blank-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 전 주가</strong></p>
+        </div>
+
+        <!-- 문제 5 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 5</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <p class="question-text">투자 전 고려해야 할 6가지 요소에 해당하지 않는 것은?</p>
+            <div class="options">
+                <p>① Risk Tolerance (리스크 허용도)</p>
+                <p>② Time Horizon (투자 기간)</p>
+                <p>③ Market Timing (시장 타이밍)</p>
+                <p>④ Tax Implications (세금 영향)</p>
+            </div>
+        </div>
+
+        <!-- 문제 6 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 6</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">OX 문제</span>
+            </div>
+            <p class="question-text">모멘텀 지표가 0을 상향 돌파하면 Exit(퇴출) 신호이다. (O / X)</p>
+        </div>
+
+        <!-- 문제 7 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 7</span>
+                <span class="difficulty medium">⭐⭐ 보통</span>
+                <span class="question-type">객관식</span>
+            </div>
+            <p class="question-text">RSI가 70 이상일 때의 시장 상태를 무엇이라고 하는가?</p>
+            <div class="options">
+                <p>① Oversold (과매도)</p>
+                <p>② Overbought (과매수)</p>
+                <p>③ Neutral (중립)</p>
+                <p>④ Momentum (모멘텀)</p>
+            </div>
+        </div>
+
+        <!-- 문제 8 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 8</span>
+                <span class="difficulty easy">⭐ 쉬움</span>
+                <span class="question-type">빈칸채우기</span>
+            </div>
+            <p class="question-text">비프 스테이크 비유에서, 펀더멘털 분석은 <span class="blank-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>의 질을 보는 것이고, 테크니컬 분석은 소금과 후추의 양을 조절하는 것과 같다.</p>
+        </div>
+
+        <!-- 문제 9 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 9</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <p class="question-text">RSI와 모멘텀 지표만을 활용한 빈번한 매매(데이 트레이딩)가 장기투자 대비 불리한 이유를 2가지 이상 서술하시오.</p>
+        </div>
+
+        <!-- 문제 10 -->
+        <div class="question-box">
+            <div class="question-header">
+                <span class="question-number">문제 10</span>
+                <span class="difficulty hard">⭐⭐⭐ 어려움</span>
+                <span class="question-type">서술형</span>
+            </div>
+            <p class="question-text">은퇴가 2년 남은 63세 투자자가 테슬라 주식에 자산의 100%를 투자하는 것이 부적절한 이유를 '투자 전 고려 요소'와 연관 지어 설명하시오.</p>
+        </div>
+
+        <!-- 정답지 섹션 -->
+        <div class="answer-section">
+            <h2>━━━ 📝 정답 및 해설 ━━━</h2>
+
+            <div class="score-box">
+                <h3>채점 기준</h3>
+                <p>객관식/OX/단답형: 각 10점 | 서술형: 각 15점</p>
+                <p style="margin-top:8px;font-size:1.2rem"><strong>총점: 100점</strong></p>
+            </div>
+
+            <!-- 정답 1 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 1</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> RSI(Relative Strength Index)는 <strong>0에서 100</strong> 사이의 범위에서 움직이는 지표입니다. 30 이하는 과매도(Oversold), 70 이상은 과매수(Overbought) 구간으로 판단합니다.
+                </div>
+            </div>
+
+            <!-- 정답 2 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 2</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">X</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> <strong>펀더멘털 분석이 최우선</strong>이며 가장 중요합니다. 테크니컬 분석은 참고용으로만 활용해야 합니다. 비유하자면 펀더멘털은 고기의 질이고, 테크니컬은 양념에 불과합니다.
+                </div>
+            </div>
+
+            <!-- 정답 3 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 3</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">Buy Signal (매수 신호)</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> RSI 30 이하는 주가가 <strong>저평가(Oversold)</strong> 되어 있다는 의미로, 매수를 고려할 수 있는 <strong>Buy Signal(바이 시그널)</strong>이 발생합니다. 반대로 70 이상은 Sell Signal입니다.
+                </div>
+            </div>
+
+            <!-- 정답 4 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 4</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">10일</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 모멘텀 지표의 공식은 <strong>현재 주가 - 10일 전 주가</strong>입니다. 이 값이 0보다 크면 상승 추세(Entry Point), 0보다 작으면 하락 추세(Exit Point)로 해석합니다.
+                </div>
+            </div>
+
+            <!-- 정답 5 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 5</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">③</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 투자 전 고려해야 할 6가지 요소는 ① Investment Process, ② Individual Goal, ③ Risk Tolerance, ④ Time Horizon, ⑤ Liquidity Needs, ⑥ Tax Implications입니다. <strong>Market Timing은 포함되지 않습니다.</strong>
+                </div>
+            </div>
+
+            <!-- 정답 6 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 6</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">X</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 모멘텀 지표가 <strong>0을 상향 돌파</strong>하면 상승 기류가 시작되는 <strong>Entry(진입) 신호</strong>입니다. 반대로 0 이하로 떨어지면 Exit(퇴출) 신호가 됩니다.
+                </div>
+            </div>
+
+            <!-- 정답 7 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 7</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">②</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> RSI 70 이상은 <strong>Overbought(과매수)</strong> 상태를 의미합니다. 주가가 과도하게 상승하여 매도를 고려할 수 있는 구간입니다. Oversold는 30 이하일 때입니다.
+                </div>
+            </div>
+
+            <!-- 정답 8 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 8</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">고기</span>
+                </div>
+                <div class="explanation">
+                    <strong>해설:</strong> 비프 스테이크 비유에서 펀더멘털 분석은 <strong>고기의 질, 부위, 양</strong>을 보는 것에 해당합니다. 고기 자체가 좋아야 양념(테크니컬)이 의미가 있습니다.
+                </div>
+            </div>
+
+            <!-- 정답 9 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 9</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">서술형 모범답안</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>1. 거래 비용(Transaction Cost) 증가:</strong> 빈번한 매매로 인해 시간과 수수료가 많이 소요됩니다. 매매할 때마다 거래 수수료가 발생하고, 지속적인 모니터링에 시간이 소모됩니다.<br><br>
+                    <strong>2. 세금 부담 증가:</strong> 단기 매매 차익에 대해 양도소득세(약 25%)가 부과되어 수익의 상당 부분이 세금으로 빠져나갑니다.<br><br>
+                    <strong>3. 수익률 감소:</strong> 통계적으로 빈번한 매매는 장기 보유 대비 수익률이 60~70% 수준으로 감소합니다. 지나고 나서 보면 가만히 있었을 때 더 높은 수익을 얻는 경우가 많습니다.<br><br>
+                    <strong>4. 과매수/과매도 오류:</strong> 테크니컬 지표가 항상 정확하지 않아 잘못된 타이밍에 매매할 가능성이 높습니다.
+                </div>
+            </div>
+
+            <!-- 정답 10 -->
+            <div class="answer-box">
+                <div class="answer-header">
+                    <span class="question-number">문제 10</span>
+                    <span class="answer-label">정답</span>
+                    <span class="answer-text">서술형 모범답안</span>
+                </div>
+                <div class="explanation">
+                    <strong>모범답안:</strong><br><br>
+                    <strong>1. Time Horizon (투자 기간):</strong> 은퇴까지 2년밖에 남지 않아 투자 회복 기간이 부족합니다. 만약 테슬라 주가가 크게 하락하면 은퇴 전까지 회복하지 못할 수 있습니다.<br><br>
+                    <strong>2. Risk Tolerance (리스크 허용도):</strong> 은퇴를 앞둔 시점에서는 리스크를 보수적으로 관리해야 합니다. 단일 종목 100% 투자는 극도로 위험한 전략입니다.<br><br>
+                    <strong>3. Liquidity Needs (유동성 필요):</strong> 은퇴 후 생활비로 현금이 필요한 상황에서, 변동성이 큰 주식에 올인하면 필요할 때 현금화하기 어려울 수 있습니다.<br><br>
+                    <strong>결론:</strong> 나이가 많고 은퇴가 가까운 투자자는 분산 투자와 보수적인 포트폴리오 구성이 필수적입니다.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📚 투자 아카데미 9회 시험문제 | RSI와 모멘텀</p>
+            <p style="color:#999;font-size:0.8rem">본 시험문제는 학습 목적으로 작성되었습니다.</p>
+        </footer>
+    </div>
+</body>
+</html>
