@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>완성도 높은 투자 포트폴리오 구성법 | 미국 증시 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-card: #111827;
+  --bg-card-alt: #0f172a;
+  --accent: #f59e0b;
+  --accent-dim: #92400e;
+  --green: #10b981;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --purple: #a78bfa;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-dim: #64748b;
+  --border: #1e293b;
+  --gradient-gold: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Header */
+.hero {
+  background: linear-gradient(180deg, #1a1428 0%, var(--bg-primary) 100%);
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--gradient-gold);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.35;
+  margin-bottom: 12px;
+  background: linear-gradient(to right, #f1f5f9, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.hero-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* Sections */
+.section {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.section p, .section li {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Performance Grid */
+.perf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.perf-item {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.perf-item .ticker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.perf-item .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.perf-item .label {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+/* Index Cards */
+.index-bar {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.index-chip {
+  flex-shrink: 0;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.index-chip .name {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.index-chip .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Comparison */
+.compare-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.compare-col {
+  background: var(--bg-card-alt);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.compare-col.winner { border-color: var(--green); }
+.compare-col.loser { border-color: var(--red); }
+
+.compare-col .investor-name {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.compare-col .strategy {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.compare-col .amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.compare-col .desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Callout */
+.callout {
+  background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.02));
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.callout-red {
+  background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.02));
+  border-left-color: var(--red);
+}
+
+.callout-blue {
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.02));
+  border-left-color: var(--blue);
+}
+
+/* Numbered List */
+.num-list {
+  list-style: none;
+  counter-reset: item;
+}
+
+.num-list li {
+  counter-increment: item;
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 16px;
+}
+
+.num-list li::before {
+  content: counter(item);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 26px;
+  height: 26px;
+  background: var(--gradient-gold);
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.num-list li strong {
+  color: var(--text-primary);
+}
+
+/* Portfolio Diagram */
+.portfolio-diagram {
+  margin: 20px 0;
+}
+
+.port-ring {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.port-ring .ring-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: center;
+}
+
+.port-ring .ring-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.port-ring .ring-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.ring-core { border-left: 4px solid var(--accent); }
+.ring-mid { border-left: 4px solid var(--blue); }
+.ring-sat { border-left: 4px solid var(--purple); }
+.ring-cash { border-left: 4px solid var(--green); }
+
+/* Catalyst Tags */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.tag {
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* Footer */
+.footer {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* Bar Chart */
+.bar-chart { margin: 16px 0; }
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.bar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  width: 55px;
+  flex-shrink: 0;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+.bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--bg-card-alt);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  min-width: 2px;
+}
+
+.bar-fill.pos { background: linear-gradient(90deg, #059669, #10b981); }
+.bar-fill.neg { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+.bar-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  width: 55px;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">10분 투자 아카데미</div>
+    <h1>완성도 높은 투자 포트폴리오 구성하는 법</h1>
+    <div class="hero-meta">
+      <span>📅 2026.02.15</span>
+      <span>📺 투자는인생TV</span>
+      <span>🇺🇸 미국 증시 분석</span>
+    </div>
+  </div>
+</div>
+
+<!-- 1. 시장 현황 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">MARKET OVERVIEW</div>
+    <h2>2026년 YTD 주요 지수 현황</h2>
+    <p>2026년 1월 2일 시작 이후, 주요 미국 지수들은 혼조세를 보이고 있다. S&P 500은 사실상 보합인 반면, 나스닥은 소프트웨어 섹터 중심으로 큰 하락을 기록했다. 다우존스만이 양호한 수익률을 유지 중이다.</p>
+
+    <div class="index-bar">
+      <div class="index-chip">
+        <div class="name">S&P 500</div>
+        <div class="val negative">-0.1%</div>
+      </div>
+      <div class="index-chip">
+        <div class="name">NASDAQ</div>
+        <div class="val negative">-3.0%</div>
+      </div>
+      <div class="index-chip">
+        <div class="name">Dow Jones</div>
+        <div class="val positive">+2.99%</div>
+      </div>
+    </div>
+
+    <div class="callout-red callout">
+      <p>⚠️ S&P 500 기업 중 <strong>204개(약 40%)</strong>가 평균 수익률 <strong>-10% 이하</strong>를 기록 중. 무작위 종목 보유 시 포트폴리오 성장성이 크게 저하될 위험.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 하락 촉매 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">RISK CATALYSTS</div>
+    <h2>2026년 주요 하락 촉매 (캐털리스트)</h2>
+    <p>올해 시장 변동성을 야기한 핵심 촉매들은 다음과 같다. 이 촉매들은 매주, 매 분기마다 달라질 수 있어 지속적인 모니터링이 필수적이다.</p>
+
+    <div class="tag-list">
+      <span class="tag">🏛️ 연준 독립성 훼손 우려</span>
+      <span class="tag">📈 인플레이션 상승 우려</span>
+      <span class="tag">🦅 케빈 워시 매파적 스탠스</span>
+      <span class="tag">🤖 AI CAPEX 예상 초과</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header">📌 촉매별 상세</div>
+      <p><strong>연준 독립성 훼손:</strong> 파월 의장이 DOJ(법무부)에 의해 조사를 받는 상황이 발생하며, 연준의 독립성에 대한 심각한 우려가 확산됨. 시장은 이에 크게 반응하여 급락.</p>
+      <p><strong>케빈 워시 신임 연준의장:</strong> 새로운 연준의장 후보로 거론되는 케빈 워시의 매파적(Hawkish) 성향이 금리 인하 기대를 약화시킴.</p>
+      <p><strong>AI CAPEX 폭증:</strong> AI 관련 자본지출(Capital Expenditure)이 시장 예상을 크게 상회하면서 수익성 우려로 기술주 중심 급락 촉발.</p>
+      <p><strong>인플레이션:</strong> 소비자물가 상승 추세 지속으로 금리 인하 시점이 지연될 가능성 증대.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 섹터별 성과 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">SECTOR PERFORMANCE</div>
+    <h2>섹터별·종목별 YTD 수익률</h2>
+    <p>소프트웨어 섹터는 심각한 타격을 입은 반면, 반도체 장비·소재·에너지·방위산업 등은 강세를 유지하고 있다.</p>
+
+    <div class="card">
+      <div class="card-header" style="color:var(--red);">📉 부진 종목 (소프트웨어·빅테크)</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-label">MSFT</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:34%"></div></div>
+          <span class="bar-value negative">-17%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">NVDA</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:38%"></div></div>
+          <span class="bar-value negative">-19%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">ADBE</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:50%"></div></div>
+          <span class="bar-value negative">-25%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">NOW</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:60%"></div></div>
+          <span class="bar-value negative">-30%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">GOOG</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:4.4%"></div></div>
+          <span class="bar-value negative">-2.2%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">AMD</span>
+          <div class="bar-track"><div class="bar-fill neg" style="width:6%"></div></div>
+          <span class="bar-value negative">-3%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="color:var(--green);">📈 강세 종목 (반도체·소재·에너지·방위)</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-label">MU</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:90%"></div></div>
+          <span class="bar-value positive">+45%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">VRT</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:89%"></div></div>
+          <span class="bar-value positive">+44.7%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">CAT</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:70%"></div></div>
+          <span class="bar-value positive">+35%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">MWM</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:44%"></div></div>
+          <span class="bar-value positive">+22%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">CVX</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:42%"></div></div>
+          <span class="bar-value positive">+21%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">WMT</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:40%"></div></div>
+          <span class="bar-value positive">+20%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Gold</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:33%"></div></div>
+          <span class="bar-value positive">+16.7%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">NLR</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:28%"></div></div>
+          <span class="bar-value positive">+14%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">STOK</span>
+          <div class="bar-track"><div class="bar-fill pos" style="width:30%"></div></div>
+          <span class="bar-value positive">+15%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 액티브 vs 패시브 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">ACTIVE vs PASSIVE</div>
+    <h2>액티브 매니지먼트의 결정적 차이</h2>
+    <p>동일한 $100 투자금을 가진 두 투자자의 결과를 비교하면, 섹터 로테이션과 기관 투자 흐름을 추종한 액티브 전략이 압도적인 차이를 만들어냈다.</p>
+
+    <div class="compare-box">
+      <div class="compare-col winner">
+        <div class="investor-name" style="color:var(--green);">투자자 A</div>
+        <div class="strategy">액티브 (섹터 로테이션)</div>
+        <div class="amount positive">$130</div>
+        <div class="desc">Adobe → Micron 전환<br>기관 보유율 추종</div>
+      </div>
+      <div class="compare-col loser">
+        <div class="investor-name" style="color:var(--red);">투자자 B</div>
+        <div class="strategy">패시브 (Buy & Hold)</div>
+        <div class="amount negative">$60</div>
+        <div class="desc">Adobe 장기 보유<br>-40% 하락</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>💡 <strong>핵심 포인트:</strong> 기회비용까지 포함하면 투자자 B는 $70의 손실을 본 셈이다. 마이크론의 기관 보유율은 작년 60%에서 올해 90%로 급증했으며, 1년간 수익률은 +288%를 기록.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 6대 투자 원칙 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">INVESTMENT FRAMEWORK</div>
+    <h2>포트폴리오 성과를 높이는 6대 원칙</h2>
+
+    <ol class="num-list">
+      <li><strong>기관 투자 이동 파악:</strong> 기관투자자(헤지펀드, 뮤추얼펀드 등)의 매수·매도 방향을 추적. 마이크론처럼 기관 보유율이 급증하는 종목은 변동성이 크지만 상승 확률이 높다. 개인 투자자의 소액 거래(10억~1,000억)는 주가에 큰 영향을 미치지 못한다.</li>
+      <li><strong>펀더멘탈 상승 집단 선별:</strong> 대규모 자금이 유입되면서 펀더멘탈(기업 실적, 매출, 이익)이 함께 개선되는 종목군을 지속적으로 선별하여 투자.</li>
+      <li><strong>바텀업 접근법 우선:</strong> 탑다운(거시경제 → 섹터 → 종목) 방식보다 바텀업(Bottom-up) 접근이 실전에서 더 유효함. 기업 단위의 실적과 기관 동향을 먼저 분석.</li>
+      <li><strong>신호와 노이즈 분리:</strong> 투자 리스크가 커지는 조짐을 미리 감지하고, 시장의 진짜 신호(Signal)와 일시적 소음(Noise)을 구별하는 능력이 핵심.</li>
+      <li><strong>현금 비중 조절로 리스크 관리:</strong> 투자 계좌 내 현금 비중을 적극적으로 가감하여 리스크를 조절. 작년 1월에는 "가용 현금 전부 투자" 판단 후 시장이 40~50% 상승.</li>
+      <li><strong>캐털리스트 변화 적응:</strong> 촉매(Catalyst)는 매달, 매 분기 달라진다. 금리 인하 기대, 관세 정책 등 과거 촉매를 연구해도 소용없으며, 현재 캐털리스트를 실시간 파악하는 것이 핵심.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 6. 골든벨 포트폴리오 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">GOLDEN BELL PORTFOLIO</div>
+    <h2>골든벨 포트폴리오 구성법</h2>
+    <p>현재 시장에서 추천되는 "골든벨" 포트폴리오 구조는 리딩 섹터 중심의 코어-위성 전략이다.</p>
+
+    <div class="card">
+      <div class="card-header">🏆 4대 리딩 섹터 (2026년 현재)</div>
+      <div class="perf-grid">
+        <div class="perf-item">
+          <div class="ticker">🖥️ IT</div>
+          <div class="label">소프트웨어보다 칩·장비 위주</div>
+        </div>
+        <div class="perf-item">
+          <div class="ticker">⛏️ Materials</div>
+          <div class="label">소재 섹터</div>
+        </div>
+        <div class="perf-item">
+          <div class="ticker">⚡ Energy</div>
+          <div class="label">에너지 섹터</div>
+        </div>
+        <div class="perf-item">
+          <div class="ticker">🛡️ Defense</div>
+          <div class="label">방위산업 섹터</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-diagram">
+      <div class="port-ring ring-core">
+        <div class="ring-pct" style="color:var(--accent);">60-70%</div>
+        <div>
+          <div class="ring-label">코어 (리딩 섹터)</div>
+          <div class="ring-desc">IT(칩·장비), Materials, Energy, Defense 중심. 대형주(Large Cap) 위주로 배치.</div>
+        </div>
+      </div>
+      <div class="port-ring ring-mid">
+        <div class="ring-pct" style="color:var(--blue);">20-30%</div>
+        <div>
+          <div class="ring-label">미들 (안정 대형주)</div>
+          <div class="ring-desc">다우존스 편입 종목 등 안정적 대형주. 변동성이 적고 묵직한 성격.</div>
+        </div>
+      </div>
+      <div class="port-ring ring-sat">
+        <div class="ring-pct" style="color:var(--purple);">~5%</div>
+        <div>
+          <div class="ring-label">위성 (다크호스)</div>
+          <div class="ring-desc">양자컴퓨팅 등 신성장 테마. 0.5~1%씩 소량 분산 보유.</div>
+        </div>
+      </div>
+      <div class="port-ring ring-cash">
+        <div class="ring-pct" style="color:var(--green);">적정%</div>
+        <div>
+          <div class="ring-label">현금 (리스크 버퍼)</div>
+          <div class="ring-desc">시장 상황에 따라 유동적으로 조절. 현금이 전혀 없으면 위험.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-blue callout">
+      <p>📐 <strong>포트폴리오 핵심 원칙:</strong> 코어에는 반드시 라지캡(대형주)을 배치하고, 섹터가 리딩이더라도 소형주 비중은 제한한다. 리스크-베타 + 알파를 항상 고려해야 한다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 미국 증시 시사점 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">US MARKET IMPLICATIONS</div>
+    <h2>미국 증시 및 거시경제 시사점</h2>
+
+    <div class="card">
+      <div class="card-header">🏦 연준(Fed) 정책 리스크</div>
+      <p>연준 독립성 훼손 이슈는 시장 신뢰의 근간을 흔드는 요인이다. 파월 의장에 대한 DOJ 조사와 케빈 워시의 매파적 성향은 금리 인하 전망을 불확실하게 만들고 있다. 금리 동결이 장기화되면 성장주(특히 소프트웨어)에 추가 압력이 가해질 수 있다.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🔄 섹터 대순환 진행 중</div>
+      <p>소프트웨어 → 반도체 하드웨어·장비, 에너지·소재·방위산업으로의 대규모 섹터 로테이션이 진행 중이다. Microsoft(-17%), Adobe(-25%) 같은 대형 소프트웨어 기업에서 자금이 이탈하고, Micron(+45%), VRT(+44.7%), Chevron(+21%) 등으로 유입되고 있다.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🤖 AI 투자 패러다임 변화</div>
+      <p>AI CAPEX의 급증은 역설적으로 AI 수혜주에 부담을 주고 있다. 수익성 대비 과도한 투자 우려가 커지며 NVIDIA(-19%)가 하락한 반면, AI 인프라 실질 수혜주(전력: VRT, 반도체 장비)가 부상하고 있다. AI의 수혜가 '모델 개발사'에서 '인프라 공급자'로 이동하는 추세.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">💰 방어적 자산의 강세</div>
+      <p>금(Gold)이 작년 +70%에 이어 올해도 +16.7%의 강세를 이어가고 있다. 인플레이션 우려, 연준 독립성 리스크, 지정학적 불확실성이 복합적으로 작용한 결과로, 포트폴리오 내 금 비중 확대는 유효한 헤지 전략으로 판단된다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 핵심 결론 -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">KEY TAKEAWAYS</div>
+    <h2>핵심 결론</h2>
+    <div class="card" style="border-color: var(--accent);">
+      <p><strong>1.</strong> 2026년 시장은 캐털리스트 변화가 극심하여, 단순 Buy & Hold 전략은 큰 손실을 초래할 수 있다.</p>
+      <p><strong>2.</strong> 기관 투자자의 자금 흐름과 섹터 로테이션을 능동적으로 추적하는 액티브 매니지먼트가 필수적이다.</p>
+      <p><strong>3.</strong> IT 섹터 내에서도 소프트웨어보다 반도체·장비 중심으로 포지션을 이동해야 한다.</p>
+      <p><strong>4.</strong> 골든벨 포트폴리오: 리딩 섹터 대형주 60~70% + 안정 대형주 20~30% + 다크호스 5% + 현금 적정 비중 유지.</p>
+      <p><strong>5.</strong> 현재 캐털리스트(연준 리스크, 인플레이션, AI CAPEX)를 실시간 모니터링하고 선제적으로 대응해야 한다.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p>분석 기준일: 2026년 2월 15일 | 출처: 투자는인생TV 10분 투자 아카데미</p>
+    <p style="margin-top:8px;">본 문서는 교육 목적이며 투자 권유가 아닙니다.</p>
+  </div>
+</div>
+
+</body>
+</html>
