@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포트폴리오 구성법과 최적화 | 투자는인생TV 아카데미 제1부</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+    --table-bg: #fafafa;
+    --table-header: #e11d48;
+    --border: #e5e5e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 56px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--accent2); }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .hero-meta span::before { content: '◆ '; color: var(--accent); }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* SECTIONS */
+  section { padding: 36px 0 20px; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .callout p { margin: 0; font-size: 14px; color: var(--text2); }
+
+  /* CARD GRID */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card-icon { font-size: 22px; margin-bottom: 8px; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* STEP LIST */
+  .step-list { margin: 20px 0; }
+  .step {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--text2); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  td {
+    background: var(--table-bg);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:nth-child(even) td { background: #f3f3f3; }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* SIMULATOR */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 18px;
+    margin: 24px 0;
+  }
+  .sim-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .sim-sub { font-size: 12px; color: var(--text2); margin-bottom: 18px; }
+
+  .slider-row { margin-bottom: 16px; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .slider-label span { font-weight: 700; color: var(--accent); }
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .res-item { text-align: center; }
+  .res-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .res-value { font-size: 20px; font-weight: 700; color: var(--accent2); }
+
+  .reset-btn {
+    margin-top: 14px;
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* PORTFOLIO DONUT */
+  .portfolio-viz {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 18px;
+    margin: 24px 0;
+  }
+  .pv-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .pv-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .toggle-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .toggle-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* DISCLAIMER BOX */
+  .disclaimer {
+    background: #fff5f5;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 20px 0;
+  }
+  .disclaimer-title { font-size: 12px; font-weight: 700; color: #dc2626; margin-bottom: 8px; }
+  .disclaimer p { font-size: 12px; color: #7f1d1d; margin: 0; line-height: 1.6; }
+
+  /* HIGHLIGHT */
+  .highlight { color: var(--accent); font-weight: 700; }
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 40px;
+    height: 3px;
+    background: var(--accent);
+    margin: 14px 0 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자는인생TV 아카데미 · 제1부</div>
+    <div class="hero-title">포트폴리오 <span>구성법</span>과<br>최적화 방법</div>
+    <p style="color:#ccc; font-size:14px; line-height:1.65; margin-top:12px;">
+      미국 투자 문화의 기본 철학부터 종형 포트폴리오 설계,<br>
+      포트폴리오 최적화(Optimization)의 개념까지 첫 강의 핵심 정리
+    </p>
+    <div class="hero-meta">
+      <span>2026.04.04</span>
+      <span>투자는인생TV 아카데미</span>
+      <span>1학년 1반 · 1강</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 1. 투자 면책고지 -->
+<section>
+  <div class="section-label">Investment Risk Disclaimer</div>
+  <div class="section-title">미국 투자의 법적 기초 — 면책고지</div>
+  <div class="divider"></div>
+
+  <p>강의는 미국 투자 문화의 핵심 전제인 <span class="highlight">면책고지(Disclaimer)</span>로 시작됩니다. 한국과 달리 미국에서는 모든 투자 방송·서비스가 법적으로 이 고지를 먼저 제시해야 합니다.</p>
+
+  <div class="disclaimer">
+    <div class="disclaimer-title">⚠️ 핵심 면책 원칙 (요약)</div>
+    <p>
+      모든 투자에는 원금 손실 위험이 있습니다. 제공 정보는 공개된 자료 기반이며 독립적으로 검증되지 않습니다. 과거 성과는 미래를 보장하지 않습니다. 투자 결과의 최종 책임은 투자자 본인에게 있습니다.
+    </p>
+  </div>
+
+  <div class="card-grid fade-in">
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">정보 검증 한계</div>
+      <div class="card-desc">데이터·AI 분석도 과거 데이터 기반. 정확성·완전성 보장 불가</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">최악 시나리오 인식</div>
+      <div class="card-desc">투자 전 반드시 가장 나쁜 상황을 이해하고 수용 가능한지 확인</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">👤</div>
+      <div class="card-title">개인 책임 원칙</div>
+      <div class="card-desc">어떤 추천도 보장이 아님. 모든 투자 결정과 결과는 본인 책임</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏥</div>
+      <div class="card-title">맞춤 투자 조언</div>
+      <div class="card-desc">개인 상황(나이·자산·목적)에 맞는 전문 어드바이저 상담 권고</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">💡 미국 vs 한국 투자 문화 차이</div>
+    <p>미국에서는 Investment Advisor(라이선스 보유)가 의사처럼 흔하고, 60세 이상 투자자에게는 더 까다로운 기준을 적용합니다. "이 돈이 전부입니까?"라는 질문은 비례적 리스크를 설정하기 위한 필수 절차입니다.</p>
+  </div>
+</section>
+
+<!-- 2. 방송 프로그램 구성 -->
+<section>
+  <div class="section-label">Program Structure</div>
+  <div class="section-title">투자는인생TV 방송 구성</div>
+  <div class="divider"></div>
+
+  <div class="table-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>방송</th><th>시간</th><th>특징</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>시장포커스</strong></td>
+          <td>주 1회 (변동성 시 장마감 후)</td>
+          <td>약 10분. 오늘의 시그널·시장 흐름 요약</td>
+        </tr>
+        <tr>
+          <td><strong>정규방송</strong></td>
+          <td>목요일 18:00 (미서부) · 40분</td>
+          <td>거시경제·투자정보·30대 기업 선정 및 관리</td>
+        </tr>
+        <tr>
+          <td><strong>아카데미(학교)</strong></td>
+          <td>토요일 17:00 서울시간 · 20~25분</td>
+          <td>미국 증시·기업·투자문화 교육. 프리미어 방식</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:13px; color:var(--text2);">정규방송은 <strong>40분</strong>으로 제한 — 초등학교 어텐션 사이클과 같이 집중력 한계를 고려한 설계입니다.</p>
+</section>
+
+<!-- 3. 포트폴리오 구성 3원칙 -->
+<section>
+  <div class="section-label">Portfolio Principles</div>
+  <div class="section-title">포트폴리오 구성 3대 원칙</div>
+  <div class="divider"></div>
+
+  <div class="step-list fade-in">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">저축 먼저 <span class="badge">필수</span></div>
+        <div class="step-desc">씨드머니 없이는 포트폴리오 구성 자체가 불가능합니다. 쪽배로 태평양을 건널 수 없듯, 작은 금액으로 다각화된 포트폴리오 운영은 현실적이지 않습니다.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">주식에만 몰빵 금지 <span class="badge">분산</span></div>
+        <div class="step-desc">포트폴리오는 주식 외 <strong>부동산, 금, 채권</strong>을 아우릅니다. 증권시장 안에서도 다양한 섹터·자산군으로 분산해야 합니다.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">개인 맞춤 설계 <span class="badge">핵심</span></div>
+        <div class="step-desc"><strong>목적·투자기간·위험성향·나이</strong>에 따라 포트폴리오는 완전히 달라져야 합니다. 다른 사람 포트폴리오를 그대로 따라하는 것은 간이 안 좋은 사람에게 위장약을 주는 것과 같습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 종형 포트폴리오 -->
+<section>
+  <div class="section-label">Bell-shaped Portfolio</div>
+  <div class="section-title">종형(鐘型) 포트폴리오 구조</div>
+  <div class="divider"></div>
+
+  <p>종형 포트폴리오는 <span class="highlight">중심부(안정) → 업계권(균형) → 외곽(성장)</span> 구조로 설계됩니다. 아래 버튼으로 각 유형을 확인해보세요.</p>
+
+  <div class="portfolio-viz">
+    <div class="pv-title">📊 종형 포트폴리오 시각화</div>
+    <div class="pv-sub">투자 성향 선택 후 구성 비율 확인</div>
+    <div class="toggle-row" id="profileToggle">
+      <button class="toggle-btn active" data-profile="moderate" onclick="switchProfile(this)">중도형 (Moderate)</button>
+      <button class="toggle-btn" data-profile="conservative" onclick="switchProfile(this)">보수형 (Conservative)</button>
+      <button class="toggle-btn" data-profile="growth" onclick="switchProfile(this)">성장형 (Growth)</button>
+    </div>
+    <div class="chart-container fade-in">
+      <canvas id="portfolioChart" height="240"></canvas>
+    </div>
+    <div id="profileDesc" style="font-size:13px; color:var(--text2); margin-top:10px; background:#fff; border-radius:8px; padding:12px; border:1px solid var(--border);"></div>
+  </div>
+
+  <div class="table-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>구성 영역</th><th>자산 유형</th><th>비중 (중도형)</th><th>역할</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>중심부</strong></td>
+          <td>초대형·대형 가치주 (다우 기업, 1조달러 이상)</td>
+          <td style="color:var(--accent); font-weight:700;">50~70%</td>
+          <td>변동성 최소화, 안정성 핵심</td>
+        </tr>
+        <tr>
+          <td><strong>업계권</strong></td>
+          <td>11개 섹터 중 아웃퍼폼 2~3개 섹터 집중</td>
+          <td style="color:var(--accent); font-weight:700;">25~40%</td>
+          <td>시장 초과수익 추구</td>
+        </tr>
+        <tr>
+          <td><strong>외곽</strong></td>
+          <td>초기 성장주·테마주</td>
+          <td style="color:var(--accent); font-weight:700;">5% 이내</td>
+          <td>고위험·고수익 소량 보유</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">⚠️ Cathie Wood 사례 경고</div>
+    <p>외곽 자산(초기 성장주)을 70~80%로 몰빵 시 → 상승장 수혜 후 폭락장에서 80% 손실 경험. ARK 펀드는 아직도 전고점 회복 중. 외곽 자산은 반드시 5% 이내로 제한해야 합니다.</p>
+  </div>
+</section>
+
+<!-- 5. 포트폴리오 최적화 -->
+<section>
+  <div class="section-label">Portfolio Optimization</div>
+  <div class="section-title">포트폴리오 최적화(Optimization)란?</div>
+  <div class="divider"></div>
+
+  <p><span class="highlight">항법 비유:</span> 먼 바다에서 배를 타고 목적지로 갈 때, 파도와 바람에 따라 <strong>계속 방향타를 조정</strong>하는 행위가 포트폴리오 최적화입니다. 목표를 바꾸는 게 아니라 방향을 미세 조정하는 것입니다.</p>
+
+  <div class="card-grid fade-in">
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">상승장에서</div>
+      <div class="card-desc">S&P 500 인덱스보다 더 상승할 때가 그렇지 않을 때보다 많음 (70:30)</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <div class="card-title">하락장에서</div>
+      <div class="card-desc">S&P 500보다 덜 하락. 펀더멘털 강한 기업군이 많아 폭락장을 잘 버팀</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">30% 액티브 운용</div>
+      <div class="card-desc">중도형 기준: 70%는 장기 유지, 30%는 시황에 따라 교체·최적화</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💹</div>
+      <div class="card-title">복리 효과 활용</div>
+      <div class="card-desc">주식은 복리(Compounding) 자산. 상승장일 때 복리 효과로 단순 합산 이상의 수익 발생</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 복리 시뮬레이터 -->
+<section>
+  <div class="section-label">Interactive Simulator</div>
+  <div class="section-title">복리 vs 단리 수익 시뮬레이터</div>
+  <div class="divider"></div>
+
+  <p>강의에서 강조한 <span class="highlight">복리(Compounding)의 힘</span>을 직접 체험해보세요. 원금·수익률·기간을 조절하면 결과가 즉시 반영됩니다.</p>
+
+  <div class="simulator">
+    <div class="sim-title">💰 복리 성장 시뮬레이터</div>
+    <div class="sim-sub">슬라이더를 움직여 복리와 단리의 차이를 확인하세요</div>
+
+    <div class="slider-row">
+      <div class="slider-label">초기 투자금 <span id="principalVal">$10,000</span></div>
+      <input type="range" id="principal" min="1000" max="100000" step="1000" value="10000" oninput="updateSim()">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">연간 수익률 <span id="rateVal">8%</span></div>
+      <input type="range" id="rate" min="1" max="30" step="1" value="8" oninput="updateSim()">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">투자 기간 <span id="yearsVal">10년</span></div>
+      <input type="range" id="years" min="1" max="40" step="1" value="10" oninput="updateSim()">
+    </div>
+
+    <div class="sim-result">
+      <div class="res-item">
+        <div class="res-label">단리 최종금액</div>
+        <div class="res-value" id="simpleResult">$18,000</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">복리 최종금액</div>
+        <div class="res-value" id="compoundResult">$21,589</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">복리 추가수익</div>
+        <div class="res-value" id="diffResult">+$3,589</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">복리 총수익률</div>
+        <div class="res-value" id="compoundRate">+115.9%</div>
+      </div>
+    </div>
+
+    <div class="chart-container fade-in" style="margin-top:16px;">
+      <canvas id="compoundChart" height="230"></canvas>
+    </div>
+
+    <button class="reset-btn" onclick="resetSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<!-- 7. 투자 성향 체크 -->
+<section>
+  <div class="section-label">Self Check</div>
+  <div class="section-title">내 투자 성향은?</div>
+  <div class="divider"></div>
+
+  <p>강의에서 강조한 <span class="highlight">본인 성향 파악</span>의 중요성. 아래 질문에 답하면 간단한 성향을 확인할 수 있습니다.</p>
+
+  <div class="simulator" id="quizSim">
+    <div class="sim-title">🧭 간단 투자 성향 체크</div>
+    <div class="sim-sub">각 항목에서 해당하는 곳을 선택하세요</div>
+
+    <div id="quiz-content">
+      <div class="quiz-item" style="margin-bottom:18px;">
+        <p style="font-weight:700; font-size:14px; margin-bottom:10px;">Q1. 투자 자산이 30% 하락하면?</p>
+        <div class="toggle-row">
+          <button class="toggle-btn" onclick="selectQ(1,1,this)">즉시 매도</button>
+          <button class="toggle-btn" onclick="selectQ(1,2,this)">일부 매도</button>
+          <button class="toggle-btn" onclick="selectQ(1,3,this)">유지·관찰</button>
+          <button class="toggle-btn" onclick="selectQ(1,4,this)">추가 매수</button>
+        </div>
+      </div>
+      <div class="quiz-item" style="margin-bottom:18px;">
+        <p style="font-weight:700; font-size:14px; margin-bottom:10px;">Q2. 투자 목표 기간은?</p>
+        <div class="toggle-row">
+          <button class="toggle-btn" onclick="selectQ(2,1,this)">1년 이내</button>
+          <button class="toggle-btn" onclick="selectQ(2,2,this)">1~3년</button>
+          <button class="toggle-btn" onclick="selectQ(2,3,this)">3~10년</button>
+          <button class="toggle-btn" onclick="selectQ(2,4,this)">10년 이상</button>
+        </div>
+      </div>
+      <div class="quiz-item" style="margin-bottom:18px;">
+        <p style="font-weight:700; font-size:14px; margin-bottom:10px;">Q3. 투자 자금 성격은?</p>
+        <div class="toggle-row">
+          <button class="toggle-btn" onclick="selectQ(3,1,this)">생활비 일부</button>
+          <button class="toggle-btn" onclick="selectQ(3,2,this)">단기 목돈</button>
+          <button class="toggle-btn" onclick="selectQ(3,3,this)">여유자금</button>
+          <button class="toggle-btn" onclick="selectQ(3,4,this)">장기 투자금</button>
+        </div>
+      </div>
+      <button class="reset-btn" style="margin-top:8px;" onclick="calcProfile()">결과 확인 →</button>
+    </div>
+
+    <div id="quiz-result" style="display:none; margin-top:14px; background:var(--text); color:#fff; border-radius:10px; padding:18px;">
+      <div style="font-size:13px; color:#aaa; margin-bottom:4px;">나의 투자 성향</div>
+      <div id="result-type" style="font-size:22px; font-weight:700; color:var(--accent2); margin-bottom:8px;"></div>
+      <div id="result-desc" style="font-size:13px; line-height:1.7; color:#ddd;"></div>
+      <button class="reset-btn" style="margin-top:12px;" onclick="resetQuiz()">↺ 다시하기</button>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 핵심 요약 -->
+<section>
+  <div class="section-label">Key Takeaways</div>
+  <div class="section-title">오늘 강의 핵심 정리</div>
+  <div class="divider"></div>
+
+  <div class="step-list fade-in">
+    <div class="step">
+      <div class="step-num" style="background:#1a1a1a;">①</div>
+      <div class="step-content">
+        <div class="step-title">투자 책임은 100% 본인</div>
+        <div class="step-desc">어떤 분석·AI·전문가도 수익을 보장할 수 없습니다. 미국 투자 문화의 핵심 전제.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#1a1a1a;">②</div>
+      <div class="step-content">
+        <div class="step-title">씨드머니 → 종형 설계 → 최적화</div>
+        <div class="step-desc">저축으로 씨드 형성 → 종형 포트폴리오 구성 → 지속적 방향타 조정(Optimization)</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#1a1a1a;">③</div>
+      <div class="step-content">
+        <div class="step-title">나에게 맞는 포트폴리오</div>
+        <div class="step-desc">남의 포트폴리오 따라하기 금지. 나이·목적·기간·성향에 맞춘 맞춤 설계가 정답.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#1a1a1a;">④</div>
+      <div class="step-content">
+        <div class="step-title">복리의 힘을 활용하라</div>
+        <div class="step-desc">주식은 복리 자산. 상승장일 때 복리 효과로 단순 합산 이상의 수익 창출 가능.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="padding: 30px 0 40px; text-align:center;">
+  <div style="font-size:11px; color:var(--text2); letter-spacing:0.08em;">
+    투자는인생TV 아카데미 · 제1부 분석 정리<br>
+    <span style="color:var(--accent);">※ 본 문서는 교육 목적이며 투자 추천이 아닙니다</span>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ===== FADE + CHART OBSERVERS =====
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ===== PORTFOLIO CHART DATA =====
+const profileData = {
+  moderate: {
+    labels: ['중심부 (초대형 가치주)', '업계권 (섹터별)', '외곽 (성장주)'],
+    data: [60, 35, 5],
+    desc: '🎯 중도형(Moderate): 성장과 안정을 동시 추구. 70%는 장기 유지하고 30%를 시황에 따라 적극 조정. 가장 최적화(Optimization) 가능성이 높은 방식입니다.'
+  },
+  conservative: {
+    labels: ['중심부 (초대형 가치주)', '업계권 (섹터별)', '외곽 (성장주)'],
+    data: [80, 18, 2],
+    desc: '🛡️ 보수형(Conservative): 안정성 최우선. 패시브 인컴(배당) 중심. 포트폴리오 변경이 거의 없으며 장기 복리 효과를 기다리는 전략입니다.'
+  },
+  growth: {
+    labels: ['중심부 (초대형 가치주)', '업계권 (섹터별)', '외곽 (성장주)'],
+    data: [40, 45, 15],
+    desc: '🚀 성장형(Growth): 높은 수익 추구. 외곽 비중이 높아 변동성도 큽니다. 충분한 씨드머니와 장기 투자 가능 자금일 때만 적합합니다.'
+  }
+};
+
+let portfolioChart = null;
+
+function initPortfolioChart(profile) {
+  const d = profileData[profile];
+  const ctx = document.getElementById('portfolioChart').getContext('2d');
+  if (portfolioChart) portfolioChart.destroy();
+  portfolioChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.data,
+        backgroundColor: ['#e11d48', '#1a1a1a', '#6b7280'],
+        borderWidth: 0,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: 'Noto Sans KR', size: 12 }, padding: 16, color: '#1a1a1a' }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
+          }
+        }
+      }
+    }
+  });
+  document.getElementById('profileDesc').textContent = d.desc;
+}
+
+function switchProfile(btn) {
+  document.querySelectorAll('#profileToggle .toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initPortfolioChart(btn.dataset.profile);
+}
+
+// ===== COMPOUND SIMULATOR =====
+let compoundChart = null;
+
+function updateSim() {
+  const p = parseFloat(document.getElementById('principal').value);
+  const r = parseFloat(document.getElementById('rate').value) / 100;
+  const y = parseInt(document.getElementById('years').value);
+
+  document.getElementById('principalVal').textContent = '$' + p.toLocaleString();
+  document.getElementById('rateVal').textContent = Math.round(r*100) + '%';
+  document.getElementById('yearsVal').textContent = y + '년';
+
+  const simple = p + p * r * y;
+  const compound = p * Math.pow(1 + r, y);
+  const diff = compound - simple;
+  const compRate = ((compound - p) / p * 100);
+
+  document.getElementById('simpleResult').textContent = '$' + Math.round(simple).toLocaleString();
+  document.getElementById('compoundResult').textContent = '$' + Math.round(compound).toLocaleString();
+  document.getElementById('diffResult').textContent = '+$' + Math.round(diff).toLocaleString();
+  document.getElementById('compoundRate').textContent = '+' + compRate.toFixed(1) + '%';
+
+  // Update chart
+  const labels = [], simpleData = [], compoundData = [];
+  for (let i = 0; i <= y; i++) {
+    labels.push(i + '년');
+    simpleData.push(Math.round(p + p * r * i));
+    compoundData.push(Math.round(p * Math.pow(1 + r, i)));
+  }
+
+  if (compoundChart) {
+    compoundChart.data.labels = labels;
+    compoundChart.data.datasets[0].data = simpleData;
+    compoundChart.data.datasets[1].data = compoundData;
+    compoundChart.update();
+  }
+}
+
+function initCompoundChart() {
+  const ctx = document.getElementById('compoundChart').getContext('2d');
+  compoundChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: '단리',
+          data: [],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.08)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 2
+        },
+        {
+          label: '복리',
+          data: [],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          labels: { font: { family: 'Noto Sans KR', size: 12 }, color: '#1a1a1a' }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          ticks: {
+            callback: v => '$' + (v/1000).toFixed(0) + 'K',
+            font: { size: 11 },
+            color: '#777'
+          },
+          grid: { color: '#f0f0f0' }
+        },
+        x: {
+          ticks: { font: { size: 10 }, color: '#777', maxTicksLimit: 10 },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+  updateSim();
+}
+
+function resetSim() {
+  document.getElementById('principal').value = 10000;
+  document.getElementById('rate').value = 8;
+  document.getElementById('years').value = 10;
+  updateSim();
+}
+
+// ===== CHART OBSERVER =====
+const chartConfigs = {};
+chartConfigs['portfolioChart'] = () => { initPortfolioChart('moderate'); };
+chartConfigs['compoundChart'] = () => { initCompoundChart(); };
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ===== QUIZ =====
+const answers = {1: 0, 2: 0, 3: 0};
+function selectQ(q, val, btn) {
+  const parent = btn.closest('.quiz-item').querySelector('.toggle-row');
+  parent.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  answers[q] = val;
+}
+function calcProfile() {
+  const total = answers[1] + answers[2] + answers[3];
+  let type, desc;
+  if (total <= 5) {
+    type = '🛡️ 보수형 (Conservative)';
+    desc = '원금 보전을 최우선으로 생각합니다. 대형 가치주 중심의 안정적인 포트폴리오가 적합합니다. 배당 중심의 패시브 인컴 전략을 추천합니다.';
+  } else if (total <= 8) {
+    type = '⚖️ 중도형 (Moderate)';
+    desc = '성장과 안정의 균형을 추구합니다. 종형 포트폴리오에서 중심부 60%, 업계권 35%, 외곽 5% 구성이 적합합니다. 시황에 따른 30% 액티브 운용이 최적화에 유리합니다.';
+  } else {
+    type = '🚀 성장형 (Growth)';
+    desc = '높은 수익을 추구하며 변동성을 감수할 수 있습니다. 단, 외곽 성장주도 반드시 15% 이내로 제한하고, 충분한 씨드머니와 장기 투자 가능 자금이 전제되어야 합니다.';
+  }
+  document.getElementById('result-type').textContent = type;
+  document.getElementById('result-desc').textContent = desc;
+  document.getElementById('quiz-result').style.display = 'block';
+}
+function resetQuiz() {
+  answers[1] = 0; answers[2] = 0; answers[3] = 0;
+  document.querySelectorAll('#quizSim .toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('quiz-result').style.display = 'none';
+}
+</script>
+</body>
+</html>

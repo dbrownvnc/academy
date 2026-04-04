@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 | 포트폴리오 구성법과 최적화 — 투자는인생TV 아카데미 제1부</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --text2: #777;
+    --accent: #e11d48; --border: #e5e5e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+  }
+  .hero-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; line-height: 1.25; margin-bottom: 12px; }
+  .hero-title span { color: #f43f5e; }
+  .hero-sub { font-size: 13px; color: #aaa; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* MODE TOGGLE */
+  .mode-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff;
+    border-bottom: 2px solid var(--accent);
+    padding: 12px 20px;
+    display: flex; gap: 10px; align-items: center;
+    max-width: 680px; margin: 0 auto;
+  }
+  .mode-btn {
+    padding: 7px 18px; border-radius: 20px; border: 1px solid var(--border);
+    background: #fff; font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+    transition: all 0.2s;
+  }
+  .mode-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mode-label { font-size: 12px; color: var(--text2); margin-left: auto; }
+
+  /* QUESTION */
+  .q-block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .q-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .q-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: var(--accent);
+    color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .q-meta { flex: 1; }
+  .q-type-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+  .badge-mc { background: #dbeafe; color: #1d4ed8; }
+  .badge-short { background: #dcfce7; color: #15803d; }
+  .badge-ox { background: #fef3c7; color: #b45309; }
+  .diff-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; margin-left: 6px;
+  }
+  .diff-easy { background: #f0fdf4; color: #16a34a; }
+  .diff-mid { background: #fff7ed; color: #c2410c; }
+  .diff-hard { background: #fff1f2; color: #be123c; }
+
+  .q-text { font-size: 15px; font-weight: 600; line-height: 1.6; color: var(--text); }
+
+  .options { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    background: var(--bg2);
+    color: var(--text);
+    text-align: left;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .option:hover { border-color: var(--accent); background: #fff5f5; }
+  .option.selected-correct { background: #f0fdf4; border-color: #16a34a; color: #15803d; font-weight: 700; }
+  .option.selected-wrong { background: #fff1f2; border-color: #be123c; color: #be123c; }
+  .option.reveal-correct { background: #f0fdf4; border-color: #16a34a; color: #15803d; font-weight: 700; }
+
+  /* SHORT ANSWER */
+  .short-input-wrap { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .short-input {
+    flex: 1; min-width: 180px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--bg2);
+  }
+  .short-input:focus { outline: none; border-color: var(--accent); }
+  .check-btn {
+    padding: 10px 18px; background: var(--accent); color: #fff;
+    border: none; border-radius: 8px; font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    white-space: nowrap;
+  }
+
+  /* OX */
+  .ox-row { display: flex; gap: 10px; margin-top: 12px; }
+  .ox-btn {
+    flex: 1; padding: 14px;
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 24px; cursor: pointer; background: var(--bg2);
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.correct { background: #f0fdf4; border-color: #16a34a; }
+  .ox-btn.wrong { background: #fff1f2; border-color: #be123c; }
+
+  /* ANSWER */
+  .answer-box {
+    margin-top: 14px;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: none;
+  }
+  .answer-box.show { display: block; }
+  .answer-label { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .answer-text { color: #e5e7eb; }
+  .answer-text strong { color: #f43f5e; }
+
+  /* SCORE */
+  .score-bar {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 28px 0;
+    text-align: center;
+    display: none;
+  }
+  .score-bar.show { display: block; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--accent); }
+  .score-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .score-msg { font-size: 14px; font-weight: 700; margin-top: 12px; color: var(--text); }
+
+  /* DIVIDER */
+  .divider { width: 40px; height: 3px; background: var(--accent); margin: 14px 0 20px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">시험문제 · 투자는인생TV 아카데미 제1부</div>
+    <div class="hero-title">포트폴리오 구성법과<br><span>최적화 방법</span> — 10문제</div>
+    <div class="hero-sub">객관식 5문항 / 단답형 2문항 / OX형 3문항 · 쉬움 30% · 보통 50% · 어려움 20%</div>
+  </div>
+</div>
+
+<div style="max-width:680px; margin:0 auto;">
+<div class="mode-bar">
+  <button class="mode-btn active" id="btnQuiz" onclick="setMode('quiz')">📝 풀기 모드</button>
+  <button class="mode-btn" id="btnAnswer" onclick="setMode('answer')">📖 정답 모드</button>
+  <span class="mode-label" id="scoreDisplay"></span>
+</div>
+</div>
+
+<div class="container">
+<div class="score-bar" id="scoreBar">
+  <div class="score-num" id="scoreNum">0/10</div>
+  <div class="score-label">최종 점수</div>
+  <div class="score-msg" id="scoreMsg"></div>
+</div>
+
+<!-- Q1 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">1</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-ox">OX형</span>
+      <span class="diff-badge diff-easy">쉬움</span>
+      <div class="q-text">미국에서는 투자 방송·서비스를 시작하기 전에 면책고지(Disclaimer)를 반드시 제시해야 하는 법적 의무가 있다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" onclick="checkOX(1, 'O', this)">⭕ O</button>
+    <button class="ox-btn" onclick="checkOX(1, 'X', this)">❌ X</button>
+  </div>
+  <div class="answer-box" id="ans1">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>O (맞다)</strong><br>미국은 투자 방송·서비스 시작 시 반드시 면책고지를 먼저 제시해야 합니다. 이는 법적 의무이며, 투자 위험 고지 없이 정보를 제공하는 것은 비윤리적이라고 강조합니다.</div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">2</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-mc">객관식</span>
+      <span class="diff-badge diff-easy">쉬움</span>
+      <div class="q-text">포트폴리오 구성의 첫 번째 원칙으로 강의에서 강조한 것은?</div>
+    </div>
+  </div>
+  <div class="options" id="opts2">
+    <button class="option" onclick="checkMC(2, 1, this)">① 분산 투자부터 시작한다</button>
+    <button class="option" onclick="checkMC(2, 2, this)">② 저축으로 씨드머니를 먼저 마련한다</button>
+    <button class="option" onclick="checkMC(2, 3, this)">③ 성장주에 집중 투자한다</button>
+    <button class="option" onclick="checkMC(2, 4, this)">④ 전문가 포트폴리오를 그대로 따라한다</button>
+  </div>
+  <div class="answer-box" id="ans2">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>② 저축으로 씨드머니를 먼저 마련한다</strong><br>"쪽배로 태평양을 건널 수 없다"는 비유처럼, 씨드머니 없이 포트폴리오 구성은 불가능합니다. 저축이 투자의 전제 조건입니다.</div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">3</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-mc">객관식</span>
+      <span class="diff-badge diff-easy">쉬움</span>
+      <div class="q-text">종형 포트폴리오에서 외곽(초기 성장주·테마주)의 권장 비중은?</div>
+    </div>
+  </div>
+  <div class="options" id="opts3">
+    <button class="option" onclick="checkMC(3, 1, this)">① 5% 이내</button>
+    <button class="option" onclick="checkMC(3, 2, this)">② 10~15%</button>
+    <button class="option" onclick="checkMC(3, 3, this)">③ 30% 이내</button>
+    <button class="option" onclick="checkMC(3, 4, this)">④ 50% 이내</button>
+  </div>
+  <div class="answer-box" id="ans3">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>① 5% 이내</strong><br>초기 성장주·테마주는 변동성이 매우 크기 때문에 종형 포트폴리오의 외곽에 5% 이내로만 배치해야 합니다. Cathie Wood 사례처럼 70~80% 비중으로 갔을 때 80% 손실 발생 위험이 있습니다.</div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">4</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-mc">객관식</span>
+      <span class="diff-badge diff-mid">보통</span>
+      <div class="q-text">강의에서 포트폴리오 최적화(Optimization)를 설명할 때 사용한 비유는?</div>
+    </div>
+  </div>
+  <div class="options" id="opts4">
+    <button class="option" onclick="checkMC(4, 1, this)">① 좋은 의사가 환자에게 맞는 약을 처방하는 것</button>
+    <button class="option" onclick="checkMC(4, 2, this)">② 먼 바다에서 목표를 잃지 않고 방향타를 조정하는 것</button>
+    <button class="option" onclick="checkMC(4, 3, this)">③ 학교에서 성적표를 받아 취약 과목을 보강하는 것</button>
+    <button class="option" onclick="checkMC(4, 4, this)">④ 날씨 예보를 보고 우산을 챙기는 것</button>
+  </div>
+  <div class="answer-box" id="ans4">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>② 먼 바다에서 목표를 잃지 않고 방향타를 조정하는 것</strong><br>바람이 불더라도 목적지를 바꾸지 않고 계속 방향타(고)를 조정해나가듯, 포트폴리오 최적화는 목표를 유지하면서 구성을 지속적으로 미세 조정하는 과정입니다.</div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">5</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-ox">OX형</span>
+      <span class="diff-badge diff-mid">보통</span>
+      <div class="q-text">과거의 투자 데이터와 AI 분석 결과는 미래 수익을 정확하게 예측하고 보장하는 지표로 활용할 수 있다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" onclick="checkOX(5, 'O', this)">⭕ O</button>
+    <button class="ox-btn" onclick="checkOX(5, 'X', this)">❌ X</button>
+  </div>
+  <div class="answer-box" id="ans5">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>X (틀리다)</strong><br>"Past performance is not necessarily indicative of future results." AI도 결국 과거 데이터를 학습한 것으로, 미래를 보장할 수 없습니다. 이는 투자 면책고지의 핵심 원칙 중 하나입니다.</div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">6</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-mc">객관식</span>
+      <span class="diff-badge diff-mid">보통</span>
+      <div class="q-text">중도형(Moderate) 포트폴리오의 운용 방식으로 가장 적절한 것은?</div>
+    </div>
+  </div>
+  <div class="options" id="opts6">
+    <button class="option" onclick="checkMC(6, 1, this)">① 전체 자산의 100%를 패시브 장기 보유한다</button>
+    <button class="option" onclick="checkMC(6, 2, this)">② 70%는 장기 유지하고 30%를 시황에 따라 적극 조정한다</button>
+    <button class="option" onclick="checkMC(6, 3, this)">③ 성장주에 50% 이상 집중 투자한다</button>
+    <button class="option" onclick="checkMC(6, 4, this)">④ 분기마다 전체 포트폴리오를 교체한다</button>
+  </div>
+  <div class="answer-box" id="ans6">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>② 70%는 장기 유지하고 30%를 시황에 따라 적극 조정한다</strong><br>중도형은 성장과 안정을 동시에 추구하는 액티브 매니지먼트 방식입니다. 30%를 계속 바꿔가며 최적화를 도모하는 것이 가장 효율적입니다.</div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">7</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-short">단답형</span>
+      <span class="diff-badge diff-mid">보통</span>
+      <div class="q-text">강의에서 "간이 안 좋은 사람에게 위장약을 줄 필요가 없다"는 비유로 설명한 핵심 개념을 한 단어로 쓰세요.</div>
+    </div>
+  </div>
+  <div class="short-input-wrap">
+    <input type="text" class="short-input" id="inp7" placeholder="답을 입력하세요">
+    <button class="check-btn" onclick="checkShort(7, ['맞춤', '맞춤설계', '개인맞춤', '포트폴리오맞춤', '맞춤 설계', '개인 맞춤'])">확인</button>
+  </div>
+  <div class="answer-box" id="ans7">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>맞춤 설계 (개인 맞춤)</strong><br>동일한 주식이 A에게는 맞고 B에게는 맞지 않을 수 있습니다. 나이·자산규모·투자목적·리스크 성향에 따라 완전히 다른 포트폴리오가 필요합니다. 남의 포트폴리오를 따라하는 것을 강하게 경계합니다.</div>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">8</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-ox">OX형</span>
+      <span class="diff-badge diff-mid">보통</span>
+      <div class="q-text">원금 보장, 정기적 수익 지급, 언제든 출금 가능이라는 세 가지 조건을 동시에 충족하는 투자 상품은 존재한다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" onclick="checkOX(8, 'O', this)">⭕ O</button>
+    <button class="ox-btn" onclick="checkOX(8, 'X', this)">❌ X</button>
+  </div>
+  <div class="answer-box" id="ans8">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>X (틀리다)</strong><br>강의에서 명확히 설명합니다. 원금이 보장되는 상품(보험)은 유동성(출금)이 제한되고, 유동성이 좋은 상품은 원금 보장이 없습니다. 세 가지를 동시에 충족하는 투자 상품은 현실에 존재하지 않습니다.</div>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">9</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-mc">객관식</span>
+      <span class="diff-badge diff-hard">어려움</span>
+      <div class="q-text">최적화된 포트폴리오의 특징으로 강의에서 언급하지 않은 것은?</div>
+    </div>
+  </div>
+  <div class="options" id="opts9">
+    <button class="option" onclick="checkMC(9, 1, this)">① 상승장에서 S&P 500보다 더 상승할 때가 70:30으로 많다</button>
+    <button class="option" onclick="checkMC(9, 2, this)">② 하락장에서 S&P 500보다 덜 하락하여 폭락장을 잘 버틴다</button>
+    <button class="option" onclick="checkMC(9, 3, this)">③ 펀더멘털이 강한 기업군이 다수라 기업 복구가 일정하다</button>
+    <button class="option" onclick="checkMC(9, 4, this)">④ 항상 100% 확률로 시장을 초과하는 수익을 낸다</button>
+  </div>
+  <div class="answer-box" id="ans9">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>④ 항상 100% 확률로 시장을 초과하는 수익을 낸다</strong><br>강의에서 명확히 "100%는 없어요. 70대 30이에요 항상. 60대 40. 그럴 가능성이 커지는 거지, 항상 그렇지 않다"고 강조합니다. 투자에는 어떤 절대적 보장도 없습니다.</div>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="q-block">
+  <div class="q-header">
+    <div class="q-num">10</div>
+    <div class="q-meta">
+      <span class="q-type-badge badge-short">단답형</span>
+      <span class="diff-badge diff-hard">어려움</span>
+      <div class="q-text">강의에서 5%씩 5일 상승하면 단순 합산 25%가 아닌 25% 초과 수익이 발생한다고 설명했습니다. 이 현상의 원인이 되는 수익 계산 방식을 영어와 한국어로 각각 쓰세요.</div>
+    </div>
+  </div>
+  <div class="short-input-wrap">
+    <input type="text" class="short-input" id="inp10" placeholder="예: ○○○ / ○○">
+    <button class="check-btn" onclick="checkShort(10, ['복리', '컴파운딩', 'compounding', 'compound', '복리/compounding', 'compounding/복리'])">확인</button>
+  </div>
+  <div class="answer-box" id="ans10">
+    <div class="answer-label">정답 & 해설</div>
+    <div class="answer-text">정답: <strong>Compounding (복리)</strong><br>강의에서 "5일 동안 2%씩 올라가면 10%가 아니라 10.4% 이상"이라고 설명합니다. 이는 매일의 수익이 전날 원금+수익에 더해지는 복리(Compounding) 효과 때문입니다. 주식은 이 복리 구조에 속하기 때문에 상승장에서 기하급수적 성장이 가능합니다.</div>
+  </div>
+</div>
+
+<!-- SHOW ALL ANSWERS -->
+<div style="text-align:center; padding: 28px 0 40px;">
+  <button class="check-btn" style="padding:12px 28px; font-size:14px;" onclick="showAllAnswers()">📖 전체 정답 보기</button>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const correct = {
+  1: 'O', 2: 2, 3: 1, 4: 2, 5: 'X',
+  6: 2, 7: 'text', 8: 'X', 9: 4, 10: 'text'
+};
+const userAns = {};
+let mode = 'quiz';
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnQuiz').classList.toggle('active', m === 'quiz');
+  document.getElementById('btnAnswer').classList.toggle('active', m === 'answer');
+  if (m === 'answer') showAllAnswers();
+}
+
+function revealAnswer(n) {
+  document.getElementById('ans' + n).classList.add('show');
+}
+
+function checkMC(q, selected, btn) {
+  const opts = document.querySelectorAll('#opts' + q + ' .option');
+  opts.forEach(o => o.disabled = true);
+  const isCorrect = selected === correct[q];
+  if (isCorrect) {
+    btn.classList.add('selected-correct');
+  } else {
+    btn.classList.add('selected-wrong');
+    opts[correct[q] - 1].classList.add('reveal-correct');
+  }
+  userAns[q] = isCorrect;
+  revealAnswer(q);
+  updateScore();
+}
+
+function checkOX(q, selected, btn) {
+  const row = btn.closest('.ox-row');
+  row.querySelectorAll('.ox-btn').forEach(b => { b.onclick = null; b.style.cursor = 'default'; });
+  const isCorrect = selected === correct[q];
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    row.querySelectorAll('.ox-btn').forEach(b => {
+      if (b !== btn) b.classList.add('correct');
+    });
+  }
+  userAns[q] = isCorrect;
+  revealAnswer(q);
+  updateScore();
+}
+
+function checkShort(q, accepts) {
+  const val = document.getElementById('inp' + q).value.trim().toLowerCase().replace(/\s/g, '');
+  const isCorrect = accepts.some(a => val.includes(a.toLowerCase().replace(/\s/g, '')));
+  const inp = document.getElementById('inp' + q);
+  inp.style.borderColor = isCorrect ? '#16a34a' : '#be123c';
+  inp.style.color = isCorrect ? '#15803d' : '#be123c';
+  userAns[q] = isCorrect;
+  revealAnswer(q);
+  updateScore();
+}
+
+function showAllAnswers() {
+  for (let i = 1; i <= 10; i++) revealAnswer(i);
+  // reveal correct options
+  [2,3,4,6,9].forEach(q => {
+    const opts = document.querySelectorAll('#opts' + q + ' .option');
+    if (opts.length) {
+      opts.forEach(o => o.disabled = true);
+      opts[correct[q] - 1].classList.add('reveal-correct');
+    }
+  });
+}
+
+function updateScore() {
+  const answered = Object.keys(userAns).length;
+  const correct_count = Object.values(userAns).filter(Boolean).length;
+  if (answered >= 5) {
+    const bar = document.getElementById('scoreBar');
+    bar.classList.add('show');
+    document.getElementById('scoreNum').textContent = correct_count + '/10';
+    let msg;
+    if (correct_count >= 9) msg = '🎉 탁월합니다! 핵심 개념을 완벽히 이해했습니다.';
+    else if (correct_count >= 7) msg = '👍 우수합니다! 핵심 내용을 잘 파악했습니다.';
+    else if (correct_count >= 5) msg = '📚 양호합니다. 틀린 부분을 다시 복습해보세요.';
+    else msg = '🔄 강의 내용을 다시 한번 꼼꼼히 복습하세요.';
+    document.getElementById('scoreMsg').textContent = msg;
+    document.getElementById('scoreDisplay').textContent = `현재 점수: ${correct_count}점`;
+    bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+</script>
+</body>
+</html>
