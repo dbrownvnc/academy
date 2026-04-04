@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META 10-K 분석 | 투자아카데미 #20</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 20px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .hero-title span { color: var(--accent); }
+  .hero-sub {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 12px;
+    color: #888;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* SECTION */
+  section { padding: 36px 20px; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .section-body {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.85;
+  }
+  .section-body p { margin-bottom: 12px; }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.75;
+  }
+  .highlight-box strong { color: var(--accent); }
+
+  /* KEY STAT */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    line-height: 1.2;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 18px 0;
+  }
+  .data-table th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 10px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .data-table td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text);
+  }
+  .data-table tr:nth-child(even) td { background: #f3f3f3; }
+
+  /* RISK TAG */
+  .risk-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .risk-tag {
+    background: #fff0f3;
+    color: var(--accent);
+    border: 1px solid #fda4af;
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 18px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .sim-title span { color: var(--accent); }
+  .slider-row {
+    margin-bottom: 16px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+  .slider-label strong { color: var(--text); font-weight: 600; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    height: 4px;
+    cursor: pointer;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin-top: 18px;
+    text-align: center;
+  }
+  .sim-result .big { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--accent); font-weight: 900; }
+  .sim-result .label { font-size: 12px; color: #aaa; margin-top: 4px; }
+  .sim-result .detail { font-size: 13px; color: #ccc; margin-top: 8px; }
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* DCF BOX */
+  .dcf-box {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 24px 18px;
+    margin: 22px 0;
+    text-align: center;
+  }
+  .dcf-box .dcf-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .dcf-box .dcf-val { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: #fff; }
+  .dcf-box .dcf-range { font-size: 13px; color: #aaa; margin-top: 6px; }
+  .dcf-box .dcf-note { font-size: 12px; color: #888; margin-top: 10px; line-height: 1.6; }
+
+  /* ACCORDION */
+  .accordion { margin: 12px 0; }
+  .acc-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+  .acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    background: var(--bg2);
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .acc-header:hover { background: #f0f0f0; }
+  .acc-header .arrow { font-size: 12px; color: var(--accent); transition: transform 0.3s; }
+  .acc-header.open .arrow { transform: rotate(180deg); }
+  .acc-body { display: none; padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.8; border-top: 1px solid var(--border); }
+  .acc-body.open { display: block; }
+
+  /* QUIZ */
+  .quiz-section { background: var(--bg2); }
+  .quiz-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+  }
+  .quiz-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .quiz-q { font-size: 14px; font-weight: 600; line-height: 1.6; margin-bottom: 12px; }
+  .quiz-opts label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 8px;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    line-height: 1.5;
+  }
+  .quiz-opts label:hover { border-color: var(--accent); background: #fff0f3; }
+  .quiz-opts input[type=radio] { accent-color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+  .quiz-opts label.correct { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
+  .quiz-opts label.wrong { background: #fff1f2; border-color: #f43f5e; color: #be123c; }
+  .quiz-check-btn {
+    margin-top: 10px;
+    padding: 9px 20px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .quiz-check-btn:hover { background: var(--accent2); }
+  .quiz-feedback { margin-top: 10px; font-size: 13px; padding: 10px 12px; border-radius: 6px; display: none; line-height: 1.7; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+  .quiz-feedback.ng { background: #fff1f2; color: #9f1239; border: 1px solid #fda4af; }
+  .quiz-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; margin-bottom: 8px; outline: none; }
+  .quiz-input:focus { border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: #888;
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  footer strong { color: var(--accent); }
+
+  /* TERM TOOLTIP */
+  .term {
+    border-bottom: 1px dashed var(--accent);
+    cursor: help;
+    color: inherit;
+    position: relative;
+  }
+
+  @media (max-width: 360px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">투자아카데미 20회 · 펀더멘털 분석</div>
+  <h1 class="hero-title">META 10-K<br><span>쉽게 보고 해석하기</span></h1>
+  <p class="hero-sub">광고 매출, AI 혁신, 비용 절감, 그리고 DCF 밸류에이션까지<br>메타 플랫폼스의 실적 보고서를 핵심만 짚어 해설합니다.</p>
+  <div class="hero-meta">
+    <span>📅 2026. 04. 05</span>
+    <span>📊 2023 4Q 기준</span>
+    <span>💡 투자아카데미</span>
+  </div>
+</div>
+
+<!-- 1. 왜 주가가 22% 급등했나 -->
+<section class="fade-in">
+  <div class="section-label">핵심 요약</div>
+  <h2 class="section-title">왜 메타 주가가 22% 이상 급등했나?</h2>
+  <div class="section-body">
+    <p>메타의 주가가 단기간 급등한 이유는 단순히 감이 아니라 <strong>10-K(연간 사업보고서)</strong>에 숫자로 다 나와 있습니다. 핵심은 <strong>AI 덕분에 광고 수익은 늘고, 운영 비용은 줄었다</strong>는 것입니다.</p>
+  </div>
+  <div class="stat-grid fade-in">
+    <div class="stat-card"><span class="num">+22%</span><span class="label">단기 주가 급등률</span></div>
+    <div class="stat-card"><span class="num">$38B</span><span class="label">2023 4Q 광고 매출</span></div>
+    <div class="stat-card"><span class="num">$617</span><span class="label">DCF 기준 내재가치(달러)</span></div>
+    <div class="stat-card"><span class="num">$229B</span><span class="label">총 자산(Total Assets)</span></div>
+  </div>
+</section>
+
+<!-- 2. 광고 수익 지역별 -->
+<section>
+  <div class="section-label">광고 매출 분석</div>
+  <h2 class="section-title fade-in">지역별 광고 수익: 우상향 일관성</h2>
+  <div class="section-body fade-in">
+    <p>메타의 수익 구조는 단순합니다. <strong>광고(Advertising)가 전체 매출의 대부분</strong>을 차지합니다. 지역별로는 미국이 가장 크고, 유럽·아시아 순입니다. 중요한 건 <em>줄어든 지역이 없다</em>는 점입니다.</p>
+    <div class="highlight-box">
+      <strong>AI의 역할:</strong> 사용자 행동 데이터(클릭, 관심사, 위치, 연령 등)를 AI가 분석해, 광고주가 원하는 타깃에게 정확하게 광고를 노출합니다. 광고 효율이 높아질수록 광고주가 늘고, 광고 단가도 올라갑니다.
+    </div>
+  </div>
+  <div class="chart-container fade-in">
+    <canvas id="adRevenueChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- 3. 비용 구조 -->
+<section>
+  <div class="section-label">비용 절감</div>
+  <h2 class="section-title fade-in">매출은 늘고, 비용은 줄고</h2>
+  <div class="section-body fade-in">
+    <p>메타는 2022~2023년에 대규모 인원 감축(해고)을 단행했습니다. 결과적으로 <strong>인건비(G&A)가 13%에서 6%대로 절반 가량 줄었고</strong>, 마케팅 비용도 감소했습니다. 수익은 늘고 비용은 줄어드는 구조가 만들어진 것입니다.</p>
+    <p>AI가 사람의 역할을 대신하면서, 같은 매출을 더 적은 인원으로 만들어낼 수 있게 됐습니다. 이것이 AI 혁신의 본질입니다.</p>
+  </div>
+  <div class="chart-container fade-in">
+    <canvas id="costChart" height="230"></canvas>
+  </div>
+  <div class="section-body fade-in">
+    <div class="highlight-box">
+      <strong>참고: 실리콘밸리 인건비</strong><br>
+      연봉 $200,000짜리 엔지니어 1명의 실제 회사 비용은 약 $500,000(약 2.5배). 한국 기준으로 연봉 6,000만원 직원의 실 비용은 1억 5천~2억원 수준입니다. 인건비 절감 효과가 매우 큽니다.
+    </div>
+  </div>
+</section>
+
+<!-- 4. 순이익 -->
+<section>
+  <div class="section-label">수익성</div>
+  <h2 class="section-title fade-in">순이익(Net Income) 급등</h2>
+  <div class="section-body fade-in">
+    <p>들어오는 돈(매출)이 늘고, 나가는 돈(비용)이 줄었으니 순이익은 자연스럽게 급증했습니다. 2022년 같은 분기 대비 <strong>2~3배 가까이</strong> 늘어난 영업이익을 기록하고 있습니다.</p>
+  </div>
+  <div class="chart-container fade-in">
+    <canvas id="netIncomeChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- 5. EPS 설명 -->
+<section>
+  <div class="section-label">투자 지표</div>
+  <h2 class="section-title fade-in">EPS(주당순이익)란 무엇인가?</h2>
+  <div class="section-body fade-in">
+    <p><strong class="term" title="Earnings Per Share: 주당 순이익">EPS</strong>는 순이익을 총 주식수로 나눈 값입니다. 주식 1주당 얼마의 이익이 발생했는지를 나타냅니다.</p>
+  </div>
+  <div class="accordion fade-in">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        기본 EPS (Basic EPS) <span class="arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        일반주(Common Stock)만 기준으로 계산한 EPS입니다. 가장 기본적인 수치입니다.
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        희석 EPS (Diluted EPS) <span class="arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        우선주(Preferred Stock), 스톡옵션 등 주식으로 전환될 수 있는 모든 증권을 포함해 계산한 EPS입니다. 소주에 물을 타서 희석시키듯, 주식수가 늘어날 경우를 반영합니다. 더 보수적인 수치이므로 투자 판단에 더 많이 사용됩니다. 메타의 Diluted EPS는 전 분기 대비 현저히 개선되었습니다.
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        우선주(Preferred Stock)란? <span class="arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        일반주보다 배당 등에서 우선권을 가진 주식입니다. 채권처럼 연 4~5%의 수익을 보장해 주는 대신, 의결권이 없는 경우가 많습니다. 이 우선주가 늘어나면 EPS가 희석(낮아짐)됩니다.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 재무상태표 -->
+<section>
+  <div class="section-label">재무상태표</div>
+  <h2 class="section-title fade-in">대차대조표(Balance Sheet) 핵심 읽기</h2>
+  <div class="section-body fade-in">
+    <p>재무상태표는 회사의 재산과 빚을 한눈에 보여줍니다. <strong>자산(Asset) = 부채(Liability) + 자본(Equity)</strong> 공식이 기본입니다.</p>
+  </div>
+  <table class="data-table fade-in">
+    <thead>
+      <tr><th>항목</th><th>설명</th><th>규모</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>현금·단기투자</td><td>당장 현금화 가능한 자산</td><td>유동자산 $85B</td></tr>
+      <tr><td>총 자산(Total Assets)</td><td>회사 전체 재산</td><td>$229B</td></tr>
+      <tr><td>매출채권(Receivable)</td><td>받아야 할 돈(어음)</td><td>—</td></tr>
+      <tr><td>매입채무(Payable)</td><td>갚아야 할 돈</td><td>자산보다 증가 속도 낮음</td></tr>
+      <tr><td>부채 이자율</td><td>채권 평균 이자율</td><td>3.5~3.77%</td></tr>
+    </tbody>
+  </table>
+  <div class="section-body fade-in">
+    <div class="highlight-box">
+      <strong>핵심 판단:</strong> 자산 증가 속도 &gt; 부채 증가 속도 → <strong>건실한 재무구조</strong>. 부채 이자율 3.5~3.77%는 매우 우량한 신용도를 의미합니다.
+    </div>
+  </div>
+</section>
+
+<!-- 7. 프리캐시플로우 -->
+<section>
+  <div class="section-label">현금 흐름</div>
+  <h2 class="section-title fade-in">프리캐시플로우(Free Cash Flow)</h2>
+  <div class="section-body fade-in">
+    <p><strong class="term" title="Free Cash Flow: 영업활동으로 벌어들인 현금에서 설비투자 등을 제외한 진짜 자유로운 현금">프리캐시플로우(FCF)</strong>는 회사가 실제로 쓸 수 있는 현금입니다. 영업 이익과 달리 회계적 숫자가 아닌 실제 현금 기준이라 더 중요합니다.</p>
+    <p>2022년 바닥(약 $4억)에서 2023년 $13억 수준으로 회복했으며, 연간 기준으로는 더 크게 개선됐습니다. Capital Expenditure(자본 지출)도 $32B → $28B으로 줄었습니다.</p>
+  </div>
+  <div class="chart-container fade-in">
+    <canvas id="fcfChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- 8. DCF 밸류에이션 -->
+<section>
+  <div class="section-label">밸류에이션</div>
+  <h2 class="section-title fade-in">DCF란 무엇이고, 목표주가는 얼마인가?</h2>
+  <div class="section-body fade-in">
+    <p><strong class="term" title="Discounted Cash Flow: 미래에 발생할 현금흐름을 현재 가치로 할인해 기업 가치를 산정하는 방법">DCF(할인된 현금흐름)</strong>는 미래에 기업이 벌어들일 현금을 현재 가치로 환산해 주당 가치를 계산하는 방법입니다.</p>
+    <p>계산에 필요한 두 가지 할인율: ① <strong>부채 이자율 3.5%</strong> ② <strong>업종 고유 위험 4%</strong> → 합계 약 <strong>7.5%</strong>로 미래 현금흐름을 현재 가치로 환산합니다.</p>
+  </div>
+  <div class="dcf-box fade-in">
+    <div class="dcf-label">DCF 기준 내재가치 (Intrinsic Value)</div>
+    <div class="dcf-val">$617</div>
+    <div class="dcf-range">범위: $480 ~ $617 / 주</div>
+    <div class="dcf-note">강사 기준 목표주가: $600 이상<br>현재 주가 대비 상당한 업사이드 존재</div>
+  </div>
+
+  <!-- DCF 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">📊 <span>DCF 시뮬레이터</span> — 변수를 바꿔보세요</div>
+    <div class="slider-row">
+      <div class="slider-label">연 매출 성장률 <strong id="growthVal">15%</strong></div>
+      <input type="range" min="5" max="30" value="15" step="1" id="growthSlider" oninput="calcDCF()">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">할인율(WACC) <strong id="waccVal">7.5%</strong></div>
+      <input type="range" min="5" max="15" value="7.5" step="0.5" id="waccSlider" oninput="calcDCF()">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">순이익률 <strong id="marginVal">28%</strong></div>
+      <input type="range" min="10" max="45" value="28" step="1" id="marginSlider" oninput="calcDCF()">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">예측 연수 <strong id="yearsVal">5년</strong></div>
+      <input type="range" min="3" max="10" value="5" step="1" id="yearsSlider" oninput="calcDCF()">
+    </div>
+    <div class="sim-result">
+      <div class="big" id="dcfResult">$617</div>
+      <div class="label">추정 주당 내재가치 (DCF)</div>
+      <div class="detail" id="dcfDetail">성장률 15% · WACC 7.5% · 순이익률 28% · 5년 기준</div>
+    </div>
+    <button class="reset-btn" onclick="resetDCF()">↺ 기본값으로 초기화</button>
+  </div>
+</section>
+
+<!-- 9. 리스크 팩터 -->
+<section>
+  <div class="section-label">리스크 분석</div>
+  <h2 class="section-title fade-in">10-K의 핵심: 리스크 팩터 34페이지</h2>
+  <div class="section-body fade-in">
+    <p>미국 10-K의 가장 큰 특징은 <strong>리스크 팩터를 수십 페이지에 걸쳐 솔직하게 공개</strong>한다는 점입니다. 메타는 14페이지~48페이지까지 무려 <strong>34페이지</strong>를 리스크 설명에 할애했습니다.</p>
+    <p>이는 도덕적 이유보다 실용적 이유 때문입니다. 위험을 모르면 뒤통수를 맞습니다. 알고 있어야 대책을 세울 수 있습니다.</p>
+  </div>
+  <div class="risk-tags fade-in">
+    <span class="risk-tag">사용자 확보 리스크</span>
+    <span class="risk-tag">광고주 지출 감소</span>
+    <span class="risk-tag">데이터 신호 정확도</span>
+    <span class="risk-tag">모바일 OS 의존</span>
+    <span class="risk-tag">신상품 실패 위험</span>
+    <span class="risk-tag">글로벌 규제 리스크</span>
+    <span class="risk-tag">경쟁사 위협</span>
+    <span class="risk-tag">매크로 경제</span>
+    <span class="risk-tag">데이터 보안·프라이버시</span>
+    <span class="risk-tag">미디어 부정 이미지</span>
+    <span class="risk-tag">어린이 콘텐츠 보호</span>
+    <span class="risk-tag">결제 규제 리스크</span>
+    <span class="risk-tag">CEO 권한 집중 리스크</span>
+    <span class="risk-tag">메타버스 투자 실패</span>
+  </div>
+  <div class="section-body fade-in">
+    <div class="highlight-box">
+      <strong>메타버스 실수 사례:</strong> 메타버스에 수십억 달러를 투자하다 주가가 80달러대까지 폭락. 마크 저커버그가 "당분간 하지 않겠다"고 선언한 후 주가 회복. 리스크 인식 후 방향 전환의 교과서적 사례입니다.
+    </div>
+  </div>
+</section>
+
+<!-- 10. 주가 흐름 -->
+<section>
+  <div class="section-label">주가 히스토리</div>
+  <h2 class="section-title fade-in">$80 → $400+: 쌀 때 사는 법</h2>
+  <div class="section-body fade-in">
+    <p>2022년 12월 31일 기준 메타 주가는 $80대. 강사는 이 시기 "너무 싸다"며 포트폴리오의 10~13%까지 편입을 권고했습니다. 이후 $250, $300, $400을 돌파하며 나스닥 대비 아웃퍼폼 달성.</p>
+    <p><strong>기준점(Anchor)의 중요성:</strong> '비싸다/싸다'의 판단 기준은 3개월 전 가격이 아니라 <strong>DCF와 Intrinsic Value</strong>입니다. 10-K를 읽어야 이 기준을 가질 수 있습니다.</p>
+  </div>
+  <div class="chart-container fade-in">
+    <canvas id="priceChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- 11. QUIZ -->
+<section class="quiz-section">
+  <div class="section-label">시험문제</div>
+  <h2 class="section-title fade-in">📝 10문제로 복습하기</h2>
+  <p class="section-body fade-in" style="margin-bottom:20px;">문제를 풀고 정답 확인 버튼을 눌러보세요.</p>
+
+  <!-- Q1 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q1 · 객관식 · 쉬움</div>
+    <div class="quiz-q">메타(Meta)의 주요 수익원은 무엇인가?</div>
+    <div class="quiz-opts" id="q1opts">
+      <label><input type="radio" name="q1" value="a"> a) 구독 서비스 수수료</label>
+      <label><input type="radio" name="q1" value="b"> b) 광고(Advertising) 수익</label>
+      <label><input type="radio" name="q1" value="c"> c) 클라우드 컴퓨팅 판매</label>
+      <label><input type="radio" name="q1" value="d"> d) 하드웨어 기기 판매</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q1','b','광고(Advertising) 수익이 전체 매출의 대부분을 차지합니다. 2023년 4분기 기준 약 $38B에 달합니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q1fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q2 · OX · 쉬움</div>
+    <div class="quiz-q">희석 EPS(Diluted EPS)는 우선주 등을 포함해 계산하므로 기본 EPS보다 낮다. (O/X)</div>
+    <div class="quiz-opts" id="q2opts">
+      <label><input type="radio" name="q2" value="O"> O (맞다)</label>
+      <label><input type="radio" name="q2" value="X"> X (틀리다)</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q2','O','맞습니다. 희석 EPS는 우선주, 스톡옵션 등 주식으로 전환될 가능성이 있는 증권을 모두 포함해 주식수를 늘려 계산하므로, 기본 EPS보다 낮거나 같습니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q2fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q3 · 객관식 · 쉬움</div>
+    <div class="quiz-q">메타의 10-K에서 리스크 팩터(Risk Factor)는 몇 페이지에 걸쳐 기술되어 있는가?</div>
+    <div class="quiz-opts" id="q3opts">
+      <label><input type="radio" name="q3" value="a"> a) 약 5페이지</label>
+      <label><input type="radio" name="q3" value="b"> b) 약 15페이지</label>
+      <label><input type="radio" name="q3" value="c"> c) 약 34페이지</label>
+      <label><input type="radio" name="q3" value="d"> d) 약 100페이지</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q3','c','14페이지부터 48페이지까지, 총 34페이지에 걸쳐 리스크 팩터를 상세히 기술했습니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q3fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q4 · 단답형 · 보통</div>
+    <div class="quiz-q">DCF(할인된 현금흐름) 계산 시, 메타의 부채 이자율과 업종 고유 위험을 합산한 할인율(WACC)은 약 몇 %인가?</div>
+    <input type="text" class="quiz-input" id="q4input" placeholder="숫자만 입력 (예: 7.5)">
+    <button class="quiz-check-btn" onclick="checkShort('q4','7.5','부채 이자율 약 3.5% + 업종 고유 위험 4% = 약 7.5%입니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q4fb"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q5 · 객관식 · 보통</div>
+    <div class="quiz-q">메타의 AI가 광고 효율을 높이는 핵심 원리로 가장 적절한 것은?</div>
+    <div class="quiz-opts" id="q5opts">
+      <label><input type="radio" name="q5" value="a"> a) 모든 사용자에게 동일한 광고를 노출한다</label>
+      <label><input type="radio" name="q5" value="b"> b) 사용자 행동 데이터를 분석해 맞춤형 광고를 제공한다</label>
+      <label><input type="radio" name="q5" value="c"> c) 광고주에게 고정 단가를 부과한다</label>
+      <label><input type="radio" name="q5" value="d"> d) 유명인 광고만 집행한다</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q5','b','AI가 클릭 이력, 관심사, 위치, 나이 등 사용자 행동 데이터를 분석해 최적의 광고를 매칭합니다. 이 정확도가 높아질수록 광고주 ROI가 올라가고 광고 단가도 상승합니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q5fb"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q6 · OX · 보통</div>
+    <div class="quiz-q">프리캐시플로우(FCF)는 영업이익과 동일한 개념이다. (O/X)</div>
+    <div class="quiz-opts" id="q6opts">
+      <label><input type="radio" name="q6" value="O"> O (맞다)</label>
+      <label><input type="radio" name="q6" value="X"> X (틀리다)</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q6','X','틀렸습니다. FCF는 영업활동에서 발생한 현금에서 자본적 지출(CapEx)을 뺀 값입니다. 영업이익은 회계 기준이고, FCF는 실제 현금 기준이라는 점에서 다릅니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q6fb"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q7 · 객관식 · 보통</div>
+    <div class="quiz-q">메타가 대규모 인원 감축(해고) 이후 나타난 재무적 결과로 가장 적합한 것은?</div>
+    <div class="quiz-opts" id="q7opts">
+      <label><input type="radio" name="q7" value="a"> a) 매출이 감소하고 비용도 감소했다</label>
+      <label><input type="radio" name="q7" value="b"> b) 매출은 늘고 비용도 늘었다</label>
+      <label><input type="radio" name="q7" value="c"> c) 매출은 늘고 인건비 등 비용은 줄었다</label>
+      <label><input type="radio" name="q7" value="d"> d) 매출과 비용 모두 변화 없다</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q7','c','AI가 사람의 역할을 대체하면서 인건비(G&A)가 13%→6%대로 줄었고, 동시에 광고 매출은 증가했습니다. 이것이 주가 급등의 핵심 원인입니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q7fb"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q8 · 단답형 · 보통</div>
+    <div class="quiz-q">강사가 제시한 메타의 DCF 기준 주당 내재가치(Intrinsic Value)는 약 몇 달러인가?</div>
+    <input type="text" class="quiz-input" id="q8input" placeholder="숫자만 입력 (예: 617)">
+    <button class="quiz-check-btn" onclick="checkShort('q8','617','강사 기준 $617(범위: $480~$617)이며, 목표주가로 $600 이상을 제시했습니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q8fb"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q9 · 객관식 · 어려움</div>
+    <div class="quiz-q">대차대조표(Balance Sheet)에서 Account Payable이 의미하는 것은?</div>
+    <div class="quiz-opts" id="q9opts">
+      <label><input type="radio" name="q9" value="a"> a) 내가 받아야 할 돈(미수금)</label>
+      <label><input type="radio" name="q9" value="b"> b) 내가 갚아야 할 돈(미지급금)</label>
+      <label><input type="radio" name="q9" value="c"> c) 현금 및 현금성 자산</label>
+      <label><input type="radio" name="q9" value="d"> d) 장기 부채(Long-term Debt)</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q9','b','Account Payable은 파트너사 등에게 갚아야 할 미지급금입니다. 반대로 받아야 할 돈은 Account Receivable입니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q9fb"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card fade-in">
+    <div class="quiz-num">Q10 · 객관식 · 어려움</div>
+    <div class="quiz-q">다음 중 메타의 리스크 팩터에 해당하지 않는 것은?</div>
+    <div class="quiz-opts" id="q10opts">
+      <label><input type="radio" name="q10" value="a"> a) 광고주의 광고비 지출 감소</label>
+      <label><input type="radio" name="q10" value="b"> b) 경쟁사의 등장</label>
+      <label><input type="radio" name="q10" value="c"> c) 데이터 보안 침해</label>
+      <label><input type="radio" name="q10" value="d"> d) 한국 코스피 지수 하락</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkQ('q10','d','한국 코스피 지수 하락은 메타의 사업과 직접적인 관련이 없습니다. 메타의 10-K 리스크 팩터는 광고주 감소, 경쟁, 데이터 보안, 규제, 신상품 실패 등 메타 사업에 직접 영향을 주는 요소들입니다.')">정답 확인</button>
+    <div class="quiz-feedback" id="q10fb"></div>
+  </div>
+</section>
+
+<footer>
+  <strong>투자아카데미 #20</strong> · META 10-K 분석<br>
+  본 자료는 교육 목적으로 제작되었으며 투자 권유가 아닙니다.<br>
+  수치는 2023년 4분기 기준 강의 원본 내용을 기반으로 합니다.
+</footer>
+
+<script>
+// ── ACCORDION ──
+function toggleAcc(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  document.querySelectorAll('.acc-header.open').forEach(h => {
+    h.classList.remove('open');
+    h.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    header.classList.add('open');
+    body.classList.add('open');
+  }
+}
+
+// ── FADE OBSERVER ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['adRevenueChart'] = () => {
+  new Chart(document.getElementById('adRevenueChart'), {
+    type: 'bar',
+    data: {
+      labels: ['22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4'],
+      datasets: [
+        { label: '미국·캐나다', data: [8.5,9.0,8.8,12.5,10.5,12.0,13.5,17.0], backgroundColor: '#e11d48', borderRadius: 4 },
+        { label: '유럽', data: [4.2,4.5,4.3,5.8,5.0,5.5,6.0,7.0], backgroundColor: '#2563eb', borderRadius: 4 },
+        { label: '아시아 등', data: [5.0,5.2,5.0,7.0,6.0,7.0,7.5,9.0], backgroundColor: '#6b7280', borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 10 } },
+        tooltip: { callbacks: { label: ctx => ` $${ctx.raw}B` } } },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { stacked: true, grid: { color: '#eee' }, ticks: { callback: v => `$${v}B`, font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['costChart'] = () => {
+  new Chart(document.getElementById('costChart'), {
+    type: 'line',
+    data: {
+      labels: ['21Q4','22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4'],
+      datasets: [
+        { label: '인건비(G&A, %)', data: [13,14,13,13,13,9,8,7,6], borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.08)', tension: 0.4, pointRadius: 4, fill: true },
+        { label: 'R&D(%)', data: [24,25,24,23,22,21,20,20,19], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.08)', tension: 0.4, pointRadius: 4, fill: false },
+        { label: '마케팅(%)', data: [8,9,8,7,7,6,5,5,4], borderColor: '#6b7280', backgroundColor: 'rgba(107,114,128,0.08)', tension: 0.4, pointRadius: 4, fill: false },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 10 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: '#eee' }, ticks: { callback: v => `${v}%`, font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['netIncomeChart'] = () => {
+  new Chart(document.getElementById('netIncomeChart'), {
+    type: 'bar',
+    data: {
+      labels: ['22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4'],
+      datasets: [{
+        label: '순이익 ($B)',
+        data: [7.5, 6.7, 4.4, 4.7, 5.7, 7.8, 11.6, 14.0],
+        backgroundColor: (ctx) => ctx.raw > 0 ? '#e11d48' : '#6b7280',
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}B` } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: '#eee' }, ticks: { callback: v => `$${v}B`, font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['fcfChart'] = () => {
+  new Chart(document.getElementById('fcfChart'), {
+    type: 'line',
+    data: {
+      labels: ['21Q1','21Q2','21Q3','21Q4','22Q1','22Q2','22Q3','22Q4','23Q1','23Q2','23Q3','23Q4'],
+      datasets: [{
+        label: '프리캐시플로우 ($B)',
+        data: [8,9,10,12,6,4,0.4,4,6,8,10,13],
+        borderColor: '#e11d48',
+        backgroundColor: 'rgba(225,29,72,0.1)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#e11d48'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw}B` } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#eee' }, ticks: { callback: v => `$${v}B`, font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['priceChart'] = () => {
+  new Chart(document.getElementById('priceChart'), {
+    type: 'line',
+    data: {
+      labels: ['22.01','22.04','22.07','22.10','22.12','23.03','23.06','23.09','23.11','24.01','24.04'],
+      datasets: [{
+        label: 'META 주가 (USD)',
+        data: [320,220,170,130,88,180,285,310,350,395,420],
+        borderColor: '#e11d48',
+        backgroundColor: 'rgba(225,29,72,0.08)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#e11d48'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` $${ctx.raw}` } },
+        annotation: {}
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#eee' }, ticks: { callback: v => `$${v}`, font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+// ── CHART OBSERVER ──
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── DCF SIMULATOR ──
+const BASE = { growth: 15, wacc: 7.5, margin: 28, years: 5, baseRevenue: 130, shares: 2.55 };
+function calcDCF() {
+  const g = parseFloat(document.getElementById('growthSlider').value);
+  const w = parseFloat(document.getElementById('waccSlider').value);
+  const m = parseFloat(document.getElementById('marginSlider').value);
+  const y = parseInt(document.getElementById('yearsSlider').value);
+  document.getElementById('growthVal').textContent = g + '%';
+  document.getElementById('waccVal').textContent = w + '%';
+  document.getElementById('marginVal').textContent = m + '%';
+  document.getElementById('yearsVal').textContent = y + '년';
+  let totalPV = 0;
+  let rev = BASE.baseRevenue;
+  for (let i = 1; i <= y; i++) {
+    rev *= (1 + g / 100);
+    const netIncome = rev * (m / 100);
+    const pv = netIncome / Math.pow(1 + w / 100, i);
+    totalPV += pv;
+  }
+  const terminalValue = (rev * (m / 100)) / (w / 100 - 0.03);
+  const pvTerminal = terminalValue / Math.pow(1 + w / 100, y);
+  const totalValue = (totalPV + pvTerminal) * 1e9;
+  const perShare = totalValue / (BASE.shares * 1e9);
+  const capped = Math.min(Math.max(perShare, 50), 1500);
+  document.getElementById('dcfResult').textContent = '$' + Math.round(capped);
+  document.getElementById('dcfDetail').textContent = `성장률 ${g}% · WACC ${w}% · 순이익률 ${m}% · ${y}년 기준`;
+}
+function resetDCF() {
+  document.getElementById('growthSlider').value = BASE.growth;
+  document.getElementById('waccSlider').value = BASE.wacc;
+  document.getElementById('marginSlider').value = BASE.margin;
+  document.getElementById('yearsSlider').value = BASE.years;
+  calcDCF();
+}
+
+// ── QUIZ ──
+function checkQ(qid, correct, explanation) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}fb`);
+  if (!selected) { fb.className = 'quiz-feedback show ng'; fb.textContent = '선택지를 골라주세요.'; return; }
+  const labels = document.querySelectorAll(`#${qid}opts label`);
+  labels.forEach(l => {
+    const radio = l.querySelector('input');
+    if (radio.value === correct) l.classList.add('correct');
+    else if (radio.checked && radio.value !== correct) l.classList.add('wrong');
+  });
+  if (selected.value === correct) {
+    fb.className = 'quiz-feedback show ok';
+    fb.innerHTML = `✅ 정답! ${explanation}`;
+  } else {
+    fb.className = 'quiz-feedback show ng';
+    fb.innerHTML = `❌ 오답. ${explanation}`;
+  }
+}
+function checkShort(qid, correct, explanation) {
+  const input = document.getElementById(`${qid}input`);
+  const fb = document.getElementById(`${qid}fb`);
+  const val = input.value.trim().replace(/[^0-9.]/g,'');
+  if (!val) { fb.className = 'quiz-feedback show ng'; fb.textContent = '답을 입력해주세요.'; return; }
+  if (Math.abs(parseFloat(val) - parseFloat(correct)) < 0.1) {
+    fb.className = 'quiz-feedback show ok';
+    fb.innerHTML = `✅ 정답! ${explanation}`;
+  } else {
+    fb.className = 'quiz-feedback show ng';
+    fb.innerHTML = `❌ 오답. 정답: ${correct} — ${explanation}`;
+  }
+}
+</script>
+</body>
+</html>
