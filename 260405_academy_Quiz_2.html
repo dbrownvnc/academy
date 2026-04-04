@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 21회 — 시험문제 10선</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5; --blue: #2563eb;
+    --green: #16a34a; --red: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px; line-height: 1.75;
+    max-width: 680px; margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+  .hero {
+    border-bottom: 3px solid var(--accent);
+    padding: 48px 0 28px; margin-bottom: 36px;
+  }
+  .hero-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(24px,6vw,38px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; }
+  h1 span { color: var(--accent); }
+  .hero p { font-size: 13px; color: var(--text2); }
+
+  .quiz-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; margin-bottom: 20px; overflow: hidden;
+  }
+  .quiz-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+  }
+  .quiz-num {
+    background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .quiz-q { font-weight: 600; font-size: 14px; flex: 1; }
+  .diff {
+    font-size: 10px; font-weight: 600; letter-spacing: 1px;
+    padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+  }
+  .easy { background: #dcfce7; color: #166534; }
+  .medium { background: #fef9c3; color: #854d0e; }
+  .hard { background: #fee2e2; color: #991b1b; }
+
+  .quiz-type {
+    font-size: 10px; color: var(--text2); flex-shrink: 0;
+    border: 1px solid var(--border); border-radius: 3px;
+    padding: 2px 7px;
+  }
+  .chevron { font-size: 14px; color: var(--text2); transition: transform 0.3s; }
+  .quiz-card.open .chevron { transform: rotate(180deg); }
+
+  .quiz-body { display: none; padding: 0 18px 18px; }
+  .quiz-card.open .quiz-body { display: block; }
+
+  .options { margin: 12px 0; }
+  .opt {
+    padding: 10px 14px; border: 1px solid var(--border);
+    border-radius: 4px; margin-bottom: 8px;
+    cursor: pointer; font-size: 14px;
+    transition: all 0.15s; background: #fff;
+  }
+  .opt:hover { border-color: var(--accent); color: var(--accent); }
+  .opt.selected { background: #fff1f4; border-color: var(--accent); color: var(--accent); }
+  .opt.correct { background: #dcfce7; border-color: var(--green); color: var(--green); font-weight: 600; }
+  .opt.wrong { background: #fee2e2; border-color: var(--red); color: var(--red); }
+
+  .short-input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 4px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 14px;
+    margin: 10px 0; outline: none;
+  }
+  .short-input:focus { border-color: var(--accent); }
+
+  .ox-btns { display: flex; gap: 10px; margin: 10px 0; }
+  .ox-btn {
+    flex: 1; padding: 14px; font-size: 22px;
+    border: 2px solid var(--border); border-radius: 6px;
+    background: #fff; cursor: pointer;
+    text-align: center; transition: all 0.15s;
+    font-family: inherit;
+  }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.selected { border-color: var(--accent); background: #fff1f4; }
+  .ox-btn.correct { border-color: var(--green); background: #dcfce7; }
+  .ox-btn.wrong { border-color: var(--red); background: #fee2e2; }
+
+  .check-btn {
+    padding: 9px 20px; background: var(--accent); color: #fff;
+    border: none; border-radius: 4px; cursor: pointer;
+    font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500; margin-top: 4px;
+  }
+  .check-btn:hover { background: var(--accent2); }
+  .check-btn:disabled { background: var(--border); color: var(--text2); cursor: default; }
+
+  .answer-box {
+    margin-top: 12px; padding: 14px 16px;
+    background: #fff; border: 1px solid var(--border); border-radius: 4px;
+    font-size: 13px; display: none;
+  }
+  .answer-box.show { display: block; }
+  .answer-box .ans-label { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .answer-box .ans-text { color: var(--text); line-height: 1.7; }
+
+  .score-bar {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 20px; margin-bottom: 32px;
+    text-align: center;
+  }
+  .score-big { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900; color: var(--accent); }
+  .score-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .score-track { height: 8px; background: var(--border); border-radius: 4px; margin: 12px 0 0; overflow: hidden; }
+  .score-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.6s ease; }
+
+  footer { text-align: center; font-size: 11px; color: var(--text2); padding-top: 32px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">투자 아카데미 21회 · 시험문제</div>
+  <h1>10문제로 확인하는<br><span>525·333·114·1030</span></h1>
+  <p>문제를 풀고 정답 버튼을 누르면 해설이 표시됩니다.</p>
+</div>
+
+<div class="score-bar">
+  <div class="score-big" id="scoreNum">0 / 10</div>
+  <div class="score-sub">맞힌 문제 / 전체 문제</div>
+  <div class="score-track"><div class="score-fill" id="scoreFill" style="width:0%"></div></div>
+</div>
+
+<!-- 문제 1 -->
+<div class="quiz-card open" id="q1">
+  <div class="quiz-header" onclick="toggleCard('q1')">
+    <div class="quiz-num">1</div>
+    <div class="quiz-q">5·25 법칙에서 '25'가 의미하는 것은?</div>
+    <span class="diff easy">쉬움</span>
+    <span class="quiz-type">객관식</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q1opts">
+      <div class="opt" onclick="selectOpt('q1',0)">① 소형주의 최대 비중 25%</div>
+      <div class="opt" onclick="selectOpt('q1',1)">② 한 종목의 전체 포트폴리오 최대 비중 25%</div>
+      <div class="opt" onclick="selectOpt('q1',2)">③ 현금 보유의 최소 비율 25%</div>
+      <div class="opt" onclick="selectOpt('q1',3)">④ 수익률 목표 25%</div>
+    </div>
+    <button class="check-btn" onclick="checkMC('q1',1)">정답 확인</button>
+    <div class="answer-box" id="q1ans">
+      <div class="ans-label">✅ 정답: ②</div>
+      <div class="ans-text">5·25 법칙에서 '25'는 <strong>한 종목이 전체 포트폴리오에서 차지할 수 있는 최대 비중</strong>을 뜻합니다. 아무리 좋은 주식도, 아무리 큰 회사도 25%를 초과해서는 안 됩니다. 초과 시 변동성이 커지고 불안심리가 생깁니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 2 -->
+<div class="quiz-card" id="q2">
+  <div class="quiz-header" onclick="toggleCard('q2')">
+    <div class="quiz-num">2</div>
+    <div class="quiz-q">소형주(스몰캡)의 최대 투자 비중은?</div>
+    <span class="diff easy">쉬움</span>
+    <span class="quiz-type">객관식</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q2opts">
+      <div class="opt" onclick="selectOpt('q2',0)">① 10%</div>
+      <div class="opt" onclick="selectOpt('q2',1)">② 5%</div>
+      <div class="opt" onclick="selectOpt('q2',2)">③ 15%</div>
+      <div class="opt" onclick="selectOpt('q2',3)">④ 25%</div>
+    </div>
+    <button class="check-btn" onclick="checkMC('q2',1)">정답 확인</button>
+    <div class="answer-box" id="q2ans">
+      <div class="ans-label">✅ 정답: ②</div>
+      <div class="ans-text">소형주는 미래 가능성이 크더라도 현재 실적이 없는 경우가 많아 리스크가 높습니다. 5·25 법칙에서 소형주는 전체 비중의 <strong>5% 이내</strong>로 제한합니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 3 -->
+<div class="quiz-card" id="q3">
+  <div class="quiz-header" onclick="toggleCard('q3')">
+    <div class="quiz-num">3</div>
+    <div class="quiz-q">3·3·3 법칙의 '두 번째 3'은 무엇을 의미하는가?</div>
+    <span class="diff medium">보통</span>
+    <span class="quiz-type">객관식</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q3opts">
+      <div class="opt" onclick="selectOpt('q3',0)">① 투자 자산을 3가지로 분산할 것</div>
+      <div class="opt" onclick="selectOpt('q3',1)">② 주식이 3일 연속 하락하면 분할 매수 시작</div>
+      <div class="opt" onclick="selectOpt('q3',2)">③ 여유 현금의 1/3씩 매수할 것</div>
+      <div class="opt" onclick="selectOpt('q3',3)">④ 섹터를 3개월마다 점검할 것</div>
+    </div>
+    <button class="check-btn" onclick="checkMC('q3',1)">정답 확인</button>
+    <div class="answer-box" id="q3ans">
+      <div class="ans-label">✅ 정답: ②</div>
+      <div class="ans-text">3·3·3 법칙의 세 가지 의미: 첫 번째 3 = 자산 3분산(주식·부동산·금), <strong>두 번째 3 = 3일 연속 하락 시 매수 시작</strong>, 세 번째 3 = 여유 현금의 1/3씩 나누어 매수.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 4 -->
+<div class="quiz-card" id="q4">
+  <div class="quiz-header" onclick="toggleCard('q4')">
+    <div class="quiz-num">4</div>
+    <div class="quiz-q">미국 주식시장의 섹터는 총 몇 개인가? (단답형)</div>
+    <span class="diff easy">쉬움</span>
+    <span class="quiz-type">단답형</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <input type="text" class="short-input" id="q4input" placeholder="숫자로 입력하세요">
+    <button class="check-btn" onclick="checkShort('q4','11')">정답 확인</button>
+    <div class="answer-box" id="q4ans">
+      <div class="ans-label">✅ 정답: 11개</div>
+      <div class="ans-text">미국 주식시장은 <strong>11개 섹터</strong>로 분류됩니다. IT, 헬스케어, 금융, 에너지, 필수소비재, 재량소비재, 산업재, 소재, 유틸리티, 부동산(REIT), 통신 등입니다. 1·14 법칙은 이 중 선도 4개 섹터에 집중하는 전략입니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 5 -->
+<div class="quiz-card" id="q5">
+  <div class="quiz-header" onclick="toggleCard('q5')">
+    <div class="quiz-num">5</div>
+    <div class="quiz-q">1·14 법칙에서 '섹터 로테이션'의 의미로 가장 적절한 것은?</div>
+    <span class="diff medium">보통</span>
+    <span class="quiz-type">객관식</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q5opts">
+      <div class="opt" onclick="selectOpt('q5',0)">① 매일 섹터를 바꿔가며 단기 매매하는 전략</div>
+      <div class="opt" onclick="selectOpt('q5',1)">② 언더퍼포밍 섹터 비중을 서서히 줄이고, 선도 섹터로 조금씩 옮겨 타는 것</div>
+      <div class="opt" onclick="selectOpt('q5',2)">③ 11개 섹터에 동일한 비중으로 분산 투자하는 것</div>
+      <div class="opt" onclick="selectOpt('q5',3)">④ IT 섹터에만 집중 투자하는 것</div>
+    </div>
+    <button class="check-btn" onclick="checkMC('q5',1)">정답 확인</button>
+    <div class="answer-box" id="q5ans">
+      <div class="ans-label">✅ 정답: ②</div>
+      <div class="ans-text">섹터 로테이션이란 성과가 부진한 섹터의 비중을 <strong>서서히 줄이고</strong>, 기관이 집중 매수하는 아웃퍼포밍 섹터로 <strong>조금씩 이동</strong>하는 것입니다. 급격한 전환이 아니라 점진적 조정이 핵심입니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 6 -->
+<div class="quiz-card" id="q6">
+  <div class="quiz-header" onclick="toggleCard('q6')">
+    <div class="quiz-num">6</div>
+    <div class="quiz-q">10·30 법칙에 따라 리스크 회피 성향 투자자가 유지해야 할 최소 현금 비율은? (단답형)</div>
+    <span class="diff easy">쉬움</span>
+    <span class="quiz-type">단답형</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <input type="text" class="short-input" id="q6input" placeholder="%로 입력 (예: 10)">
+    <button class="check-btn" onclick="checkShort('q6','10')">정답 확인</button>
+    <div class="answer-box" id="q6ans">
+      <div class="ans-label">✅ 정답: 10%</div>
+      <div class="ans-text">10·30 법칙에서 현금 보유 범위는 <strong>10~30%</strong>입니다. 리스크를 적게 지고 싶은 경우 10%, 폭락장에서 더 적극적으로 매수하고 싶은 경우 30%까지 현금을 유지합니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 7 -->
+<div class="quiz-card" id="q7">
+  <div class="quiz-header" onclick="toggleCard('q7')">
+    <div class="quiz-num">7</div>
+    <div class="quiz-q">마진 계좌(빌린 돈)로 주식에 투자해도 된다. (OX)</div>
+    <span class="diff easy">쉬움</span>
+    <span class="quiz-type">OX</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="ox-btns">
+      <button class="ox-btn" id="q7O" onclick="selectOX('q7','O')">⭕ 맞다</button>
+      <button class="ox-btn" id="q7X" onclick="selectOX('q7','X')">❌ 틀리다</button>
+    </div>
+    <button class="check-btn" onclick="checkOX('q7','X')">정답 확인</button>
+    <div class="answer-box" id="q7ans">
+      <div class="ans-label">✅ 정답: X (틀리다)</div>
+      <div class="ans-text">마진(빌린 돈)으로 투자하는 것은 절대 금지입니다. 3·3·3 법칙의 핵심 중 하나는 <strong>"감당할 수 있는 자산만 투자"</strong>하는 것입니다. 대공황의 원인 중 하나도 레버리지 투자였습니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 8 -->
+<div class="quiz-card" id="q8">
+  <div class="quiz-header" onclick="toggleCard('q8')">
+    <div class="quiz-num">8</div>
+    <div class="quiz-q">진행자가 종목 투자 시 제시하는 3가지 가격 기준을 모두 고르시오.</div>
+    <span class="diff medium">보통</span>
+    <span class="quiz-type">객관식(복수)</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q8opts">
+      <div class="opt" onclick="toggleMulti('q8',0)">① Intrinsic Value (내재가치)</div>
+      <div class="opt" onclick="toggleMulti('q8',1)">② P/E Ratio (주가수익비율)</div>
+      <div class="opt" onclick="toggleMulti('q8',2)">③ DCF Value (현금흐름할인가치)</div>
+      <div class="opt" onclick="toggleMulti('q8',3)">④ Target Price (목표주가)</div>
+      <div class="opt" onclick="toggleMulti('q8',4)">⑤ Book Value (장부가치)</div>
+    </div>
+    <button class="check-btn" onclick="checkMulti('q8',[0,2,3])">정답 확인</button>
+    <div class="answer-box" id="q8ans">
+      <div class="ans-label">✅ 정답: ①③④</div>
+      <div class="ans-text">진행자는 3가지 기준을 제공합니다.<br>
+      • <strong>Intrinsic Value</strong>: 자산·부채 정산 후 실제 가치<br>
+      • <strong>DCF Value</strong>: 미래 현금흐름을 현재가치로 환산<br>
+      • <strong>Target Price</strong>: 1년 내 달성 가능한 목표주가<br>
+      현재 주가가 이 세 값보다 낮을 때 매수 기회로 봅니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 9 -->
+<div class="quiz-card" id="q9">
+  <div class="quiz-header" onclick="toggleCard('q9')">
+    <div class="quiz-num">9</div>
+    <div class="quiz-q">Value Trap이란 무엇인지 설명하고, 이것이 1·14 법칙과 어떻게 연관되는지 서술하시오. (서술형)</div>
+    <span class="diff hard">어려움</span>
+    <span class="quiz-type">서술형</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <textarea class="short-input" id="q9input" placeholder="답을 입력하세요..." rows="4" style="resize:vertical;"></textarea>
+    <button class="check-btn" onclick="revealAnswer('q9')">모범 답안 확인</button>
+    <div class="answer-box" id="q9ans">
+      <div class="ans-label">📋 모범 답안</div>
+      <div class="ans-text">
+        <strong>Value Trap(가치 함정)</strong>: 펀더멘털이 탄탄하고 내재가치가 높은 기업임에도 불구하고, 기관 투자자들의 자금이 유입되지 않아 주가가 오르지 않는 상태를 말합니다.<br><br>
+        <strong>1·14 법칙과의 연관성</strong>: 11개 섹터 중 현재 기관 자금이 몰리는 선도(리딩) 섹터 4개에 투자해야 합니다. 아무리 개별 기업의 가치가 높아도 속한 섹터에 자금이 유입되지 않으면 주가 상승이 제한됩니다. 즉, Value Trap을 피하려면 개별 종목뿐 아니라 <strong>섹터 선택</strong>이 필수입니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 문제 10 -->
+<div class="quiz-card" id="q10">
+  <div class="quiz-header" onclick="toggleCard('q10')">
+    <div class="quiz-num">10</div>
+    <div class="quiz-q">4대 법칙 중 "폭락장 대비 현금 비축"과 가장 직접적으로 관련된 법칙은?</div>
+    <span class="diff medium">보통</span>
+    <span class="quiz-type">객관식</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quiz-body">
+    <div class="options" id="q10opts">
+      <div class="opt" onclick="selectOpt('q10',0)">① 5·25 법칙</div>
+      <div class="opt" onclick="selectOpt('q10',1)">② 3·3·3 법칙</div>
+      <div class="opt" onclick="selectOpt('q10',2)">③ 1·14 법칙</div>
+      <div class="opt" onclick="selectOpt('q10',3)">④ 10·30 법칙</div>
+    </div>
+    <button class="check-btn" onclick="checkMC('q10',3)">정답 확인</button>
+    <div class="answer-box" id="q10ans">
+      <div class="ans-label">✅ 정답: ④</div>
+      <div class="ans-text"><strong>10·30 법칙(리밸런싱 전략)</strong>이 폭락장 대비 현금 보유와 직접 연관됩니다. 전체 포트폴리오의 10~30%를 현금으로 유지하면서, 목표가 이하로 떨어진 우량 종목을 분할 매수하는 데 활용합니다.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  투자 아카데미 21회 · 시험 문제 10선 · 2026.04.05
+</footer>
+
+<script>
+let scores = {};
+
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// OBJECTIVE
+function selectOpt(qid, idx) {
+  if (scores[qid] !== undefined) return;
+  const opts = document.querySelectorAll(`#${qid}opts .opt`);
+  opts.forEach(o => o.classList.remove('selected'));
+  opts[idx].classList.add('selected');
+  opts[idx].dataset.chosen = idx;
+}
+function checkMC(qid, correct) {
+  if (scores[qid] !== undefined) return;
+  const opts = document.querySelectorAll(`#${qid}opts .opt`);
+  let chosen = -1;
+  opts.forEach((o, i) => { if (o.classList.contains('selected')) chosen = i; });
+  if (chosen === -1) { alert('선택지를 선택하세요.'); return; }
+  opts[chosen].classList.remove('selected');
+  if (chosen === correct) {
+    opts[chosen].classList.add('correct');
+    scores[qid] = 1;
+  } else {
+    opts[chosen].classList.add('wrong');
+    opts[correct].classList.add('correct');
+    scores[qid] = 0;
+  }
+  document.getElementById(`${qid}ans`).classList.add('show');
+  updateScore();
+}
+
+// SHORT
+function checkShort(qid, correct) {
+  if (scores[qid] !== undefined) return;
+  const val = document.getElementById(`${qid}input`).value.trim();
+  if (!val) { alert('답을 입력하세요.'); return; }
+  scores[qid] = (val === correct || val === correct + '%') ? 1 : 0;
+  document.getElementById(`${qid}ans`).classList.add('show');
+  updateScore();
+}
+
+// OX
+let oxSel = {};
+function selectOX(qid, val) {
+  if (scores[qid] !== undefined) return;
+  oxSel[qid] = val;
+  document.getElementById(`${qid}O`).classList.toggle('selected', val === 'O');
+  document.getElementById(`${qid}X`).classList.toggle('selected', val === 'X');
+}
+function checkOX(qid, correct) {
+  if (scores[qid] !== undefined) return;
+  const sel = oxSel[qid];
+  if (!sel) { alert('O 또는 X를 선택하세요.'); return; }
+  const oBtn = document.getElementById(`${qid}O`);
+  const xBtn = document.getElementById(`${qid}X`);
+  oBtn.classList.remove('selected'); xBtn.classList.remove('selected');
+  if (sel === correct) {
+    document.getElementById(`${qid}${sel}`).classList.add('correct');
+    scores[qid] = 1;
+  } else {
+    document.getElementById(`${qid}${sel}`).classList.add('wrong');
+    document.getElementById(`${qid}${correct}`).classList.add('correct');
+    scores[qid] = 0;
+  }
+  document.getElementById(`${qid}ans`).classList.add('show');
+  updateScore();
+}
+
+// MULTI
+let multiSel = {};
+function toggleMulti(qid, idx) {
+  if (scores[qid] !== undefined) return;
+  if (!multiSel[qid]) multiSel[qid] = new Set();
+  const opts = document.querySelectorAll(`#${qid}opts .opt`);
+  if (multiSel[qid].has(idx)) { multiSel[qid].delete(idx); opts[idx].classList.remove('selected'); }
+  else { multiSel[qid].add(idx); opts[idx].classList.add('selected'); }
+}
+function checkMulti(qid, correct) {
+  if (scores[qid] !== undefined) return;
+  const sel = multiSel[qid] ? [...multiSel[qid]].sort() : [];
+  if (!sel.length) { alert('하나 이상 선택하세요.'); return; }
+  const opts = document.querySelectorAll(`#${qid}opts .opt`);
+  opts.forEach(o => o.classList.remove('selected'));
+  const sortedCorrect = [...correct].sort();
+  const isCorrect = JSON.stringify(sel) === JSON.stringify(sortedCorrect);
+  sel.forEach(i => opts[i].classList.add(correct.includes(i) ? 'correct' : 'wrong'));
+  correct.forEach(i => { if (!sel.includes(i)) opts[i].classList.add('correct'); });
+  scores[qid] = isCorrect ? 1 : 0;
+  document.getElementById(`${qid}ans`).classList.add('show');
+  updateScore();
+}
+
+// ESSAY
+function revealAnswer(qid) {
+  if (scores[qid] !== undefined) return;
+  scores[qid] = -1; // unscored
+  document.getElementById(`${qid}ans`).classList.add('show');
+}
+
+function updateScore() {
+  const answered = Object.values(scores).filter(v => v !== undefined && v !== -1);
+  const correct = answered.filter(v => v === 1).length;
+  const total = answered.length + (scores['q9'] === -1 ? 0 : 0);
+  const scoredTotal = Object.keys(scores).length;
+  document.getElementById('scoreNum').textContent = `${correct} / ${scoredTotal}`;
+  document.getElementById('scoreFill').style.width = (correct / 10 * 100) + '%';
+}
+</script>
+</body>
+</html>
