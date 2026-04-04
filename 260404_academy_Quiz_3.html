@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 포트폴리오 구성 — 시험문제 10선</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff; --bg-alt: #fafafa;
+  --text: #1a1a1a; --text-sub: #777777;
+  --accent: #e11d48; --accent2: #f43f5e;
+  --border: #e5e5e5; --correct: #16a34a; --wrong: #dc2626;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px;}
+.hero{background:linear-gradient(135deg,#1a1a1a,#2d1f2f);color:#fff;padding:40px 20px 36px;text-align:center;}
+.hero h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;margin-bottom:6px;}
+.hero p{font-size:13px;color:rgba(255,255,255,.6);}
+.container{max-width:640px;margin:0 auto;padding:0 18px;}
+.score-bar{background:var(--bg-alt);border-bottom:1px solid var(--border);padding:14px 18px;text-align:center;position:sticky;top:0;z-index:10;}
+.score-bar span{font-weight:700;font-size:18px;color:var(--accent);}
+
+.q-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 18px;margin:18px 0;transition:border-color .3s;}
+.q-card.answered-correct{border-color:var(--correct);}
+.q-card.answered-wrong{border-color:var(--wrong);}
+.q-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--accent);opacity:.3;line-height:1;}
+.q-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.5px;margin-left:8px;vertical-align:middle;}
+.q-badge.easy{background:#dcfce7;color:#166534;}
+.q-badge.medium{background:#fef3c7;color:#92400e;}
+.q-badge.hard{background:#fee2e2;color:#991b1b;}
+.q-type{font-size:11px;color:var(--text-sub);margin-top:2px;}
+.q-text{font-size:15px;font-weight:600;margin:10px 0 14px;line-height:1.6;}
+.q-options{display:flex;flex-direction:column;gap:8px;}
+.q-opt{padding:10px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;transition:all .2s;background:var(--bg-alt);}
+.q-opt:hover{border-color:var(--accent);background:#fff5f7;}
+.q-opt.selected{border-color:var(--accent);background:#fff5f7;font-weight:600;}
+.q-opt.correct{border-color:var(--correct);background:#f0fdf4;font-weight:600;}
+.q-opt.wrong{border-color:var(--wrong);background:#fef2f2;text-decoration:line-through;opacity:.6;}
+.q-opt.disabled{pointer-events:none;}
+.q-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'Noto Sans KR';margin-bottom:8px;}
+.q-submit{display:inline-block;padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR';}
+.q-submit:hover{background:var(--accent2);}
+.q-submit:disabled{background:#d1d5db;cursor:not-allowed;}
+
+.q-feedback{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:13px;line-height:1.7;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.correct-fb{background:#f0fdf4;border-left:3px solid var(--correct);}
+.q-feedback.wrong-fb{background:#fef2f2;border-left:3px solid var(--wrong);}
+
+.result-section{text-align:center;padding:30px 20px;margin:20px 0;background:var(--bg-alt);border-radius:12px;border:1px solid var(--border);display:none;}
+.result-section.show{display:block;}
+.result-section .big{font-family:'Playfair Display',serif;font-size:48px;font-weight:800;color:var(--accent);}
+.result-section p{font-size:14px;color:var(--text-sub);margin-top:8px;}
+.btn-reveal{display:block;width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin:20px 0;font-family:'Noto Sans KR';}
+.btn-reveal:hover{background:var(--accent2);}
+
+.footer{text-align:center;padding:24px;font-size:11px;color:var(--text-sub);border-top:1px solid var(--border);margin-top:24px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>시험문제 10선</h1>
+  <p>본인맞춤 투자 포트폴리오 구성방법과 과정</p>
+</div>
+
+<div class="score-bar">
+  정답: <span id="scoreCorrect">0</span> / 10 &nbsp;|&nbsp; 점수: <span id="scorePercent">0</span>점
+</div>
+
+<div class="container">
+
+<!-- Q1 -->
+<div class="q-card" id="q1">
+  <div class="q-num">01 <span class="q-badge easy">쉬움</span></div>
+  <div class="q-type">OX 문제</div>
+  <div class="q-text">미국은 국민의 약 70% 이상이 직·간접적으로 투자에 참여하고 있다. (O/X)</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerOX(1,'O',this)">⭕ O</div>
+    <div class="q-opt" onclick="answerOX(1,'X',this)">❌ X</div>
+  </div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card" id="q2">
+  <div class="q-num">02 <span class="q-badge easy">쉬움</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">5·25 법칙에서, 아무리 좋은 대형주라도 한 종목에 투자할 수 있는 최대 비중은?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(2,0,this)">① 10%</div>
+    <div class="q-opt" onclick="answerMC(2,1,this)">② 25%</div>
+    <div class="q-opt" onclick="answerMC(2,2,this)">③ 50%</div>
+    <div class="q-opt" onclick="answerMC(2,3,this)">④ 제한 없음</div>
+  </div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card" id="q3">
+  <div class="q-num">03 <span class="q-badge easy">쉬움</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">미국 주식시장의 섹터(Sector)는 총 몇 개로 분류되는가?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(3,0,this)">① 5개</div>
+    <div class="q-opt" onclick="answerMC(3,1,this)">② 8개</div>
+    <div class="q-opt" onclick="answerMC(3,2,this)">③ 11개</div>
+    <div class="q-opt" onclick="answerMC(3,3,this)">④ 15개</div>
+  </div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card" id="q4">
+  <div class="q-num">04 <span class="q-badge medium">보통</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">종형(Bell-Shaped) 포트폴리오에서 가장 높은 비중을 차지하는 것은?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(4,0,this)">① 소형주(Small Cap)</div>
+    <div class="q-opt" onclick="answerMC(4,1,this)">② 현금(Cash)</div>
+    <div class="q-opt" onclick="answerMC(4,2,this)">③ 대형주(Large/Mega Cap)</div>
+    <div class="q-opt" onclick="answerMC(4,3,this)">④ 중형주(Mid Cap)</div>
+  </div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card" id="q5">
+  <div class="q-num">05 <span class="q-badge medium">보통</span></div>
+  <div class="q-type">OX 문제</div>
+  <div class="q-text">가치주(Value Stock)는 배당을 주지 않고, 성장주(Growth Stock)는 배당을 지급하는 것이 일반적이다. (O/X)</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerOX(5,'O',this)">⭕ O</div>
+    <div class="q-opt" onclick="answerOX(5,'X',this)">❌ X</div>
+  </div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card" id="q6">
+  <div class="q-num">06 <span class="q-badge medium">보통</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">미국 시장에서 "시그널(Signal)"에 해당하는 것은 다음 중 무엇인가?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(6,0,this)">① 정치인 관련 소문</div>
+    <div class="q-opt" onclick="answerMC(6,1,this)">② 동반 하락장</div>
+    <div class="q-opt" onclick="answerMC(6,2,this)">③ 기관 투자자의 매수·매도 행동</div>
+    <div class="q-opt" onclick="answerMC(6,3,this)">④ 유튜브 추천 종목</div>
+  </div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card" id="q7">
+  <div class="q-num">07 <span class="q-badge medium">보통</span></div>
+  <div class="q-type">단답형</div>
+  <div class="q-text">미국 상장기업이 매년 공개하는 연간보고서의 명칭은? (영문 약어로 답하세요)</div>
+  <input class="q-input" id="q7input" placeholder="답을 입력하세요">
+  <button class="q-submit" onclick="answerShort(7)">제출</button>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card" id="q8">
+  <div class="q-num">08 <span class="q-badge medium">보통</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">Minimum Required Distribution(MRD)은 어떤 투자자에게 해당하는가?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(8,0,this)">① 모든 미국 투자자</div>
+    <div class="q-opt" onclick="answerMC(8,1,this)">② 70세 이상 은퇴 자산 보유자</div>
+    <div class="q-opt" onclick="answerMC(8,2,this)">③ 해지펀드 매니저</div>
+    <div class="q-opt" onclick="answerMC(8,3,this)">④ 외국인 투자자</div>
+  </div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card" id="q9">
+  <div class="q-num">09 <span class="q-badge hard">어려움</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">GICS(Global Industry Classification Standard)에서 AMD의 분류 계층을 올바르게 나열한 것은?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(9,0,this)">① Sector → Industry → Sub-Industry</div>
+    <div class="q-opt" onclick="answerMC(9,1,this)">② Sector → Industry Group → Industry → Sub-Industry</div>
+    <div class="q-opt" onclick="answerMC(9,2,this)">③ Industry → Sector → Sub-Industry → Group</div>
+    <div class="q-opt" onclick="answerMC(9,3,this)">④ Group → Sector → Industry</div>
+  </div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card" id="q10">
+  <div class="q-num">10 <span class="q-badge hard">어려움</span></div>
+  <div class="q-type">객관식</div>
+  <div class="q-text">기업이 채권(Bond)을 발행했을 때, 투자자가 해당 종목을 보유해도 괜찮다고 판단할 수 있는 경우는?</div>
+  <div class="q-options">
+    <div class="q-opt" onclick="answerMC(10,0,this)">① 기존 부채를 상환하기 위해 채권을 발행한 경우</div>
+    <div class="q-opt" onclick="answerMC(10,1,this)">② M&A(인수합병)를 위해 채권을 발행한 경우</div>
+    <div class="q-opt" onclick="answerMC(10,2,this)">③ 배당금 지급을 위해 채권을 발행한 경우</div>
+    <div class="q-opt" onclick="answerMC(10,3,this)">④ 경영진 보너스를 위해 채권을 발행한 경우</div>
+  </div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+
+<!-- Results -->
+<div class="result-section" id="resultSection">
+  <div class="big" id="finalScore">0</div>
+  <p id="finalMsg">모든 문제를 풀어주세요</p>
+</div>
+
+<div class="footer">
+  투자 아카데미 19회 특별공개방송 — 시험문제<br>
+  교육 목적으로 작성되었습니다.
+</div>
+
+</div>
+
+<script>
+const answers = {
+  1: { correct: 'O', explanation: '미국은 국민연금 대신 개인 은퇴 자산 운용 제도가 있어, 직장 생활 시작과 함께 간접적으로 투자에 참여하게 됩니다. 직·간접 참여율이 70% 이상입니다.' },
+  2: { correct: 1, explanation: '5·25 법칙에서 25%는 대형주에 대한 최대 비중 상한선입니다. 아무리 좋은 종목이라도 한 종목에 전체 포트폴리오의 25%를 초과하여 투자해서는 안 됩니다.' },
+  3: { correct: 2, explanation: '미국 시장은 Energy, Materials, Industrials, Utilities, Healthcare, Financials, Consumer Discretionary, Consumer Staples, Information Technology, Communication Services, Real Estate의 11개 섹터로 분류됩니다.' },
+  4: { correct: 2, explanation: '종형(Bell-Shaped) 포트폴리오는 종 모양처럼 중앙(대형주·메가캡)이 가장 높고, 양쪽(중형주, 소형주)으로 갈수록 비중이 줄어드는 구조입니다.' },
+  5: { correct: 'X', explanation: '반대입니다. 가치주(Value Stock)가 정기적으로 배당을 지급하며, 성장주(Growth Stock)는 배당을 주지 않거나 매우 적게 줍니다. 가치주는 느린 성장을 배당으로 보상합니다.' },
+  6: { correct: 2, explanation: '시그널(Signal)은 기관 투자자들의 실제 매수·매도 "행동"입니다. 소문이나 동반 하락장은 노이즈(Noise)에 해당하며, 펀더멘털과 무관한 일시적 변동입니다.' },
+  7: { correct: ['10-K', '10K', '10k', '10-k'], explanation: '10-K는 미국 상장기업이 SEC(증권거래위원회)에 제출하는 연간보고서입니다. 밸런스시트, 인컴 스테이트먼트, 캐시플로우, 사업 리스크 등이 모두 공개됩니다.' },
+  8: { correct: 1, explanation: 'MRD(Minimum Required Distribution)는 70세 이상의 은퇴 자산 보유자가 매년 의무적으로 일정 금액을 인출해야 하는 규정입니다. 인출하지 않으면 페널티가 부과됩니다.' },
+  9: { correct: 1, explanation: 'GICS는 Sector → Industry Group → Industry → Sub-Industry의 4단계 계층으로 구성됩니다. AMD의 경우 IT(Sector) → Semiconductors & Equipment(Industry Group) → Semiconductors & Semiconductor Equipment(Industry) → Semiconductors(Sub-Industry)입니다.' },
+  10: { correct: 1, explanation: '채권 발행 목적이 M&A(인수합병)인 경우는 성장을 위한 전략적 투자이므로 긍정적 시그널입니다. 반면 기존 부채 상환을 위한 채권 발행은 부정적 시그널로, 매도를 고려해야 합니다.' }
+};
+
+let score = 0;
+let answered = new Set();
+
+function updateScore() {
+  document.getElementById('scoreCorrect').textContent = score;
+  document.getElementById('scorePercent').textContent = score * 10;
+  if (answered.size === 10) {
+    const rs = document.getElementById('resultSection');
+    rs.classList.add('show');
+    document.getElementById('finalScore').textContent = score * 10 + '점';
+    let msg = '';
+    if (score >= 9) msg = '🏆 훌륭합니다! 투자 기본기가 탄탄합니다.';
+    else if (score >= 7) msg = '👍 잘 하셨습니다! 부족한 부분만 복습하세요.';
+    else if (score >= 5) msg = '📖 기본기 보강이 필요합니다. 본문을 다시 읽어보세요.';
+    else msg = '💪 아직 학습이 필요합니다. 투자 아카데미 영상을 처음부터 시청해 보세요.';
+    document.getElementById('finalMsg').textContent = msg;
+  }
+}
+
+function showFeedback(num, isCorrect) {
+  const fb = document.getElementById('fb' + num);
+  fb.className = 'q-feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = (isCorrect ? '✅ 정답!' : '❌ 오답!') + '<br>' + answers[num].explanation;
+  const card = document.getElementById('q' + num);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+}
+
+function answerMC(num, idx, el) {
+  if (answered.has(num)) return;
+  answered.add(num);
+  const opts = el.parentElement.querySelectorAll('.q-opt');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === answers[num].correct) o.classList.add('correct');
+    else if (i === idx && idx !== answers[num].correct) o.classList.add('wrong');
+  });
+  const isCorrect = idx === answers[num].correct;
+  if (isCorrect) score++;
+  showFeedback(num, isCorrect);
+  updateScore();
+}
+
+function answerOX(num, val, el) {
+  if (answered.has(num)) return;
+  answered.add(num);
+  const opts = el.parentElement.querySelectorAll('.q-opt');
+  opts.forEach(o => {
+    o.classList.add('disabled');
+    if (o.textContent.includes(answers[num].correct)) o.classList.add('correct');
+    else if (o === el && val !== answers[num].correct) o.classList.add('wrong');
+  });
+  const isCorrect = val === answers[num].correct;
+  if (isCorrect) score++;
+  showFeedback(num, isCorrect);
+  updateScore();
+}
+
+function answerShort(num) {
+  if (answered.has(num)) return;
+  const input = document.getElementById('q' + num + 'input');
+  const val = input.value.trim();
+  if (!val) return;
+  answered.add(num);
+  input.disabled = true;
+  document.querySelector('#q' + num + ' .q-submit').disabled = true;
+  const isCorrect = answers[num].correct.some(a => a.toLowerCase() === val.toLowerCase());
+  if (isCorrect) score++;
+  input.style.borderColor = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+  input.style.background = isCorrect ? '#f0fdf4' : '#fef2f2';
+  showFeedback(num, isCorrect);
+  updateScore();
+}
+</script>
+</body>
+</html>

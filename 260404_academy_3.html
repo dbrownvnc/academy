@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>본인맞춤 투자 포트폴리오 구성방법과 과정</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-alt: #fafafa;
+  --text: #1a1a1a;
+  --text-sub: #777777;
+  --accent: #e11d48;
+  --accent2: #f43f5e;
+  --chart1: #e11d48;
+  --chart2: #1a1a1a;
+  --chart3: #6b7280;
+  --chart4: #2563eb;
+  --table-bg: #fafafa;
+  --table-header: #e11d48;
+  --table-border: #e5e5e5;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+.hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1f2f 50%, #1a1a1a 100%);
+  color: #fff;
+  padding: 60px 20px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(225,29,72,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(244,63,94,0.1) 0%, transparent 50%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-3%,2%) rotate(3deg); }
+}
+.hero-content { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+.hero .sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+}
+.hero .meta {
+  margin-top: 16px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+.container { max-width: 640px; margin: 0 auto; padding: 0 18px; }
+
+/* Section Styling */
+.section {
+  padding: 36px 0 28px;
+  border-bottom: 1px solid var(--table-border);
+}
+.section:last-child { border-bottom: none; }
+.section-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.15;
+  line-height: 1;
+  margin-bottom: -10px;
+}
+.section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.35;
+}
+.section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 20px 0 10px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+.section p {
+  margin-bottom: 14px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.section .sub-text {
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+/* Highlight Box */
+.highlight-box {
+  background: linear-gradient(135deg, #fff5f7, #fef2f4);
+  border-left: 4px solid var(--accent);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.highlight-box strong { color: var(--accent); }
+
+/* Quote */
+.quote-block {
+  background: var(--bg-alt);
+  border-left: 4px solid var(--chart2);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+/* Warning */
+.warning-box {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 14px 16px;
+  margin: 18px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+}
+
+/* Table */
+.table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: 8px;
+  border: 1px solid var(--table-border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead { background: var(--table-header); color: #fff; }
+th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--table-border);
+  background: var(--table-bg);
+}
+tr:last-child td { border-bottom: none; }
+
+/* Charts */
+.fade-in {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.chart-container {
+  position: relative;
+  max-height: 340px;
+  margin: 18px 0;
+}
+.chart-container canvas {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  max-height: 300px;
+}
+.chart-container.chart-ready canvas {
+  opacity: 1;
+}
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+/* Interactive Components */
+.sim-container {
+  background: var(--bg-alt);
+  border: 1px solid var(--table-border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  margin: 20px 0;
+}
+.sim-container h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--accent);
+}
+.sim-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.sim-label {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 90px;
+  color: var(--text);
+}
+.sim-slider {
+  flex: 1;
+  min-width: 120px;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e5e5;
+  outline: none;
+  cursor: pointer;
+}
+.sim-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(225,29,72,0.3);
+}
+.sim-value {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 50px;
+  text-align: right;
+  color: var(--accent);
+}
+.sim-result {
+  background: #fff;
+  border: 1px solid var(--table-border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.sim-result .big-num {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent);
+  font-family: 'Playfair Display', serif;
+}
+.btn-reset {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--text);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.btn-reset:hover { background: var(--accent); }
+
+/* Flowchart */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 18px 0;
+}
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 8px;
+  padding-left: 8px;
+}
+.flow-step:hover { background: var(--bg-alt); }
+.flow-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.flow-num.inactive { background: #d1d5db; }
+.flow-body { flex: 1; }
+.flow-body strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.flow-body span { font-size: 13px; color: var(--text-sub); }
+.flow-detail {
+  display: none;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #fff5f7;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.flow-step.active .flow-detail { display: block; }
+.flow-arrow {
+  text-align: center;
+  color: #d1d5db;
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 0;
+}
+
+/* Bell Curve SVG */
+.bell-svg-wrap {
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Sector Grid */
+.sector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+}
+.sector-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--table-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sector-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(225,29,72,0.1);
+}
+.sector-card .sc-name { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.sector-card .sc-ex { color: var(--text-sub); }
+.sector-card.active { border-color: var(--accent); background: #fff5f7; }
+
+/* Toggle Comparison */
+.toggle-group {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--table-border);
+}
+.toggle-btn {
+  flex: 1;
+  padding: 10px 8px;
+  background: var(--bg-alt);
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-sub);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.toggle-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+.toggle-content {
+  display: none;
+  padding: 16px;
+  background: var(--bg-alt);
+  border-radius: 0 0 8px 8px;
+  border: 1px solid var(--table-border);
+  border-top: none;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.toggle-content.active { display: block; }
+
+/* Footer */
+.footer {
+  background: var(--bg-alt);
+  padding: 30px 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-sub);
+  border-top: 1px solid var(--table-border);
+  margin-top: 30px;
+}
+.toc {
+  background: var(--bg-alt);
+  border: 1px solid var(--table-border);
+  border-radius: 10px;
+  padding: 18px;
+  margin: 24px 0;
+}
+.toc h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.toc a {
+  display: block;
+  padding: 5px 0;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px dotted var(--table-border);
+  transition: color 0.2s;
+}
+.toc a:last-child { border-bottom: none; }
+.toc a:hover { color: var(--accent); }
+.toc a span { color: var(--text-sub); margin-right: 6px; }
+
+@media (max-width: 400px) {
+  .hero h1 { font-size: 22px; }
+  .section h2 { font-size: 19px; }
+  .sector-grid { grid-template-columns: 1fr; }
+  .sim-row { flex-direction: column; align-items: flex-start; }
+  .sim-slider { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">투자 아카데미 19회</div>
+    <h1>본인맞춤 투자 포트폴리오<br>구성방법과 과정</h1>
+    <p class="sub">테일러 투자자문 CIO · 24년 미국 월가 경력의 실전 투자 교육</p>
+    <p class="meta">투자는인생TV · 2026.04.04 · 특별 공개방송</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc fade-in">
+    <h4>목차</h4>
+    <a href="#s1"><span>01</span> 투자 성향 파악 — 자기 자신을 알라</a>
+    <a href="#s2"><span>02</span> 투자 목적 설정 — 성장 vs 현재소득</a>
+    <a href="#s3"><span>03</span> 한국식 투자 습관 탈피</a>
+    <a href="#s4"><span>04</span> 미국 시장의 구조적 장점</a>
+    <a href="#s5"><span>05</span> 섹터 중심 포트폴리오 전략</a>
+    <a href="#s6"><span>06</span> 서브 인더스트리 분류 체계</a>
+    <a href="#s7"><span>07</span> 종형(Bell-Shaped) 포트폴리오</a>
+    <a href="#s8"><span>08</span> 5·25 법칙과 비중 조절</a>
+    <a href="#s9"><span>09</span> 가치주 vs 성장주</a>
+    <a href="#s10"><span>10</span> 실전 포트폴리오 시뮬레이터</a>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section fade-in" id="s1">
+    <div class="section-num">01</div>
+    <h2>투자 성향 파악 — "자기 자신을 알라"</h2>
+    <p>적을 알고 나를 알면 백전백승이라는 말이 투자에서도 그대로 적용됩니다. <strong>나를 모르고 주식 중심으로 생각하면 백전백패</strong>입니다. 자기 자신을 아는 것은 곧 투자 성향을 파악하는 것입니다.</p>
+
+    <h3>파악해야 할 핵심 항목</h3>
+    <p><strong>① 리스크 감내 수준:</strong> 내가 얼마나 하락을 견딜 수 있는가? 10% 하락에도 공포에 빠져 매도하는 사람과, 30% 하락을 감내할 수 있는 사람의 포트폴리오는 완전히 달라야 합니다.</p>
+    <p><strong>② 투자 기간(Time Horizon):</strong> 30대가 은퇴 목적으로 투자하면 30년의 여유가 있어 리스크를 더 가져갈 수 있지만, 50대는 10여 년밖에 남지 않아 위험을 크게 가져서는 안 됩니다.</p>
+    <p><strong>③ 투자 습관과 성격:</strong> 귀가 얇아 소문에 흔들리는지, 원칙 없이 테마주만 쫓는지, 장기 보유가 가능한지 냉정하게 자기 점검이 필요합니다.</p>
+
+    <div class="highlight-box">
+      <strong>핵심 원칙:</strong> 주식은 양방향입니다. 올라갈 것만 생각하면 안 됩니다. 빨리 올라간 만큼 빨리 떨어질 가능성이 언제나 존재하며, 리스크 없이 자산을 늘릴 수 있는 투자는 없습니다.
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ 실제 사례:</strong> LA에 거주하던 한 투자자가 100만 달러(약 13억 원)를 테슬라 한 종목에 올인했다가 큰 손실을 입었습니다. 60세에 가까운 나이에 평생 모은 돈을 잃은 것입니다. 종목 집중 투자의 위험을 보여주는 대표적 사례입니다.
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section fade-in" id="s2">
+    <div class="section-num">02</div>
+    <h2>투자 목적 설정</h2>
+    <p>포트폴리오 구성의 첫 번째 분기점은 <strong>투자 목적</strong>입니다. 크게 세 가지로 나뉩니다.</p>
+
+    <div class="toggle-group">
+      <button class="toggle-btn active" onclick="showToggle(0)">성장(Growth)</button>
+      <button class="toggle-btn" onclick="showToggle(1)">현재소득(Income)</button>
+      <button class="toggle-btn" onclick="showToggle(2)">토탈 리턴</button>
+    </div>
+    <div class="toggle-content active" id="toggle0">
+      <strong>자본 이득(Capital Gain) 중심</strong><br>
+      배당보다 주가 상승을 목표로 합니다. 30~40대 장기 투자자에게 적합하며, 성장주 비중이 높은 포트폴리오를 구성합니다. 타임 호라이즌이 길수록 더 높은 리스크를 감내할 수 있습니다.
+    </div>
+    <div class="toggle-content" id="toggle1">
+      <strong>배당·이자 수입 중심</strong><br>
+      은퇴자나 정기적인 현금 흐름이 필요한 투자자에게 적합합니다. 미국에서는 70세 이상일 경우 <em>Minimum Required Distribution(MRD)</em> 의무 인출 규정이 있어, 은퇴 자산에서 매년 일정 금액을 반드시 인출해야 합니다.<br>
+      <span style="color:var(--text-sub);font-size:13px;">예시: 300만 달러 은퇴 자산 × 7% 배당 = 연 21만 달러(월 약 $17,500)</span>
+    </div>
+    <div class="toggle-content" id="toggle2">
+      <strong>성장 + 소득의 결합</strong><br>
+      배당을 받으면서도 자본 이득을 함께 추구합니다. 가치주와 성장주의 비중을 균형 있게 배분하여 안정성과 수익성을 동시에 추구하는 전략입니다.
+    </div>
+
+    <p class="sub-text" style="margin-top:14px;">* 주식 중심으로 사고하면 모든 사람이 같은 종목(애플, 테슬라, 엔비디아)에만 투자하게 됩니다. 목적이 다르면 포트폴리오의 조합이 완전히 달라야 합니다.</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section fade-in" id="s3">
+    <div class="section-num">03</div>
+    <h2>한국식 투자 습관을 버려라</h2>
+    <p>미국 주식 투자를 시작하기 전에 한국에서 들이넣은 투자 습관과 용어 자체를 완전히 바꿔야 합니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>🚫 버려야 할 것</th><th>✅ 바뀌어야 할 것</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>"단타", "떡상", "수혜주"</td><td>기업 펀더멘털 기반 장기 투자</td></tr>
+          <tr><td>종목 중심 사고</td><td>섹터 중심 포트폴리오 사고</td></tr>
+          <tr><td>소문·테마·추천주 의존</td><td>10-K, 재무제표 직접 분석</td></tr>
+          <tr><td>올인·집중 투자</td><td>분산 투자와 비중 조절</td></tr>
+          <tr><td>해지펀드식 이벤트 베팅</td><td>시간과 복리의 힘 활용</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight-box">
+      <strong>한국 주식시장의 3대 구조적 문제:</strong><br>
+      ① <strong>파이가 작다</strong> — 시가총액이 작아 외국 자본 유출입에 따른 변동성이 과도<br>
+      ② <strong>비윤리적 관행</strong> — 작전 세력이 여전히 존재하며 징벌적 처벌 미비<br>
+      ③ <strong>매도 신호 부재</strong> — 레이팅 기관이 셀(Sell) 시그널을 제대로 제공하지 않음
+    </div>
+
+    <div class="quote-block">
+      "미국 전체 헤지펀드가 시장에서 차지하는 비중은 1~2%에 불과합니다. 그런데 한국 투자자들은 마치 헤지펀드처럼 사고하고 자산을 운용합니다. 왜 헤지펀드가 아닌데 헤지펀드처럼 합니까?"
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section fade-in" id="s4">
+    <div class="section-num">04</div>
+    <h2>미국 시장의 구조적 장점</h2>
+
+    <h3>투자자 보호 법률 체계</h3>
+    <p>1929년 대공황 이후 미국은 <strong>개인 투자자를 보호하는 엄격한 법률</strong>을 체계적으로 구축했습니다. Investment Company Act of 1940 등의 법률이 현재까지 적용되며, 위반 시 수십 년 형의 징벌적 처벌이 가해집니다.</p>
+    <p>모든 투자사는 개인 투자자 보호 의무를 가지며, 이를 어기면 업계에서 영구 퇴출됩니다. 이러한 법적 인프라가 미국 시장의 신뢰성과 투명성을 뒷받침합니다.</p>
+
+    <h3>국민 참여율</h3>
+    <p>미국은 직·간접적으로 <strong>국민의 70% 이상이 투자</strong>에 참여하고 있습니다. 별도의 국민연금 제도가 없어 개인이 직접 은퇴 자산을 운용해야 하므로, 직장 생활을 시작하면 자연스럽게 투자에 노출됩니다.</p>
+
+    <h3>펀더멘털 공시 — 10-K 보고서</h3>
+    <p>미국 상장기업의 연간보고서(10-K)는 기업의 모든 정보를 투명하게 공개합니다. 밸런스시트, 인컴 스테이트먼트, 캐시플로우는 물론이고, <strong>사업 리스크까지 구체적으로 기술</strong>합니다. "내일이라도 망할 수 있다"는 수준으로 솔직하게 작성되어 투자자가 정보에 기반한 결정을 내릴 수 있게 합니다.</p>
+
+    <div class="highlight-box">
+      <strong>노이즈 vs 시그널 구별법</strong><br>
+      • <strong>노이즈(Noise):</strong> 소문, 동반 하락장, 특정 산업에 대한 정부 발언 등 펀더멘털과 무관한 일시적 변동<br>
+      • <strong>시그널(Signal):</strong> 기관 투자자들의 실제 매수·매도 행동, 펀더멘털 변화(밸런스시트, 캐시플로우, 채권 발행 등)
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section fade-in" id="s5">
+    <div class="section-num">05</div>
+    <h2>섹터 중심 포트폴리오 전략</h2>
+    <p>미국 시장은 <strong>11개 섹터</strong>로 체계적으로 분류되어 있으며, 대형 기관들은 모두 섹터 단위로 자금을 운용합니다. 개인 투자자도 이 흐름에 맞춰야 합니다.</p>
+
+    <div class="sector-grid" id="sectorGrid">
+      <div class="sector-card" onclick="toggleSector(this,'에너지 기업(XOM 등). 유가·지정학적 리스크에 민감하며, 경기순환적 특성.')"><div class="sc-name">⛽ Energy</div><div class="sc-ex">ExxonMobil</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'화학·배터리 소재 기업. 원자재 가격과 밀접한 관계.')"><div class="sc-name">🧪 Materials</div><div class="sc-ex">화학·소재</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'제조·건설·항공우주 등 산업재 기업. 경기 확장기에 강세.')"><div class="sc-name">🏗️ Industrials</div><div class="sc-ex">산업재</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'전기·가스·수도 등 필수 인프라. 방어적 성격이 강하고 배당이 높음.')"><div class="sc-name">💡 Utilities</div><div class="sc-ex">AT&T, PG&E</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'제약·의료기기·바이오. 인구 고령화 수혜 섹터이며, 규제 리스크 존재.')"><div class="sc-name">🏥 Healthcare</div><div class="sc-ex">J&J, Eli Lilly</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'은행·투자회사·보험. 금리 환경에 민감하며, 금리 상승기에 유리.')"><div class="sc-name">🏦 Financials</div><div class="sc-ex">JPMorgan, GS</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'경기에 따라 소비가 변동하는 재량 소비재. 아마존, 명품 브랜드 등.')"><div class="sc-name">🛍️ Cons. Disc.</div><div class="sc-ex">Amazon, LVMH</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'경기와 무관하게 소비되는 필수 소비재. 식품·음료·담배. 방어적.')"><div class="sc-name">🥫 Cons. Staples</div><div class="sc-ex">Coca-Cola</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'반도체, 소프트웨어, 하드웨어 등 핵심 기술 기업. 높은 성장성.')"><div class="sc-name">💻 Info Tech</div><div class="sc-ex">Apple, MSFT, AMD</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'소셜미디어·검색·통신. 디지털 광고와 플랫폼 경제의 핵심.')"><div class="sc-name">📡 Comm. Services</div><div class="sc-ex">Meta, Google</div></div>
+      <div class="sector-card" onclick="toggleSector(this,'리츠(REITs) 및 부동산 관련 기업. 금리 민감도 높고 배당 수입 제공.')"><div class="sc-name">🏠 Real Estate</div><div class="sc-ex">리츠·부동산</div></div>
+    </div>
+    <div id="sectorDetail" style="display:none;background:#fff5f7;padding:12px 14px;border-radius:8px;font-size:13px;margin:-4px 0 16px;line-height:1.7;color:var(--text);"></div>
+
+    <h3>섹터 로테이션 실전 사례</h3>
+    <div class="chart-title">2023~2024 섹터별 수익률 변화</div>
+    <div class="chart-container fade-in">
+      <canvas id="sectorChart" height="250"></canvas>
+    </div>
+    <p class="sub-text">섹터별 강세·약세가 지속적으로 바뀝니다. 기관들이 "이 섹터 줄이고 저 섹터 늘린다" 식으로 운용하므로, 개인도 이 흐름을 읽어야 합니다.</p>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section fade-in" id="s6">
+    <div class="section-num">06</div>
+    <h2>서브 인더스트리 분류 체계</h2>
+    <p>미국은 모든 상장기업을 <strong>4단계 계층</strong>으로 과학적이고 체계적으로 분류합니다. 이를 <em>GICS(Global Industry Classification Standard)</em>라고 합니다.</p>
+
+    <!-- Interactive Hierarchy -->
+    <div class="sim-container">
+      <h4>📊 AMD 분류 예시 (클릭하여 펼치기)</h4>
+      <div class="flow-steps" id="gicsFlow">
+        <div class="flow-step active" onclick="toggleFlow(this)">
+          <div class="flow-num">1</div>
+          <div class="flow-body">
+            <strong>Sector — Information Technology</strong>
+            <span>11개 대분류 섹터 중 하나</span>
+            <div class="flow-detail">가장 큰 분류 단위. IPO 시점에 결정되며, 기업의 주력 사업 영역에 따라 분류됩니다.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step" onclick="toggleFlow(this)">
+          <div class="flow-num">2</div>
+          <div class="flow-body">
+            <strong>Industry Group — Semiconductors & Equipment</strong>
+            <span>섹터 하위 그룹</span>
+            <div class="flow-detail">같은 섹터 내에서 유사한 사업을 영위하는 기업군을 묶은 것입니다. IT 섹터 안에서도 반도체, 소프트웨어, 하드웨어로 나뉩니다.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step" onclick="toggleFlow(this)">
+          <div class="flow-num">3</div>
+          <div class="flow-body">
+            <strong>Industry — Semiconductors & Semiconductor Equipment</strong>
+            <span>더 세분화된 산업 코드</span>
+            <div class="flow-detail">산업 코드 번호가 부여되어 조세 정책, 산업 규제, 통계 집계 등에 활용됩니다.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step" onclick="toggleFlow(this)">
+          <div class="flow-num">4</div>
+          <div class="flow-body">
+            <strong>Sub-Industry — Semiconductors</strong>
+            <span>가장 구체적인 분류</span>
+            <div class="flow-detail">반도체 "설계"(AMD, NVDA)와 반도체 "장비"(ASML, LRCX)를 구별합니다. 경쟁사 분석과 대체 종목 선정에 핵심적입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p><strong>왜 이렇게 분류하는가?</strong></p>
+    <p>① <strong>조세 합리화:</strong> 산업별 세금 정책·인센티브를 정확히 적용할 수 있습니다.<br>
+    ② <strong>혼선 방지:</strong> 기업이 등록된 사업 범위 외 활동을 하면 별도 회사(스핀오프)로 분리해야 합니다.<br>
+    ③ <strong>투자 의사결정:</strong> 애플이 부진하면 같은 섹터 내에서 마이크로소프트로 교체하는 등 합리적 종목 교체가 가능합니다.</p>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section fade-in" id="s7">
+    <div class="section-num">07</div>
+    <h2>종형(Bell-Shaped) 포트폴리오</h2>
+    <p>"골든벨 포트폴리오"라 불리는 이 구조는 <strong>대형주를 중심에 높이 배치</strong>하고, 시가총액이 작아질수록 비중을 줄이는 종 모양의 배분 전략입니다.</p>
+
+    <!-- Bell Curve Interactive SVG -->
+    <div class="bell-svg-wrap fade-in">
+      <svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;">
+        <defs>
+          <linearGradient id="bellGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e11d48" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#e11d48" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+        <!-- Grid -->
+        <line x1="40" y1="190" x2="340" y2="190" stroke="#e5e5e5" stroke-width="1"/>
+        <!-- Bell Curve -->
+        <path d="M50,188 Q80,185 110,170 Q140,140 160,90 Q175,45 190,35 Q205,45 220,90 Q240,140 260,170 Q290,185 320,188" fill="url(#bellGrad)" stroke="#e11d48" stroke-width="2.5"/>
+        <!-- Labels -->
+        <text x="70" y="210" font-size="10" fill="#777" font-family="Noto Sans KR" text-anchor="middle">소형주</text>
+        <text x="140" y="210" font-size="10" fill="#777" font-family="Noto Sans KR" text-anchor="middle">중형주</text>
+        <text x="190" y="210" font-size="11" fill="#e11d48" font-weight="700" font-family="Noto Sans KR" text-anchor="middle">대형주</text>
+        <text x="250" y="210" font-size="10" fill="#777" font-family="Noto Sans KR" text-anchor="middle">중형주</text>
+        <text x="310" y="210" font-size="10" fill="#777" font-family="Noto Sans KR" text-anchor="middle">소형주</text>
+        <!-- Arrows -->
+        <text x="190" y="25" font-size="10" fill="#1a1a1a" font-weight="700" font-family="Noto Sans KR" text-anchor="middle">높은 비중</text>
+        <text x="70" y="178" font-size="9" fill="#777" font-family="Noto Sans KR" text-anchor="middle">낮은 비중</text>
+        <!-- Risk line -->
+        <text x="50" y="16" font-size="9" fill="#22c55e" font-family="Noto Sans KR">🟢 보수적</text>
+        <text x="280" y="16" font-size="9" fill="#e11d48" font-family="Noto Sans KR">🔴 공격적</text>
+        <line x1="100" y1="12" x2="270" y2="12" stroke="#d1d5db" stroke-width="1" stroke-dasharray="4"/>
+        <!-- Cash -->
+        <rect x="310" y="150" width="40" height="36" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+        <text x="330" y="170" font-size="8" fill="#166534" font-family="Noto Sans KR" text-anchor="middle">현금</text>
+        <text x="330" y="180" font-size="7" fill="#166534" font-family="Noto Sans KR" text-anchor="middle">5~30%</text>
+      </svg>
+    </div>
+
+    <h3>종형 포트폴리오의 핵심 장점</h3>
+    <p><strong>① 안정성:</strong> 대형·메가캡 성장주/가치주를 중심으로 두어, 폭락장에서도 견디는 능력이 크고 회복도 빠릅니다.</p>
+    <p><strong>② 리스크 분산:</strong> 한두 종목 실패 시에도 전체 포트폴리오 변화가 미미합니다.</p>
+    <p><strong>③ 유연한 리밸런싱:</strong> 섹터 로테이션 시 전체 포트폴리오의 변화를 미리 이해하고 조정 가능합니다.</p>
+    <p><strong>④ 현금 보유:</strong> 항상 5~30%의 현금을 유지하여 새로운 기회 포착 및 하락 시 추가 매수에 활용합니다.</p>
+
+    <div class="quote-block">
+      "모래 위에 성을 쌓으면 망합니다. 종형 포트폴리오는 바위 위에 집을 짓는 형태입니다."
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section fade-in" id="s8">
+    <div class="section-num">08</div>
+    <h2>5·25 법칙과 비중 조절</h2>
+    <p>포트폴리오 비중 관리의 핵심 원칙이 <strong>5·25 법칙</strong>입니다.</p>
+
+    <div class="sim-container">
+      <h4>📏 5·25 법칙</h4>
+      <div class="table-wrap" style="margin:0;">
+        <table>
+          <thead>
+            <tr><th>구분</th><th>최대 비중</th><th>적용 대상</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>25% 상한</strong></td><td>25%</td><td>아무리 좋은 대형주(라지캡)라도 한 종목에 25% 초과 금지</td></tr>
+            <tr><td><strong>5% 하한</strong></td><td>5%</td><td>고위험 종목(밈주식, 소형주, 변동성 높은 주식)은 5% 이하</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--text-sub);margin-top:12px;">* 비중이 어긋날 때마다 반드시 맞출 필요는 없지만, 5·25 법칙의 범위에서 벗어나서는 안 됩니다.</p>
+    </div>
+
+    <h3>미국 시장의 60:40 / 70:30 원칙</h3>
+    <p>미국 투자에서 특별한 상황(동반 하락장)이 아니면, 시장 참여자의 <strong>60~70%는 오르고 30~40%는 빠지는 것이 정상</strong>입니다. 10개 종목 중 2개가 하락하고 8개가 상승하는 것은 건강한 포트폴리오의 신호입니다. 오히려 10개가 모두 오르는 동반 상승장이 더 위험합니다.</p>
+
+    <div class="warning-box">
+      <strong>⚠️ 망하는 두 가지 방법:</strong><br>
+      ① 잡주(밈주식 등)에 과도한 비중을 투자하여 큰 손실<br>
+      ② 급전이 필요해 좋은 종목을 헐값에 매도하여 기회비용 상실
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section fade-in" id="s9">
+    <div class="section-num">09</div>
+    <h2>가치주 vs 성장주 비교</h2>
+
+    <div class="chart-container fade-in">
+      <canvas id="vsChart" height="230"></canvas>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>특성</th><th>가치주 (Value)</th><th>성장주 (Growth)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>주가 변동</td><td>느리게 상승, 덜 하락</td><td>빠르게 상승, 크게 하락 가능</td></tr>
+          <tr><td>배당</td><td>정기적 배당 지급 (1~3%)</td><td>배당 없거나 매우 적음</td></tr>
+          <tr><td>베타(β)</td><td>1 이하 (저변동)</td><td>1 이상, 2 이상도 가능 (고변동)</td></tr>
+          <tr><td>대표 종목</td><td>J&J, MMM, 다우지수 편입 종목</td><td>AI 관련주, 성장형 IT 기업</td></tr>
+          <tr><td>적합 투자자</td><td>보수적, 은퇴 준비 투자자</td><td>장기 성장 지향, 리스크 감내 가능</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub-text">가치주 투자 시 배당금이 늘어나는지·줄어드는지·중단되는지를 반드시 모니터링해야 합니다. 배당 축소는 부정적 신호입니다.</p>
+  </div>
+
+  <!-- SECTION 10: Portfolio Simulator -->
+  <div class="section fade-in" id="s10">
+    <div class="section-num">10</div>
+    <h2>실전 포트폴리오 시뮬레이터</h2>
+    <p>아래 슬라이더를 조절하여 나만의 종형 포트폴리오 비중을 실험해 보세요.</p>
+
+    <div class="sim-container">
+      <h4>🎮 포트폴리오 비중 배분 시뮬레이터</h4>
+
+      <div class="sim-row">
+        <span class="sim-label">메가/라지캡</span>
+        <input type="range" class="sim-slider" id="slLarge" min="30" max="80" value="60" oninput="updateSim()">
+        <span class="sim-value" id="vlLarge">60%</span>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">미드캡</span>
+        <input type="range" class="sim-slider" id="slMid" min="5" max="40" value="20" oninput="updateSim()">
+        <span class="sim-value" id="vlMid">20%</span>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">스몰캡</span>
+        <input type="range" class="sim-slider" id="slSmall" min="0" max="20" value="5" oninput="updateSim()">
+        <span class="sim-value" id="vlSmall">5%</span>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">현금</span>
+        <input type="range" class="sim-slider" id="slCash" min="5" max="30" value="15" oninput="updateSim()">
+        <span class="sim-value" id="vlCash">15%</span>
+      </div>
+
+      <div class="sim-result" id="simResult">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+          <span style="font-size:13px;font-weight:600;">합계:</span>
+          <span class="big-num" id="simTotal">100%</span>
+        </div>
+        <div id="simFeedback" style="font-size:13px;line-height:1.7;"></div>
+      </div>
+
+      <div class="chart-container" style="margin-top:14px;max-height:260px;">
+        <canvas id="simPieChart" height="200"></canvas>
+      </div>
+
+      <button class="btn-reset" onclick="resetSim()">↻ 초기화</button>
+    </div>
+  </div>
+
+  <!-- Risk Tolerance Simulator -->
+  <div class="section fade-in">
+    <h2>리스크 감내 수준 계산기</h2>
+    <p>투자 가능 금액과 최대 감내 하락률을 입력하면, 실제 손실 금액을 확인할 수 있습니다.</p>
+    <div class="sim-container">
+      <h4>💰 리스크 시뮬레이터</h4>
+      <div class="sim-row">
+        <span class="sim-label">투자 금액($)</span>
+        <input type="number" id="riskAmt" value="100000" min="1000" max="10000000" style="flex:1;padding:8px;border:1px solid #e5e5e5;border-radius:6px;font-size:14px;font-family:'Noto Sans KR';" oninput="calcRisk()">
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">최대 하락률</span>
+        <input type="range" class="sim-slider" id="riskPct" min="5" max="60" value="20" oninput="calcRisk()">
+        <span class="sim-value" id="riskPctVal">-20%</span>
+      </div>
+      <div class="sim-result" id="riskResult">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:11px;color:var(--text-sub);">최대 예상 손실</div>
+            <div class="big-num" id="riskLoss">-$20,000</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-sub);">남는 자산</div>
+            <div class="big-num" style="color:var(--chart4);" id="riskRemain">$80,000</div>
+          </div>
+        </div>
+        <p id="riskAdvice" style="margin-top:10px;font-size:13px;line-height:1.7;"></p>
+      </div>
+      <button class="btn-reset" onclick="document.getElementById('riskAmt').value=100000;document.getElementById('riskPct').value=20;calcRisk();">↻ 초기화</button>
+    </div>
+  </div>
+
+  <!-- Key Takeaways -->
+  <div class="section fade-in">
+    <h2>핵심 요약</h2>
+    <div class="highlight-box" style="background:linear-gradient(135deg,#1a1a1a,#2d1f2f);color:#fff;border-left-color:#e11d48;">
+      <strong style="color:#f43f5e;">투자 포트폴리오 구성 5단계 프로세스</strong><br><br>
+      <strong style="color:#fff;">Step 1.</strong> 자기 자신을 알라 — 투자 성향·리스크 감내 수준 파악<br>
+      <strong style="color:#fff;">Step 2.</strong> 투자 목적 결정 — 성장 / 현재소득 / 토탈 리턴<br>
+      <strong style="color:#fff;">Step 3.</strong> 섹터 중심 사고 — 11개 섹터에서 유망 섹터 선별<br>
+      <strong style="color:#fff;">Step 4.</strong> 종형 포트폴리오 구축 — 대형주 중심 + 5·25 법칙 준수<br>
+      <strong style="color:#fff;">Step 5.</strong> 펀더멘털 기반 매매 — 노이즈가 아닌 시그널로 판단
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>투자는인생TV</strong> · 투자 아카데미 19회 특별공개방송 분석<br>
+    테일러 투자자문 CIO · 24년 미국 월가 경력<br>
+    <span style="margin-top:8px;display:block;">본 자료는 교육 목적으로 작성되었으며, 특정 종목에 대한 매수·매도 추천이 아닙니다.</span>
+  </div>
+
+</div>
+
+<script>
+// Toggle investment objective tabs
+function showToggle(idx) {
+  document.querySelectorAll('.toggle-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.toggle-content').forEach((c,i) => c.classList.toggle('active', i===idx));
+}
+
+// Sector card toggle
+function toggleSector(card, desc) {
+  const detail = document.getElementById('sectorDetail');
+  const wasActive = card.classList.contains('active');
+  document.querySelectorAll('.sector-card').forEach(c => c.classList.remove('active'));
+  if (wasActive) {
+    detail.style.display = 'none';
+  } else {
+    card.classList.add('active');
+    detail.textContent = desc;
+    detail.style.display = 'block';
+  }
+}
+
+// GICS flow toggle
+function toggleFlow(el) {
+  el.classList.toggle('active');
+}
+
+// Portfolio simulator
+let simPie = null;
+function updateSim() {
+  const l = +document.getElementById('slLarge').value;
+  const m = +document.getElementById('slMid').value;
+  const s = +document.getElementById('slSmall').value;
+  const c = +document.getElementById('slCash').value;
+  const total = l + m + s + c;
+
+  document.getElementById('vlLarge').textContent = l + '%';
+  document.getElementById('vlMid').textContent = m + '%';
+  document.getElementById('vlSmall').textContent = s + '%';
+  document.getElementById('vlCash').textContent = c + '%';
+  document.getElementById('simTotal').textContent = total + '%';
+  document.getElementById('simTotal').style.color = total === 100 ? '#e11d48' : '#dc2626';
+
+  let fb = '';
+  if (total !== 100) fb += '⚠️ 비중 합계가 100%가 되도록 조절해 주세요.<br>';
+  if (l < 40) fb += '💡 대형주 비중이 40% 미만이면 안정성이 낮아집니다.<br>';
+  if (s > 10) fb += '⚡ 소형주 비중 10% 초과 — 공격적 포트폴리오입니다.<br>';
+  if (c < 5) fb += '💵 현금 비중 5% 미만 — 기회 포착이 어려워집니다.<br>';
+  if (l >= 50 && c >= 10 && s <= 10 && total === 100) fb = '✅ 균형 잡힌 종형 포트폴리오입니다!';
+  document.getElementById('simFeedback').innerHTML = fb;
+
+  // Pie chart
+  const ctx = document.getElementById('simPieChart');
+  if (simPie) simPie.destroy();
+  simPie = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['메가/라지캡', '미드캡', '스몰캡', '현금'],
+      datasets: [{
+        data: [l, m, s, c],
+        backgroundColor: ['#e11d48', '#2563eb', '#6b7280', '#22c55e'],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 12 } }
+      }
+    }
+  });
+}
+
+function resetSim() {
+  document.getElementById('slLarge').value = 60;
+  document.getElementById('slMid').value = 20;
+  document.getElementById('slSmall').value = 5;
+  document.getElementById('slCash').value = 15;
+  updateSim();
+}
+
+// Risk calculator
+function calcRisk() {
+  const amt = Math.max(0, +document.getElementById('riskAmt').value || 0);
+  const pct = +document.getElementById('riskPct').value;
+  const loss = amt * pct / 100;
+  const remain = amt - loss;
+
+  document.getElementById('riskPctVal').textContent = '-' + pct + '%';
+  document.getElementById('riskLoss').textContent = '-$' + loss.toLocaleString();
+  document.getElementById('riskRemain').textContent = '$' + remain.toLocaleString();
+
+  let advice = '';
+  if (pct <= 10) advice = '보수적 투자 성향입니다. 가치주·배당주 중심 포트폴리오가 적합합니다.';
+  else if (pct <= 25) advice = '중간 정도의 리스크 감내 수준입니다. 가치주+성장주 혼합 포트폴리오를 추천합니다.';
+  else if (pct <= 40) advice = '공격적 투자 성향입니다. 성장주 비중을 높이되, 5·25 법칙을 반드시 지켜야 합니다.';
+  else advice = '매우 공격적 투자 성향입니다. 이 수준의 하락을 실제로 견딜 수 있는지 신중히 판단하세요.';
+  document.getElementById('riskAdvice').textContent = advice;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  updateSim();
+  calcRisk();
+});
+
+// Fade-in observer
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// Chart configs
+const chartConfigs = {};
+
+chartConfigs['sectorChart'] = () => {
+  new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['IT', 'Comm.\nServices', 'Cons.\nDisc.', 'Financials', 'Healthcare', 'Energy', 'Industrials', 'Materials', 'Utilities', 'Real\nEstate', 'Cons.\nStaples'],
+      datasets: [
+        {
+          label: '2023년 초 하락폭(%)',
+          data: [-28, -12, -15, -22, -5, -18, -8, -10, -3, -14, -2],
+          backgroundColor: 'rgba(225,29,72,0.7)'
+        },
+        {
+          label: '2023년 말 상승률(%)',
+          data: [52, 48, 38, 10, 8, 5, 12, 7, 3, 6, 4],
+          backgroundColor: 'rgba(37,99,235,0.7)'
+        },
+        {
+          label: '2024년 상승률(%)',
+          data: [35, 30, 22, 28, 12, 18, 15, 8, 10, 5, 9],
+          backgroundColor: 'rgba(107,114,128,0.6)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 10, family: 'Noto Sans KR' }, padding: 8 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%'
+          }
+        }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '%', font: { size: 10 } }, grid: { color: '#f0f0f0' } },
+        x: { ticks: { font: { size: 9 }, maxRotation: 0 }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['vsChart'] = () => {
+  new Chart(document.getElementById('vsChart'), {
+    type: 'radar',
+    data: {
+      labels: ['안정성', '배당 수익', '성장 잠재력', '변동성(역)', '장기 수익률'],
+      datasets: [
+        {
+          label: '가치주',
+          data: [85, 80, 40, 80, 55],
+          backgroundColor: 'rgba(37,99,235,0.15)',
+          borderColor: '#2563eb',
+          borderWidth: 2,
+          pointBackgroundColor: '#2563eb'
+        },
+        {
+          label: '성장주',
+          data: [40, 15, 90, 30, 80],
+          backgroundColor: 'rgba(225,29,72,0.15)',
+          borderColor: '#e11d48',
+          borderWidth: 2,
+          pointBackgroundColor: '#e11d48'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 12 } }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { stepSize: 25, display: false },
+          pointLabels: { font: { size: 10, family: 'Noto Sans KR' } },
+          grid: { color: '#e5e5e5' }
+        }
+      }
+    }
+  });
+};
+
+// Chart observer
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+
+</body>
+</html>
