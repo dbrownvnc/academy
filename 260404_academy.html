@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 45편 — 투자의 7가지 목적과 선진화</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-alt: #fafafa;
+  --text: #1a1a1a;
+  --text-sub: #777777;
+  --accent: #e11d48;
+  --accent2: #f43f5e;
+  --chart1: #e11d48;
+  --chart2: #1a1a1a;
+  --chart3: #6b7280;
+  --chart4: #2563eb;
+  --table-bg: #fafafa;
+  --table-header: #e11d48;
+  --table-border: #e5e5e5;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1f2f 40%, #3b1525 70%, #1a1a1a 100%);
+  color: #fff;
+  padding: 60px 20px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 70%, rgba(225,29,72,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(244,63,94,0.1) 0%, transparent 50%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-3%, 3%); }
+}
+.hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+.hero-tag {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+.hero .subtitle {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  line-height: 1.6;
+}
+.hero-meta {
+  margin-top: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.5px;
+}
+
+/* Layout */
+.container { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+section { padding: 36px 0; }
+section + section { border-top: 1px solid var(--table-border); }
+
+/* Typography */
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  line-height: 1.3;
+}
+h2 .num {
+  color: var(--accent);
+  font-weight: 800;
+}
+h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 24px 0 10px;
+  color: var(--text);
+}
+p { margin-bottom: 14px; color: var(--text); }
+.lead {
+  font-size: 16px;
+  color: var(--text-sub);
+  font-weight: 300;
+  border-left: 3px solid var(--accent);
+  padding-left: 16px;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-alt);
+  border-radius: 10px;
+  padding: 22px;
+  margin: 18px 0;
+  border: 1px solid var(--table-border);
+}
+.card-accent {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(135deg, #fff5f7 0%, var(--bg-alt) 100%);
+}
+.card h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+.card p:last-child { margin-bottom: 0; }
+
+/* Purpose list */
+.purpose-item {
+  display: flex;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--table-border);
+}
+.purpose-item:last-child { border-bottom: none; }
+.purpose-num {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 16px;
+  margin-top: 2px;
+}
+.purpose-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.purpose-content .en {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 400;
+  margin-left: 6px;
+}
+.purpose-content p {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 0;
+}
+
+/* Stage timeline */
+.timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--chart3));
+}
+.timeline-item {
+  position: relative;
+  padding: 14px 0 20px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px; top: 18px;
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline-item .era {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.timeline-item h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.timeline-item p {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 0;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+th {
+  background: var(--table-header);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--table-border);
+  background: var(--table-bg);
+}
+tr:last-child td { border-bottom: none; }
+
+/* Highlight box */
+.highlight-box {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  color: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+.highlight-box h3 {
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  margin-top: 0;
+}
+.highlight-box p { color: rgba(255,255,255,0.9); }
+.highlight-box p:last-child { margin-bottom: 0; }
+
+/* Charts */
+.fade-in {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.chart-container {
+  position: relative;
+  max-height: 340px;
+  margin: 20px 0;
+}
+.chart-container canvas {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  max-height: 300px;
+}
+.chart-container.chart-ready canvas {
+  opacity: 1;
+}
+.chart-label {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 6px;
+}
+
+/* Interactive simulator */
+.sim-box {
+  background: var(--bg-alt);
+  border: 1px solid var(--table-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.sim-box h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sim-row {
+  margin-bottom: 16px;
+}
+.sim-row label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.sim-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.sim-row .val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  float: right;
+}
+.sim-result {
+  background: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-top: 12px;
+}
+.sim-result .big {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.sim-result .label {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+.sim-btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.sim-btn:hover { background: var(--accent2); }
+.sim-btn.reset {
+  background: var(--chart3);
+}
+.sim-btn.reset:hover { background: #555; }
+
+/* Flip cards */
+.flip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+@media (max-width: 420px) {
+  .flip-grid { grid-template-columns: 1fr; }
+}
+.flip-card {
+  perspective: 800px;
+  height: 120px;
+  cursor: pointer;
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-front, .flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+.flip-front {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  font-weight: 700;
+}
+.flip-back {
+  background: var(--bg-alt);
+  border: 2px solid var(--accent);
+  color: var(--text);
+  transform: rotateY(180deg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Drag compare */
+.compare-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  margin: 16px 0;
+}
+.compare-btn {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fff;
+  color: var(--text);
+  border: none;
+}
+.compare-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Footer */
+.footer {
+  background: var(--text);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+/* Divider */
+.divider {
+  width: 40px;
+  height: 3px;
+  background: var(--accent);
+  margin: 10px 0 20px;
+  border-radius: 2px;
+}
+
+/* Portfolio bar */
+.port-bar {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 32px;
+  margin: 12px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+.port-bar div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.6s ease;
+}
+
+/* Lifecycle */
+.lifecycle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.lifecycle-item {
+  flex: 1 1 calc(50% - 8px);
+  min-width: 140px;
+  background: var(--bg-alt);
+  border: 1px solid var(--table-border);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 13px;
+  position: relative;
+  padding-left: 40px;
+}
+.lifecycle-item .age {
+  position: absolute;
+  left: 10px; top: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: #fff5f7;
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.lifecycle-item strong { display: block; font-size: 13px; margin-bottom: 2px; }
+.lifecycle-item span { font-size: 11px; color: var(--text-sub); }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">투자 아카데미 · 제45편</div>
+    <h1>투자의 7가지 목적과<br>미국 주식 선진화의 교훈</h1>
+    <p class="subtitle">왜 투자에는 명확한 목적이 필요한가?<br>100년에 걸친 미국 투자 선진화 4단계와 한국 투자자에게 주는 시사점</p>
+    <p class="hero-meta">투자는인생TV 아카데미 · 2026년 분석</p>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- 핵심 요약 -->
+<section>
+  <h2><span class="num">00</span> 핵심 요약</h2>
+  <div class="divider"></div>
+  <p class="lead">투자에는 7가지 서로 다른 목적이 존재하며, 목적에 따라 수익률·리스크·포트폴리오 구성이 완전히 달라진다. 한국은 현재 '투기(Speculation)' 중심의 1단계에 머물러 있으며, 미국이 100년에 걸쳐 도달한 '토탈 파이낸셜 플래닝' 4단계로 나아가야 한다.</p>
+
+  <div class="highlight-box fade-in">
+    <h3>이 강의의 3대 메시지</h3>
+    <p>① 투자 목적이 다르면 수익률 비교 자체가 무의미하다</p>
+    <p>② 주식 중심의 스톡피킹은 미국이 60년 전 졸업한 방식이다</p>
+    <p>③ 토탈 파이낸셜 플래닝 = 요람에서 무덤까지 인생 설계</p>
+  </div>
+</section>
+
+<!-- 투자의 7가지 목적 -->
+<section>
+  <h2><span class="num">01</span> 투자의 7가지 목적</h2>
+  <div class="divider"></div>
+  <p>투자하기 전에 반드시 자신의 <strong>투자 목적</strong>을 정해야 한다. 목적 없는 투자는 방향 없는 항해와 같다. 미국의 선진 투자 문화에서는 이 7가지 목적을 명확히 구분한다.</p>
+
+  <div class="fade-in">
+    <div class="purpose-item">
+      <div class="purpose-num">1</div>
+      <div class="purpose-content">
+        <h4>성장 <span class="en">Growth</span></h4>
+        <p>주가 상승을 통한 투자자본 증식. S&P 500 대형주 중심으로 투자. 밈주식이나 고위험 소형주가 아닌, 미국 500대 기업에 해당하는 종목이 대상.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">2</div>
+      <div class="purpose-content">
+        <h4>인컴 <span class="en">Income</span></h4>
+        <p>정기적 배당·이자 수익으로 현금 흐름 창출. 은퇴자, 조기 은퇴 운동선수 등이 주요 대상. 6~9% 배당 종목과 채권 포함 포트폴리오 구성.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">3</div>
+      <div class="purpose-content">
+        <h4>토탈 리턴 <span class="en">Total Return</span></h4>
+        <p>성장(1번)과 인컴(2번)의 결합. 배당을 주는 블루칩 가치주 + BBB급 이상 채권으로 구성된 토탈 리턴 펀드.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">4</div>
+      <div class="purpose-content">
+        <h4>자본 보전 <span class="en">Preservation of Capital</span></h4>
+        <p>원금 손실 위험을 최소화. 정부 국채(Treasury Bond), 10년 만기 국채, MMF, 보수적 CD 등으로 구성. 자산가가 인플레이션 이상의 수익만 추구할 때 적합.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">5</div>
+      <div class="purpose-content">
+        <h4>절세 <span class="en">Tax Reduction</span></h4>
+        <p>세금 부담을 줄이기 위한 투자. 지방채(Municipal Bond)는 지방세 면제로 5% 수익 = 7% 수준 효과. 529 플랜(학자금), 신탁계좌(Trust Account), 1031 Exchange(부동산) 등 다양한 절세 수단 활용.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">6</div>
+      <div class="purpose-content">
+        <h4>투기 <span class="en">Speculation</span></h4>
+        <p>수익률 극대화가 유일한 목표. 기술적 분석(차트) 중심, 제로섬 게임. 페니스톡 몰빵 등 고위험 투자. 한국 개인투자자의 99%가 이 함정에 빠져 있다고 경고.</p>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">7</div>
+      <div class="purpose-content">
+        <h4>유동성 <span class="en">Liquidity</span></h4>
+        <p>급전 필요 시 빠른 현금화가 목적. 2년 이내 사용 예정 자금(주택구입, 결혼자금 등)은 고위험 주식 투자 부적합. 보수적 자산에 배치 필요.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart: 7가지 목적별 위험-수익 -->
+  <div class="chart-container fade-in">
+    <canvas id="chart1" height="240"></canvas>
+  </div>
+  <p class="chart-label">투자 목적별 위험-수익 프로파일 (개념적 비교)</p>
+</section>
+
+<!-- 목적별 비교 불가 -->
+<section>
+  <h2><span class="num">02</span> 왜 수익률 비교가 무의미한가</h2>
+  <div class="divider"></div>
+  <p>투자 목적이 다르면 기대수익률·리스크 수준·포트폴리오 구성이 완전히 다르다. 유동성 목적의 투자자가 투기 목적 투자자와 수익률을 비교하는 것은 <strong>마라톤 선수와 100m 단거리 선수의 기록을 비교</strong>하는 것만큼 의미 없다.</p>
+
+  <div class="card card-accent fade-in">
+    <h4>핵심 원칙</h4>
+    <p>"내 친구가 투기로 두 배를 벌었다고 해서, 유동성 확보가 목적인 나의 연 5% 수익이 잘못된 것이 아니다. 투자 목적이 다르면 수익률 비교 자체가 성립하지 않는다."</p>
+  </div>
+
+  <table class="fade-in">
+    <tr><th>투자 목적</th><th>기대수익률</th><th>리스크</th><th>대표 자산</th></tr>
+    <tr><td>성장</td><td>8~12%</td><td>중~높음</td><td>S&P 500 대형주</td></tr>
+    <tr><td>인컴</td><td>4~9%</td><td>중</td><td>배당주, 채권</td></tr>
+    <tr><td>토탈 리턴</td><td>6~10%</td><td>중</td><td>블루칩 가치주+채권</td></tr>
+    <tr><td>자본 보전</td><td>2~5%</td><td>낮음</td><td>국채, MMF, CD</td></tr>
+    <tr><td>절세</td><td>3~6%</td><td>낮~중</td><td>지방채, 529, Trust</td></tr>
+    <tr><td>투기</td><td>-100~∞%</td><td>극히 높음</td><td>페니스톡, 밈주식</td></tr>
+    <tr><td>유동성</td><td>1~4%</td><td>매우 낮음</td><td>단기채, 현금성 자산</td></tr>
+  </table>
+</section>
+
+<!-- 투기의 문제점 -->
+<section>
+  <h2><span class="num">03</span> 투기(Speculation)의 구조적 문제</h2>
+  <div class="divider"></div>
+  <p>강연자는 한국 투자문화의 가장 큰 문제로 <strong>투기와 투자의 구분 부재</strong>를 꼽았다. 투기를 조장하는 3가지 신호가 있다.</p>
+
+  <div class="card fade-in">
+    <h4>투기 판별 3가지 신호</h4>
+    <p><strong>① 기술적 분석(차트) 만능주의:</strong> 그래프만 그려놓고 "이때 매수, 이때 매도"를 반복하는 방식. 펀더멘털 분석 없는 제로섬 게임.</p>
+    <p><strong>② "몇 배 벌었다" 과시:</strong> 위험(리스크)에 대한 언급 없이 수익률만 강조. "천만원으로 100억 벌었다"는 뒤에는 수많은 실패자가 존재.</p>
+    <p><strong>③ 페니스톡 몰빵:</strong> 1달러 이하 소형 제약주 등에 수십만 달러를 집중 투자하는 극단적 위험 감수.</p>
+  </div>
+
+  <div class="card card-accent fade-in">
+    <h4>선진국과 후진국의 투자 보도 차이</h4>
+    <p><strong>후진국형:</strong> "XX주식으로 100배 수익!" — 리스크 언급 없음</p>
+    <p><strong>선진국형:</strong> "이 투자의 수익은 XX%였으나, 리스크 수준은 매우 높은 자산이었다" — 리스크와 리턴을 함께 보도</p>
+  </div>
+
+  <!-- 투기 vs 투자 비교 토글 -->
+  <div class="sim-box fade-in">
+    <h4>🔄 투기 vs 투자 비교</h4>
+    <div class="compare-toggle">
+      <button class="compare-btn active" onclick="showCompare('spec')">투기 (Speculation)</button>
+      <button class="compare-btn" onclick="showCompare('inv')">투자 (Investment)</button>
+    </div>
+    <div id="compare-content">
+      <div id="comp-spec">
+        <table>
+          <tr><td><strong>목표</strong></td><td>단기 수익률 극대화</td></tr>
+          <tr><td><strong>분석</strong></td><td>기술적 분석 (차트 패턴)</td></tr>
+          <tr><td><strong>기간</strong></td><td>수일~수주</td></tr>
+          <tr><td><strong>리스크</strong></td><td>극히 높음 (원금 전액 손실 가능)</td></tr>
+          <tr><td><strong>승률</strong></td><td>개인투자자 99% 손실</td></tr>
+          <tr><td><strong>본질</strong></td><td>제로섬 게임</td></tr>
+        </table>
+      </div>
+      <div id="comp-inv" style="display:none;">
+        <table>
+          <tr><td><strong>목표</strong></td><td>장기 자산 증식 / 목적 달성</td></tr>
+          <tr><td><strong>분석</strong></td><td>펀더멘털 + 거시경제 분석</td></tr>
+          <tr><td><strong>기간</strong></td><td>수년~수십년</td></tr>
+          <tr><td><strong>리스크</strong></td><td>분산 투자로 관리</td></tr>
+          <tr><td><strong>승률</strong></td><td>장기 S&P 500 연평균 ~10%</td></tr>
+          <tr><td><strong>본질</strong></td><td>기업 성장의 과실 공유</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 미국 투자 선진화 4단계 -->
+<section>
+  <h2><span class="num">04</span> 미국 투자 선진화 4단계</h2>
+  <div class="divider"></div>
+  <p>미국 투자 문화가 100년에 걸쳐 진화해 온 과정을 4단계로 정리했다. 한국은 현재 <strong>1단계(주식 중심 스톡피킹)</strong>에 머물러 있으며, 최소 3단계로 도약해야 한다.</p>
+
+  <div class="timeline fade-in">
+    <div class="timeline-item">
+      <div class="era">1단계 · 1929~1960년대</div>
+      <h4>주식 중심 스톡피킹</h4>
+      <p>개별 주식 선택에 집중. 대공황(1929) 이후 5~6년간 주가 회복 불능 → 주식 중심 사고의 한계 노출. <strong>현재 한국이 이 단계.</strong></p>
+    </div>
+    <div class="timeline-item">
+      <div class="era">2단계 · 1970년대~</div>
+      <h4>투자 위험 분산 (섹터 분류)</h4>
+      <p>1970년대 오일쇼크 이후 산업별 11개 섹터 분류 체계 확립. 섹터별 순환(Rotation)을 통한 위험 분산 개념 등장.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="era">3단계 · 1990~2000년대</div>
+      <h4>포트폴리오 구성 & 리밸런싱</h4>
+      <p>인터넷 버블 시대. 포트폴리오 구성·섹터 로테이션·리밸런싱 개념 실전 배치. 거시경제 신호 → 산업 → 섹터 → 유망 종목의 Top-down 접근. <strong>이 방송이 가르치고자 하는 단계.</strong></p>
+    </div>
+    <div class="timeline-item">
+      <div class="era">4단계 · 현재</div>
+      <h4>토탈 파이낸셜 플래닝</h4>
+      <p>요람에서 무덤까지(Cradle to Grave) 인생 전체의 재무설계. 투자 계좌·절세·학자금·은퇴·장기요양·유산까지 통합 관리.</p>
+    </div>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart2" height="220"></canvas>
+  </div>
+  <p class="chart-label">미국 투자 선진화 단계별 복잡성과 한국 현재 위치</p>
+</section>
+
+<!-- 333 법칙 & 한국 자산구조 -->
+<section>
+  <h2><span class="num">05</span> 333 법칙과 한국의 자산 구조 편중</h2>
+  <div class="divider"></div>
+  <p>선진국의 자산배분 원칙인 <strong>'333 법칙'</strong>은 주식 30%, 부동산 30%, 대안투자·현금 등 나머지 40%로 균형 잡힌 포트폴리오를 구성하는 것이다. 그러나 한국은 부동산 비중이 <strong>90% 이상</strong>으로 극단적 쏠림 현상을 보인다.</p>
+
+  <h3>선진국형 자산배분 (333법칙)</h3>
+  <div class="port-bar fade-in">
+    <div style="width:30%;background:var(--accent)">주식 30%</div>
+    <div style="width:30%;background:var(--chart2)">부동산 30%</div>
+    <div style="width:30%;background:var(--chart3)">대안투자 30%</div>
+    <div style="width:10%;background:var(--chart4)">현금 10%</div>
+  </div>
+
+  <h3>한국형 자산구조 (현실)</h3>
+  <div class="port-bar fade-in">
+    <div style="width:90%;background:var(--chart2)">부동산 90%+</div>
+    <div style="width:7%;background:var(--accent);font-size:9px">주식</div>
+    <div style="width:3%;background:var(--chart3);font-size:9px">기타</div>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart3" height="240"></canvas>
+  </div>
+  <p class="chart-label">선진국형 vs 한국형 자산 배분 비교</p>
+</section>
+
+<!-- 토탈 파이낸셜 플래닝 -->
+<section>
+  <h2><span class="num">06</span> 토탈 파이낸셜 플래닝</h2>
+  <div class="divider"></div>
+  <p>미국의 투자 선진화 4단계인 <strong>Total Financial Planning</strong>은 태어나서 사망할 때까지(Cradle to Grave) 인생 전체를 재무적으로 설계하는 것이다.</p>
+
+  <h3>인생 주기별 재무 설계</h3>
+  <div class="lifecycle fade-in">
+    <div class="lifecycle-item"><span class="age">0세</span><strong>투자 계좌 개설</strong><span>출생 시 투자 계좌 개설</span></div>
+    <div class="lifecycle-item"><span class="age">0~18</span><strong>학자금 준비</strong><span>529 플랜 등 절세형 저축</span></div>
+    <div class="lifecycle-item"><span class="age">20대</span><strong>투자 시작</strong><span>소득의 일부 원천징수식 투자</span></div>
+    <div class="lifecycle-item"><span class="age">20~30</span><strong>은퇴 계좌 운영</strong><span>401k 등 은퇴 계좌 시작</span></div>
+    <div class="lifecycle-item"><span class="age">30대</span><strong>주택 구입</strong><span>주택 자금 마련·대출 관리</span></div>
+    <div class="lifecycle-item"><span class="age">30~40</span><strong>결혼·출산</strong><span>가족 보험·학자금 계좌 개설</span></div>
+    <div class="lifecycle-item"><span class="age">50~60</span><strong>자산관리 전환</strong><span>성장→인컴 전환, 리스크 축소</span></div>
+    <div class="lifecycle-item"><span class="age">60+</span><strong>신탁계좌</strong><span>절세 목적 Trust 설정</span></div>
+    <div class="lifecycle-item"><span class="age">70~80</span><strong>롱텀케어</strong><span>간호·요양 비용 대비</span></div>
+    <div class="lifecycle-item"><span class="age">사후</span><strong>유산·장례</strong><span>장례비용 포함 자산 이전</span></div>
+  </div>
+</section>
+
+<!-- 노동 소득 vs 투자 소득 -->
+<section>
+  <h2><span class="num">07</span> 왜 투자해야 하는가</h2>
+  <div class="divider"></div>
+  <p>1990년대 이후 인터넷과 기술혁명으로 <strong>투자 수익이 노동 수익을 기하급수적으로 앞지르기 시작</strong>했다. 임금 상승률은 인플레이션을 따라가지 못하며, 월급만으로는 자산을 형성할 수 없는 시대가 되었다.</p>
+
+  <div class="card fade-in">
+    <h4>투자가 필수인 5가지 이유</h4>
+    <p><strong>① 노동 소득의 한계:</strong> 노동 수익 기간 최대 30년, 인플레이션 대비 실질 구매력 하락</p>
+    <p><strong>② 평생 직장 소멸:</strong> 1990년대부터 대량해고 만연 (구글도 13,000명 정리해고)</p>
+    <p><strong>③ 현금 가치 하락:</strong> 인플레이션으로 현금의 실질 가치 지속 하락</p>
+    <p><strong>④ 수명 증가:</strong> 100세 시대, 은퇴 후 40년을 대비해야</p>
+    <p><strong>⑤ AI 대체 위험:</strong> 4차 산업혁명으로 단순 화이트칼라 일자리 소멸 가속</p>
+  </div>
+
+  <!-- 복리 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <h4>🧮 복리 투자 시뮬레이터</h4>
+    <div class="sim-row">
+      <label>월 투자금 <span class="val" id="monthlyVal">₩1,000,000</span></label>
+      <input type="range" id="monthly" min="100000" max="5000000" step="100000" value="1000000" oninput="calcCompound()">
+    </div>
+    <div class="sim-row">
+      <label>연평균 수익률 <span class="val" id="rateVal">8%</span></label>
+      <input type="range" id="rate" min="2" max="15" step="0.5" value="8" oninput="calcCompound()">
+    </div>
+    <div class="sim-row">
+      <label>투자 기간 <span class="val" id="yearsVal">20년</span></label>
+      <input type="range" id="years" min="5" max="40" step="1" value="20" oninput="calcCompound()">
+    </div>
+    <div class="sim-result">
+      <div class="big" id="resultTotal">₩5억 8,902만</div>
+      <div class="label">예상 자산 총액</div>
+      <div style="margin-top:8px;font-size:13px;color:var(--text-sub);">
+        원금 합계: <strong id="resultPrincipal">₩2억 4,000만</strong> · 수익: <strong id="resultProfit" style="color:var(--accent)">₩3억 4,902만</strong>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px;">
+      <button class="sim-btn reset" onclick="resetCompound()">초기화</button>
+    </div>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart4" height="240"></canvas>
+  </div>
+  <p class="chart-label">노동소득 vs 투자수익 격차 개념도 (1990년~현재)</p>
+</section>
+
+<!-- 100세 시대 -->
+<section>
+  <h2><span class="num">08</span> 100세 시대 — 은퇴 후 40년</h2>
+  <div class="divider"></div>
+  <p>강연자는 <strong>"은퇴 후 40년, 나는 우아해야 한다"</strong>고 강조했다. 소득이 20대에 시작되어 50대에 정점을 찍고 하락하는 반면, 지출과 인플레이션은 계속 상승한다. 이 격차를 <strong>투자 수익</strong>으로 메워야 한다.</p>
+
+  <div class="card card-accent fade-in">
+    <h4>세대별 경고</h4>
+    <p>밀레니얼·X·Z·알파 세대는 SNS·인플루언서를 통해 억만장자와 동일한 소비 수준(아이폰 15 등)에 노출되어 <strong>소비 동격화 착각</strong>에 빠지기 쉽다. "아이폰 하나로 억만장자와 같은 수준"이라는 착각을 경계하고, <strong>현실적인 씀씀이</strong>를 유지해야 한다.</p>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart5" height="240"></canvas>
+  </div>
+  <p class="chart-label">100세 시대 소득 vs 지출 라이프사이클 (개념도)</p>
+</section>
+
+<!-- 5년 전 포트폴리오 실적 -->
+<section>
+  <h2><span class="num">09</span> 실전 검증 — 5년 전 추천 포트폴리오</h2>
+  <div class="divider"></div>
+  <p>강연자가 약 5년 전 "자본주의 4.0" 강연에서 추천했던 종목들을 보유했다면 <strong>3~5배 수익</strong>을 달성했을 것이라고 언급했다. 장기 투자와 포트폴리오 구성의 힘을 보여주는 실례다.</p>
+
+  <table class="fade-in">
+    <tr><th>종목</th><th>비고</th></tr>
+    <tr><td>META (구 Facebook)</td><td>PSA → 소셜미디어 대형주</td></tr>
+    <tr><td>Intel</td><td>반도체 대표주</td></tr>
+    <tr><td>Broadcom (구 Avago)</td><td>반도체·인프라</td></tr>
+    <tr><td>Booking Holdings</td><td>온라인 여행</td></tr>
+    <tr><td>Paychex</td><td>급여처리 서비스</td></tr>
+    <tr><td>NVIDIA</td><td>GPU·AI 핵심주</td></tr>
+    <tr><td>Verizon</td><td>통신</td></tr>
+    <tr><td>ADS</td><td>금융 데이터</td></tr>
+    <tr><td>Texas Instruments</td><td>아날로그 반도체</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text-sub);">※ 5년 전 추천 당시 기준이며, 현재 시점에서 개별 종목 성과는 다를 수 있음</p>
+</section>
+
+<!-- 핵심 개념 플립카드 -->
+<section>
+  <h2><span class="num">10</span> 핵심 개념 플립카드</h2>
+  <div class="divider"></div>
+  <p>카드를 터치하면 뒤집어서 설명을 확인할 수 있습니다.</p>
+  <div class="flip-grid">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">333 법칙</div>
+        <div class="flip-back">주식 30% + 부동산 30% + 대안투자 30% + 현금 10%의 선진국형 자산배분 원칙</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">스톡피킹</div>
+        <div class="flip-back">개별 주식 선택에 집중하는 1단계 투자 방식. 미국은 60년 전에 졸업한 방법</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">섹터 로테이션</div>
+        <div class="flip-back">경기 순환에 따라 유망 산업 섹터로 자금을 이동시키는 전략 (2단계)</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">리밸런싱</div>
+        <div class="flip-back">거시경제 분석 후 폭락 시 유망 섹터·종목을 저가 매입하여 포트폴리오를 재조정하는 것</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">Municipal Bond</div>
+        <div class="flip-back">지방정부 발행 채권. 지방세 면제 혜택으로 5% 수익 ≈ 세전 7% 효과</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">529 플랜</div>
+        <div class="flip-back">미국 대학 학자금 전용 세금 우대 저축 계좌. 원천징수 전 금액으로 투자 가능</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 결론 -->
+<section>
+  <div class="highlight-box fade-in">
+    <h3>마무리 — 투자는 인생이다</h3>
+    <p>투자의 목적을 명확히 정하고, 그 목적에 맞는 포트폴리오를 구성하라. 남의 수익률과 비교하지 말라. 한국 투자자는 스톡피킹(1단계)에서 벗어나 포트폴리오 구성과 리밸런싱(3단계)으로, 나아가 토탈 파이낸셜 플래닝(4단계)으로 진화해야 한다. 월급만으로는 인플레이션을 이길 수 없다. 투자는 선택이 아닌 필수이며, 곧 인생 설계 그 자체다.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>투자는인생TV 아카데미 · 제45편 분석 정리 · 교육 목적 자료</p>
+  <p style="margin-top:6px;">본 자료는 특정 금융상품에 대한 투자 권유가 아닙니다</p>
+</footer>
+
+<script>
+// === Fade-in Observer ===
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// === Chart Configs ===
+const chartConfigs = {};
+
+// Chart 1: Risk-Return Scatter
+chartConfigs['chart1'] = () => {
+  new Chart(document.getElementById('chart1'), {
+    type: 'bubble',
+    data: {
+      datasets: [{
+        label: '투자 목적별 위험-수익',
+        data: [
+          {x: 5, y: 10, r: 14, label: '성장'},
+          {x: 4, y: 6.5, r: 13, label: '인컴'},
+          {x: 4.5, y: 8, r: 12, label: '토탈리턴'},
+          {x: 1.5, y: 3.5, r: 11, label: '자본보전'},
+          {x: 2.5, y: 5, r: 10, label: '절세'},
+          {x: 9, y: 15, r: 16, label: '투기'},
+          {x: 1, y: 2.5, r: 10, label: '유동성'}
+        ],
+        backgroundColor: ['rgba(225,29,72,0.7)','rgba(37,99,235,0.7)','rgba(107,114,128,0.7)','rgba(16,185,129,0.7)','rgba(245,158,11,0.7)','rgba(239,68,68,0.7)','rgba(99,102,241,0.7)'],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {display: false},
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const d = ctx.raw;
+              return d.label + ' (위험: ' + d.x + ', 기대수익: ' + d.y + '%)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {title: {display: true, text: '위험 수준 →', font: {size: 12}}, min: 0, max: 11},
+        y: {title: {display: true, text: '기대 수익률(%) →', font: {size: 12}}, min: 0, max: 18}
+      }
+    }
+  });
+};
+
+// Chart 2: 4 Stages bar
+chartConfigs['chart2'] = () => {
+  new Chart(document.getElementById('chart2'), {
+    type: 'bar',
+    data: {
+      labels: ['1단계\n스톡피킹', '2단계\n위험분산', '3단계\n포트폴리오', '4단계\n토탈플래닝'],
+      datasets: [
+        {
+          label: '선진화 수준',
+          data: [25, 50, 75, 100],
+          backgroundColor: ['#6b7280', '#2563eb', '#e11d48', '#1a1a1a'],
+          borderRadius: 6,
+        },
+        {
+          label: '한국 현재 수준',
+          data: [25, 10, 5, 2],
+          backgroundColor: 'rgba(225,29,72,0.2)',
+          borderColor: '#e11d48',
+          borderWidth: 2,
+          borderRadius: 6,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {position: 'bottom', labels: {font: {size: 11}}},
+      },
+      scales: {
+        y: {beginAtZero: true, max: 110, title: {display: true, text: '성숙도', font: {size: 11}}},
+        x: {ticks: {font: {size: 11}}}
+      }
+    }
+  });
+};
+
+// Chart 3: Asset Allocation Doughnut
+chartConfigs['chart3'] = () => {
+  const ctx = document.getElementById('chart3').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['주식', '부동산', '대안투자', '현금'],
+      datasets: [
+        {
+          label: '선진국형',
+          data: [30, 30, 30, 10],
+          backgroundColor: ['#e11d48', '#1a1a1a', '#6b7280', '#2563eb'],
+          borderWidth: 2,
+          borderColor: '#fff',
+        },
+        {
+          label: '한국형',
+          data: [5, 90, 3, 2],
+          backgroundColor: ['rgba(225,29,72,0.5)', 'rgba(26,26,26,0.5)', 'rgba(107,114,128,0.5)', 'rgba(37,99,235,0.5)'],
+          borderWidth: 2,
+          borderColor: '#fff',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {position: 'bottom', labels: {font: {size: 11}}},
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed + '%';
+            }
+          }
+        }
+      }
+    }
+  });
+};
+
+// Chart 4: Labor vs Investment income
+chartConfigs['chart4'] = () => {
+  new Chart(document.getElementById('chart4'), {
+    type: 'line',
+    data: {
+      labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2025'],
+      datasets: [
+        {
+          label: '투자 수익 성장',
+          data: [100, 140, 200, 260, 340, 480, 700, 950],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          borderWidth: 2.5,
+        },
+        {
+          label: '노동 소득 성장',
+          data: [100, 112, 125, 138, 150, 165, 180, 195],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          borderWidth: 2.5,
+        },
+        {
+          label: '인플레이션 누적',
+          data: [100, 115, 132, 150, 170, 190, 220, 260],
+          borderColor: '#2563eb',
+          borderDash: [5, 5],
+          tension: 0.4,
+          pointRadius: 3,
+          borderWidth: 2,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {legend: {position: 'bottom', labels: {font: {size: 11}}}},
+      scales: {
+        y: {beginAtZero: true, title: {display: true, text: '성장지수 (1990=100)', font: {size: 11}}}
+      }
+    }
+  });
+};
+
+// Chart 5: Lifecycle
+chartConfigs['chart5'] = () => {
+  new Chart(document.getElementById('chart5'), {
+    type: 'line',
+    data: {
+      labels: ['0세','10세','20세','30세','40세','50세','60세','70세','80세','90세','100세'],
+      datasets: [
+        {
+          label: '근로소득',
+          data: [0,0,15,50,75,90,50,10,0,0,0],
+          borderColor: '#1a1a1a',
+          backgroundColor: 'rgba(26,26,26,0.06)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+        },
+        {
+          label: '지출 수준',
+          data: [20,25,35,50,60,65,55,50,55,60,60],
+          borderColor: '#e11d48',
+          borderDash: [5, 5],
+          tension: 0.4,
+          borderWidth: 2,
+          fill: false,
+        },
+        {
+          label: '투자 수익 (이상적)',
+          data: [5,10,20,35,55,80,95,90,80,70,60],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.06)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {legend: {position: 'bottom', labels: {font: {size: 11}}}},
+      scales: {
+        y: {title: {display: true, text: '상대적 크기', font: {size: 11}}}
+      }
+    }
+  });
+};
+
+// === Chart Observer ===
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// === Compare Toggle ===
+function showCompare(type) {
+  document.getElementById('comp-spec').style.display = type === 'spec' ? 'block' : 'none';
+  document.getElementById('comp-inv').style.display = type === 'inv' ? 'block' : 'none';
+  document.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// === Compound Calculator ===
+function calcCompound() {
+  const m = parseInt(document.getElementById('monthly').value);
+  const r = parseFloat(document.getElementById('rate').value) / 100;
+  const y = parseInt(document.getElementById('years').value);
+
+  document.getElementById('monthlyVal').textContent = '₩' + m.toLocaleString();
+  document.getElementById('rateVal').textContent = (r * 100).toFixed(1) + '%';
+  document.getElementById('yearsVal').textContent = y + '년';
+
+  const mr = r / 12;
+  const n = y * 12;
+  let total;
+  if (mr === 0) {
+    total = m * n;
+  } else {
+    total = m * ((Math.pow(1 + mr, n) - 1) / mr);
+  }
+  const principal = m * n;
+  const profit = total - principal;
+
+  document.getElementById('resultTotal').textContent = formatKRW(total);
+  document.getElementById('resultPrincipal').textContent = formatKRW(principal);
+  document.getElementById('resultProfit').textContent = formatKRW(profit);
+}
+
+function formatKRW(val) {
+  if (val >= 100000000) {
+    const uk = Math.floor(val / 100000000);
+    const man = Math.floor((val % 100000000) / 10000);
+    return '₩' + uk + '억 ' + man.toLocaleString() + '만';
+  } else if (val >= 10000) {
+    return '₩' + Math.floor(val / 10000).toLocaleString() + '만';
+  }
+  return '₩' + Math.floor(val).toLocaleString();
+}
+
+function resetCompound() {
+  document.getElementById('monthly').value = 1000000;
+  document.getElementById('rate').value = 8;
+  document.getElementById('years').value = 20;
+  calcCompound();
+}
+
+// Init calculator
+calcCompound();
+</script>
+</body>
+</html>
