@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퀴즈 — 새내기 멤버 오리엔테이션 · 투자는인생TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --text2: #777;
+    --red: #e11d48; --red2: #f43f5e; --border: #e5e5e5;
+    --green: #16a34a; --yellow: #ca8a04;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+
+  /* HERO */
+  .hero { background: var(--text); color: #fff; padding: 44px 24px 36px; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--red2); margin-bottom: 12px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 6vw, 36px); font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+  .hero p { font-size: 13px; color: #aaa; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  /* SCORE BAR */
+  .score-banner {
+    background: var(--bg2); border-bottom: 2px solid var(--border);
+    padding: 16px 20px; position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .score-label { font-size: 12px; color: var(--text2); }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; color: var(--red); }
+
+  /* QUIZ CARD */
+  .quiz-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+  .quiz-header {
+    background: var(--text);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .q-num {
+    background: var(--red);
+    color: #fff;
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .q-meta { display: flex; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .badge-easy { background: #dcfce7; color: var(--green); }
+  .badge-mid { background: #fef9c3; color: var(--yellow); }
+  .badge-hard { background: #ffeef2; color: var(--red); }
+  .badge-type { background: #f3f4f6; color: #555; }
+  .q-text { font-size: 14px; font-weight: 500; line-height: 1.5; }
+
+  .quiz-body { padding: 18px; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .opt-btn:hover:not([disabled]) { border-color: var(--red); background: #fff5f7; }
+  .opt-btn.correct { border-color: var(--green); background: #f0fdf4; color: var(--green); font-weight: 700; }
+  .opt-btn.wrong { border-color: var(--red); background: #fff5f7; color: var(--red); }
+  .opt-btn[disabled] { cursor: default; }
+
+  /* SHORT ANSWER */
+  .short-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+  .short-input {
+    flex: 1; min-width: 160px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+  }
+  .short-input:focus { border-color: var(--red); }
+  .check-btn {
+    background: var(--red); color: #fff; border: none;
+    padding: 10px 20px; border-radius: 6px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .check-btn:hover { background: var(--red2); }
+
+  /* OX */
+  .ox-wrap { display: flex; gap: 12px; }
+  .ox-btn {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 28px;
+    cursor: pointer;
+    background: var(--bg2);
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+    font-family: inherit;
+  }
+  .ox-btn:hover:not([disabled]) { border-color: var(--red); background: #fff5f7; }
+  .ox-btn.correct { border-color: var(--green); background: #f0fdf4; }
+  .ox-btn.wrong { border-color: var(--red); background: #fff5f7; }
+  .ox-btn[disabled] { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+  .feedback.wrong-fb { background: #fff5f7; border: 1px solid #fecdd3; color: #9f1239; }
+
+  /* RESULT */
+  .result-section { display: none; text-align: center; padding: 40px 20px; }
+  .result-section.show { display: block; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  .result-score { font-size: 48px; font-weight: 900; color: var(--red); font-family: 'Playfair Display', serif; margin: 12px 0; }
+  .result-msg { color: var(--text2); font-size: 14px; margin-bottom: 24px; }
+  .retry-btn {
+    background: var(--red); color: #fff; border: none;
+    padding: 14px 36px; border-radius: 8px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .retry-btn:hover { background: var(--red2); }
+
+  /* DIVIDER */
+  .answer-key-section { background: var(--bg2); border-top: 2px solid var(--border); padding: 32px 0; margin-top: 20px; }
+  .answer-key-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--red); margin-bottom: 20px; }
+  .ak-item { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .ak-item:last-child { border-bottom: none; margin-bottom: 0; }
+  .ak-q { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .ak-a { font-size: 13px; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+  .ak-exp { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  @media (max-width: 400px) { .hero h1 { font-size: 22px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">📝 QUIZ — 투자는인생TV</div>
+    <h1>새내기 멤버<br>오리엔테이션 시험</h1>
+    <p>객관식 · 단답형 · OX 혼합 | 10문제 | 각 10점</p>
+  </div>
+</div>
+
+<div class="score-banner">
+  <span class="score-label">현재 점수</span>
+  <span class="score-num" id="scoreBanner">0 / 100점</span>
+</div>
+
+<div class="wrap" id="quizWrap">
+
+  <!-- Q1 -->
+  <div class="quiz-card" id="q1">
+    <div class="quiz-header">
+      <div class="q-num">1</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-easy">쉬움</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">방송 진행자 데이빗 형님의 공식 직함으로 올바른 것은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(1, false, this)">① CEO (최고경영자)</button>
+        <button class="opt-btn" onclick="answerMC(1, true, this)">② CIO (Chief Investment Officer, 투자 담당 대표)</button>
+        <button class="opt-btn" onclick="answerMC(1, false, this)">③ CFO (최고재무책임자)</button>
+        <button class="opt-btn" onclick="answerMC(1, false, this)">④ 브로커 딜러</button>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card" id="q2">
+    <div class="quiz-header">
+      <div class="q-num">2</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-easy">쉬움</span><span class="badge badge-type">OX</span></div>
+        <div class="q-text">미국 증권시장에서 투자자를 제대로 표현하면 '주식투자자'가 아니라 '증권투자자'라고 불러야 한다. (O/X)</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="ox-wrap">
+        <button class="ox-btn" onclick="answerOX(2, true, this)">⭕</button>
+        <button class="ox-btn" onclick="answerOX(2, false, this)">❌</button>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card" id="q3">
+    <div class="quiz-header">
+      <div class="q-num">3</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-mid">보통</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">미국 증권투자의 기본 소양 3가지로 올바르게 묶인 것은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(3, false, this)">① 차트 분석 / 뉴스 파악 / 커뮤니티 의견 수집</button>
+        <button class="opt-btn" onclick="answerMC(3, true, this)">② 거시경제 이해 / 11개 섹터 이해 / 기업 펀더멘털 분석</button>
+        <button class="opt-btn" onclick="answerMC(3, false, this)">③ 단기 모멘텀 / 배당 수익률 / 공매도 전략</button>
+        <button class="opt-btn" onclick="answerMC(3, false, this)">④ 개인 심리 / 손절 타이밍 / 매수 타이밍</button>
+      </div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card" id="q4">
+    <div class="quiz-header">
+      <div class="q-num">4</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-mid">보통</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">3년 내 집 구매를 계획 중인 사람에게 가장 적합한 투자 자산은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(4, false, this)">① 슈퍼마이크로컴퓨터 등 변동성 높은 성장주</button>
+        <button class="opt-btn" onclick="answerMC(4, false, this)">② 암호화폐</button>
+        <button class="opt-btn" onclick="answerMC(4, true, this)">③ 국채(Treasury) 등 안정 자산</button>
+        <button class="opt-btn" onclick="answerMC(4, false, this)">④ 스몰캡 기술주</button>
+      </div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card" id="q5">
+    <div class="quiz-header">
+      <div class="q-num">5</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-mid">보통</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">방송에서 언급한 '잡주(Bad Stock)'의 특징으로 올바른 것은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(5, false, this)">① 폭락장에서 잘 버티고 폭등장에서 크게 오른다</button>
+        <button class="opt-btn" onclick="answerMC(5, true, this)">② 폭락장에 많이 떨어지고, 폭등장에도 별로 오르지 않는다</button>
+        <button class="opt-btn" onclick="answerMC(5, false, this)">③ 배당 수익률이 매우 높다</button>
+        <button class="opt-btn" onclick="answerMC(5, false, this)">④ 기관 투자자들이 선호하는 종목이다</button>
+      </div>
+      <div class="feedback" id="fb5"></div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card" id="q6">
+    <div class="quiz-header">
+      <div class="q-num">6</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-mid">보통</span><span class="badge badge-type">단답형</span></div>
+        <div class="q-text">미국 기관 투자자들이 포트폴리오를 조정하는 방식을 무엇이라 하는가? (힌트: 섹터 비중을 줄이고 늘리는 전략)</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="short-wrap">
+        <input class="short-input" type="text" id="sa6" placeholder="답 입력...">
+        <button class="check-btn" onclick="checkShort(6, ['리밸런싱','리밸런싱 전략','rebalancing'])">확인</button>
+      </div>
+      <div class="feedback" id="fb6"></div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card" id="q7">
+    <div class="quiz-header">
+      <div class="q-num">7</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-hard">어려움</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">방송에서 언급된 미국 기관 투자업계의 생존율 관련 내용으로 올바른 것은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(7, false, this)">① 100명 중 50%가 쿼터를 달성한다</button>
+        <button class="opt-btn" onclick="answerMC(7, false, this)">② 100명 중 30명이 자산운용에 성공한다</button>
+        <button class="opt-btn" onclick="answerMC(7, true, this)">③ 100명 시작 → 60% 탈락 → 10명 쿼터 달성 → 2명만 운용 성공</button>
+        <button class="opt-btn" onclick="answerMC(7, false, this)">④ 6개월이면 완전히 정착할 수 있다</button>
+      </div>
+      <div class="feedback" id="fb7"></div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card" id="q8">
+    <div class="quiz-header">
+      <div class="q-num">8</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-hard">어려움</span><span class="badge badge-type">OX</span></div>
+        <div class="q-text">401(k)에서 '타겟데이 펀드'(Target Date Fund)는 채권 비중이 높기 때문에, 장기 수익률을 위해 그로스(Growth) 펀드로 교체하는 것이 유리하다. (O/X)</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="ox-wrap">
+        <button class="ox-btn" onclick="answerOX(8, true, this)">⭕</button>
+        <button class="ox-btn" onclick="answerOX(8, false, this)">❌</button>
+      </div>
+      <div class="feedback" id="fb8"></div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card" id="q9">
+    <div class="quiz-header">
+      <div class="q-num">9</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-mid">보통</span><span class="badge badge-type">단답형</span></div>
+        <div class="q-text">방송에서 "S&P 500을 지난 20년간 보유했을 경우 약 몇 % 수익률을 올렸다"고 언급하는가?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="short-wrap">
+        <input class="short-input" type="text" id="sa9" placeholder="숫자만 입력 (예: 300)">
+        <button class="check-btn" onclick="checkShort(9, ['800','800%','800프로'])">확인</button>
+      </div>
+      <div class="feedback" id="fb9"></div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card" id="q10">
+    <div class="quiz-header">
+      <div class="q-num">10</div>
+      <div>
+        <div class="q-meta"><span class="badge badge-hard">어려움</span><span class="badge badge-type">객관식</span></div>
+        <div class="q-text">다음 중 미국 증권시장의 특징을 가장 잘 설명한 것은?</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="options">
+        <button class="opt-btn" onclick="answerMC(10, false, this)">① 대주주가 소액주주보다 훨씬 많은 권한을 갖는다</button>
+        <button class="opt-btn" onclick="answerMC(10, false, this)">② 개인 투자자 중심으로 단기 차익을 노리는 구조다</button>
+        <button class="opt-btn" onclick="answerMC(10, false, this)">③ 한국 주식시장과 동일한 원리로 운영된다</button>
+        <button class="opt-btn" onclick="answerMC(10, true, this)">④ 소액주주도 법적으로 강하게 보호되며, 기관 주도의 섹터 중심 운용이 이루어진다</button>
+      </div>
+      <div class="feedback" id="fb10"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-section" id="resultSection">
+    <div class="result-emoji" id="resultEmoji">🎓</div>
+    <div class="result-title">결과 확인</div>
+    <div class="result-score" id="resultScore">0점</div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="retry-btn" onclick="retryQuiz()">🔄 다시 풀기</button>
+  </div>
+
+</div><!-- /quizWrap -->
+
+<!-- ANSWER KEY -->
+<div class="answer-key-section">
+  <div class="wrap">
+    <div class="answer-key-title">📋 정답 및 해설</div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q1. 데이빗 형님의 공식 직함은?</div>
+      <div class="ak-a">✅ ② CIO (Chief Investment Officer)</div>
+      <div class="ak-exp">테일러 투자자문사의 CIO로, 투자를 전적으로 담당하는 투자 담당 대표다. 이전에는 메릴린치 등 대형 기관에서 포트폴리오 매니저로 근무했다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q2. 투자자는 '주식투자자'가 아닌 '증권투자자'다. (O/X)</div>
+      <div class="ak-a">✅ O (맞음)</div>
+      <div class="ak-exp">Securities(증권)는 주식(Stock)보다 넓은 개념이다. ETF, 채권(Treasury), 뮤추얼펀드, 우선주 등도 모두 포함된다. "주식만 한다"는 인식이 잘못된 출발점이다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q3. 미국 증권투자 기본 소양 3가지는?</div>
+      <div class="ak-a">✅ ② 거시경제 / 11개 섹터 / 기업 펀더멘털</div>
+      <div class="ak-exp">①거시경제(연준 금리·인플레이션 연동), ②11개 섹터 이해 및 섹터 로테이션, ③기업 펀더멘털 분석(10-K, EPS, PE, DCF). 이 세 가지가 방송의 핵심 프레임이다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q4. 3년 내 집 구매 예정자에게 적합한 투자 자산은?</div>
+      <div class="ak-a">✅ ③ 국채(Treasury) 등 안정 자산</div>
+      <div class="ak-exp">목적이 단기 자산 보전이므로, 변동성이 큰 성장주는 부적합하다. 집 구매 시기에 자산이 30~50% 하락해 있을 경우 계획이 무너지기 때문이다. "슈퍼마이크로가 아무리 좋아도 3년 내 집 산다면 안 된다"고 명시했다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q5. 잡주(Bad Stock)의 특징은?</div>
+      <div class="ak-a">✅ ② 폭락장에 많이 떨어지고, 폭등장에도 별로 오르지 않음</div>
+      <div class="ak-exp">정상적인 주식은 폭등장에서 함께 올라야 한다. 잡주는 내릴 때만 많이 내리고, 올라가는 장에도 제대로 못 따라오는 종목이다. 즉시 정리해야 한다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q6. 기관 투자자들의 비중 조절 전략은?</div>
+      <div class="ak-a">✅ 리밸런싱 (Rebalancing)</div>
+      <div class="ak-exp">리밸런싱이란 포트폴리오의 비중을 주기적으로 조정하는 것이다. 오르는 섹터는 비중을 늘리고, 내리는 섹터는 줄인다. 전량 매도하는 것이 아니라 2~5% 씩 이동시키는 방식이다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q7. 미국 기관 투자업계 생존율은?</div>
+      <div class="ak-a">✅ ③ 100명 → 40명 → 10명 쿼터 달성 → 2명 운용 성공</div>
+      <div class="ak-exp">6개의 시험 합격, 쿼터(자산 목표) 달성, 장기 운용 퍼포먼스 — 이 세 관문을 모두 통과해야 한다. 최소 6~7년이 걸리며 미국인 기준에서도 100명 중 2명만 살아남는다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q8. 401(k) 타겟데이 펀드를 그로스로 교체하는 게 유리하다. (O/X)</div>
+      <div class="ak-a">✅ O (맞음)</div>
+      <div class="ak-exp">타겟데이 펀드(예: Target Date 2040, 2050)는 채권 비중이 높아 장기 수익률이 낮다. 연 1~2회 조정 기간에 전액 Growth 펀드로 변경을 권고했다. Growth 펀드 안에는 100여 개의 성장주가 담겨 있다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q9. S&P 500의 20년 수익률은 약 몇 %인가?</div>
+      <div class="ak-a">✅ 800% (이상)</div>
+      <div class="ak-exp">방송에서 "지난 20년 동안 800% 이상 올랐다"고 명시했다. 초기 100만 달러 투자 시 현재 8~900만 달러가 됐다는 계산이다. 이것이 미국 증권 투자의 핵심 근거다.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-q">Q10. 미국 증권시장의 특징을 가장 잘 설명한 것은?</div>
+      <div class="ak-a">✅ ④ 소액주주 법적 보호 + 기관 주도 섹터 중심 운용</div>
+      <div class="ak-exp">테슬라의 소액주주(61주 보유자)가 대법원 판결로 보호받은 사례를 제시했다. 또한 BlackRock, JPMorgan 등 대형 기관이 섹터 단위로 수조 달러를 운용하는 구조가 핵심이다. 이것이 한국 시장과 근본적으로 다른 점이다.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let score = 0;
+let answered = {};
+
+function updateScore() {
+  document.getElementById('scoreBanner').textContent = score + ' / 100점';
+  if (Object.keys(answered).length >= 10) showResult();
+}
+
+function showResult() {
+  document.getElementById('resultSection').classList.add('show');
+  const emoji = score >= 80 ? '🏆' : score >= 60 ? '🎓' : score >= 40 ? '📚' : '💪';
+  const msg = score >= 80 ? '훌륭합니다! 투자 기본기를 잘 이해하고 있습니다.' :
+               score >= 60 ? '좋습니다. 틀린 문제를 복습하고 방송을 다시 보세요.' :
+               score >= 40 ? '기본 개념을 더 공부해야 합니다. 아카데미 영상을 먼저 보세요.' :
+               '투자 아카데미 20개 영상부터 시작하세요. 기초가 중요합니다!';
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultScore').textContent = score + '점';
+  document.getElementById('resultMsg').textContent = msg;
+  document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function setFeedback(id, isCorrect, correctAns) {
+  const fb = document.getElementById('fb' + id);
+  fb.classList.add('show');
+  if (isCorrect) {
+    fb.classList.add('correct-fb');
+    fb.innerHTML = '✅ <strong>정답입니다!</strong> 아래 해설을 확인하세요.';
+  } else {
+    fb.classList.add('wrong-fb');
+    fb.innerHTML = '❌ <strong>오답입니다.</strong>' + (correctAns ? ' 정답: <strong>' + correctAns + '</strong>' : ' 다시 확인해보세요.');
+  }
+}
+
+function disableGroup(qNum, type) {
+  if (type === 'mc') {
+    document.querySelectorAll('#q' + qNum + ' .opt-btn').forEach(b => b.disabled = true);
+  } else if (type === 'ox') {
+    document.querySelectorAll('#q' + qNum + ' .ox-btn').forEach(b => b.disabled = true);
+  } else if (type === 'short') {
+    const inp = document.getElementById('sa' + qNum);
+    if (inp) inp.disabled = true;
+    const btn = inp?.nextElementSibling;
+    if (btn) btn.disabled = true;
+  }
+}
+
+function answerMC(qNum, isCorrect, btn) {
+  if (answered[qNum]) return;
+  answered[qNum] = true;
+  disableGroup(qNum, 'mc');
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) { score += 10; }
+  setFeedback(qNum, isCorrect, null);
+  updateScore();
+}
+
+function answerOX(qNum, userAnswer, btn) {
+  if (answered[qNum]) return;
+  const correct = {2: true, 8: true}[qNum];
+  const isCorrect = (userAnswer === correct);
+  answered[qNum] = true;
+  disableGroup(qNum, 'ox');
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) { score += 10; }
+  setFeedback(qNum, isCorrect, correct ? 'O (맞음)' : 'X (틀림)');
+  updateScore();
+}
+
+function checkShort(qNum, acceptedAnswers) {
+  if (answered[qNum]) return;
+  const val = document.getElementById('sa' + qNum).value.trim().replace(/\s/g, '');
+  if (!val) { alert('답을 입력하세요.'); return; }
+  const isCorrect = acceptedAnswers.some(a => val.replace(/\s/g,'').toLowerCase() === a.toLowerCase());
+  answered[qNum] = true;
+  disableGroup(qNum, 'short');
+  if (isCorrect) { score += 10; }
+  setFeedback(qNum, isCorrect, acceptedAnswers[0]);
+  updateScore();
+}
+
+function retryQuiz() {
+  score = 0; answered = {};
+  document.getElementById('scoreBanner').textContent = '0 / 100점';
+  document.getElementById('resultSection').classList.remove('show');
+  document.querySelectorAll('.opt-btn, .ox-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.short-input').forEach(i => { i.disabled = false; i.value = ''; });
+  document.querySelectorAll('.check-btn').forEach(b => b.disabled = false);
+  document.querySelectorAll('.feedback').forEach(f => {
+    f.classList.remove('show','correct-fb','wrong-fb');
+    f.innerHTML = '';
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
