@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 & 정답 해설 — 투자는인생TV 아카데미 제1부</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5; --green: #059669; --blue: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.75; }
+  .header {
+    background: var(--text); color: #fff; padding: 36px 20px 28px;
+  }
+  .header .label { font-size: 11px; letter-spacing: 3px; color: var(--accent2); margin-bottom: 8px; }
+  .header h1 { font-family: 'Noto Serif KR', serif; font-size: 22px; line-height: 1.35; }
+  .header .meta { font-size: 12px; color: #aaa; margin-top: 10px; }
+  .container { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
+  .section-badge {
+    display: inline-block;
+    background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 4px 12px; margin: 36px 0 20px;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    border: 1px solid var(--border); border-radius: 8px; margin-bottom: 18px; overflow: hidden;
+  }
+  .q-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; background: var(--bg2); border-bottom: 1px solid var(--border);
+  }
+  .q-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .q-meta { font-size: 11px; color: var(--text2); }
+  .q-meta strong { color: var(--text); }
+  .q-body { padding: 14px 16px; }
+  .q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.6; }
+  .q-opts { list-style: none; }
+  .q-opts li {
+    padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: 5px; margin-bottom: 6px; font-size: 13px;
+    background: #fff;
+  }
+  .q-opts li.correct { background: #d1fae5; border-color: var(--green); color: #065f46; font-weight: 600; }
+  .q-opts li.correct::before { content: '✅ '; }
+  .q-opts li.wrong { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+  .q-opts li.wrong::before { content: '❌ '; }
+  /* ── ANSWER SECTION ── */
+  .ans-section { border-top: 2px dashed var(--border); margin-top: 0; }
+  .ans-toggle {
+    width: 100%; padding: 10px 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    text-align: left; display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .ans-toggle:hover { background: #fff5f7; }
+  .ans-body { padding: 12px 16px; background: #fff8f9; font-size: 13px; display: none; border-top: 1px solid #fecdd3; }
+  .ans-body.open { display: block; }
+  .ans-label { color: var(--green); font-weight: 700; margin-bottom: 4px; font-size: 13px; }
+  .ans-exp { color: var(--text); line-height: 1.7; }
+  /* ── DIFFICULTY BADGE ── */
+  .diff { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+  .diff.easy { background: #d1fae5; color: #065f46; }
+  .diff.med { background: #fef3c7; color: #92400e; }
+  .diff.hard { background: #fee2e2; color: #7f1d1d; }
+  /* ── ANSWER KEY TABLE ── */
+  .key-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .key-table th { background: var(--accent); color: #fff; padding: 8px 10px; text-align: center; }
+  .key-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: center; background: var(--bg2); }
+  .key-table tr:nth-child(even) td { background: #f0f0f0; }
+  .type-badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+  .type-obj { background: #dbeafe; color: var(--blue); }
+  .type-ox { background: #fce7f3; color: #be185d; }
+  .footer { background: var(--text); color: #aaa; text-align: center; font-size: 12px; padding: 28px 20px; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="label">투자는인생TV 아카데미 · 시험문제 & 정답 해설</div>
+    <h1>📝 포트폴리오 구성법과 최적화<br>시험문제 10문항 + 정답 해설</h1>
+    <div class="meta">강의: 제1부 | 날짜: 2026년 04월 04일 | 유형: 객관식·OX·단답형 혼합</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 정답 일람표 ══ -->
+  <div class="section-badge">📋 정답 일람표</div>
+  <table class="key-table">
+    <thead>
+      <tr><th>번호</th><th>유형</th><th>난이도</th><th>정답</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff easy">쉬움</span></td><td>② 투자자 본인 책임</td></tr>
+      <tr><td>2번</td><td><span class="type-badge type-ox">OX</span></td><td><span class="diff easy">쉬움</span></td><td>O (맞다)</td></tr>
+      <tr><td>3번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff easy">쉬움</span></td><td>③ 5% 이내</td></tr>
+      <tr><td>4번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff med">보통</span></td><td>② 비중 조정하는 것</td></tr>
+      <tr><td>5번</td><td><span class="type-badge type-obj">단답형</span></td><td><span class="diff med">보통</span></td><td>② 마드레이션(Moderate)</td></tr>
+      <tr><td>6번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff med">보통</span></td><td>② 복리 효과 발생</td></tr>
+      <tr><td>7번</td><td><span class="type-badge type-ox">OX</span></td><td><span class="diff med">보통</span></td><td>X (반대한다)</td></tr>
+      <tr><td>8번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff hard">어려움</span></td><td>② 최악의 시나리오 이해</td></tr>
+      <tr><td>9번</td><td><span class="type-badge type-obj">단답형</span></td><td><span class="diff hard">어려움</span></td><td>② 초성장주 고비중의 위험</td></tr>
+      <tr><td>10번</td><td><span class="type-badge type-obj">객관식</span></td><td><span class="diff hard">어려움</span></td><td>④ 수수료 무관 (틀린 것)</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:12px;color:var(--text2);margin-top:8px;">※ 각 문제 카드 하단의 [정답 확인] 버튼을 클릭하면 해설을 볼 수 있습니다.</p>
+
+  <!-- ══ 문제지 ══ -->
+  <div class="section-badge">📄 문제지 (시험 응시용)</div>
+
+  <!-- Q1 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--green);">1</div>
+      <div>
+        <div class="q-meta"><strong>객관식</strong> &nbsp;|&nbsp; <span class="diff easy">쉬움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">다음 중 미국 투자 문화의 기본 원칙으로 올바른 것은?</div>
+      <ul class="q-opts">
+        <li>① 투자 수익은 채널 운영자가 보장한다</li>
+        <li class="correct">② 모든 투자 결과의 책임은 투자자 본인에게 있다</li>
+        <li>③ 과거 데이터는 미래를 정확히 예측한다</li>
+        <li>④ 원금 보장 + 정기 수익 + 자유 출금은 기본 조건이다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">미국 투자 문화에서 투자 결과의 책임은 전적으로 투자자 본인에게 있습니다. 어떤 방송이나 조언자도 수익을 보장할 수 없습니다. 강사는 이를 "윤리적 의무"라고 강조하며, 디스클레이머를 방송 맨 앞에 항상 노출한다고 밝혔습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--green);">2</div>
+      <div>
+        <div class="q-meta"><strong>OX형</strong> &nbsp;|&nbsp; <span class="diff easy">쉬움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">포트폴리오를 구성하기 위해서는 먼저 씨드머니(종잣돈)를 마련해야 한다. (O / X)</div>
+      <ul class="q-opts">
+        <li class="correct">O — 맞다</li>
+        <li>X — 아니다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: O</div>
+        <div class="ans-exp">강사는 "저축도 안 되는 사람이 무슨 포트폴리오냐"라고 강조합니다. 종잣돈 없이는 여러 자산에 분산 투자 자체가 불가능하며, 씨드머니 마련이 투자의 첫 번째 조건입니다. 비유: 태평양을 건너려면 쪽배가 아닌 제대로 된 배가 필요합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--green);">3</div>
+      <div>
+        <div class="q-meta"><strong>객관식</strong> &nbsp;|&nbsp; <span class="diff easy">쉬움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">'종형(Bell) 포트폴리오'에서 외곽(Edge) 구역에 배치하는 자산(초기 성장주·소형주 등)의 권장 비중은?</div>
+      <ul class="q-opts">
+        <li>① 50% 이상</li>
+        <li>② 30% 내외</li>
+        <li class="correct">③ 5% 이내</li>
+        <li>④ 10~20%</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ③</div>
+        <div class="ans-exp">강사는 "외곽 지역에 초기 성장주나 소형주는 5% 이내로 있어야 한다"고 명시합니다. 이 구역에 높은 비중을 두면 캐시 우드 사례처럼 80% 폭락 위험에 노출됩니다. 고위험·고수익 자산은 전체 포트폴리오의 극소수만 배분해야 합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:#d97706);">4</div>
+      <div>
+        <div class="q-meta"><strong>객관식</strong> &nbsp;|&nbsp; <span class="diff med">보통</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">'포트폴리오 최적화(Portfolio Optimization)'를 가장 잘 설명한 것은?</div>
+      <ul class="q-opts">
+        <li>① 가장 많이 오른 종목에 자산을 집중하는 것</li>
+        <li class="correct">② 목표 방향을 유지하면서 시장 변화에 따라 비중을 조정하는 것</li>
+        <li>③ 모든 주식을 매도하고 현금을 보유하는 것</li>
+        <li>④ S&P 500 인덱스 펀드에 100% 투자하는 것</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">강사의 비유: "먼 바다에서 목표점을 잃지 않고 바람에 따라 키를 조정하는 것." 최적화는 목표(항구)를 향해 가되, 바람(시장 변화)에 따라 돛(비중)을 조정하는 능동적 과정입니다. 단순히 종목을 바꾸는 것이 아니라 방향성을 유지하는 것이 핵심입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:#d97706;">5</div>
+      <div>
+        <div class="q-meta"><strong>단답형</strong> &nbsp;|&nbsp; <span class="diff med">보통</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">강사가 투자 성향 중 '최적화 가능성이 가장 높다'고 언급한 성향은 무엇인가요?</div>
+      <ul class="q-opts">
+        <li>① 보수형 (Conservative)</li>
+        <li class="correct">② 마드레이션 (Moderation)</li>
+        <li>③ 공격형 (Aggressive)</li>
+        <li>④ 인덱스형 (Passive)</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">마드레이션(Moderate, 중간 성향)은 성장과 안정을 동시에 추구하는 적극적 자산 관리 방식입니다. 70%는 안정 자산으로 유지하고, 30%는 지속적으로 교체·최적화하기 때문에 "가장 최적화 가능성이 크다"고 강사가 직접 언급했습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:#d97706;">6</div>
+      <div>
+        <div class="q-meta"><strong>객관식</strong> &nbsp;|&nbsp; <span class="diff med">보통</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">복리(Compounding)와 단리(Simple Growth)를 비교할 때 올바른 설명은?</div>
+      <ul class="q-opts">
+        <li>① 단기(1~2년)에는 복리가 항상 단리보다 월등히 유리하다</li>
+        <li class="correct">② 주식 상승장에서 매일 수익이 원금에 더해지므로 복리 효과가 발생한다</li>
+        <li>③ 복리는 예금에만 해당되고 주식에는 적용되지 않는다</li>
+        <li>④ 단리와 복리의 차이는 투자 기간과 무관하다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">강사는 "상승장일 때 복리로 성장한다"고 설명합니다. 예: 5일 연속 2% 상승 시 단순합산 10%가 아닌 10.4% 이상이 됩니다. 복리 효과는 시간이 길수록 단리와 격차가 기하급수적으로 커지기 때문에 장기 투자의 핵심 원리입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:#d97706;">7</div>
+      <div>
+        <div class="q-meta"><strong>OX형</strong> &nbsp;|&nbsp; <span class="diff med">보통</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">강사는 방송에서 다른 구독자의 포트폴리오를 공개적으로 공유하는 것을 권장한다. (O / X)</div>
+      <ul class="q-opts">
+        <li>O — 권장한다</li>
+        <li class="correct">X — 반대한다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: X</div>
+        <div class="ans-exp">강사는 개인 포트폴리오 공개를 강하게 반대합니다. 이유: ① 개인정보(나이, 자산, 성향) 노출 위험 ② 맞춤 설계 방해 — 같은 종목이 A에게는 맞고 B에게는 안 맞을 수 있음 ③ '냄비 근성'으로 타인 포트폴리오를 그대로 따라 하는 위험. 이것은 미국의 기본 투자 철학이기도 합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--accent);">8</div>
+      <div>
+        <div class="q-meta"><strong>객관식</strong> &nbsp;|&nbsp; <span class="diff hard">어려움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">미국 투자 면책 고지(Disclaimer)에서 가장 마지막에 강조하는 핵심 원칙은?</div>
+      <ul class="q-opts">
+        <li>① 수익률이 높은 상품에 집중 투자하라</li>
+        <li class="correct">② 투자 전 반드시 최악의 시나리오를 완전히 이해하라</li>
+        <li>③ AI 분석을 기반으로 투자 결정을 내려라</li>
+        <li>④ 투자 전 정부 기관의 승인을 받아야 한다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">강사가 직접 인용한 마지막 디스클레이머 문구: <em>"Do not enter any investment without fully understanding the worst case scenarios of that investment."</em> — 어떤 투자든 최악의 결과(예: 원금 전액 손실)를 완전히 이해한 뒤 투자해야 합니다. 이는 강사가 "가장 중요한 것"으로 강조한 항목입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--accent);">9</div>
+      <div>
+        <div class="q-meta"><strong>단답형 선택</strong> &nbsp;|&nbsp; <span class="diff hard">어려움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">강사가 '캐시 우드(Cathie Wood)' 사례를 통해 경고하려 한 핵심 내용은?</div>
+      <ul class="q-opts">
+        <li>① 인덱스 펀드의 위험성</li>
+        <li class="correct">② 초성장주 고비중 포트폴리오의 위험성 (80% 급락 후 미회복)</li>
+        <li>③ 채권 투자의 낮은 수익률</li>
+        <li>④ 국내 ETF의 환율 리스크</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ②</div>
+        <div class="ans-exp">캐시 우드는 ARK Invest를 통해 초성장주(테슬라, 비트코인 관련 주 등)에 고비중 투자했다가 2021~2022년 약 80% 폭락 후 아직 회복하지 못하고 있습니다. 강사는 이를 "종형 포트폴리오에서 외곽(Edge) 구역이 5% 이내여야 하는 이유"의 반면교사로 인용했습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num" style="background:var(--accent);">10</div>
+      <div>
+        <div class="q-meta"><strong>객관식 (틀린 것 찾기)</strong> &nbsp;|&nbsp; <span class="diff hard">어려움</span></div>
+        <div class="q-meta">배점: 10점</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-text">강사가 '30개 기업 선정'을 100개보다 선호하는 이유로 <u>적절하지 않은 것</u>은?</div>
+      <ul class="q-opts">
+        <li>① 30개가 관리하기 적절한 수준이다</li>
+        <li>② 30개도 20~30억 원 이상 투자 시 분산 효과가 충분하다</li>
+        <li>③ 100개는 사실상 마케팅 목적으로 활용될 가능성이 높다</li>
+        <li class="correct">④ 30개는 수수료가 전혀 발생하지 않기 때문이다</li>
+      </ul>
+    </div>
+    <div class="ans-section">
+      <button class="ans-toggle" onclick="toggleAns(this)">💡 정답 & 해설 보기 <span>▼</span></button>
+      <div class="ans-body">
+        <div class="ans-label">정답: ④ (틀린 이유)</div>
+        <div class="ans-exp">강사는 30개 선정의 이유로 ① 관리 용이성, ② 분산 효과 충분, ③ 100개는 마케팅용이라는 현실 인식을 언급했습니다. ④ "수수료 무관"은 강의 어디에도 언급되지 않은 내용입니다. 종목 수와 거래 수수료는 별개의 문제이며, 강사는 이를 기준으로 삼지 않았습니다.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  투자는인생TV 아카데미 제1부 — 시험문제 & 정답 해설 파일<br>
+  ⚠️ 본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.
+</div>
+
+<script>
+function toggleAns(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  btn.querySelector('span').textContent = isOpen ? '▼' : '▲';
+}
+</script>
+</body>
+</html>
