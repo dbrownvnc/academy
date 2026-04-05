@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 26회 — 주가 적정가 판단법</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --subtext: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .hero-label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: clamp(24px, 6vw, 38px);
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-divider {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin-top: 28px;
+  }
+
+  /* CONTAINER */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* SECTION */
+  .section { padding: 36px 0 28px; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .section p { color: #2a2a2a; margin-bottom: 12px; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: var(--bg2);
+    border-left: 4px solid var(--accent);
+    padding: 16px 18px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .highlight strong { color: var(--accent); }
+
+  /* KEYWORD BADGE */
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+  }
+  .badge-outline {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+
+  /* CONCEPT CARDS */
+  .card-grid { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card p { font-size: 13px; color: var(--subtext); margin: 0; }
+
+  /* FORMULA BOX */
+  .formula {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    font-family: 'Noto Sans KR', monospace;
+    font-size: 14px;
+    line-height: 2;
+    overflow-x: auto;
+  }
+  .formula .f-label { color: #aaa; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .formula .f-main { font-size: 17px; font-weight: 700; color: var(--accent2); }
+  .formula .f-vars { font-size: 12px; color: #ccc; margin-top: 6px; }
+
+  /* FADE-IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+    background: var(--bg2);
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:nth-child(even) td { background: #f5f5f5; }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    margin: 20px 0;
+  }
+  .sim-box h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-row { margin-bottom: 14px; }
+  .sim-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--text);
+  }
+  .sim-row label span { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+    height: 4px;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sim-result-item { text-align: center; }
+  .sim-result-item .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--accent2);
+  }
+  .sim-result-item .lbl { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .reset-btn {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* RISK FACTORS */
+  .risk-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .risk-item:last-child { border-bottom: none; }
+  .risk-num {
+    min-width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 13px;
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .risk-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .risk-content p { font-size: 13px; color: var(--subtext); margin: 0; }
+
+  /* CONCLUSION */
+  .conclusion {
+    background: linear-gradient(135deg, var(--text) 0%, #2d2d2d 100%);
+    color: #fff;
+    padding: 32px 24px;
+    margin: 0 -20px;
+  }
+  .conclusion h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 14px;
+    color: var(--accent2);
+  }
+  .conclusion p { font-size: 14px; line-height: 1.8; color: #ddd; }
+  .conclusion .key-point {
+    background: rgba(225, 29, 72, 0.2);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 14px;
+  }
+
+  /* COMPANY TYPE TOGGLE */
+  .toggle-tabs { display: flex; gap: 0; margin-bottom: 16px; border-radius: 6px; overflow: hidden; border: 1.5px solid var(--border); }
+  .tab-btn {
+    flex: 1;
+    padding: 9px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--bg2);
+    border: none;
+    cursor: pointer;
+    color: var(--subtext);
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+
+  /* DCF STEPS */
+  .steps { counter-reset: step; }
+  .step {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+  .step::before {
+    content: counter(step);
+    min-width: 28px;
+    height: 28px;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .step-content p { font-size: 13px; color: var(--subtext); margin: 0; }
+
+  /* VALUATION RESULT */
+  .val-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .val-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .val-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .val-card .desc { font-size: 11px; color: var(--subtext); margin-top: 4px; }
+  .val-card.positive .num { color: #16a34a; }
+  .val-card.highlight-card { border-color: var(--accent); background: #fff0f3; }
+
+  footer {
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 12px;
+    color: #bbb;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자 아카데미 26회 · 2026.04.05</div>
+    <h1>내가 투자한 주가,<br><span>합당한 가격인가?</span></h1>
+    <div class="hero-meta">
+      <span>📺 유튜브 강의 분석</span>
+      <span>⏱ 약 30분 강의</span>
+      <span>💡 DCF · Intrinsic Value</span>
+    </div>
+    <div class="hero-divider"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 강의 핵심 -->
+  <div class="section fade-in">
+    <div class="section-label">Overview</div>
+    <h2>강의 핵심 요약</h2>
+    <p>주가의 적정 가격을 판단하기 위해 PE(주가수익비율) 같은 단순 지표가 아닌, <strong>DCF(할인현금흐름)</strong>와 <strong>Intrinsic Value(내재가치)</strong>를 활용해야 한다는 것이 이번 강의의 핵심입니다.</p>
+    <div class="highlight">
+      <strong>핵심 원리:</strong> 기업은 돈을 벌고, 남기고, 빚 갚고, 재투자하는 사이클을 반복합니다. 이를 수치화하면 현재 주가가 합리적인지(오버밸류 vs 언더밸류) 알 수 있습니다.
+    </div>
+    <p>강사는 과거 프리캐시플로우 데이터 → 미래 예측 → 현재가치화 순서로 계산하며, 이 수치는 "헛수"가 아닌 합리적 근거라고 강조합니다.</p>
+  </div>
+
+  <!-- 레이셔의 한계 -->
+  <div class="section fade-in">
+    <div class="section-label">Problem</div>
+    <h2>왜 PE 레이셔만으로는 부족한가?</h2>
+    <p>PE(주가수익비율)처럼 단순 비율만 보면 적정 주가가 보이지 않습니다. 예를 들어 PE가 46인 주식이 PE 17짜리보다 더 많이 오를 수 있습니다.</p>
+
+    <div class="toggle-tabs" id="companyTabs">
+      <button class="tab-btn active" onclick="showCompany('stable')">🟢 안정성장형 (A)</button>
+      <button class="tab-btn" onclick="showCompany('cyclic')">🟡 사이클릭형 (B)</button>
+      <button class="tab-btn" onclick="showCompany('risky')">🔴 변동성형 (C)</button>
+    </div>
+
+    <div class="chart-container fade-in">
+      <canvas id="companyChart" height="230"></canvas>
+    </div>
+
+    <div id="companyDesc" class="highlight">
+      <strong>안정성장형 (Acme):</strong> 프리캐시플로우가 매년 꾸준히 증가. 디스카운트 레이트를 낮게 적용 → 주가 프리미엄 부여 가능
+    </div>
+  </div>
+
+  <!-- 3가지 핵심 개념 -->
+  <div class="section fade-in">
+    <div class="section-label">Core Concepts</div>
+    <h2>3가지 핵심 개념</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3>Free Cash Flow (프리캐시플로우)</h3>
+        <p>기업이 영업활동으로 벌어 자본적 지출(설비투자 등)을 뺀 뒤 남은 실제 현금. 월급 받아서 생활비 쓰고 남은 돈과 같은 개념. 10K 보고서의 캐시플로우 항목에서 확인 가능.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3>Present Value (현재가치)</h3>
+        <p>미래의 현금을 오늘 기준으로 환산한 값. 2년 뒤 받을 500달러는 현재 기준으로 436달러 정도의 가치밖에 없다는 개념. 미래 가치를 할인율(Discount Rate)로 나눠 계산.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3>Discount Rate (할인율)</h3>
+        <p>투자 리스크를 숫자로 표현한 것. 우량 기업은 낮은 이자율로 채권 발행(2~3%), 부실 기업은 10% 이상. 할인율이 높을수록 리스크↑, 주가에 부정적 영향.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 현재가치 공식 -->
+  <div class="section fade-in">
+    <div class="section-label">Formula</div>
+    <h2>현재가치(Present Value) 계산식</h2>
+    <div class="formula">
+      <div class="f-label">Discounted Cash Flow</div>
+      <div class="f-main">PV = CF / (1 + R)^N</div>
+      <div class="f-vars">
+        N = 연도 수 (Number of Years)<br>
+        CF = 프리캐시플로우 (Free Cash Flow)<br>
+        R = 할인율 (Discount Rate)<br>
+        G = 성장률 (Growth Rate)
+      </div>
+    </div>
+    <div class="formula" style="margin-top:0;">
+      <div class="f-label">Perpetuity Value (영구가치)</div>
+      <div class="f-main">PerpV = CF × (1+G) / (R - G)</div>
+      <div class="f-vars">회사가 영원히 이 캐시플로우를 만들어낼 때의 현재가치 총합</div>
+    </div>
+    <p style="font-size:13px;color:var(--subtext);">* Perpetuity(퍼페추이티)란 회사를 '영원히' 특정 할인율로 평가할 때의 가치. DCF 계산의 최종 단계에 활용됩니다.</p>
+  </div>
+
+  <!-- DCF 계산기 시뮬레이터 -->
+  <div class="section fade-in">
+    <div class="section-label">Simulator</div>
+    <h2>DCF 주가 적정가 시뮬레이터</h2>
+    <p>강의의 Acme 사례를 기반으로, 수치를 조정해 적정주가가 어떻게 변하는지 직접 체험해 보세요.</p>
+
+    <div class="sim-box">
+      <h3>🔢 파라미터 조정</h3>
+
+      <div class="sim-row">
+        <label>내년 프리캐시플로우 (백만$) <span id="fcf-val">630</span></label>
+        <input type="range" id="fcf" min="200" max="1500" value="630" step="10" oninput="updateSim()">
+      </div>
+      <div class="sim-row">
+        <label>할인율 (Discount Rate) <span id="dr-val">9%</span></label>
+        <input type="range" id="dr" min="4" max="20" value="9" step="0.5" oninput="updateSim()">
+      </div>
+      <div class="sim-row">
+        <label>영구 성장률 (Perpetuity Growth) <span id="gr-val">3%</span></label>
+        <input type="range" id="gr" min="1" max="8" value="3" step="0.5" oninput="updateSim()">
+      </div>
+      <div class="sim-row">
+        <label>연간 성장률 (Annual Growth) <span id="ag-val">5%</span></label>
+        <input type="range" id="ag" min="1" max="20" value="5" step="0.5" oninput="updateSim()">
+      </div>
+      <div class="sim-row">
+        <label>발행주식수 (백만주) <span id="sh-val">221</span></label>
+        <input type="range" id="sh" min="50" max="1000" value="221" step="5" oninput="updateSim()">
+      </div>
+
+      <div class="sim-result">
+        <div class="sim-result-item">
+          <div class="val" id="r-dcf">—</div>
+          <div class="lbl">10년 DCF 합계 (백만$)</div>
+        </div>
+        <div class="sim-result-item">
+          <div class="val" id="r-perp">—</div>
+          <div class="lbl">영구가치 현재값 (백만$)</div>
+        </div>
+        <div class="sim-result-item">
+          <div class="val" id="r-total">—</div>
+          <div class="lbl">총 내재가치 (백만$)</div>
+        </div>
+        <div class="sim-result-item">
+          <div class="val" id="r-price">—</div>
+          <div class="lbl">주당 적정가 ($)</div>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="resetSim()">↺ 초기값으로 리셋</button>
+    </div>
+
+    <!-- Acme 예시 결과 -->
+    <p style="font-size:13px;color:var(--subtext);margin-top:4px;">📌 강의 원본 Acme 사례 결과:</p>
+    <div class="val-result">
+      <div class="val-card"><div class="num">$4,913M</div><div class="desc">10년 DCF 합계</div></div>
+      <div class="val-card"><div class="num">$7,086M</div><div class="desc">영구가치 현재값</div></div>
+      <div class="val-card highlight-card"><div class="num">$54.30</div><div class="desc">주당 내재가치</div></div>
+      <div class="val-card positive"><div class="num">+16%</div><div class="desc">현재가 $45 대비 언더밸류</div></div>
+    </div>
+  </div>
+
+  <!-- 할인율 결정 요인 -->
+  <div class="section fade-in">
+    <div class="section-label">Risk Factors</div>
+    <h2>디스카운트 레이트를 결정하는 7가지 요인</h2>
+    <p>할인율(Discount Rate)이 낮을수록 주가를 높게 평가받습니다. 아래 요인들이 낮은 할인율을 만드는 조건입니다.</p>
+
+    <div class="risk-item fade-in">
+      <div class="risk-num">1</div>
+      <div class="risk-content">
+        <h4>기업 규모 (Size)</h4>
+        <p>규모가 크면 클수록 할인율을 낮게 적용. 러셀2000 소형주보다 다우지수 대형주 중심으로 투자해야 하는 이유. 한 종목 비중 0.5% 이상 금지 권고.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">2</div>
+      <div class="risk-content">
+        <h4>재무 레버리지 (Financial Leverage)</h4>
+        <p>부채가 많을수록 할인율 상승. 채권 발행, 우선주, 전환사채 과다 발행 기업은 주의. 빚이 많으면 투자 리스크 증가.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">3</div>
+      <div class="risk-content">
+        <h4>사이클 여부 (Cyclicality)</h4>
+        <p>반도체처럼 2~3년 호황 후 침체를 반복하는 사이클릭 기업은 할인율 높게 적용. 가장 선호하는 것은 매년 꾸준히 성장하는 Stable 기업.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">4</div>
+      <div class="risk-content">
+        <h4>경영진 거버넌스 (Management / Corporate Governance)</h4>
+        <p>CEO 리스크, 합리적 의사결정, 사업 집중도. 문어발식 확장(엔터테인먼트·유통 등 무관한 영역 진출)은 기업가치를 떨어뜨림.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">5</div>
+      <div class="risk-content">
+        <h4>경제적 해자 (Economic Moat)</h4>
+        <p>중세 성 주변의 해자(moat)처럼, 경쟁자가 넘기 어려운 진입장벽. 시장점유율을 빼앗기지 않고 꾸준히 넓히는 기업일수록 할인율 낮아짐.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">6</div>
+      <div class="risk-content">
+        <h4>사업 복잡성 (Complexity)</h4>
+        <p>10K 보고서, 사업 구조, 전략이 이해하기 어려울수록 투자자 신뢰 감소. 시각적으로 명확하게 커뮤니케이션하는 기업이 리스크 낮음.</p>
+      </div>
+    </div>
+    <div class="risk-item fade-in">
+      <div class="risk-num">7</div>
+      <div class="risk-content">
+        <h4>종합 결론</h4>
+        <p>할인율을 낮게 받는 기업은 비슷한 실적에도 주가 성장 속도가 빠름. 이것이 PE가 높아도 주가가 오르는 이유.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 할인율별 주가 영향 차트 -->
+  <div class="section fade-in">
+    <div class="section-label">Visualization</div>
+    <h2>할인율에 따른 주당 내재가치 변화</h2>
+    <p>동일한 기업(FCF 630M, 성장률 3%, 주식수 221M)에서 할인율만 바꾸면 적정 주가가 얼마나 달라지는지 보여줍니다.</p>
+    <div class="chart-container fade-in">
+      <canvas id="discountChart" height="230"></canvas>
+    </div>
+    <p style="font-size:12px;color:var(--subtext);">* 할인율이 낮을수록(우량 기업) 적정 주가가 훨씬 높게 계산됩니다.</p>
+  </div>
+
+  <!-- 5단계 DCF 프로세스 -->
+  <div class="section fade-in">
+    <div class="section-label">Process</div>
+    <h2>10년 DCF 밸류에이션 5단계</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-content">
+          <h4>과거 FCF로 미래 예측 (Forecast)</h4>
+          <p>과거 10년 프리캐시플로우 평균 성장률(예: 7~8%)을 구해 향후 10년에 복리로 적용. 올해 500 → 내년 535(7% 성장) 식으로 계산.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>현재가치화 (Discount to PV)</h4>
+          <p>각 연도의 FCF를 PV = CF / (1+R)^N 공식으로 현재가치로 환산. 10년치 합산 → Sum of DCF.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>영구가치 계산 (Perpetuity Value)</h4>
+          <p>10년 이후 기업이 영구히 만들어낼 현금의 현재가치 총합. CF×(1+G) / (R-G) 공식 적용.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>영구가치 현재화</h4>
+          <p>산출된 영구가치를 10년 할인율로 다시 현재가치화. Perpetuity PV = Perp.V / (1+R)^10.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>주당 내재가치 도출 (Per Share Value)</h4>
+          <p>총 내재가치(Sum of DCF + Perpetuity PV) ÷ 총 발행주식수 = 주당 적정가 (Intrinsic Value)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3개 회사 유형 비교표 -->
+  <div class="section fade-in">
+    <div class="section-label">Comparison</div>
+    <h2>3가지 회사 유형별 FCF 패턴 비교</h2>
+    <table>
+      <tr>
+        <th>연도</th>
+        <th>A (안정성장)</th>
+        <th>B (사이클릭)</th>
+        <th>C (변동성)</th>
+      </tr>
+      <tr><td>2024</td><td>100</td><td>100</td><td>100</td></tr>
+      <tr><td>2025</td><td>110</td><td>80</td><td>20</td></tr>
+      <tr><td>2026</td><td>120 (130)</td><td>120</td><td>200</td></tr>
+      <tr><td>2027</td><td>145</td><td>90</td><td>90</td></tr>
+      <tr><td>2028</td><td>160</td><td>110</td><td>300</td></tr>
+      <tr>
+        <td><strong>디스카운트</strong></td>
+        <td style="color:#16a34a;font-weight:700;">낮음 (3~5%)</td>
+        <td style="color:#d97706;font-weight:700;">중간 (7%)</td>
+        <td style="color:#dc2626;font-weight:700;">높음 (12%)</td>
+      </tr>
+    </table>
+    <div class="highlight">
+      <strong>투자 결론:</strong> 프리캐시플로우가 꾸준히 우상향하는 <span style="color:var(--accent)">A형 기업(안정성장)</span>에 집중 투자해야 합니다. B(사이클릭)와 C(변동성)는 할인율이 높아져 적정 주가가 낮게 계산됩니다.
+    </div>
+  </div>
+
+  <!-- 결론 -->
+  <div class="conclusion fade-in">
+    <div class="container">
+      <div class="section-label" style="color:var(--accent2);">Conclusion</div>
+      <h2>오늘 강의의 핵심 결론</h2>
+      <p>DCF(할인현금흐름)와 내재가치(Intrinsic Value)를 계산하면 현재 주가가 합리적인지 파악할 수 있습니다. 완벽히 맞지는 않지만, 투자 실패를 막고 비싼 주식과 싼 주식을 구분하는 기준이 됩니다.</p>
+      <div class="key-point">
+        ✅ <strong>디스카운트 레이트를 낮게 받는 기업</strong>이 비슷한 실적에도 주가 성장 속도가 빠르다<br><br>
+        ✅ 현재 주가 vs 내재가치 차이가 <strong>30% 이상</strong>이면, 하락장에서 더 크게 떨어지고 상승장에서 더 빠르게 회복<br><br>
+        ✅ PE 레이셔만으로는 적정가를 알 수 없다. <strong>FCF 패턴 + DCF</strong>를 함께 봐야 한다
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  투자 아카데미 26회 강의 분석 · 본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.
+</footer>
+
+<script>
+// ===== FADE-IN OBSERVER =====
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ===== CHART CONFIGS =====
+const chartConfigs = {};
+
+// Company FCF Chart
+const companyData = {
+  stable: {
+    label: 'A - 안정성장형 (Acme)',
+    data: [100, 110, 120, 145, 160],
+    color: '#16a34a',
+    desc: '<strong>안정성장형 (Acme):</strong> 프리캐시플로우가 매년 꾸준히 증가. 디스카운트 레이트 낮음 → 주가 프리미엄 부여 가능. <span style="color:var(--accent)">투자 권장</span>'
+  },
+  cyclic: {
+    label: 'B - 사이클릭형 (Bravo)',
+    data: [100, 80, 120, 90, 110],
+    color: '#d97706',
+    desc: '<strong>사이클릭형 (Bravo):</strong> 반도체처럼 호황·침체 반복. 디스카운트 레이트 중간 (약 7%). 투자 시 사이클 타이밍 중요.'
+  },
+  risky: {
+    label: 'C - 변동성형 (Charlie)',
+    data: [100, 20, 200, 90, 300],
+    color: '#dc2626',
+    desc: '<strong>변동성형 (Charlie):</strong> 매출 총량은 높지만 들쑥날쑥. 디스카운트 레이트 높음 (약 12%). <span style="color:var(--accent)">투자 비권장</span>'
+  }
+};
+
+let companyChartInstance = null;
+let currentCompany = 'stable';
+const years = ['2024', '2025', '2026', '2027', '2028'];
+
+function renderCompanyChart(type) {
+  const d = companyData[type];
+  if (companyChartInstance) companyChartInstance.destroy();
+  companyChartInstance = new Chart(document.getElementById('companyChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [{
+        label: d.label,
+        data: d.data,
+        borderColor: d.color,
+        backgroundColor: d.color + '20',
+        fill: true,
+        tension: 0.35,
+        pointRadius: 5,
+        pointBackgroundColor: d.color,
+        borderWidth: 2.5
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` FCF: ${ctx.raw}M` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: '#f0f0f0' },
+          ticks: { font: { size: 11 } }
+        },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+  document.getElementById('companyDesc').innerHTML = d.desc;
+}
+
+chartConfigs['companyChart'] = () => renderCompanyChart('stable');
+
+window.showCompany = function(type) {
+  currentCompany = type;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['stable','cyclic','risky'][i] === type);
+  });
+  renderCompanyChart(type);
+};
+
+// Discount Rate Chart
+chartConfigs['discountChart'] = () => {
+  const rates = [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20];
+  const prices = rates.map(r => {
+    const { price } = calcDCF(630, r/100, 0.03, 0.05, 221);
+    return Math.round(price * 100) / 100;
+  });
+  new Chart(document.getElementById('discountChart'), {
+    type: 'bar',
+    data: {
+      labels: rates.map(r => r + '%'),
+      datasets: [{
+        label: '주당 내재가치 ($)',
+        data: prices,
+        backgroundColor: rates.map(r => r <= 7 ? '#16a34a' : r <= 10 ? '#e11d48' : '#6b7280'),
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` $${ctx.raw}` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: '#f0f0f0' },
+          ticks: { callback: v => '$' + v, font: { size: 11 } }
+        },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+// ===== CHART OBSERVER =====
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ===== DCF CALCULATOR =====
+function calcDCF(fcf, dr, gr, ag, shares) {
+  let sumDCF = 0;
+  let cf = fcf;
+  let lastCF = 0;
+  for (let n = 1; n <= 10; n++) {
+    cf = cf * (1 + ag);
+    const pv = cf / Math.pow(1 + dr, n);
+    sumDCF += pv;
+    if (n === 10) lastCF = cf;
+  }
+  const perpV = lastCF * (1 + gr) / (dr - gr);
+  const perpPV = perpV / Math.pow(1 + dr, 10);
+  const total = sumDCF + perpPV;
+  const price = total / shares;
+  return { sumDCF: Math.round(sumDCF), perpPV: Math.round(perpPV), total: Math.round(total), price: Math.round(price * 100) / 100 };
+}
+
+function updateSim() {
+  const fcf = parseFloat(document.getElementById('fcf').value);
+  const dr = parseFloat(document.getElementById('dr').value) / 100;
+  const gr = parseFloat(document.getElementById('gr').value) / 100;
+  const ag = parseFloat(document.getElementById('ag').value) / 100;
+  const sh = parseFloat(document.getElementById('sh').value);
+
+  document.getElementById('fcf-val').textContent = fcf;
+  document.getElementById('dr-val').textContent = (dr * 100).toFixed(1) + '%';
+  document.getElementById('gr-val').textContent = (gr * 100).toFixed(1) + '%';
+  document.getElementById('ag-val').textContent = (ag * 100).toFixed(1) + '%';
+  document.getElementById('sh-val').textContent = sh;
+
+  if (dr <= gr) {
+    document.getElementById('r-dcf').textContent = '오류';
+    document.getElementById('r-perp').textContent = '할인율 > 성장률';
+    document.getElementById('r-total').textContent = '필요';
+    document.getElementById('r-price').textContent = '—';
+    return;
+  }
+
+  const { sumDCF, perpPV, total, price } = calcDCF(fcf, dr, gr, ag, sh);
+  document.getElementById('r-dcf').textContent = '$' + sumDCF.toLocaleString() + 'M';
+  document.getElementById('r-perp').textContent = '$' + perpPV.toLocaleString() + 'M';
+  document.getElementById('r-total').textContent = '$' + total.toLocaleString() + 'M';
+  document.getElementById('r-price').textContent = '$' + price.toFixed(2);
+}
+
+function resetSim() {
+  document.getElementById('fcf').value = 630;
+  document.getElementById('dr').value = 9;
+  document.getElementById('gr').value = 3;
+  document.getElementById('ag').value = 5;
+  document.getElementById('sh').value = 221;
+  updateSim();
+}
+
+updateSim();
+</script>
+</body>
+</html>

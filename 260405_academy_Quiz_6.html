@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 투자 아카데미 26회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --sub: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a; --wrong: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.75; }
+
+  .hero {
+    background: var(--text); color: #fff;
+    padding: 40px 24px 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: '?'; position: absolute;
+    right: 20px; top: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 140px; font-weight: 900;
+    color: var(--accent); opacity: 0.12;
+    line-height: 1;
+  }
+  .hero-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5.5vw, 34px); font-weight: 900; margin-bottom: 10px; }
+  .hero p { font-size: 13px; color: #aaa; }
+  .hero-bar { height: 4px; background: linear-gradient(90deg, var(--accent), transparent); margin-top: 24px; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* NOTICE */
+  .notice {
+    background: #fff8f0;
+    border: 1.5px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 24px 0 8px;
+    font-size: 13px;
+    color: #92400e;
+  }
+
+  /* SECTION DIVIDER */
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--accent);
+    padding: 32px 0 10px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 18px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+  .q-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--accent);
+    min-width: 32px;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .badge-easy { background: #dcfce7; color: #166534; }
+  .badge-mid { background: #fef9c3; color: #854d0e; }
+  .badge-hard { background: #fee2e2; color: #991b1b; }
+  .badge-type { background: var(--accent); color: #fff; }
+
+  .q-text { font-weight: 700; font-size: 15px; margin-bottom: 12px; line-height: 1.55; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 6px; }
+  .opt {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--text);
+    text-align: left;
+    font-family: 'Noto Sans KR', sans-serif;
+    width: 100%;
+  }
+  .opt:hover { border-color: var(--accent); background: #fff0f3; }
+  .opt.selected { border-color: var(--accent); background: #fff0f3; }
+  .opt.correct { border-color: var(--correct); background: #f0fdf4; color: var(--correct); font-weight: 700; }
+  .opt.wrong { border-color: var(--wrong); background: #fef2f2; color: var(--wrong); }
+  .opt-letter { font-weight: 900; min-width: 20px; }
+
+  /* SHORT/OX INPUT */
+  .short-input {
+    width: 100%; border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 10px 14px;
+    font-size: 14px; font-family: 'Noto Sans KR', sans-serif;
+    outline: none; margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+
+  .ox-btns { display: flex; gap: 10px; margin-bottom: 8px; }
+  .ox-btn {
+    flex: 1; padding: 12px;
+    font-size: 22px; font-weight: 900;
+    border: 1.5px solid var(--border);
+    border-radius: 8px; cursor: pointer;
+    background: #fff; transition: all 0.18s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.selected-O { border-color: var(--correct); background: #f0fdf4; }
+  .ox-btn.selected-X { border-color: var(--wrong); background: #fef2f2; }
+
+  /* CHECK BUTTON */
+  .check-btn {
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 6px;
+    padding: 8px 18px; font-size: 13px;
+    font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s; margin-top: 6px;
+  }
+  .check-btn:hover { background: var(--accent2); }
+
+  /* FEEDBACK */
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .feedback.correct-fb { background: #f0fdf4; border: 1px solid var(--correct); color: #166534; }
+  .feedback.wrong-fb { background: #fef2f2; border: 1px solid var(--wrong); color: #991b1b; }
+  .feedback.show { display: block; }
+  .fb-label { font-weight: 900; margin-bottom: 4px; }
+
+  /* SCORE PANEL */
+  .score-panel {
+    background: var(--text); color: #fff;
+    border-radius: 10px; padding: 22px 20px;
+    margin: 20px 0; text-align: center;
+  }
+  .score-panel .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900;
+    color: var(--accent2);
+  }
+  .score-panel .score-lbl { font-size: 13px; color: #aaa; margin-top: 4px; }
+  .score-panel .grade { font-size: 18px; font-weight: 700; margin-top: 10px; }
+
+  .submit-btn {
+    display: block; width: 100%;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 14px; font-size: 15px;
+    font-weight: 700; cursor: pointer;
+    margin: 24px 0 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+
+  .reset-all-btn {
+    display: block; width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--sub); border-radius: 8px;
+    padding: 12px; font-size: 14px;
+    font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s; margin-bottom: 30px;
+  }
+  .reset-all-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer {
+    text-align: center; padding: 24px 20px;
+    font-size: 12px; color: #bbb;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자 아카데미 26회 · 시험문제</div>
+    <h1>주가 적정가 판단법<br>확인 테스트</h1>
+    <p>총 10문제 · 객관식 / 단답형 / OX · 즉시 채점</p>
+    <div class="hero-bar"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="notice">
+    ⚠️ 각 문제의 답을 선택하거나 입력 후 <strong>[정답 확인]</strong> 버튼을 누르세요. 전체 제출은 하단의 <strong>[최종 제출 및 점수 확인]</strong> 버튼을 사용하세요.
+  </div>
+
+  <!-- ===== 쉬움 (3문제) ===== -->
+  <div class="sec-title">🟢 쉬움 — 3문제</div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-meta">
+      <span class="q-num">Q1</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">프리캐시플로우(Free Cash Flow)를 가장 잘 설명한 것은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q1','A')"><span class="opt-letter">A</span> 기업이 연간 벌어들인 총매출액</button>
+      <button class="opt" onclick="selectOpt(this,'q1','B')"><span class="opt-letter">B</span> 영업활동으로 벌어 자본적 지출을 뺀 뒤 남은 실제 현금</button>
+      <button class="opt" onclick="selectOpt(this,'q1','C')"><span class="opt-letter">C</span> 주주에게 지급하는 배당금</button>
+      <button class="opt" onclick="selectOpt(this,'q1','D')"><span class="opt-letter">D</span> 기업의 총자산에서 총부채를 뺀 순자산</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q1','B','영업활동으로 벌어들인 돈에서 사업 유지를 위한 자본적 지출(설비투자 등)을 뺀 뒤 남은 현금이 프리캐시플로우입니다. 강사는 이를 \"월급 받아서 생활비 쓰고 남은 돈\"에 비유했습니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-meta">
+      <span class="q-num">Q2</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">OX</span>
+    </div>
+    <div class="q-text">PE(주가수익비율)가 낮은 주식은 항상 PE가 높은 주식보다 투자 가치가 높다.</div>
+    <div class="ox-btns">
+      <button class="ox-btn" id="q2-O" onclick="selectOX('q2','O')">O</button>
+      <button class="ox-btn" id="q2-X" onclick="selectOX('q2','X')">X</button>
+    </div>
+    <button class="check-btn" onclick="checkOX('q2','X','강의의 핵심 주제가 바로 이것입니다. PE가 46인 주식이 PE가 17인 주식보다 더 오를 수 있습니다. PE 레이셔만으로는 적정 가격이 보이지 않으며, DCF와 Intrinsic Value를 함께 봐야 합니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-meta">
+      <span class="q-num">Q3</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">DCF 계산에서 R이 의미하는 것은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q3','A')"><span class="opt-letter">A</span> 연도 수 (Number of Years)</button>
+      <button class="opt" onclick="selectOpt(this,'q3','B')"><span class="opt-letter">B</span> 성장률 (Growth Rate)</button>
+      <button class="opt" onclick="selectOpt(this,'q3','C')"><span class="opt-letter">C</span> 할인율 (Discount Rate)</button>
+      <button class="opt" onclick="selectOpt(this,'q3','D')"><span class="opt-letter">D</span> 프리캐시플로우 (Free Cash Flow)</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q3','C','강의에서 PV = CF / (1+R)^N 공식의 변수를 설명할 때, R은 Discount Rate(할인율), N은 Number of Years, CF는 Cash Flow, G는 Growth Rate라고 명시했습니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q3"></div>
+  </div>
+
+  <!-- ===== 보통 (5문제) ===== -->
+  <div class="sec-title">🟡 보통 — 5문제</div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-meta">
+      <span class="q-num">Q4</span>
+      <span class="badge badge-mid">보통</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">할인율(Discount Rate)이 높아질수록 주가에 미치는 영향으로 올바른 것은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q4','A')"><span class="opt-letter">A</span> 주가의 내재가치가 높아진다</button>
+      <button class="opt" onclick="selectOpt(this,'q4','B')"><span class="opt-letter">B</span> 투자 리스크가 낮아진다</button>
+      <button class="opt" onclick="selectOpt(this,'q4','C')"><span class="opt-letter">C</span> 투자 리스크가 높아지고 내재가치(주가)는 낮게 계산된다</button>
+      <button class="opt" onclick="selectOpt(this,'q4','D')"><span class="opt-letter">D</span> 프리캐시플로우가 자동으로 증가한다</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q4','C','강의에서 \"할인율이 크면 클수록 투자 리스크는 커지게 되어 있다\"고 했습니다. 할인율이 높으면 미래 현금흐름을 더 많이 깎아서 현재가치로 만들기 때문에 내재가치(적정주가)가 낮아집니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-meta">
+      <span class="q-num">Q5</span>
+      <span class="badge badge-mid">보통</span>
+      <span class="badge badge-type">단답형</span>
+    </div>
+    <div class="q-text">강의에서 소개한 Acme 사의 현재 주가는 $45였습니다. DCF 계산 결과 주당 내재가치가 $54.30이라면, 이 주식은 현재 어떤 상태입니까? (오버밸류 / 언더밸류 중 선택)</div>
+    <input type="text" class="short-input" id="ans-q5" placeholder="예: 오버밸류 또는 언더밸류">
+    <button class="check-btn" onclick="checkShort('q5',['언더밸류','undervalue','under value','저평가'],'현재 주가($45)가 내재가치($54.30)보다 낮으므로 언더밸류(저평가) 상태입니다. 강의에서도 \"16% 정도 언더밸류 돼 있다\"고 설명했으며, 이 경우 투자 대상으로 판단할 수 있습니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-meta">
+      <span class="q-num">Q6</span>
+      <span class="badge badge-mid">보통</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">강의에서 소개한 3가지 회사 유형(안정성장형·사이클릭형·변동성형) 중 투자에 가장 적합한 유형은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q6','A')"><span class="opt-letter">A</span> 프리캐시플로우가 폭발적으로 증가하는 변동성형 (Charlie)</button>
+      <button class="opt" onclick="selectOpt(this,'q6','B')"><span class="opt-letter">B</span> 반도체처럼 호황·침체를 반복하는 사이클릭형 (Bravo)</button>
+      <button class="opt" onclick="selectOpt(this,'q6','C')"><span class="opt-letter">C</span> 프리캐시플로우가 매년 꾸준히 성장하는 안정성장형 (Acme)</button>
+      <button class="opt" onclick="selectOpt(this,'q6','D')"><span class="opt-letter">D</span> PE 레이셔가 가장 낮은 회사</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q6','C','강의에서 \"100, 101, 103, 105, 107, 110처럼 꾸준히 성장하는 회사를 선호한다\"고 했습니다. 안정성장형은 할인율을 낮게 적용받아 같은 조건에서도 내재가치(주가)를 높게 평가받습니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q6"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-meta">
+      <span class="q-num">Q7</span>
+      <span class="badge badge-mid">보통</span>
+      <span class="badge badge-type">OX</span>
+    </div>
+    <div class="q-text">Economic Moat(경제적 해자)가 넓은 기업일수록 할인율을 높게 적용받는다.</div>
+    <div class="ox-btns">
+      <button class="ox-btn" id="q7-O" onclick="selectOX('q7','O')">O</button>
+      <button class="ox-btn" id="q7-X" onclick="selectOX('q7','X')">X</button>
+    </div>
+    <button class="check-btn" onclick="checkOX('q7','X','강의에서 \"이코노믹 모트가 넓으면 넓을수록 디스카운트를 적게 받는다\"고 했습니다. 경쟁자가 넘기 어려운 진입장벽을 갖춘 기업은 리스크가 낮아 낮은 할인율을 적용받고, 그 결과 내재가치가 높게 계산됩니다.')">정답 확인</button>
+    <div class="feedback" id="fb-q7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-meta">
+      <span class="q-num">Q8</span>
+      <span class="badge badge-mid">보통</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">10년 DCF 밸류에이션의 5단계 중, 마지막 단계(5단계)에 해당하는 것은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q8','A')"><span class="opt-letter">A</span> 과거 FCF로 미래 10년치 예측 (Forecast)</button>
+      <button class="opt" onclick="selectOpt(this,'q8','B')"><span class="opt-letter">B</span> Perpetuity Value 계산</button>
+      <button class="opt" onclick="selectOpt(this,'q8','C')"><span class="opt-letter">C</span> 총 내재가치를 발행주식수로 나눠 주당 적정가 산출</button>
+      <button class="opt" onclick="selectOpt(this,'q8','D')"><span class="opt-letter">D</span> 각 연도 FCF를 할인율로 현재가치화</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q8','C','5단계: ① 미래 FCF 예측 → ② 현재가치화(Sum of DCF) → ③ Perpetuity Value 계산 → ④ Perpetuity PV 산출 → ⑤ 총 내재가치 ÷ 발행주식수 = 주당 내재가치(Intrinsic Value)')">정답 확인</button>
+    <div class="feedback" id="fb-q8"></div>
+  </div>
+
+  <!-- ===== 어려움 (2문제) ===== -->
+  <div class="sec-title">🔴 어려움 — 2문제</div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-meta">
+      <span class="q-num">Q9</span>
+      <span class="badge badge-hard">어려움</span>
+      <span class="badge badge-type">단답형</span>
+    </div>
+    <div class="q-text">Perpetuity Value를 구하는 공식에서 분모가 (R - G)인 이유를 한 문장으로 설명하시오. (R = 할인율, G = 성장률)</div>
+    <input type="text" class="short-input" id="ans-q9" placeholder="자유롭게 서술하세요">
+    <button class="check-btn" onclick="revealLong('q9')">정답 확인</button>
+    <div class="feedback" id="fb-q9"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-meta">
+      <span class="q-num">Q10</span>
+      <span class="badge badge-hard">어려움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">다음 중 할인율(Discount Rate)을 낮게 적용받는 기업의 특성으로 올바르게 묶인 것은?</div>
+    <div class="options">
+      <button class="opt" onclick="selectOpt(this,'q10','A')"><span class="opt-letter">A</span> 소형 기업 + 부채 많음 + 사이클릭한 FCF</button>
+      <button class="opt" onclick="selectOpt(this,'q10','B')"><span class="opt-letter">B</span> 대형 기업 + 부채 적음 + 안정적 FCF + 넓은 경제적 해자 + 투명한 지배구조</button>
+      <button class="opt" onclick="selectOpt(this,'q10','C')"><span class="opt-letter">C</span> 대형 기업이지만 FCF가 들쑥날쑥하고 문어발식 사업 구조</button>
+      <button class="opt" onclick="selectOpt(this,'q10','D')"><span class="opt-letter">D</span> PE 레이셔가 낮고 배당을 많이 주는 기업</button>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q10','B','강의에서 소개한 7가지 할인율 결정 요인: ①대형기업(↓할인율) ②부채 적음(↓) ③안정적 FCF(↓) ④훌륭한 경영진·거버넌스(↓) ⑤넓은 경제적 해자(↓) ⑥단순·명확한 사업구조(↓) ⑦종합: 이 조건들을 갖출수록 같은 실적에서도 주가 성장이 빠름')">정답 확인</button>
+    <div class="feedback" id="fb-q10"></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <button class="submit-btn" onclick="submitAll()">📊 최종 제출 및 점수 확인</button>
+  <div class="score-panel" id="scorePanel" style="display:none;">
+    <div class="score-num" id="scoreNum">—</div>
+    <div class="score-lbl">/ 10점 (자동채점 기준)</div>
+    <div class="grade" id="gradeMsg"></div>
+  </div>
+  <button class="reset-all-btn" onclick="resetAll()">↺ 전체 초기화</button>
+</div>
+
+<footer>투자 아카데미 26회 · 시험문제지 · 교육 목적 전용</footer>
+
+<script>
+const state = {};
+
+function selectOpt(btn, qid, val) {
+  if (state[qid]?.checked) return;
+  document.querySelectorAll(`#${qid} .opt`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state[qid] = { ...state[qid], selected: val };
+}
+
+function selectOX(qid, val) {
+  if (state[qid]?.checked) return;
+  document.getElementById(`${qid}-O`).classList.remove('selected-O');
+  document.getElementById(`${qid}-X`).classList.remove('selected-X');
+  document.getElementById(`${qid}-${val}`).classList.add(`selected-${val}`);
+  state[qid] = { ...state[qid], selected: val };
+}
+
+function checkMCQ(qid, correct, explanation) {
+  if (state[qid]?.checked) return;
+  const sel = state[qid]?.selected;
+  const fb = document.getElementById(`fb-${qid}`);
+  if (!sel) { fb.className = 'feedback wrong-fb show'; fb.innerHTML = '<div class="fb-label">⚠️ 답을 선택해주세요.</div>'; return; }
+
+  state[qid] = { ...state[qid], checked: true, correct: sel === correct };
+  document.querySelectorAll(`#${qid} .opt`).forEach(b => {
+    const letter = b.querySelector('.opt-letter').textContent;
+    if (letter === correct) b.classList.add('correct');
+    else if (letter === sel && sel !== correct) b.classList.add('wrong');
+  });
+
+  if (sel === correct) {
+    fb.className = 'feedback correct-fb show';
+    fb.innerHTML = `<div class="fb-label">✅ 정답!</div>${explanation}`;
+  } else {
+    fb.className = 'feedback wrong-fb show';
+    fb.innerHTML = `<div class="fb-label">❌ 오답 (정답: ${correct})</div>${explanation}`;
+  }
+}
+
+function checkOX(qid, correct, explanation) {
+  if (state[qid]?.checked) return;
+  const sel = state[qid]?.selected;
+  const fb = document.getElementById(`fb-${qid}`);
+  if (!sel) { fb.className = 'feedback wrong-fb show'; fb.innerHTML = '<div class="fb-label">⚠️ O 또는 X를 선택해주세요.</div>'; return; }
+
+  state[qid] = { ...state[qid], checked: true, correct: sel === correct };
+  const isCorrect = sel === correct;
+  fb.className = `feedback ${isCorrect ? 'correct-fb' : 'wrong-fb'} show`;
+  fb.innerHTML = `<div class="fb-label">${isCorrect ? '✅ 정답!' : `❌ 오답 (정답: ${correct})`}</div>${explanation}`;
+}
+
+function checkShort(qid, keywords, explanation) {
+  if (state[qid]?.checked) return;
+  const val = document.getElementById(`ans-${qid}`).value.trim().toLowerCase();
+  const fb = document.getElementById(`fb-${qid}`);
+  if (!val) { fb.className = 'feedback wrong-fb show'; fb.innerHTML = '<div class="fb-label">⚠️ 답을 입력해주세요.</div>'; return; }
+
+  const isCorrect = keywords.some(k => val.includes(k.toLowerCase()));
+  state[qid] = { checked: true, correct: isCorrect };
+  fb.className = `feedback ${isCorrect ? 'correct-fb' : 'wrong-fb'} show`;
+  fb.innerHTML = `<div class="fb-label">${isCorrect ? '✅ 정답!' : '❌ 오답'}</div>${explanation}`;
+}
+
+function revealLong(qid) {
+  if (state[qid]?.checked) return;
+  state[qid] = { checked: true, correct: null };
+  const fb = document.getElementById(`fb-${qid}`);
+  fb.className = 'feedback correct-fb show';
+  fb.innerHTML = `<div class="fb-label">📖 모범 답안</div>할인율(R)은 투자자가 요구하는 수익률이고 성장률(G)은 현금흐름의 연간 증가율인데, 영구히 성장하는 현금흐름의 현재가치 총합은 \"요구수익률과 성장률의 차이\"로만 수렴하기 때문에 분모가 (R-G)가 됩니다. 만약 R≤G이면 분모가 0 이하가 되어 계산 자체가 불가능합니다.`;
+}
+
+function submitAll() {
+  let auto = 0, total = 0;
+  ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'].forEach(qid => {
+    if (state[qid]?.correct === true) auto++;
+    if (state[qid]?.correct !== undefined && state[qid]?.correct !== null) total++;
+  });
+  const panel = document.getElementById('scorePanel');
+  panel.style.display = 'block';
+  document.getElementById('scoreNum').textContent = auto;
+  const grade = auto >= 9 ? '🏆 우수 — 핵심 개념을 완벽히 이해했습니다!' :
+                auto >= 7 ? '👍 양호 — 주요 개념을 잘 이해했습니다.' :
+                auto >= 5 ? '📚 보통 — 강의를 한 번 더 복습해 보세요.' :
+                            '🔄 복습 필요 — 처음부터 다시 강의를 보세요.';
+  document.getElementById('gradeMsg').textContent = grade;
+  panel.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  Object.keys(state).forEach(k => delete state[k]);
+  document.querySelectorAll('.opt').forEach(b => b.className = 'opt');
+  document.querySelectorAll('.ox-btn').forEach(b => b.className = 'ox-btn');
+  document.querySelectorAll('.feedback').forEach(fb => { fb.className = 'feedback'; fb.innerHTML = ''; });
+  document.querySelectorAll('.short-input').forEach(inp => inp.value = '');
+  document.getElementById('scorePanel').style.display = 'none';
+}
+</script>
+</body>
+</html>
