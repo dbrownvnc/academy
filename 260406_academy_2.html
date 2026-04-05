@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>기업 현금흐름과 주가 | 투자아카데미 27회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #fafafa;
+      --text: #1a1a1a;
+      --text2: #777777;
+      --accent: #e11d48;
+      --accent2: #f43f5e;
+      --border: #e5e5e5;
+      --c1: #e11d48;
+      --c2: #1a1a1a;
+      --c3: #6b7280;
+      --c4: #2563eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: #0d0d0d;
+      color: #fff;
+      padding: 60px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225,29,72,0.35) 0%, transparent 70%);
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent2);
+      text-transform: uppercase;
+      border: 1px solid rgba(244,63,94,0.4);
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 7vw, 42px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--accent2); }
+    .hero-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+    .hero-meta {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .meta-item { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .meta-item strong { color: rgba(255,255,255,0.85); display: block; font-size: 13px; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+    section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .sec-title em { font-style: italic; color: var(--accent); }
+
+    /* ── BODY TEXT ── */
+    p { margin-bottom: 14px; color: var(--text); font-weight: 400; }
+    strong { font-weight: 700; color: var(--text); }
+    .lead { font-size: 16px; font-weight: 500; line-height: 1.7; color: #222; }
+
+    /* ── PULL QUOTE ── */
+    .pullquote {
+      border-left: 3px solid var(--accent);
+      padding: 14px 18px;
+      margin: 24px 0;
+      background: var(--bg2);
+    }
+    .pullquote p {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      padding: 20px;
+      margin: 24px 0;
+      border-radius: 0 0 4px 4px;
+    }
+    .highlight-box h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .highlight-box ul { padding-left: 18px; }
+    .highlight-box li { margin-bottom: 8px; font-size: 14px; }
+
+    /* ── NUMBER CARDS ── */
+    .num-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .num-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 18px 16px;
+      border-radius: 4px;
+    }
+    .num-card .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .num-card .num-label { font-size: 12px; color: var(--text2); line-height: 1.4; }
+
+    /* ── STEP LIST ── */
+    .step-list { margin: 20px 0; }
+    .step-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-content { font-size: 14px; padding-top: 4px; }
+    .step-content strong { display: block; margin-bottom: 2px; }
+
+    /* ── FLOW DIAGRAM ── */
+    .flow-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px 16px;
+      margin: 24px 0;
+    }
+    .flow-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .flow-box {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      min-width: 90px;
+      color: var(--text);
+    }
+    .flow-box.accent {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .flow-box.dark {
+      background: #0d0d0d;
+      color: #fff;
+      border-color: #0d0d0d;
+    }
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* ── CHART ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .chart-container {
+      position: relative;
+      max-height: 340px;
+      margin: 24px 0;
+    }
+    .chart-container canvas {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      max-height: 300px;
+    }
+    .chart-container.chart-ready canvas {
+      opacity: 1;
+    }
+    .chart-label {
+      font-size: 11px;
+      color: var(--text2);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── TABLE ── */
+    .tbl-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f4f4f4; }
+    .td-pos { color: #059669; font-weight: 700; }
+    .td-neg { color: var(--accent); font-weight: 700; }
+
+    /* ── VERDICT ── */
+    .verdict-wrap {
+      background: #0d0d0d;
+      color: #fff;
+      padding: 28px 24px;
+      border-radius: 6px;
+      margin: 24px 0;
+    }
+    .verdict-wrap h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 14px;
+      color: var(--accent2);
+    }
+    .verdict-wrap ul { padding-left: 18px; }
+    .verdict-wrap li { margin-bottom: 10px; font-size: 13px; color: rgba(255,255,255,0.8); }
+
+    /* ── SIM ── */
+    .sim-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px 20px;
+      margin: 24px 0;
+    }
+    .sim-wrap h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .slider-row { margin-bottom: 16px; }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 6px;
+    }
+    .slider-row label span { color: var(--accent); font-weight: 700; }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+    .sim-result {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+    .sim-result .sr-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .sim-result .sr-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sim-result .sr-row span:last-child { font-weight: 700; }
+    .sim-result .verdict-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .tag-buy { background: #d1fae5; color: #065f46; }
+    .tag-hold { background: #fef3c7; color: #92400e; }
+    .tag-sell { background: #fee2e2; color: #991b1b; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 30px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text2);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider span { font-size: 18px; color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">투자아카데미 27회 · 분석리포트</div>
+    <h1>기업 <span>현금흐름</span>이<br>주가를 결정한다</h1>
+    <p style="color:rgba(255,255,255,0.6); font-size:14px; margin-top:12px;">
+      Free Cash Flow · DCF 밸류에이션 · 애플 사례 분석
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>2026년 4월 6일</strong>발행일</div>
+      <div class="meta-item"><strong>투자는인생TV</strong>원본 채널</div>
+      <div class="meta-item"><strong>기업 펀더멘탈</strong>분석 카테고리</div>
+    </div>
+  </div>
+</div>
+
+<!-- 1. 핵심 요약 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Core Thesis</div>
+    <h2 class="sec-title fade-in">주가 상승의 <em>근원</em>은<br>현금흐름의 선순환</h2>
+
+    <p class="lead fade-in">
+      기업의 주가가 장기적으로 우상향하려면 <strong>Free Cash Flow(잉여현금흐름)</strong>가 매년 증가해야 한다. 현금이 늘어야 재투자가 되고, 재투자가 되어야 매출이 늘고, 매출이 늘어야 다시 현금이 쌓이는 선순환이 완성된다. 이 사이클이 깨지는 순간 주가 상승 모멘텀은 소멸한다.
+    </p>
+
+    <div class="num-grid fade-in">
+      <div class="num-card">
+        <div class="num">1~3년</div>
+        <div class="num-label">현금흐름 악화가 주가에 반영되는 데 걸리는 시간</div>
+      </div>
+      <div class="num-card">
+        <div class="num">7가지</div>
+        <div class="num-label">주가 예측 시 필수로 확인해야 할 재무 지표</div>
+      </div>
+      <div class="num-card">
+        <div class="num">FCF</div>
+        <div class="num-label">영업현금 − CAPEX = 실질 잉여현금. 마이너스면 위험 신호</div>
+      </div>
+      <div class="num-card">
+        <div class="num">DCF</div>
+        <div class="num-label">미래 현금흐름을 현재 가치로 할인 — 기관 밸류에이션의 핵심</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 현금흐름 선순환 구조 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Cash Flow Cycle</div>
+    <h2 class="sec-title fade-in">현금흐름 <em>선순환</em> 구조</h2>
+
+    <p class="fade-in">
+      기업이 주식이나 채권을 발행해 현금을 조달하면, 그 현금은 두 가지 핵심 자산에 투입된다. 재고(Inventory) 확보와 고정자산(Fixed Assets) — 공장·데이터센터·설비 — 투자다. 이 투자가 매출로 이어지고, 매출 대금(현금 또는 매출채권)이 다시 현금으로 돌아오며 사이클이 완성된다.
+    </p>
+
+    <div class="flow-wrap fade-in">
+      <div class="flow-title">기업 현금흐름 선순환 다이어그램</div>
+
+      <div class="flow-row">
+        <div class="flow-box dark">주식 발행<br><small style="opacity:.6">Equity</small></div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-box dark">채권 발행<br><small style="opacity:.6">Bond</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box accent">현금 확보<br><small>Cash</small></div>
+      </div>
+
+      <div style="text-align:center; color:var(--accent); font-size:22px; margin:4px 0;">↓</div>
+
+      <div class="flow-row">
+        <div class="flow-box">재고 확보<br><small style="color:var(--text2)">Inventory</small></div>
+        <div class="flow-arrow" style="color:var(--c3)">↔</div>
+        <div class="flow-box">공장·설비<br><small style="color:var(--text2)">Fixed Assets</small></div>
+      </div>
+
+      <div style="text-align:center; color:var(--accent); font-size:22px; margin:4px 0;">↓</div>
+
+      <div class="flow-row">
+        <div class="flow-box">현금 매출<br><small style="color:var(--text2)">Cash Sale</small></div>
+        <div class="flow-arrow" style="color:var(--c3)">+</div>
+        <div class="flow-box">신용 매출<br><small style="color:var(--text2)">A/R</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box accent">FCF 축적</div>
+      </div>
+
+      <div style="text-align:center; color:var(--accent); font-size:22px; margin:4px 0;">↓</div>
+
+      <div class="flow-row">
+        <div class="flow-box">배당금<br><small style="color:var(--text2)">Dividend</small></div>
+        <div class="flow-arrow" style="color:var(--c3)">|</div>
+        <div class="flow-box">이자 지급<br><small style="color:var(--text2)">Interest</small></div>
+        <div class="flow-arrow" style="color:var(--c3)">|</div>
+        <div class="flow-box">세금<br><small style="color:var(--text2)">Tax</small></div>
+        <div class="flow-arrow" style="color:var(--c3)">|</div>
+        <div class="flow-box">재투자<br><small style="color:var(--text2)">Reinvest</small></div>
+      </div>
+    </div>
+
+    <div class="pullquote fade-in">
+      <p>"현금이 줄어든다는 얘기는 이 모든 선순환이 악순환이 된다는 거죠. 선순환이 악순환이 됩니다. 이게 하루 아침에 나타나지 않아요."</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 주가 예측 7가지 지표 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">7 Key Metrics</div>
+    <h2 class="sec-title fade-in">주가 예측을 위한<br><em>7가지 필수 체크리스트</em></h2>
+
+    <div class="step-list fade-in">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>매출 & 이익 증가 (Revenue & Profit Growth)</strong>
+          기업의 가장 기본적인 성장 지표. P/E 비율의 분모인 Earnings와 직결.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>밸류에이션 비율 (P/E, P/S Ratio)</strong>
+          현재 주가가 이익 대비 비싼지 싼지 판단. 단순 비교가 아닌 섹터·성장률 맥락 필수.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>잉여현금흐름 (Free Cash Flow = OCF − CAPEX)</strong>
+          영업활동으로 번 현금에서 자본투자를 뺀 '진짜 현금'. 마이너스 추세면 위험.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>매출채권 (Accounts Receivable)</strong>
+          A/R이 급증하면 실제 현금 회수 전 인식된 매출이 많다는 뜻. SMCI·NVDA 선행 지표.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>재고 (Inventory)</strong>
+          재고가 꾸준히 늘어나고 있으면 수요 증가 선행 신호. 재고 감소 = 팔 것이 없는 상황.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <strong>고정자산·설비투자 (Fixed Assets / CAPEX)</strong>
+          공장·데이터센터 증설이 지속적으로 이뤄지고 있는지 확인. 성장주의 필수 조건.
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <strong>현금 사용 구성 (Cash Allocation)</strong>
+          배당 증가 = 긍정, 채권 남발 = 부정, 자사주 매입 과다 = 성장 한계 신호.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 현금 사용 구조 시각화 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Cash Allocation</div>
+    <h2 class="sec-title fade-in">FCF의 <em>사용처</em>가<br>기업 전략을 말한다</h2>
+
+    <p class="fade-in">
+      잉여현금이 어디로 흘러가는지를 보면 경영진의 전략적 방향을 읽을 수 있다. <strong>배당 증가와 재투자 병행</strong>이 이상적이며, <strong>자사주 매입에만 집중하는 것</strong>은 새로운 성장 엔진을 찾지 못했다는 신호다.
+    </p>
+
+    <div class="chart-container fade-in">
+      <canvas id="cashAllocChart" height="240"></canvas>
+    </div>
+    <div class="chart-label fade-in">※ 이상적인 FCF 사용 배분 예시 (성장 단계 기업 기준)</div>
+
+    <div class="tbl-wrap fade-in">
+      <table>
+        <thead>
+          <tr>
+            <th>현금 사용처</th>
+            <th>시장 해석</th>
+            <th>주가 영향</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>배당 증가</td>
+            <td>현금흐름 우수, 주주 환원 의지</td>
+            <td class="td-pos">긍정적 ↑</td>
+          </tr>
+          <tr>
+            <td>설비 재투자</td>
+            <td>성장 모멘텀 유지, 미래 매출 기대</td>
+            <td class="td-pos">장기 긍정 ↑</td>
+          </tr>
+          <tr>
+            <td>자사주 매입 (적정)</td>
+            <td>유통 주식 수 감소 → EPS 개선</td>
+            <td class="td-pos">단기 긍정 ↑</td>
+          </tr>
+          <tr>
+            <td>자사주 매입 (과다)</td>
+            <td>성장 투자 포기 신호, 한계점 도달</td>
+            <td class="td-neg">장기 부정 ↓</td>
+          </tr>
+          <tr>
+            <td>채권 남발</td>
+            <td>자체 현금 부족, 부채 비율 상승</td>
+            <td class="td-neg">부정적 ↓</td>
+          </tr>
+          <tr>
+            <td>세금·이자 증가</td>
+            <td>채무 구조 악화, FCF 감소</td>
+            <td class="td-neg">부정적 ↓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 애플 사례 분석 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Apple Case Study</div>
+    <h2 class="sec-title fade-in">애플 사례 — <em>자사주 매입</em>의<br>양면성</h2>
+
+    <p class="fade-in">
+      강의에서는 애플을 구체적 사례로 제시했다. 애플은 수년간 막대한 자사주 매입을 진행해 주가 상승을 유지해왔지만, 실질적 성장 지표인 재고·설비투자·매출채권의 증가세가 둔화되고 있다. <strong>2022년부터 FCF가 실질적으로 마이너스 구간에 진입</strong>했다는 점이 핵심 경고 신호다.
+    </p>
+
+    <div class="pullquote fade-in">
+      <p>"2022년부터 애플은 빚 갚는데 다 사용하고 Free Cash Flow가 실질적으로 마이너스입니다."</p>
+    </div>
+
+    <!-- 애플 가상 트렌드 차트 -->
+    <div class="chart-container fade-in">
+      <canvas id="appleFcfChart" height="230"></canvas>
+    </div>
+    <div class="chart-label fade-in">애플 주요 현금흐름 지표 트렌드 (개념 도식화 · 단위: 상대값)</div>
+
+    <div class="highlight-box fade-in">
+      <h4>⚠ 애플 현금흐름 경고 신호 요약</h4>
+      <ul>
+        <li><strong>현금성 자산(Cash & Investments)</strong>: 2014년 이후 꾸준히 증가하다 최근 정체·하락</li>
+        <li><strong>총 현금(Total Cash)</strong>: 고점 대비 크게 감소, 200B 수준에서 100B 이하로 하락</li>
+        <li><strong>매출채권(A/R)</strong>: 고점 이후 지지부진, 폭발적 성장 부재</li>
+        <li><strong>재고(Inventory)</strong>: 2019년 고점 이후 정체 — 팔 물건이 늘어나지 않음</li>
+        <li><strong>FCF</strong>: 2022년부터 실질 마이너스 전환 — 부채 상환에 현금 소진</li>
+        <li><strong>자사주 매입 집중</strong>: 성장 투자 대신 자사주 매입에 현안 — 상승 속도 한계</li>
+      </ul>
+    </div>
+
+    <!-- 지표 레이더 -->
+    <div class="chart-container fade-in">
+      <canvas id="appleRadarChart" height="240"></canvas>
+    </div>
+    <div class="chart-label fade-in">애플 성장 건전성 평가 레이더 (10점 만점, 강의 내용 기준)</div>
+  </div>
+</section>
+
+<!-- 6. DCF 밸류에이션 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">DCF Valuation</div>
+    <h2 class="sec-title fade-in">DCF — 기관이<br><em>현금흐름을 할인</em>하는 방식</h2>
+
+    <p class="fade-in">
+      DCF(Discounted Cash Flow)는 미래에 벌어들일 현금을 현재 가치로 환산하는 밸류에이션 방식이다. 채권 발행이 많으면 <strong>WACC(가중평균자본비용)</strong>가 높아지고, 이는 할인율을 끌어올려 현재가치를 낮춘다. 기관투자자들은 이 차이를 즉각 포착해 투자 비중을 조정한다.
+    </p>
+
+    <div class="chart-container fade-in">
+      <canvas id="dcfChart" height="230"></canvas>
+    </div>
+    <div class="chart-label fade-in">연간 FCF 성장 시나리오별 현재가치 비교 (할인율 변수)</div>
+
+    <div class="highlight-box fade-in">
+      <h4>📐 DCF 핵심 공식</h4>
+      <ul>
+        <li><strong>DCF 현재가치 = Σ [FCFₜ ÷ (1 + r)ᵗ]</strong> — r: 할인율(WACC)</li>
+        <li>채권 발행 증가 → WACC 상승 → 할인율 상승 → 현재가치 하락</li>
+        <li>현재 주가 > DCF 산출가 → 고평가(Overvalued) → 기관 매수 제한</li>
+        <li>현재 주가 < DCF 산출가 → 저평가(Undervalued) → 안전마진 확보</li>
+      </ul>
+    </div>
+
+    <div class="pullquote fade-in">
+      <p>"DCF 지금 현재 주가에 비해 싼 것이 훨씬 더 주가의 변동성이 적고 앞으로 상승률이 높을 수밖에 없다."</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 시뮬레이터 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Interactive Simulator</div>
+    <h2 class="sec-title fade-in">현금흐름 건전성<br><em>시뮬레이터</em></h2>
+
+    <p class="fade-in">아래 슬라이더를 조정해 기업의 현금흐름 건전성을 직접 평가해보세요.</p>
+
+    <div class="sim-wrap fade-in">
+      <h4>기업 현금흐름 건전성 체크</h4>
+
+      <div class="slider-row">
+        <label>FCF 성장률 (전년비) <span id="fcgLabel">+15%</span></label>
+        <input type="range" id="fcgSlider" min="-30" max="50" value="15" step="1">
+      </div>
+      <div class="slider-row">
+        <label>재고 증가율 <span id="invLabel">+10%</span></label>
+        <input type="range" id="invSlider" min="-20" max="40" value="10" step="1">
+      </div>
+      <div class="slider-row">
+        <label>부채비율 (D/E) <span id="deLabel">0.5</span></label>
+        <input type="range" id="deSlider" min="0" max="3" value="0.5" step="0.1">
+      </div>
+      <div class="slider-row">
+        <label>자사주 매입 비율 (FCF 대비) <span id="bbLabel">20%</span></label>
+        <input type="range" id="bbSlider" min="0" max="100" value="20" step="5">
+      </div>
+      <div class="slider-row">
+        <label>매출채권(A/R) 성장률 <span id="arLabel">+12%</span></label>
+        <input type="range" id="arSlider" min="-10" max="50" value="12" step="1">
+      </div>
+
+      <div class="sim-result" id="simResult">
+        <div class="sr-row">
+          <span>현금흐름 선순환 점수</span>
+          <span id="srScore">—</span>
+        </div>
+        <div class="sr-row">
+          <span>성장 지속 가능성</span>
+          <span id="srGrowth">—</span>
+        </div>
+        <div class="sr-row">
+          <span>주가 상승 모멘텀</span>
+          <span id="srMomentum">—</span>
+        </div>
+        <div class="sr-row">
+          <span>투자 판단</span>
+          <span id="srVerdict">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 투자 인사이트 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Investment Takeaways</div>
+    <h2 class="sec-title fade-in">미국 증시 관점<br><em>투자 시사점</em></h2>
+
+    <p class="fade-in">
+      이 강의의 현금흐름 분석 프레임은 미국 증시 투자에 직접 적용 가능하다. S&P 500 빅테크 종목들도 동일한 기준으로 평가할 수 있으며, 특히 AI 인프라 투자 사이클에서 이 지표들이 핵심 선행 신호를 제공한다.
+    </p>
+
+    <div class="tbl-wrap fade-in">
+      <table>
+        <thead>
+          <tr>
+            <th>종목/섹터</th>
+            <th>현금흐름 강점</th>
+            <th>주의 포인트</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>NVDA</strong></td>
+            <td>A/R 급증 → 수주 폭발, FCF 고성장</td>
+            <td>밸류에이션 부담, 사이클 리스크</td>
+          </tr>
+          <tr>
+            <td><strong>MSFT</strong></td>
+            <td>Azure 클라우드 FCF 안정 증가</td>
+            <td>설비투자(CAPEX) 급증으로 FCF 압박</td>
+          </tr>
+          <tr>
+            <td><strong>AAPL</strong></td>
+            <td>브랜드 파워, 서비스 매출 성장</td>
+            <td>FCF 실질 마이너스, 자사주 매입 과다</td>
+          </tr>
+          <tr>
+            <td><strong>AMZN</strong></td>
+            <td>AWS FCF 급성장, 재고 효율화</td>
+            <td>물류 CAPEX 부담</td>
+          </tr>
+          <tr>
+            <td><strong>AI 인프라 섹터</strong></td>
+            <td>SMCI, ANET — A/R·재고 동반 급증</td>
+            <td>분기 실적 변동성 높음</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 섹터별 FCF 건전성 비교 -->
+    <div class="chart-container fade-in">
+      <canvas id="sectorChart" height="230"></canvas>
+    </div>
+    <div class="chart-label fade-in">빅테크 FCF 성장률 비교 (개념적 상대 평가, 강의 내용 기반)</div>
+
+    <div class="verdict-wrap fade-in">
+      <h4>핵심 투자 원칙 요약</h4>
+      <ul>
+        <li><strong>FCF가 매년 증가하는 기업에만 장기 투자</strong> — 선순환이 깨지는 신호를 포착하면 즉시 재평가</li>
+        <li><strong>재고 + A/R 동반 증가</strong> = 실적 발표 3~6개월 전 선행 매수 신호</li>
+        <li><strong>자사주 매입 비중이 FCF의 70% 초과</strong> = 성장 동력 소진 경고</li>
+        <li><strong>채권 발행 증가 + FCF 감소 동시 발생</strong> = 즉각적 비중 축소 검토</li>
+        <li><strong>DCF 기준 현재 주가가 10% 이상 고평가</strong> = 기관 매수 제한 구간</li>
+        <li><strong>1년 이상 인내심</strong> — 선순환·악순환 모두 시간 지연 후 주가에 반영됨</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9. 장기 복리 시뮬레이션 -->
+<section>
+  <div class="container">
+    <div class="sec-label fade-in">Compound Growth</div>
+    <h2 class="sec-title fade-in">장기 복리 효과 —<br><em>공부가 수익률을 결정한다</em></h2>
+
+    <p class="fade-in">
+      강의 말미에 강조한 핵심: 단기 차익보다 장기 복리가 진짜 부를 만든다. 원금 500만 원으로 연 20% vs 연 7% 수익률 10년 결과는 극명히 갈린다.
+    </p>
+
+    <div class="chart-container fade-in">
+      <canvas id="compoundChart" height="230"></canvas>
+    </div>
+    <div class="chart-label fade-in">500만원 원금 기준 연 수익률별 10년 복리 성장 시뮬레이션</div>
+
+    <div class="highlight-box fade-in">
+      <h4>💡 복리 시뮬레이션 핵심 수치</h4>
+      <ul>
+        <li><strong>연 7% (S&P 500 장기 평균)</strong>: 500만원 → 약 984만원 (10년)</li>
+        <li><strong>연 15% (우량 성장주 평균)</strong>: 500만원 → 약 2,023만원 (10년)</li>
+        <li><strong>연 20% (FCF 성장주 선별 투자)</strong>: 500만원 → 약 3,096만원 (10년)</li>
+        <li><strong>연 30% (SMCI·NVDA급 성공 사례)</strong>: 500만원 → 약 7,039만원 (10년)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>투자아카데미 27회 · 기업 현금흐름 이해하기 분석 리포트</p>
+    <p style="margin-top:6px;">본 문서는 교육 목적으로 작성되었으며 특정 종목에 대한 투자 권유가 아닙니다.</p>
+    <p style="margin-top:6px; color:#aaa;">© 2026 분석 리포트 · 투자는인생TV 원본 강의 기반</p>
+  </div>
+</footer>
+
+<script>
+// ──────────────────────────────────────────────
+// OBSERVER 1: Fade-in
+// ──────────────────────────────────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ──────────────────────────────────────────────
+// CHART CONFIGS (정의만, 직접 호출 금지)
+// ──────────────────────────────────────────────
+const chartConfigs = {};
+
+// 1. 현금 배분 도넛
+chartConfigs['cashAllocChart'] = () => {
+  new Chart(document.getElementById('cashAllocChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['설비 재투자', '배당금', '자사주 매입(적정)', '부채 상환', '현금 유보'],
+      datasets: [{
+        data: [35, 20, 20, 15, 10],
+        backgroundColor: ['#e11d48', '#1a1a1a', '#6b7280', '#2563eb', '#d1d5db'],
+        borderColor: '#fff',
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      animation: { animateRotate: true, animateScale: true, duration: 2000, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 10 } }
+      }
+    }
+  });
+};
+
+// 2. 애플 FCF 트렌드 라인
+chartConfigs['appleFcfChart'] = () => {
+  new Chart(document.getElementById('appleFcfChart'), {
+    type: 'line',
+    data: {
+      labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+      datasets: [
+        {
+          label: 'FCF (잉여현금흐름)',
+          data: [100, 85, 95, 120, 40, 15, -5],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#e11d48',
+          pointRadius: 4
+        },
+        {
+          label: '재고 (Inventory)',
+          data: [80, 100, 90, 95, 80, 78, 75],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.05)',
+          fill: false,
+          tension: 0.4,
+          borderWidth: 2,
+          pointBackgroundColor: '#2563eb',
+          pointRadius: 4
+        },
+        {
+          label: '자사주 매입 규모',
+          data: [40, 55, 70, 85, 90, 95, 88],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.05)',
+          fill: false,
+          tension: 0.4,
+          borderWidth: 2,
+          borderDash: [6, 3],
+          pointBackgroundColor: '#6b7280',
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1800, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 10 } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+        y: {
+          grid: { color: '#f0f0f0' },
+          ticks: { font: { size: 11 } },
+          title: { display: true, text: '상대값 (100 기준)', font: { size: 10 }, color: '#777' }
+        }
+      }
+    }
+  });
+};
+
+// 3. 애플 레이더
+chartConfigs['appleRadarChart'] = () => {
+  new Chart(document.getElementById('appleRadarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['FCF 성장', '재고 증가', '설비투자', 'A/R 성장', '배당 안정성', '부채 건전성'],
+      datasets: [
+        {
+          label: '애플 현재',
+          data: [2, 3, 4, 4, 7, 3],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.15)',
+          borderWidth: 2,
+          pointBackgroundColor: '#e11d48',
+          pointRadius: 4
+        },
+        {
+          label: '이상적 성장주',
+          data: [8, 8, 8, 8, 7, 7],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          borderWidth: 2,
+          borderDash: [5, 3],
+          pointBackgroundColor: '#2563eb',
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1800, easing: 'easeInOutQuart', delay: ctx => ctx.dataIndex * 120 },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 10 } }
+      },
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { stepSize: 2, font: { size: 10 }, color: '#aaa', backdropColor: 'transparent' },
+          grid: { color: '#e5e5e5' },
+          pointLabels: { font: { size: 11, family: 'Noto Sans KR' } }
+        }
+      }
+    }
+  });
+};
+
+// 4. DCF 할인율 시나리오 바
+chartConfigs['dcfChart'] = () => {
+  new Chart(document.getElementById('dcfChart'), {
+    type: 'bar',
+    data: {
+      labels: ['성장 20%\n할인율 8%', '성장 15%\n할인율 10%', '성장 10%\n할인율 12%', '성장 5%\n할인율 15%', 'FCF 정체\n할인율 18%'],
+      datasets: [{
+        label: 'DCF 현재가치 (주당, 달러)',
+        data: [195, 160, 125, 90, 55],
+        backgroundColor: ['#e11d48', '#f43f5e', '#6b7280', '#2563eb', '#374151'],
+        borderRadius: 3,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1500, easing: 'easeInOutQuart', delay: ctx => ctx.dataIndex * 150 },
+      animations: { y: { from: 0 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` $${ctx.parsed.y} (내재가치 추정)`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: {
+          grid: { color: '#f0f0f0' },
+          title: { display: true, text: '주당 내재가치 ($)', font: { size: 10 }, color: '#777' },
+          ticks: { font: { size: 11 }, callback: v => '$' + v }
+        }
+      }
+    }
+  });
+};
+
+// 5. 섹터 FCF 가로 바
+chartConfigs['sectorChart'] = () => {
+  new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['NVDA', 'AMZN', 'MSFT', 'GOOGL', 'META', 'AAPL'],
+      datasets: [{
+        label: 'FCF 성장률 (상대 평가)',
+        data: [95, 72, 68, 60, 55, 15],
+        backgroundColor: ['#e11d48', '#f43f5e', '#2563eb', '#2563eb', '#6b7280', '#374151'],
+        borderRadius: 3,
+        indexAxis: 'y',
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      animations: { x: { from: 0 } },
+      animation: { duration: 1500, easing: 'easeInOutQuart', delay: ctx => ctx.dataIndex * 150 },
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          grid: { color: '#f0f0f0' },
+          title: { display: true, text: '상대 FCF 성장 점수 (100점 만점)', font: { size: 10 }, color: '#777' },
+          ticks: { font: { size: 11 } }
+        },
+        y: { grid: { display: false }, ticks: { font: { size: 12, weight: '700' } } }
+      }
+    }
+  });
+};
+
+// 6. 복리 성장 라인
+chartConfigs['compoundChart'] = () => {
+  const years = [0,1,2,3,4,5,6,7,8,9,10];
+  const calc = (rate) => years.map(y => Math.round(500 * Math.pow(1 + rate/100, y)));
+  new Chart(document.getElementById('compoundChart'), {
+    type: 'line',
+    data: {
+      labels: years.map(y => y + '년'),
+      datasets: [
+        { label: '연 30%', data: calc(30), borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.07)', fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3 },
+        { label: '연 20%', data: calc(20), borderColor: '#f43f5e', backgroundColor: 'transparent', fill: false, tension: 0.4, borderWidth: 2 },
+        { label: '연 15%', data: calc(15), borderColor: '#2563eb', backgroundColor: 'transparent', fill: false, tension: 0.4, borderWidth: 2 },
+        { label: '연 7%',  data: calc(7),  borderColor: '#6b7280', backgroundColor: 'transparent', fill: false, tension: 0.4, borderWidth: 2, borderDash: [5,3] }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1800, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' }, padding: 10 } },
+        tooltip: {
+          mode: 'index',
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}만원` }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+        y: {
+          grid: { color: '#f0f0f0' },
+          ticks: { font: { size: 11 }, callback: v => v.toLocaleString() + '만' }
+        }
+      }
+    }
+  });
+};
+
+// ──────────────────────────────────────────────
+// OBSERVER 2: Chart 전용
+// ──────────────────────────────────────────────
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const canvas = entry.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        setTimeout(() => {
+          chartConfigs[canvas.id]();
+          entry.target.classList.add('chart-ready');
+          delete chartConfigs[canvas.id];
+        }, 200);
+      }
+      chartObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.25 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ──────────────────────────────────────────────
+// SIMULATOR
+// ──────────────────────────────────────────────
+const sliders = {
+  fcg: document.getElementById('fcgSlider'),
+  inv: document.getElementById('invSlider'),
+  de:  document.getElementById('deSlider'),
+  bb:  document.getElementById('bbSlider'),
+  ar:  document.getElementById('arSlider'),
+};
+const labels = {
+  fcg: document.getElementById('fcgLabel'),
+  inv: document.getElementById('invLabel'),
+  de:  document.getElementById('deLabel'),
+  bb:  document.getElementById('bbLabel'),
+  ar:  document.getElementById('arLabel'),
+};
+
+function updateSim() {
+  const fcg = parseFloat(sliders.fcg.value);
+  const inv = parseFloat(sliders.inv.value);
+  const de  = parseFloat(sliders.de.value);
+  const bb  = parseFloat(sliders.bb.value);
+  const ar  = parseFloat(sliders.ar.value);
+
+  labels.fcg.textContent = (fcg >= 0 ? '+' : '') + fcg + '%';
+  labels.inv.textContent = (inv >= 0 ? '+' : '') + inv + '%';
+  labels.de.textContent  = de.toFixed(1);
+  labels.bb.textContent  = bb + '%';
+  labels.ar.textContent  = (ar >= 0 ? '+' : '') + ar + '%';
+
+  let score = 0;
+  score += fcg >= 15 ? 30 : fcg >= 0 ? 20 : fcg >= -10 ? 10 : 0;
+  score += inv >= 10 ? 20 : inv >= 0 ? 12 : 0;
+  score += de <= 0.5 ? 20 : de <= 1.5 ? 12 : de <= 2.5 ? 5 : 0;
+  score += bb <= 30 ? 15 : bb <= 60 ? 8 : bb <= 80 ? 3 : 0;
+  score += ar >= 15 ? 15 : ar >= 5 ? 10 : ar >= 0 ? 5 : 0;
+
+  const growth = score >= 70 ? '매우 우수' : score >= 50 ? '양호' : score >= 30 ? '주의 필요' : '위험';
+  const momentum = fcg > 10 && inv > 5 && de < 1 ? '강함 ↑' : fcg > 0 && de < 2 ? '보통 →' : '약함 ↓';
+
+  let verdict, tagClass;
+  if (score >= 70) { verdict = '적극 매수 검토'; tagClass = 'tag-buy'; }
+  else if (score >= 45) { verdict = '관망 / 부분 매수'; tagClass = 'tag-hold'; }
+  else { verdict = '비중 축소 검토'; tagClass = 'tag-sell'; }
+
+  document.getElementById('srScore').textContent = score + ' / 100';
+  document.getElementById('srGrowth').textContent = growth;
+  document.getElementById('srMomentum').textContent = momentum;
+  document.getElementById('srVerdict').innerHTML = `<span class="verdict-tag ${tagClass}">${verdict}</span>`;
+}
+
+Object.values(sliders).forEach(s => s.addEventListener('input', updateSim));
+updateSim();
+</script>
+</body>
+</html>
