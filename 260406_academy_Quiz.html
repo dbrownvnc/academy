@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험 문제 — 포트폴리오 비교 분석 (2024.05.18)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a; --wrong: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.75; }
+
+  .hero {
+    background: var(--text); color: #fff;
+    padding: 40px 20px 28px;
+  }
+  .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--accent2); font-weight: 700; margin-bottom: 10px; text-transform: uppercase; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; line-height: 1.25; margin-bottom: 10px; }
+  .hero-sub { font-size: 13px; color: #aaa; }
+  .hero-info { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-chip { background: #222; border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #ccc; }
+
+  .score-board {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .score-text { font-size: 13px; color: var(--text2); }
+  .score-val { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--accent); }
+  .btn-reset {
+    background: none; border: 1px solid var(--accent); color: var(--accent);
+    padding: 7px 14px; border-radius: 6px; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-reset:hover { background: var(--accent); color: #fff; }
+
+  .quiz-wrap { padding: 0 20px 40px; }
+  .q-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .q-card.answered-correct { border-color: var(--correct); }
+  .q-card.answered-wrong { border-color: var(--wrong); }
+
+  .q-header {
+    background: var(--bg2); padding: 14px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .q-num {
+    background: var(--accent); color: #fff;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .q-meta { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .q-text { font-size: 14px; font-weight: 500; line-height: 1.65; }
+
+  .q-body { padding: 14px 16px; }
+
+  /* OX */
+  .ox-row { display: flex; gap: 10px; }
+  .ox-btn {
+    flex: 1; padding: 14px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--bg2); cursor: pointer; font-size: 22px;
+    text-align: center; transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff1f2; }
+  .ox-btn.selected { border-color: var(--accent); background: #fff1f2; }
+  .ox-btn.correct-ans { border-color: var(--correct); background: #f0fdf4; }
+  .ox-btn.wrong-ans { border-color: var(--wrong); background: #fef2f2; }
+
+  /* MCQ */
+  .mcq-option {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 8px; margin-bottom: 6px; cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg2);
+  }
+  .mcq-option:hover:not(.disabled) { border-color: var(--accent); background: #fff1f2; }
+  .mcq-option.selected { border-color: var(--accent); background: #fff1f2; }
+  .mcq-option.correct-ans { border-color: var(--correct); background: #f0fdf4; }
+  .mcq-option.wrong-ans { border-color: var(--wrong); background: #fef2f2; }
+  .opt-label {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--border); color: var(--text2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .opt-text { font-size: 13px; line-height: 1.6; }
+  .disabled { pointer-events: none; }
+
+  /* 단답형 */
+  .short-input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; background: var(--bg2); color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+  .short-input:disabled { opacity: 0.6; }
+  .submit-btn {
+    margin-top: 8px; padding: 9px 20px;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+  .submit-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  /* 해설 */
+  .explanation {
+    margin-top: 12px; padding: 12px 14px;
+    background: #fffbeb; border-left: 3px solid #f59e0b;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px; line-height: 1.7;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .exp-title { font-weight: 700; color: #92400e; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* 결과 */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-top: 10px;
+  }
+  .badge-c { background: #dcfce7; color: #15803d; }
+  .badge-w { background: #fee2e2; color: #b91c1c; }
+
+  .diff-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 700;
+  }
+  .diff-easy { background: #dcfce7; color: #15803d; }
+  .diff-med { background: #fef9c3; color: #854d0e; }
+  .diff-hard { background: #fee2e2; color: #991b1b; }
+
+  .final-result {
+    margin: 20px 0; padding: 24px 20px;
+    background: var(--text); color: #fff;
+    border-radius: 12px; text-align: center; display: none;
+  }
+  .final-result.show { display: block; }
+  .final-score { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--accent2); }
+  .final-label { font-size: 14px; color: #aaa; margin-top: 6px; }
+  .final-msg { margin-top: 12px; font-size: 14px; color: #ccc; }
+
+  .footer { padding: 24px 20px; text-align: center; color: var(--text2); font-size: 12px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Quiz · 시험 문제</div>
+  <h1>포트폴리오 비교 분석<br>이해도 테스트</h1>
+  <p class="hero-sub">투자 아카데미 2024.05.18 방송 기반</p>
+  <div class="hero-info">
+    <span class="hero-chip">총 10문제</span>
+    <span class="hero-chip">객관식 · 단답형 · OX</span>
+    <span class="hero-chip">정답+해설 즉시 확인</span>
+  </div>
+</div>
+
+<div class="score-board">
+  <div>
+    <div class="score-text">현재 점수</div>
+    <div class="score-val" id="score-display">0 / 10</div>
+  </div>
+  <button class="btn-reset" onclick="resetAll()">↺ 다시 풀기</button>
+</div>
+
+<div class="quiz-wrap" id="quiz-container"></div>
+
+<div class="footer">투자는인생TV · 투자 아카데미 2024.05.18 · 복습용 퀴즈</div>
+
+<script>
+const questions = [
+  // ── Q1 (쉬움, OX)
+  {
+    id: 1, type: 'ox', diff: 'easy',
+    text: '포트폴리오에서 특정 종목을 1% 비중으로 보유하면, 그 종목이 30% 상승했을 때 전체 포트폴리오에는 0.3%p 기여한다. (OX)',
+    answer: 'O',
+    exp: '맞습니다. 1% × 30% = 0.3%p 기여. 이 때문에 "사나 마나 똑같다"는 표현이 사용됩니다. 핵심주는 최소 5% 이상의 비중이 필요합니다.'
+  },
+  // ── Q2 (쉬움, 객관식)
+  {
+    id: 2, type: 'mcq', diff: 'easy',
+    text: '리딩 섹터 4개가 포트폴리오 전체에서 차지해야 하는 최소 비중은?',
+    options: ['40%', '50%', '70%', '90%'],
+    answer: 2,
+    exp: '방송에서 "리딩 섹터들이 한 4개 있는데 그게 중심이 70%가 돼야 됩니다"라고 명시했습니다. 핵심 섹터 외 다양한 곳에 분산하면 오히려 성과를 희석시킵니다.'
+  },
+  // ── Q3 (쉬움, OX)
+  {
+    id: 3, type: 'ox', diff: 'easy',
+    text: '여러 종목에 넓게 분산 투자할수록 포트폴리오 리스크는 항상 낮아진다. (OX)',
+    answer: 'X',
+    exp: '틀렸습니다. 방송에서 "여러 가지 주식을 많이 가지고 있다고 리스크가 적어지는 건 아니에요. 오해입니다"라고 명확히 밝혔습니다. 퍼포먼스 낮은 종목이 많아지면 수익을 희석하면서 리스크는 그대로이거나 더 커집니다.'
+  },
+  // ── Q4 (보통, 객관식)
+  {
+    id: 4, type: 'mcq', diff: 'med',
+    text: '멤버 A의 포트폴리오에서 파이낸셜 섹터(ARCC 포함)가 차지하는 비중은?',
+    options: ['1~2%', '4~5%', '약 8%', '15% 이상'],
+    answer: 2,
+    exp: '방송에서 "파이낸셜 섹터가 8%나 차지하고"라고 언급했습니다. 현재 파이낸셜 섹터를 줄여야 하는 시점인데 과도한 비중을 유지하고 있는 문제가 있습니다.'
+  },
+  // ── Q5 (보통, 단답형)
+  {
+    id: 5, type: 'short', diff: 'med',
+    text: '방송에서 언급된 "AI 8대장"에 포함되는 종목 중 아는 것을 3개 이상 적으세요.',
+    keywords: ['메타', '엔비디아', '슈퍼마이크로', '팔로알토', '어도비', '구글', '알파벳', '마이크로소프트', 'meta', 'nvda', 'smci', 'panw', 'adbe', 'googl', 'msft'],
+    minMatch: 3,
+    exp: 'AI 8대장: 메타(META), 엔비디아(NVDA), 슈퍼마이크로(SMCI), 팔로알토 네트웍스(PANW), 어도비(ADBE), 구글/알파벳(GOOGL), 마이크로소프트(MSFT) + 1. 이 종목들을 중심으로 포트폴리오의 핵심을 구성해야 합니다.'
+  },
+  // ── Q6 (보통, OX)
+  {
+    id: 6, type: 'ox', diff: 'med',
+    text: '40대 투자자에게 배당주(MO, 리얼티인컴 등)는 포트폴리오에 필수적으로 포함되어야 한다. (OX)',
+    answer: 'X',
+    exp: '틀렸습니다. 배당주는 배당이 주는 주식의 주가 상승 속도가 매우 떨어지기 때문에 은퇴하신 분들에게 맞습니다. 40대는 성장주 중심으로 포트폴리오를 구성하고, 은퇴 후에 배당주로 전환해야 합니다.'
+  },
+  // ── Q7 (보통, 객관식)
+  {
+    id: 7, type: 'mcq', diff: 'med',
+    text: '멤버 B가 1월 가입 이후 받은 종합 평점과 YTD 수익률로 올바른 것은?',
+    options: ['90점, +30%', '84점, +15%', '75점, +10%', '80점, +20%'],
+    answer: 1,
+    exp: '방송에서 "100점 만점에 84점 드리겠습니다"라고 했으며, 수익률은 "올해 1월 달부터 수익률이 한 15% 정도"라고 언급했습니다.'
+  },
+  // ── Q8 (보통, 객관식)
+  {
+    id: 8, type: 'mcq', diff: 'med',
+    text: '다음 중 방송에서 QQQ(나스닥100 ETF)를 매도 권고하는 핵심 이유로 가장 적절한 것은?',
+    options: [
+      '거래 수수료가 너무 높아서',
+      '나스닥100 중 실제 퍼포먼스 기여 종목이 10%에 불과, 나머지가 수익을 희석하기 때문에',
+      '최근 IT 섹터가 전반적으로 하락하고 있어서',
+      'ETF는 세금 불이익이 크기 때문에'
+    ],
+    answer: 1,
+    exp: '"나스닥 백 중에 퍼포먼스 나는 거 그중에 10%밖에 안 돼요. 나머지 90%는 못 올라가거나 안 올라가거나 적게 올라가거나 심지어는 떨어진 게 많으니까 안 올라가는 거예요." 퍼포먼스 좋은 종목을 직접 집중 매수하는 것이 ETF보다 효율적입니다.'
+  },
+  // ── Q9 (어려움, 객관식)
+  {
+    id: 9, type: 'mcq', diff: 'hard',
+    text: '멤버 A가 에너지주를 신규 매수한 것이 문제가 되는 이유 두 가지를 모두 포함한 것은?',
+    options: [
+      '에너지주 자체가 나쁜 종목이고, 비중이 너무 높아서',
+      '현재 에너지 섹터를 줄이고 있는 시점인데 신규 매수했고, 비중이 1%로 너무 낮아 실효가 없어서',
+      '에너지주는 성장성이 없어서, 그리고 배당을 주지 않아서',
+      '컨텍스트 없이 샀고, David 30대 그룹 종목이 아니어서'
+    ],
+    answer: 1,
+    exp: '두 가지 문제: ① 현재 줄이고 있는 섹터(컨텍스트 미파악) ② 1% 비중으로는 전체 포트폴리오에 아무런 영향이 없음. 에너지주 자체의 좋고 나쁨이 아니라, 타이밍과 비중 둘 다 잘못됐다는 점이 핵심입니다.'
+  },
+  // ── Q10 (어려움, 단답형)
+  {
+    id: 10, type: 'short', diff: 'hard',
+    text: '방송에서 강조한 "지금 시점의 투자 전략"을 두 가지 이상 서술하세요. (팔아야 할 것, 사야 할 타이밍 등)',
+    keywords: ['현금', '팔', '폭락', '공부', '비중', '줄이'],
+    minMatch: 2,
+    exp: '① 지금은 팔 것(배당주, ETF, 비중 과다 종목)을 정리하고 현금을 확보할 시점 ② 폭락장(2~3차례 예상)이 올 때를 노려 핵심주를 5~10% 비중으로 매수 ③ 매수 전에 반드시 과거 방송을 통해 공부하고 컨텍스트를 이해할 것 ④ 지금 당장 급하게 종목을 추가하지 말 것.'
+  }
+];
+
+let score = 0;
+let answered = new Array(questions.length).fill(false);
+
+function getDiffLabel(d) {
+  if (d === 'easy') return '<span class="diff-badge diff-easy">쉬움</span>';
+  if (d === 'med') return '<span class="diff-badge diff-med">보통</span>';
+  return '<span class="diff-badge diff-hard">어려움</span>';
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'q-card-' + idx;
+
+    let bodyHTML = '';
+    if (q.type === 'ox') {
+      bodyHTML = `<div class="ox-row">
+        <button class="ox-btn" data-idx="${idx}" data-val="O" onclick="answerOX(${idx},'O')">⭕ O</button>
+        <button class="ox-btn" data-idx="${idx}" data-val="X" onclick="answerOX(${idx},'X')">❌ X</button>
+      </div>`;
+    } else if (q.type === 'mcq') {
+      bodyHTML = q.options.map((opt, oi) =>
+        `<div class="mcq-option" id="opt-${idx}-${oi}" onclick="answerMCQ(${idx},${oi})">
+          <div class="opt-label">${String.fromCharCode(65+oi)}</div>
+          <div class="opt-text">${opt}</div>
+        </div>`
+      ).join('');
+    } else {
+      bodyHTML = `<input type="text" class="short-input" id="short-${idx}" placeholder="답을 입력하세요...">
+        <br><button class="submit-btn" id="submit-${idx}" onclick="answerShort(${idx})">확인</button>`;
+    }
+
+    bodyHTML += `<div class="explanation" id="exp-${idx}">
+      <div class="exp-title">📚 해설</div>
+      ${q.exp}
+    </div>`;
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div style="flex:1;">
+          <div class="q-meta">Q${q.id} &nbsp;|&nbsp; ${getDiffLabel(q.diff)} &nbsp;|&nbsp; ${q.type === 'ox' ? 'OX형' : q.type === 'mcq' ? '객관식' : '단답형'}</div>
+          <div class="q-text">${q.text}</div>
+        </div>
+      </div>
+      <div class="q-body">${bodyHTML}</div>`;
+    container.appendChild(card);
+  });
+
+  // final result block
+  const fin = document.createElement('div');
+  fin.className = 'final-result'; fin.id = 'final-result';
+  fin.innerHTML = `<div style="font-size:13px;color:#aaa;margin-bottom:4px;">최종 점수</div>
+    <div class="final-score" id="final-score-val">0</div>
+    <div class="final-label">/ 10 문제 정답</div>
+    <div class="final-msg" id="final-msg"></div>`;
+  container.appendChild(fin);
+}
+
+function updateScore() {
+  document.getElementById('score-display').textContent = score + ' / ' + questions.length;
+  if (answered.every(Boolean)) showFinal();
+}
+
+function showFinal() {
+  const fin = document.getElementById('final-result');
+  fin.classList.add('show');
+  document.getElementById('final-score-val').textContent = score;
+  const pct = (score / questions.length) * 100;
+  let msg = '';
+  if (pct >= 90) msg = '🏆 우수! 비중 조절과 컨텍스트 이해도가 높습니다.';
+  else if (pct >= 70) msg = '✅ 양호. 핵심 개념은 파악했지만 세부 내용을 다시 복습하세요.';
+  else if (pct >= 50) msg = '📖 과거 방송을 4~5개씩 다시 보시기 바랍니다.';
+  else msg = '⚠ 주식 중심이 아닌 포트폴리오 중심으로 다시 공부하세요.';
+  document.getElementById('final-msg').textContent = msg;
+}
+
+function markCard(idx, correct) {
+  const card = document.getElementById('q-card-' + idx);
+  card.classList.remove('answered-correct','answered-wrong');
+  card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+  document.getElementById('exp-' + idx).classList.add('show');
+  answered[idx] = true;
+  if (correct) score++;
+  updateScore();
+}
+
+function answerOX(idx, val) {
+  if (answered[idx]) return;
+  const q = questions[idx];
+  const correct = val === q.answer;
+  ['O','X'].forEach(v => {
+    const btn = document.querySelector(`button.ox-btn[data-idx="${idx}"][data-val="${v}"]`);
+    btn.disabled = true;
+    if (v === q.answer) btn.classList.add('correct-ans');
+    else if (v === val && !correct) btn.classList.add('wrong-ans');
+  });
+  markCard(idx, correct);
+}
+
+function answerMCQ(idx, oi) {
+  if (answered[idx]) return;
+  const q = questions[idx];
+  const correct = oi === q.answer;
+  q.options.forEach((_, i) => {
+    const el = document.getElementById('opt-' + idx + '-' + i);
+    el.classList.add('disabled');
+    if (i === q.answer) el.classList.add('correct-ans');
+    else if (i === oi && !correct) el.classList.add('wrong-ans');
+  });
+  markCard(idx, correct);
+}
+
+function answerShort(idx) {
+  if (answered[idx]) return;
+  const q = questions[idx];
+  const input = document.getElementById('short-' + idx);
+  const val = input.value.trim().toLowerCase();
+  input.disabled = true;
+  document.getElementById('submit-' + idx).disabled = true;
+  const matches = q.keywords.filter(k => val.includes(k.toLowerCase())).length;
+  const correct = matches >= q.minMatch;
+  markCard(idx, correct);
+}
+
+function resetAll() {
+  score = 0;
+  answered = new Array(questions.length).fill(false);
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
