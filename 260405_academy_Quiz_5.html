@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 25회 — 시험문제 10선</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --green: #16a34a; --red: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px; line-height: 1.75;
+    max-width: 600px; margin: 0 auto; padding: 0 0 60px;
+  }
+  .hero {
+    background: var(--text); color: #fff;
+    padding: 40px 24px 32px;
+  }
+  .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; color: var(--accent2); text-transform: uppercase; margin-bottom: 10px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+  .hero h1 span { color: var(--accent2); }
+  .hero-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  .progress-bar {
+    background: var(--bg2); padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .progress-bar .label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; }
+  .progress-count { font-size: 12px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+  .q-card {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 20px;
+    display: none;
+  }
+  .q-card.active { display: block; }
+  .q-meta {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 12px;
+  }
+  .q-num {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 2px;
+    letter-spacing: 0.1em;
+  }
+  .q-type {
+    font-size: 11px; color: var(--text2); font-weight: 500;
+    border: 1px solid var(--border); padding: 2px 8px; border-radius: 2px;
+  }
+  .q-diff {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 2px;
+  }
+  .easy { background: rgba(22,163,74,0.1); color: #16a34a; }
+  .med { background: rgba(245,158,11,0.1); color: #b45309; }
+  .hard { background: rgba(225,29,72,0.1); color: #e11d48; }
+
+  .q-text {
+    font-size: 15px; font-weight: 700; line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13.5px;
+    transition: all 0.2s;
+    background: var(--bg);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .option:hover { border-color: var(--accent); background: rgba(225,29,72,0.03); }
+  .option .opt-label { font-weight: 700; color: var(--accent2); flex-shrink: 0; min-width: 20px; }
+  .option.correct { border-color: var(--green); background: rgba(22,163,74,0.08); }
+  .option.wrong { border-color: var(--red); background: rgba(220,38,38,0.06); }
+  .option.revealed { pointer-events: none; }
+
+  .text-input-area {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    resize: vertical; min-height: 70px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .text-input-area:focus { border-color: var(--accent); }
+
+  .ox-row { display: flex; gap: 12px; margin-top: 4px; }
+  .ox-btn {
+    flex: 1; padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: 4px; cursor: pointer;
+    font-size: 28px; font-weight: 900;
+    text-align: center;
+    transition: all 0.2s;
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.correct { border-color: var(--green); background: rgba(22,163,74,0.08); }
+  .ox-btn.wrong { border-color: var(--red); background: rgba(220,38,38,0.06); }
+  .ox-btn.revealed { pointer-events: none; }
+
+  .submit-btn {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 4px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; margin-top: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+  .submit-btn:disabled { background: var(--border); color: var(--text2); cursor: default; }
+
+  .answer-box {
+    margin-top: 16px; padding: 14px 16px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; display: none;
+  }
+  .answer-box.show { display: block; }
+  .answer-box .ans-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+  }
+  .answer-box .ans-correct {
+    font-weight: 700; color: var(--green); font-size: 14px; margin-bottom: 6px;
+  }
+  .answer-box .ans-explain { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+  .nav-row {
+    display: flex; gap: 10px; padding: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-btn {
+    flex: 1; padding: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px; cursor: pointer;
+    font-size: 13px; font-weight: 500;
+    background: var(--bg); color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
+  .nav-btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+
+  /* RESULT PAGE */
+  .result-page { display: none; padding: 40px 20px; text-align: center; }
+  .result-page.show { display: block; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px; font-weight: 900;
+    color: var(--accent); line-height: 1;
+    margin: 20px 0 8px;
+  }
+  .result-msg { font-size: 16px; margin-bottom: 24px; color: var(--text2); }
+  .result-grade {
+    font-size: 28px; font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 20px;
+  }
+  .score-breakdown {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 16px; text-align: left; margin-bottom: 20px;
+  }
+  .score-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .score-row:last-child { border-bottom: none; }
+  .retry-btn {
+    background: var(--accent); color: #fff; border: none;
+    padding: 14px 28px; border-radius: 4px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .q-index-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .q-idx-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%; border: 1.5px solid var(--border);
+    background: var(--bg); font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+  }
+  .q-idx-btn.done { background: var(--green); color: #fff; border-color: var(--green); }
+  .q-idx-btn.wrong-done { background: var(--red); color: #fff; border-color: var(--red); }
+  .q-idx-btn.current { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">투자아카데미 25회 · 시험문제</div>
+  <h1>소액투자자 <span>7가지 실수</span><br>완전 정복 테스트</h1>
+  <div class="hero-meta" style="margin-top:10px">총 10문제 · 객관식 / 단답형 / OX · 제한 없음</div>
+</div>
+
+<div class="progress-bar">
+  <span class="label">진행률</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <span class="progress-count" id="progressCount">0 / 10</span>
+</div>
+
+<div class="q-index-row" id="qIndexRow"></div>
+
+<!-- ======= QUESTIONS ======= -->
+
+<!-- Q1 -->
+<div class="q-card active" data-q="0">
+  <div class="q-meta">
+    <span class="q-num">Q 01</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff easy">쉬움</span>
+  </div>
+  <div class="q-text">강사가 "투자는 실적이 좋은 사람보다 ( )이 적은 사람이 항상 이긴다"고 강조했다. 괄호에 들어갈 단어는?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>손실</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>실수</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>거래</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>욕심</div>
+  </div>
+  <div class="answer-box" data-correct="B" data-explain="강의의 핵심 메시지: '투자는 실적이 좋은 사람보다 실수가 적은 사람이 항상 이깁니다.' 화려한 수익보다 실수를 줄이는 방어적 투자가 장기적으로 우월하다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: B — 실수</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card" data-q="1">
+  <div class="q-meta">
+    <span class="q-num">Q 02</span>
+    <span class="q-type">OX</span>
+    <span class="q-diff easy">쉬움</span>
+  </div>
+  <div class="q-text">소형주(스몰캡)는 아예 포트폴리오에 편입하지 말아야 한다. (O / X)</div>
+  <div class="ox-row">
+    <button class="ox-btn" data-val="O">O</button>
+    <button class="ox-btn" data-val="X">X</button>
+  </div>
+  <div class="answer-box" data-correct="X" data-explain="강의에서는 소형주를 '아예 투자하지 말라'가 아니라 '비중을 5% 이하로 제한하라'고 했다. 소형주 100개 중 1~2개가 대형주로 성장할 수 있으므로 미래를 위한 소량 투자는 허용한다. 단, 거북이 알처럼 대부분은 살아남지 못한다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: X (거짓)</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card" data-q="2">
+  <div class="q-meta">
+    <span class="q-num">Q 03</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff easy">쉬움</span>
+  </div>
+  <div class="q-text">강의에서 제시한 '오여 법칙'에 따르면, 단일 종목이 전체 포트폴리오에서 차지하면 안 되는 최대 비중은?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>10%</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>15%</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>25%</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>30%</div>
+  </div>
+  <div class="answer-box" data-correct="C" data-explain="오여 법칙: 단일 종목이 전체 포트폴리오의 25%를 초과하면 안 된다. 강사는 소액 투자자의 경우 실질적으로 10% 수준을 권장하며, 엔비디아처럼 좋은 주식도 25% 초과 시 비중을 줄여야 한다고 강조했다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: C — 25%</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card" data-q="3">
+  <div class="q-meta">
+    <span class="q-num">Q 04</span>
+    <span class="q-type">단답형</span>
+    <span class="q-diff med">보통</span>
+  </div>
+  <div class="q-text">강의에서 "투자 역사상 공부 대가가 가장 비싼 네 단어"라고 표현한 영어 문장은 무엇인가? (영어로 작성)</div>
+  <textarea class="text-input-area" placeholder="영어로 입력하세요..."></textarea>
+  <button class="submit-btn" onclick="submitText(this, 3)">정답 확인</button>
+  <div class="answer-box" data-correct="It's different this time" data-explain="이번에는 다를 거야 — 사이클이 있는 섹터(에너지, 원자재 등)가 급등할 때 '이번엔 영구적 상승'이라고 믿는 착각. 역사적으로 반복해서 투자자들에게 막대한 손실을 안겨준 심리적 함정이다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: "It's different this time"</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card" data-q="4">
+  <div class="q-meta">
+    <span class="q-num">Q 05</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff med">보통</span>
+  </div>
+  <div class="q-text">강의에서 "아무도 매입에 관심이 없을 때가 가장 ( ) 때"라고 말한 내용과 일치하는 투자 원칙은 무엇인가?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>팔기 좋을</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>위험한</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>쌀</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>분산 투자할</div>
+  </div>
+  <div class="answer-box" data-correct="C" data-explain="아무도 매입에 관심이 없을 때가 가장 쌀 때이며 매수 최적 시점에 가깝다. 메타와 엔비디아 모두 사람들이 관심 없던 시절에 들어간 투자자들이 큰 수익을 올렸다. 패닉(공포) 상태는 역설적으로 매수 기회다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: C — 쌀</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card" data-q="5">
+  <div class="q-meta">
+    <span class="q-num">Q 06</span>
+    <span class="q-type">OX</span>
+    <span class="q-diff med">보통</span>
+  </div>
+  <div class="q-text">블랙록, 골드만삭스 같은 세계 최대 기관 투자자들도 Buy & Hold 전략을 사용하는 이유는, 타임투마켓(market timing)이 불가능하다는 것을 알기 때문이다. (O / X)</div>
+  <div class="ox-row">
+    <button class="ox-btn" data-val="O">O</button>
+    <button class="ox-btn" data-val="X">X</button>
+  </div>
+  <div class="answer-box" data-correct="O" data-explain="강의의 핵심 주장: 기관들은 개인보다 더 많은 자산, 정보, 경험이 있어도 고점 매도·저점 매수가 불가능하다는 것을 안다. 그래서 장기 보유(Buy & Hold)를 선택한다. 개인이 타이밍을 맞출 수 있다고 믿는 것은 착각이다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: O (참)</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card" data-q="6">
+  <div class="q-meta">
+    <span class="q-num">Q 07</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff med">보통</span>
+  </div>
+  <div class="q-text">강의에서 기업의 EPS(주당순이익)가 상승하는데 동시에 아래 지표가 감소한다면 '즉시 매도를 검토해야 한다'고 경고한 지표는?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>주가수익비율(PER)</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>영업 현금흐름(Operating Cash Flow)</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>매출총이익(Gross Profit)</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>배당수익률</div>
+  </div>
+  <div class="answer-box" data-correct="B" data-explain="힌트 1: 'EPS는 상승하는데 캐시플로우(영업 현금흐름)가 감소한다면 팔고 나와야 됩니다. 가장 위험한 신호'라고 강의에서 명시했다. EPS는 회계 조작이 가능하지만 현금흐름은 기업의 실제 건강 상태를 반영한다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: B — 영업 현금흐름(Operating Cash Flow)</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card" data-q="7">
+  <div class="q-meta">
+    <span class="q-num">Q 08</span>
+    <span class="q-type">단답형</span>
+    <span class="q-diff med">보통</span>
+  </div>
+  <div class="q-text">강의에서 소형주를 거북이 알에 비유했다. "200개의 알 중 바다까지 살아남는 것은 몇 마리"라고 했는가?</div>
+  <textarea class="text-input-area" placeholder="숫자를 입력하세요..."></textarea>
+  <button class="submit-btn" onclick="submitText(this, 7)">정답 확인</button>
+  <div class="answer-box" data-correct="2마리 (한두 마리)" data-explain="소형주를 거북이 알에 비유: 200개 알 중 새에게 잡아먹히고, 바다에서도 천적에게 대부분 희생되어 결국 1~2마리만 살아남는다. 소형주도 100개 중 1개만 대형주가 될 수 있다는 의미로, 비중 관리의 중요성을 강조한다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: 2마리 (한두 마리)</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card" data-q="8">
+  <div class="q-meta">
+    <span class="q-num">Q 09</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff hard">어려움</span>
+  </div>
+  <div class="q-text">강의에서 언급한 두 가지 기업 밸류에이션 지표의 설명이 바르게 연결된 것은?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>Intrinsic Value — 미래 매출을 현재 가치로 환산한 주당 기업 가치</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>DCF Value — 기업의 향후 벌어들일 총 매출을 현재 가치로 환산 후 자본비용을 제하고 발행 주식 수로 나눈 값</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>Intrinsic Value — 최근 분기 EPS에 PER을 곱한 값</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>DCF Value — 경쟁사 대비 상대적 주가 수준</div>
+  </div>
+  <div class="answer-box" data-correct="B" data-explain="Intrinsic Value(내재가치)는 기업의 모든 자산을 매각했을 때 남는 가치를 발행 주식 수로 나눈 것. DCF Value(현금흐름할인법 가치)는 기업이 향후 벌어들일 총 매출을 현재 가치로 환산하고, 이자·자본 비용(WACC)을 제하여 발행 총 주식으로 나눈 주당 기업 가치다. 목표주가가 아무리 높아도 이 두 가치를 초과하면 투자 대상에서 제외한다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: B</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card" data-q="9">
+  <div class="q-meta">
+    <span class="q-num">Q 10</span>
+    <span class="q-type">객관식</span>
+    <span class="q-diff hard">어려움</span>
+  </div>
+  <div class="q-text">강의에서 소형주의 100년간 연평균 수익률과 S&P500 대형주의 수익률을 각각 언급했다. 1,000달러를 30년 투자했을 때, 대형주 투자 결과로 올바른 것은?</div>
+  <div class="options">
+    <div class="option" data-val="A"><span class="opt-label">A</span>약 $11,000 (소형주 9.3% 기준 30년 복리)</div>
+    <div class="option" data-val="B"><span class="opt-label">B</span>약 $14,000 (소형주 결과)</div>
+    <div class="option" data-val="C"><span class="opt-label">C</span>약 $21,000 (대형주 10.7% 기준 30년 복리)</div>
+    <div class="option" data-val="D"><span class="opt-label">D</span>약 $35,000 (대형주 결과)</div>
+  </div>
+  <div class="answer-box" data-correct="C" data-explain="강의 수치: 소형주 연평균 9.3% → 30년 후 약 $14,000 / 대형주(S&P500) 연평균 10.7% → 30년 후 약 $21,000. 겉보기에 1.4%p 차이지만 복리 효과로 $7,000이나 차이 난다. 10만 달러 투자 시 140만 달러 vs 210만 달러로 70만 달러 차이가 발생한다. 이것이 소형주 중심 포트폴리오가 위험한 이유다.">
+    <div class="ans-label">정답 및 해설</div>
+    <div class="ans-correct">✓ 정답: C — 약 $21,000</div>
+    <div class="ans-explain"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-row">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← 이전</button>
+  <button class="nav-btn primary" id="nextBtn" onclick="navigate(1)">다음 →</button>
+</div>
+
+<!-- RESULT -->
+<div class="result-page" id="resultPage">
+  <div style="font-size:48px;margin-bottom:8px">🎓</div>
+  <div style="font-size:12px;font-weight:700;letter-spacing:0.15em;color:var(--text2);text-transform:uppercase;margin-bottom:4px">최종 점수</div>
+  <div class="result-score" id="resultScore">—</div>
+  <div class="result-grade" id="resultGrade">—</div>
+  <div class="result-msg" id="resultMsg">—</div>
+  <div class="score-breakdown" id="scoreBreakdown"></div>
+  <button class="retry-btn" onclick="retryQuiz()">↺ 다시 풀기</button>
+</div>
+
+<script>
+const totalQ = 10;
+let answers = new Array(totalQ).fill(null);
+let answered = new Array(totalQ).fill(false);
+let currentQ = 0;
+let correctCount = 0;
+
+// Build index buttons
+const idxRow = document.getElementById('qIndexRow');
+for (let i = 0; i < totalQ; i++) {
+  const b = document.createElement('button');
+  b.className = 'q-idx-btn' + (i === 0 ? ' current' : '');
+  b.textContent = i + 1;
+  b.onclick = () => goTo(i);
+  idxRow.appendChild(b);
+}
+
+function updateProgress() {
+  const done = answered.filter(Boolean).length;
+  document.getElementById('progressFill').style.width = (done / totalQ * 100) + '%';
+  document.getElementById('progressCount').textContent = done + ' / ' + totalQ;
+}
+
+function goTo(idx) {
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.q-idx-btn').forEach((b, i) => {
+    b.classList.remove('current');
+    b.classList.remove('done');
+    b.classList.remove('wrong-done');
+    if (answered[i]) {
+      b.classList.add(answers[i] === 'correct' ? 'done' : 'wrong-done');
+    }
+  });
+  document.querySelectorAll('.q-card')[idx].classList.add('active');
+  document.querySelectorAll('.q-idx-btn')[idx].classList.add('current');
+  currentQ = idx;
+  document.getElementById('prevBtn').disabled = idx === 0;
+
+  const allDone = answered.every(Boolean);
+  const nextBtn = document.getElementById('nextBtn');
+  if (idx === totalQ - 1) {
+    nextBtn.textContent = allDone ? '결과 보기 →' : '결과 보기 →';
+    nextBtn.onclick = () => { if (allDone) showResult(); else { if (confirm('아직 답하지 않은 문제가 있습니다. 결과를 보시겠습니까?')) showResult(); } };
+  } else {
+    nextBtn.textContent = '다음 →';
+    nextBtn.onclick = () => navigate(1);
+  }
+}
+
+function navigate(dir) {
+  const next = currentQ + dir;
+  if (next < 0 || next >= totalQ) return;
+  goTo(next);
+}
+
+// MCQ
+document.querySelectorAll('.options').forEach((opts, qi) => {
+  opts.querySelectorAll('.option').forEach(opt => {
+    opt.onclick = () => {
+      if (answered[qi]) return;
+      const correct = opts.closest('.q-card').querySelector('.answer-box').dataset.correct;
+      const val = opt.dataset.val;
+      answered[qi] = true;
+      answers[qi] = val === correct ? 'correct' : 'wrong';
+      if (val === correct) { opt.classList.add('correct'); correctCount++; }
+      else {
+        opt.classList.add('wrong');
+        opts.querySelectorAll('.option').forEach(o => { if (o.dataset.val === correct) o.classList.add('correct'); });
+      }
+      opts.querySelectorAll('.option').forEach(o => o.classList.add('revealed'));
+      revealAnswer(opts.closest('.q-card'));
+      updateProgress(); updateIdxBtn(qi);
+    };
+  });
+});
+
+// OX
+document.querySelectorAll('.ox-row').forEach((row, qi) => {
+  const card = row.closest('.q-card');
+  const qIdx = +card.dataset.q;
+  row.querySelectorAll('.ox-btn').forEach(btn => {
+    btn.onclick = () => {
+      if (answered[qIdx]) return;
+      const correct = card.querySelector('.answer-box').dataset.correct;
+      const val = btn.dataset.val;
+      answered[qIdx] = true;
+      answers[qIdx] = val === correct ? 'correct' : 'wrong';
+      if (val === correct) { btn.classList.add('correct'); correctCount++; }
+      else {
+        btn.classList.add('wrong');
+        row.querySelectorAll('.ox-btn').forEach(b => { if (b.dataset.val === correct) b.classList.add('correct'); });
+      }
+      row.querySelectorAll('.ox-btn').forEach(b => b.classList.add('revealed'));
+      revealAnswer(card);
+      updateProgress(); updateIdxBtn(qIdx);
+    };
+  });
+});
+
+function submitText(btn, qi) {
+  if (answered[qi]) return;
+  const card = btn.closest('.q-card');
+  const textarea = card.querySelector('textarea');
+  if (!textarea.value.trim()) { textarea.style.borderColor = '#e11d48'; setTimeout(() => textarea.style.borderColor = '', 1000); return; }
+  answered[qi] = true;
+  answers[qi] = 'correct'; // Short answer — always show answer
+  correctCount++;
+  btn.disabled = true;
+  textarea.disabled = true;
+  revealAnswer(card);
+  updateProgress(); updateIdxBtn(qi);
+}
+
+function revealAnswer(card) {
+  const ab = card.querySelector('.answer-box');
+  ab.classList.add('show');
+  ab.querySelector('.ans-explain').textContent = ab.dataset.explain;
+}
+
+function updateIdxBtn(qi) {
+  const btn = document.querySelectorAll('.q-idx-btn')[qi];
+  btn.classList.remove('done', 'wrong-done');
+  btn.classList.add(answers[qi] === 'correct' ? 'done' : 'wrong-done');
+}
+
+function showResult() {
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('qIndexRow').style.display = 'none';
+  document.querySelector('.nav-row').style.display = 'none';
+  const rp = document.getElementById('resultPage');
+  rp.classList.add('show');
+
+  const doneCount = answered.filter(Boolean).length;
+  const score = Math.round(correctCount / totalQ * 100);
+  document.getElementById('resultScore').textContent = score + '점';
+
+  let grade, msg;
+  if (score >= 90) { grade = '💎 투자 마스터'; msg = '7가지 실수를 완벽히 이해했습니다. 실전에서 바로 적용하세요.'; }
+  else if (score >= 70) { grade = '🥇 투자 중급자'; msg = '핵심 개념을 잘 이해했습니다. 틀린 문제를 다시 복습하세요.'; }
+  else if (score >= 50) { grade = '📚 기초 보완 필요'; msg = '기본 개념 재학습을 권장합니다. 강의를 다시 한번 들어보세요.'; }
+  else { grade = '⚠️ 재학습 권장'; msg = '강의 내용을 처음부터 차근히 다시 보세요.'; }
+  document.getElementById('resultGrade').textContent = grade;
+  document.getElementById('resultMsg').textContent = msg;
+
+  const breakdown = document.getElementById('scoreBreakdown');
+  const qdiff = ['쉬움','쉬움','쉬움','보통','보통','보통','보통','보통','어려움','어려움'];
+  let eC=0,eT=0,mC=0,mT=0,hC=0,hT=0;
+  answered.forEach((done, i) => {
+    if (qdiff[i]==='쉬움') { eT++; if(answers[i]==='correct') eC++; }
+    else if (qdiff[i]==='보통') { mT++; if(answers[i]==='correct') mC++; }
+    else { hT++; if(answers[i]==='correct') hC++; }
+  });
+  breakdown.innerHTML = `
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px">난이도별 성적</div>
+    <div class="score-row"><span>쉬움 (3문제)</span><span style="font-weight:700;color:var(--green)">${eC} / ${eT} 정답</span></div>
+    <div class="score-row"><span>보통 (5문제)</span><span style="font-weight:700;color:#b45309">${mC} / ${mT} 정답</span></div>
+    <div class="score-row"><span>어려움 (2문제)</span><span style="font-weight:700;color:var(--accent)">${hC} / ${hT} 정답</span></div>
+    <div class="score-row" style="font-weight:700"><span>총점</span><span style="color:var(--accent)">${correctCount} / ${totalQ} 정답 (${score}점)</span></div>
+  `;
+}
+
+function retryQuiz() {
+  answers = new Array(totalQ).fill(null);
+  answered = new Array(totalQ).fill(false);
+  correctCount = 0;
+  currentQ = 0;
+
+  document.querySelectorAll('.q-card').forEach(c => {
+    c.querySelectorAll('.option').forEach(o => { o.className = 'option'; });
+    c.querySelectorAll('.ox-btn').forEach(b => { b.className = 'ox-btn'; });
+    c.querySelectorAll('textarea').forEach(t => { t.value = ''; t.disabled = false; t.style.borderColor = ''; });
+    c.querySelectorAll('.submit-btn').forEach(b => b.disabled = false);
+    c.querySelectorAll('.answer-box').forEach(ab => ab.classList.remove('show'));
+  });
+  document.getElementById('qIndexRow').style.display = 'flex';
+  document.querySelector('.nav-row').style.display = 'flex';
+  document.getElementById('resultPage').classList.remove('show');
+  document.querySelectorAll('.q-idx-btn').forEach(b => { b.classList.remove('done','wrong-done','current'); });
+
+  updateProgress();
+  goTo(0);
+}
+
+// Init
+updateProgress();
+</script>
+</body>
+</html>
