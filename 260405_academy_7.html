@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 24회 — 엔비디아 10K 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --table-header: #e11d48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  .masthead {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .issue-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 7vw, 42px);
+    font-weight: 900;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .masthead h1 span { color: var(--accent2); }
+  .masthead-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #aaa;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+    margin-bottom: 10px;
+    margin-top: 48px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5vw, 28px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 8px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    background: #fff5f7;
+    padding: 18px 20px;
+    margin: 28px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 40px 0 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+  }
+  .divider-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 12px 10px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 20px 0; border-radius: 8px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; font-size: 13.5px; }
+  thead tr { background: var(--table-header); color: #fff; }
+  thead th { padding: 11px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
+  tbody tr { background: var(--bg2); border-bottom: 1px solid var(--border); }
+  tbody tr:nth-child(even) { background: #fff; }
+  tbody td { padding: 10px 14px; color: var(--text); }
+  .up { color: #16a34a; font-weight: 600; }
+  .highlight-row td { background: #fff0f3 !important; font-weight: 600; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .badge-red { background: var(--accent); color: #fff; }
+  .badge-dark { background: var(--text); color: #fff; }
+  .badge-gray { background: #e5e5e5; color: #555; }
+
+  /* RISK CARD */
+  .risk-grid { display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+  .risk-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .risk-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .risk-card-desc { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+
+  /* BIZ SEGMENT */
+  .seg-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .seg-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900;
+    color: var(--accent); min-width: 32px;
+  }
+  .seg-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .seg-desc { font-size: 12.5px; color: var(--text2); }
+  .seg-bar-wrap { flex: 1; background: var(--border); height: 6px; border-radius: 3px; margin-top: 6px; }
+  .seg-bar { height: 100%; border-radius: 3px; background: var(--accent); }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 20px;
+    margin: 24px 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .sim-title {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sim-title::before {
+    content: '📊';
+    font-size: 16px;
+  }
+  .sim-row { margin-bottom: 16px; }
+  .sim-label {
+    font-size: 12px; color: var(--text2); margin-bottom: 6px;
+    display: flex; justify-content: space-between;
+  }
+  .sim-label span { font-weight: 700; color: var(--accent); }
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px;
+    background: var(--border); border-radius: 3px; outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent); cursor: pointer;
+    box-shadow: 0 2px 6px rgba(225,29,72,0.35);
+  }
+  .sim-result {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sim-metric { text-align: center; }
+  .sim-metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--accent);
+  }
+  .sim-metric-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .sim-reset {
+    display: block; width: 100%; margin-top: 14px;
+    padding: 9px; border: 1px solid var(--border);
+    border-radius: 6px; background: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--text2);
+    cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .sim-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* STAT HIGHLIGHT */
+  .stat-row {
+    display: flex; gap: 12px; margin: 20px 0; flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1; min-width: 130px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    color: var(--accent); line-height: 1.1;
+  }
+  .stat-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--text);
+    color: #888;
+    text-align: center;
+    padding: 28px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    margin-top: 60px;
+  }
+  .footer a { color: var(--accent2); text-decoration: none; }
+
+  /* QUIZ LINK */
+  .quiz-cta {
+    background: linear-gradient(135deg, var(--accent), #be123c);
+    border-radius: 12px;
+    padding: 24px 22px;
+    text-align: center;
+    color: #fff;
+    margin: 40px 0;
+  }
+  .quiz-cta h3 { color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 8px; }
+  .quiz-cta p { color: rgba(255,255,255,0.85); font-size: 13px; margin: 0 0 16px; }
+  .quiz-cta a {
+    display: inline-block;
+    background: #fff;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .quiz-cta a:hover { transform: scale(1.04); }
+
+  /* Staggered segment animation */
+  .seg-row { opacity: 0; transform: translateX(-10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .seg-row.show { opacity: 1; transform: translateX(0); }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="container">
+    <div class="issue-label">투자아카데미 24회 · 2026.04.05</div>
+    <h1>엔비디아 10K,<br><span>숫자로 읽는<br>확신의 근거</span></h1>
+    <div class="masthead-sub">
+      <span>📄 기업 연간보고서 분석</span>
+      <span>🏷 NVDA · Nasdaq</span>
+      <span>📅 FY2024 기준</span>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="container">
+
+  <!-- 10K 란? -->
+  <div class="section-label">개요</div>
+  <h2>10K가 투자자에게 중요한 이유</h2>
+  <p>미국 기업들이 SEC에 제출하는 연간 보고서인 <strong>Form 10K</strong>는 단순한 실적 발표가 아닙니다. 1년간의 사업 성과, 시장 환경, 강점·약점, 국내외 매출 구조, 리스크와 그 대응책까지 <em>숨김 없이</em> 공개하는 법적 의무 문서입니다.</p>
+
+  <div class="pull-quote">
+    <p>"미국 10K는 거짓이 없다. 거짓이 발견되면 기업이 감당하기 어려운 수준의 징벌적 결과를 맞는다."</p>
+  </div>
+
+  <p>한국 기업 보고서와 달리 10K는 좋은 점만 부각하지 않습니다. 약점과 리스크를 적나라하게 서술하되, 그 리스크에 대한 내부 대책도 함께 기술합니다. 투자자 입장에서는 이 문서 하나로 기업에 대한 <strong>장기 투자 확신</strong>의 근거를 얻을 수 있습니다.</p>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 비즈니스 구조 -->
+  <div class="section-label">사업 구조</div>
+  <h2>엔비디아의 4대 수익 사업</h2>
+  <p>엔비디아는 <strong>풀스택 컴퓨팅 인프라</strong> 회사입니다. GPU 칩부터 소프트웨어 라이브러리(SDK·API)·알고리즘까지 수직 통합된 플랫폼을 제공합니다.</p>
+
+  <div class="seg-row" id="seg1">
+    <div class="seg-num">①</div>
+    <div style="flex:1">
+      <div class="seg-name">데이터 센터 <span class="badge badge-red">핵심</span></div>
+      <div class="seg-desc">AI 학습·추론용 GPU 서버, 네트워킹 솔루션. FY2024 최대 매출 세그먼트. 전년 대비 수백% 성장.</div>
+      <div class="seg-bar-wrap"><div class="seg-bar" style="width:78%"></div></div>
+    </div>
+  </div>
+  <div class="seg-row" id="seg2">
+    <div class="seg-num">②</div>
+    <div style="flex:1">
+      <div class="seg-name">게이밍 (Gaming)</div>
+      <div class="seg-desc">PC·콘솔용 GPU(RTX 시리즈). 전통적인 핵심 사업. FY2024 전년 대비 약 +15% 성장.</div>
+      <div class="seg-bar-wrap"><div class="seg-bar" style="width:20%"></div></div>
+    </div>
+  </div>
+  <div class="seg-row" id="seg3">
+    <div class="seg-num">③</div>
+    <div style="flex:1">
+      <div class="seg-name">전문 시각화 (Professional Visualization)</div>
+      <div class="seg-desc">Adobe 등 크리에이티브 툴, AI 시각화 워크스테이션. +1% 소폭 성장.</div>
+      <div class="seg-bar-wrap"><div class="seg-bar" style="width:6%"></div></div>
+    </div>
+  </div>
+  <div class="seg-row" id="seg4">
+    <div class="seg-num">④</div>
+    <div style="flex:1">
+      <div class="seg-name">자동차·EV (Automotive)</div>
+      <div class="seg-desc">자율주행·전기차용 AI 칩 플랫폼(DRIVE). FY2024 약 +21% 성장. 장기 성장 기대.</div>
+      <div class="seg-bar-wrap"><div class="seg-bar" style="width:12%"></div></div>
+    </div>
+  </div>
+
+  <p style="margin-top:18px; font-size:13.5px; color:var(--text2);">막대 길이는 매출 기여 비중의 대략적 상대 크기를 나타냅니다.</p>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 매출 성과 -->
+  <div class="section-label">재무 성과 — FY2024</div>
+  <h2>1년 만에 5배, 숫자가 말하는 확신</h2>
+
+  <div class="stat-row fade-in">
+    <div class="stat-box">
+      <div class="stat-val">+221%</div>
+      <div class="stat-label">총 매출 성장 (YoY)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">72%</div>
+      <div class="stat-label">매출 총이익률</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">+858%</div>
+      <div class="stat-label">순이익 성장 (YoY)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">48%</div>
+      <div class="stat-label">순이익률</div>
+    </div>
+  </div>
+
+  <!-- 매출 차트 -->
+  <p class="chart-title">엔비디아 세그먼트별 매출 추이 (단위: $B)</p>
+  <div class="chart-container fade-in">
+    <canvas id="revenueChart" height="240"></canvas>
+  </div>
+
+  <!-- 수익성 구조 차트 -->
+  <p class="chart-title">비용 구조 변화 — 매출 대비 % (FY2023 vs FY2024)</p>
+  <div class="chart-container fade-in">
+    <canvas id="marginChart" height="220"></canvas>
+  </div>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>FY2023</th>
+          <th>FY2024</th>
+          <th>변화</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>총 매출</td>
+          <td>$26.9B</td>
+          <td>$60.9B</td>
+          <td class="up">+126%</td>
+        </tr>
+        <tr>
+          <td>매출 총이익률</td>
+          <td>56%</td>
+          <td>72%</td>
+          <td class="up">+16%p</td>
+        </tr>
+        <tr>
+          <td>R&D 비용 비중</td>
+          <td>41%</td>
+          <td>18%</td>
+          <td class="up">-23%p ↓</td>
+        </tr>
+        <tr>
+          <td>순이익</td>
+          <td>$4,368M</td>
+          <td>$29,760M</td>
+          <td class="up">+581%</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>EPS (희석)</td>
+          <td>$1.74</td>
+          <td>$11.93</td>
+          <td class="up">+586%</td>
+        </tr>
+        <tr>
+          <td>현금 및 현금성 자산</td>
+          <td>$13B</td>
+          <td>$25B</td>
+          <td class="up">+92%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pull-quote">
+    <p>"매출은 늘어나는데 비용 비중은 오히려 줄었다. 더 많이 팔고 더 많이 남기는 구조. 이런 비즈니스가 어디 있냐고."</p>
+  </div>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- EPS 시뮬레이터 -->
+  <div class="section-label">인터랙티브 시뮬레이터</div>
+  <h2>EPS 성장에 따른 적정주가 시뮬레이터</h2>
+  <p>EPS(주당순이익)와 시장이 부여하는 PER(주가수익비율)를 조정해 주가 수준을 직접 체감해 보세요.</p>
+
+  <div class="sim-box fade-in" id="epsSimBox">
+    <div class="sim-title">EPS × PER 주가 시뮬레이터</div>
+
+    <div class="sim-row">
+      <div class="sim-label">EPS (주당순이익, $) <span id="epsVal">11.93</span></div>
+      <input type="range" id="epsSlider" min="5" max="40" step="0.5" value="11.93">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">PER (주가수익비율, 배) <span id="perVal">50</span></div>
+      <input type="range" id="perSlider" min="15" max="120" step="1" value="50">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">EPS 연간 성장률 (%) <span id="growthVal">30</span></div>
+      <input type="range" id="growthSlider" min="0" max="100" step="5" value="30">
+    </div>
+
+    <div class="sim-result">
+      <div class="sim-metric">
+        <div class="sim-metric-val" id="simPrice">$597</div>
+        <div class="sim-metric-label">현재 적정주가 (EPS × PER)</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-val" id="sim3yPrice">$1,021</div>
+        <div class="sim-metric-label">3년 후 예상 주가</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-val" id="sim5yPrice">$1,553</div>
+        <div class="sim-metric-label">5년 후 예상 주가</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-val" id="simEps3y">$26.3</div>
+        <div class="sim-metric-label">3년 후 EPS 예상</div>
+      </div>
+    </div>
+    <button class="sim-reset" id="simResetBtn">↺ 기본값으로 초기화</button>
+  </div>
+
+  <p style="font-size:12px; color:var(--text2);">※ 본 시뮬레이터는 학습 목적의 단순 계산 도구입니다. 실제 투자 판단에 직접 사용하지 마세요.</p>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 주가 성과 -->
+  <div class="section-label">주가 성과</div>
+  <h2>5년 수익률 비교</h2>
+  <p>2019년 1월을 100으로 기준점 삼아 비교한 결과, 엔비디아는 동기간 약 <strong>1,600%</strong> 상승했습니다. S&P 500이 약 100% 내외, 나스닥 100이 약 160% 오른 것과 대비됩니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="perfChart" height="230"></canvas>
+  </div>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 자사주 매입 -->
+  <div class="section-label">자사주 매입</div>
+  <h2>회사가 자신의 주식을 산다는 의미</h2>
+  <p>자사주 매입(Stock Buyback)은 회사가 남는 현금으로 자사 주식을 직접 사들이는 것입니다. 유통 주식 수가 줄어 주당 가치가 올라가는 효과가 있습니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>기간</th><th>매입 주수</th><th>금액</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2023.10.30 ~ 11.26</td><td>약 90만 주</td><td>약 $464M</td></tr>
+        <tr><td>2023.11.27 ~ 12.24</td><td>약 110만 주</td><td>—</td></tr>
+        <tr><td>2024.01.28까지 추가</td><td>약 330만 주</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>자사주를 매입한다는 것은 경영진이 "지금 주가가 저평가됐다"고 판단한다는 시그널이기도 합니다. 현금 여력이 충분하다는 방증이기도 합니다.</p>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 리스크 -->
+  <div class="section-label">리스크 팩터</div>
+  <h2>10K가 숨기지 않는 위험 요소들</h2>
+  <p>10K에서 리스크 파트는 단순한 면피성 서술이 아닙니다. 구체적일수록 내부적 대책도 함께 갖춰져 있다는 뜻입니다.</p>
+
+  <div class="risk-grid fade-in">
+    <div class="risk-card">
+      <div class="risk-card-title">📉 시장 수요 예측 실패</div>
+      <div class="risk-card-desc">AI·클라우드 가속 서비스 수요를 충족하지 못할 경우 매출에 직접 타격. 특히 고성장 시기에 공급망 대응이 핵심.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-card-title">🔬 R&D 실패</div>
+      <div class="risk-card-desc">신제품·신기술 개발이 목표 시장 요구를 충족하지 못할 경우 경쟁 우위 상실 가능.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-card-title">🌏 지정학 리스크 (TSMC·대만)</div>
+      <div class="risk-card-desc">GPU 웨이퍼 생산의 핵심 파트너인 TSMC가 있는 대만에서 갈등 발생 시 공급 차질. 실제로 ARM 인수 실패 시 주가가 급락한 사례가 있음.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-card-title">🇨🇳 중국 매출 비중 축소</div>
+      <div class="risk-card-desc">전체 매출 중 중국(홍콩 포함) 비중이 약 15~16%. 과거 84%에 비해 크게 줄었지만 수출규제 강화 시 추가 영향 가능성.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-card-title">⚖️ 법적·컴플라이언스 리스크</div>
+      <div class="risk-card-desc">특허 분쟁, 반독점, 윤리 기준 위반 등. 미국 시장에서 컴플라이언스 실패는 치명적 결과로 이어질 수 있음.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-card-title">🌡️ 기후변화</div>
+      <div class="risk-card-desc">캘리포니아 산타클라라 본사 지역의 기후 변화(가뭄, 홍수, 지진)가 반도체 생산 환경에 영향을 줄 수 있다고 명시.</div>
+    </div>
+  </div>
+
+  <!-- 리스크 분포 차트 -->
+  <p class="chart-title">리스크 카테고리 분포 (10K 서술 페이지 비중 기준 추정)</p>
+  <div class="chart-container fade-in">
+    <canvas id="riskChart" height="220"></canvas>
+  </div>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 재무 건전성 -->
+  <div class="section-label">재무 건전성</div>
+  <h2>부채는 그대로, 현금은 두 배</h2>
+  <p>FY2024 기준 엔비디아의 현금 및 현금성 자산은 약 <strong>250억 달러</strong>로 전년 대비 약 2배 증가했습니다. 반면 부채는 거의 늘지 않았습니다.</p>
+
+  <p>장기 부채(채권)도 이자율이 <strong>0.3%~3.75%</strong> 수준으로, 금리가 낮을 때 발행한 덕분에 유리한 조건을 유지 중입니다. 10년 국채 금리(4%대)보다 낮아 실질적 이익입니다.</p>
+
+  <div class="stat-row fade-in">
+    <div class="stat-box">
+      <div class="stat-val">$25B</div>
+      <div class="stat-label">현금 보유량</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">$16B</div>
+      <div class="stat-label">재고 자산 (선구매)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">2.7%</div>
+      <div class="stat-label">직원 이직률 (업계 평균 3%)</div>
+    </div>
+  </div>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 지역별 매출 -->
+  <div class="section-label">지역별 매출 구조</div>
+  <h2>중국 의존도 줄이는 엔비디아</h2>
+  <p>전체 매출 $60B 중 중국(홍콩 포함) 비중은 약 <strong>15~16%($10B)</strong>입니다. 과거에는 미국 외 매출이 84%에 달했지만 현재 56%로 줄어드는 추세이며 2025년에는 더 낮아질 전망입니다. 리스크 분산이 진행 중입니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="geoChart" height="220"></canvas>
+  </div>
+
+  <div class="divider"><div class="divider-dot"></div></div>
+
+  <!-- 핵심 인사이트 -->
+  <div class="section-label">핵심 인사이트</div>
+  <h2>장기 투자자가 기억해야 할 3가지</h2>
+
+  <h3>1. 데이터 센터 성장이 멈출 때가 매도 시점</h3>
+  <p>엔비디아 매출의 절대적 비중을 차지하는 데이터 센터 비즈니스의 성장 속도가 둔화되는 시점이 포트폴리오 비중을 줄여야 할 시그널입니다. 현재로서는 향후 5~6년간 고성장이 지속될 것으로 예상됩니다.</p>
+
+  <h3>2. AI = 에너지 수요 폭증</h3>
+  <p>AI 데이터 센터의 확장은 전력 수요의 수배 증가로 이어집니다. 전력 공급·효율화 관련 기업도 함께 주목해야 합니다.</p>
+
+  <h3>3. EPS가 10배 올랐다면 주가도 10배가 정상</h3>
+  <p>FY2023 EPS $1.74 → FY2024 EPS $11.93, 약 6~7배 상승. 기업 이익이 이 속도로 성장한다면 주가의 상승은 '버블'이 아닌 '실적 반영'입니다. 단, 이 성장이 지속 가능한지 매년 10K로 검증하는 것이 핵심입니다.</p>
+
+  <!-- 퀴즈 CTA -->
+  <div class="quiz-cta fade-in">
+    <h3>📝 이해도 확인 — 시험문제 10선</h3>
+    <p>본 강의 내용을 바탕으로 출제된 문제와 해설을 확인하세요.</p>
+    <a href="nvidia_10k_quiz.html" target="_blank">시험 문제 보기 →</a>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p>투자아카데미 24회 · 엔비디아 10K 분석 요약 · 2026.04.05</p>
+  <p style="margin-top:6px;">본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.</p>
+</div>
+
+<script>
+// ── FADE IN OBSERVER ──────────────────────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// Segment row stagger
+const segObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('show'), i * 120);
+      segObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.seg-row').forEach(el => segObs.observe(el));
+
+// ── CHART CONFIGS ────────────────────────────────────
+const chartConfigs = {};
+
+chartConfigs['revenueChart'] = () => {
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+      labels: ['데이터센터', '게이밍', '전문시각화', '자동차'],
+      datasets: [
+        {
+          label: 'FY2023 ($B)',
+          data: [15.0, 9.0, 1.5, 0.9],
+          backgroundColor: '#6b7280',
+          borderRadius: 4,
+        },
+        {
+          label: 'FY2024 ($B)',
+          data: [47.5, 10.4, 1.7, 1.1],
+          backgroundColor: '#e11d48',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => ` $${ctx.parsed.y}B` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 11 } } },
+        y: { grid: { color: '#e5e5e5' }, ticks: { font: { family: 'DM Sans', size: 11 }, callback: v => `$${v}B` } }
+      }
+    }
+  });
+};
+
+chartConfigs['marginChart'] = () => {
+  new Chart(document.getElementById('marginChart'), {
+    type: 'bar',
+    data: {
+      labels: ['매출원가', 'R&D 비용', '판매·관리비', '순이익률'],
+      datasets: [
+        {
+          label: 'FY2023 (%)',
+          data: [44, 41, 10, 16],
+          backgroundColor: '#6b7280',
+          borderRadius: 4,
+        },
+        {
+          label: 'FY2024 (%)',
+          data: [28, 18, 5, 48],
+          backgroundColor: '#e11d48',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}%` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 11 } } },
+        y: { grid: { color: '#e5e5e5' }, ticks: { font: { family: 'DM Sans', size: 11 }, callback: v => `${v}%` } }
+      }
+    }
+  });
+};
+
+chartConfigs['perfChart'] = () => {
+  new Chart(document.getElementById('perfChart'), {
+    type: 'line',
+    data: {
+      labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+      datasets: [
+        {
+          label: 'NVDA',
+          data: [100, 210, 520, 480, 900, 1600],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          borderWidth: 2.5,
+        },
+        {
+          label: 'S&P 500',
+          data: [100, 115, 140, 125, 155, 175],
+          borderColor: '#2563eb',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3,
+          borderWidth: 2,
+          borderDash: [4,3],
+        },
+        {
+          label: 'Nasdaq 100',
+          data: [100, 140, 215, 170, 240, 260],
+          borderColor: '#6b7280',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3,
+          borderWidth: 2,
+          borderDash: [4,3],
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} (기준 100)` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 11 } } },
+        y: { grid: { color: '#e5e5e5' }, ticks: { font: { family: 'DM Sans', size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['riskChart'] = () => {
+  new Chart(document.getElementById('riskChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['기술·제품', '시장·수요', '지정학·공급망', '법적·컴플라이언스', '재무·인사', '기후·환경'],
+      datasets: [{
+        data: [28, 22, 18, 15, 12, 5],
+        backgroundColor: ['#e11d48', '#1a1a1a', '#6b7280', '#2563eb', '#f43f5e', '#d1d5db'],
+        borderWidth: 2,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '55%',
+      plugins: {
+        legend: { position: 'right', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12, padding: 10 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed}%` } }
+      }
+    }
+  });
+};
+
+chartConfigs['geoChart'] = () => {
+  new Chart(document.getElementById('geoChart'), {
+    type: 'bar',
+    data: {
+      labels: ['미국', '대만·아시아', '중국·홍콩', '유럽', '기타'],
+      datasets: [{
+        label: 'FY2024 매출 비중 (%)',
+        data: [44, 25, 16, 10, 5],
+        backgroundColor: ['#e11d48','#1a1a1a','#6b7280','#2563eb','#d1d5db'],
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } }
+      },
+      scales: {
+        x: { grid: { color: '#e5e5e5' }, ticks: { font: { family: 'DM Sans', size: 11 }, callback: v => `${v}%` } },
+        y: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 11 } } }
+      }
+    }
+  });
+};
+
+// ── CHART OBSERVER ─────────────────────────────────────
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── EPS SIMULATOR ─────────────────────────────────────
+const defaults = { eps: 11.93, per: 50, growth: 30 };
+
+function updateSim() {
+  const eps = parseFloat(document.getElementById('epsSlider').value);
+  const per = parseFloat(document.getElementById('perSlider').value);
+  const g = parseFloat(document.getElementById('growthSlider').value) / 100;
+
+  document.getElementById('epsVal').textContent = eps.toFixed(2);
+  document.getElementById('perVal').textContent = per;
+  document.getElementById('growthVal').textContent = (g * 100).toFixed(0);
+
+  const price = eps * per;
+  const eps3y = eps * Math.pow(1 + g, 3);
+  const eps5y = eps * Math.pow(1 + g, 5);
+  const price3y = eps3y * per;
+  const price5y = eps5y * per;
+
+  document.getElementById('simPrice').textContent = `$${Math.round(price).toLocaleString()}`;
+  document.getElementById('sim3yPrice').textContent = `$${Math.round(price3y).toLocaleString()}`;
+  document.getElementById('sim5yPrice').textContent = `$${Math.round(price5y).toLocaleString()}`;
+  document.getElementById('simEps3y').textContent = `$${eps3y.toFixed(1)}`;
+}
+
+['epsSlider','perSlider','growthSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateSim);
+});
+document.getElementById('simResetBtn').addEventListener('click', () => {
+  document.getElementById('epsSlider').value = defaults.eps;
+  document.getElementById('perSlider').value = defaults.per;
+  document.getElementById('growthSlider').value = defaults.growth;
+  updateSim();
+});
+updateSim();
+</script>
+</body>
+</html>

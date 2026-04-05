@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 엔비디아 10K 분석 | 투자아카데미 24회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a; --wrong: #dc2626;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+
+  .header {
+    background: var(--text); color: #fff;
+    padding: 36px 24px 28px;
+  }
+  .header-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--accent2); margin-bottom:10px; }
+  .header h1 { font-family:'Playfair Display',serif; font-size:clamp(22px,6vw,32px); font-weight:900; line-height:1.2; }
+  .header p { color:#aaa; font-size:13px; margin-top:10px; }
+
+  .container { max-width:680px; margin:0 auto; padding:24px 20px 60px; }
+
+  /* SCORE BOARD */
+  .scoreboard {
+    background: var(--bg2); border:1px solid var(--border);
+    border-radius:12px; padding:20px;
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:28px; flex-wrap:wrap; gap:12px;
+  }
+  .score-val { font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--accent); }
+  .score-label { font-size:12px; color:var(--text2); }
+  .progress-wrap { flex:1; min-width:160px; }
+  .progress-bar { height:8px; background:var(--border); border-radius:4px; overflow:hidden; margin:6px 0; }
+  .progress-fill { height:100%; background:var(--accent); border-radius:4px; transition:width 0.5s ease; width:0%; }
+  .progress-text { font-size:11px; color:var(--text2); }
+
+  /* QUIZ CARD */
+  .quiz-card {
+    background: var(--bg2); border:1px solid var(--border);
+    border-radius:12px; padding:22px 20px;
+    margin-bottom:16px;
+    transition: box-shadow 0.2s;
+  }
+  .quiz-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+  .q-meta {
+    display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;
+  }
+  .q-num {
+    font-family:'Playfair Display',serif;
+    font-size:13px; font-weight:700; color:var(--accent);
+  }
+  .badge {
+    font-size:10px; font-weight:700; padding:2px 8px;
+    border-radius:20px; letter-spacing:0.5px;
+  }
+  .badge-easy { background:#dcfce7; color:#16a34a; }
+  .badge-medium { background:#fef3c7; color:#d97706; }
+  .badge-hard { background:#fee2e2; color:#dc2626; }
+  .badge-type { background:#e0e7ff; color:#4338ca; }
+  .q-text { font-size:15px; font-weight:600; color:var(--text); margin-bottom:14px; line-height:1.55; }
+
+  /* OPTIONS */
+  .options { display:flex; flex-direction:column; gap:8px; }
+  .option-btn {
+    text-align:left; padding:11px 14px;
+    border:1.5px solid var(--border); border-radius:8px;
+    background:#fff; font-family:'DM Sans',sans-serif;
+    font-size:14px; color:var(--text); cursor:pointer;
+    transition: all 0.2s;
+  }
+  .option-btn:hover:not(:disabled) { border-color:var(--accent); background:#fff5f7; }
+  .option-btn.correct { border-color:var(--correct); background:#f0fdf4; color:var(--correct); font-weight:600; }
+  .option-btn.wrong { border-color:var(--wrong); background:#fef2f2; color:var(--wrong); }
+
+  /* SHORT ANSWER */
+  .sa-input {
+    width:100%; padding:11px 14px;
+    border:1.5px solid var(--border); border-radius:8px;
+    font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text);
+    background:#fff; outline:none; transition: border-color 0.2s;
+  }
+  .sa-input:focus { border-color:var(--accent); }
+  .sa-submit {
+    margin-top:10px; padding:9px 20px;
+    background:var(--accent); color:#fff;
+    border:none; border-radius:8px;
+    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+    cursor:pointer; transition: background 0.2s;
+  }
+  .sa-submit:hover { background:var(--accent2); }
+  .sa-submit:disabled { background:#ccc; cursor:default; }
+
+  /* FEEDBACK */
+  .feedback {
+    display:none; margin-top:14px;
+    padding:13px 16px; border-radius:8px;
+    font-size:13.5px; line-height:1.6;
+    border:1px solid;
+  }
+  .feedback.show { display:block; }
+  .feedback.correct-fb { background:#f0fdf4; border-color:#86efac; color:#15803d; }
+  .feedback.wrong-fb { background:#fef2f2; border-color:#fca5a5; color:#b91c1c; }
+  .feedback strong { display:block; margin-bottom:4px; font-size:14px; }
+
+  /* OX */
+  .ox-btns { display:flex; gap:12px; }
+  .ox-btn {
+    flex:1; padding:14px;
+    font-size:22px; border:2px solid var(--border);
+    border-radius:10px; background:#fff; cursor:pointer;
+    transition: all 0.2s; text-align:center;
+  }
+  .ox-btn:hover:not(:disabled) { border-color:var(--accent); background:#fff5f7; }
+  .ox-btn.correct { border-color:var(--correct); background:#f0fdf4; }
+  .ox-btn.wrong { border-color:var(--wrong); background:#fef2f2; }
+
+  /* DIVIDER */
+  .divider { text-align:center; color:var(--border); margin:32px 0 0; font-size:20px; }
+
+  /* RESET BTN */
+  .reset-all {
+    display:block; width:100%; margin-top:28px; padding:14px;
+    background:var(--text); color:#fff; border:none;
+    border-radius:10px; font-family:'DM Sans',sans-serif;
+    font-size:14px; font-weight:600; cursor:pointer;
+    transition: opacity 0.2s;
+  }
+  .reset-all:hover { opacity:0.85; }
+
+  .back-link {
+    display:inline-block; margin-bottom:24px;
+    font-size:13px; color:var(--accent); text-decoration:none;
+  }
+  .back-link:hover { text-decoration:underline; }
+
+  /* === ANSWER SHEET === */
+  .answer-sheet-toggle {
+    width:100%; padding:14px;
+    background:var(--bg2); border:1.5px solid var(--border);
+    border-radius:10px; font-family:'DM Sans',sans-serif;
+    font-size:14px; font-weight:600; cursor:pointer;
+    margin-top:16px; display:flex; justify-content:space-between; align-items:center;
+    transition: border-color 0.2s;
+  }
+  .answer-sheet-toggle:hover { border-color:var(--accent); }
+  .answer-sheet {
+    display:none; background:var(--bg2);
+    border:1px solid var(--border); border-radius:12px;
+    padding:22px 20px; margin-top:10px;
+  }
+  .answer-sheet.open { display:block; }
+  .ans-item { margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:14px; }
+  .ans-item:last-child { border:none; margin:0; padding:0; }
+  .ans-q { font-weight:700; color:var(--text); font-size:13.5px; margin-bottom:6px; }
+  .ans-a { font-size:13px; color:var(--correct); font-weight:600; margin-bottom:4px; }
+  .ans-exp { font-size:12.5px; color:var(--text2); line-height:1.55; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <div class="header-label">투자아카데미 24회 · 시험문제</div>
+    <h1>📝 엔비디아 10K<br>이해도 점검 10문</h1>
+    <p>문제를 풀고 즉시 피드백을 확인하세요. 점수는 실시간으로 집계됩니다.</p>
+  </div>
+</div>
+
+<div class="container">
+  <a href="nvidia_10k_analysis.html" class="back-link">← 분석 본문으로 돌아가기</a>
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div>
+      <div class="score-val"><span id="scoreNum">0</span> / 10</div>
+      <div class="score-label">현재 점수</div>
+    </div>
+    <div class="progress-wrap">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">진행률</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 / 10 문제 완료</div>
+    </div>
+  </div>
+
+  <!-- ── Q1 객관식 (쉬움) ─────────────────────── -->
+  <div class="quiz-card" id="qcard1">
+    <div class="q-meta">
+      <span class="q-num">Q1</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">미국 기업의 연간 보고서 Form 10K를 제출 받는 기관은?</div>
+    <div class="options">
+      <button class="option-btn" data-q="1" data-ans="A">A. IRS (국세청)</button>
+      <button class="option-btn" data-q="1" data-ans="B">B. SEC (증권거래위원회)</button>
+      <button class="option-btn" data-q="1" data-ans="C">C. Fed (연방준비제도)</button>
+      <button class="option-btn" data-q="1" data-ans="D">D. FDIC (예금보험공사)</button>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- ── Q2 객관식 (쉬움) ─────────────────────── -->
+  <div class="quiz-card" id="qcard2">
+    <div class="q-meta">
+      <span class="q-num">Q2</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">엔비디아의 FY2024 기준 가장 큰 매출 세그먼트는?</div>
+    <div class="options">
+      <button class="option-btn" data-q="2" data-ans="A">A. 게이밍 (Gaming)</button>
+      <button class="option-btn" data-q="2" data-ans="B">B. 데이터 센터 (Data Center)</button>
+      <button class="option-btn" data-q="2" data-ans="C">C. 자동차 (Automotive)</button>
+      <button class="option-btn" data-q="2" data-ans="D">D. 전문 시각화 (Pro Visualization)</button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- ── Q3 OX (쉬움) ────────────────────────── -->
+  <div class="quiz-card" id="qcard3">
+    <div class="q-meta">
+      <span class="q-num">Q3</span>
+      <span class="badge badge-easy">쉬움</span>
+      <span class="badge badge-type">OX</span>
+    </div>
+    <div class="q-text">미국 10K 보고서에서 기업은 자신에게 불리한 리스크도 반드시 기재해야 한다.</div>
+    <div class="ox-btns">
+      <button class="ox-btn" data-q="3" data-ans="O">⭕ O</button>
+      <button class="ox-btn" data-q="3" data-ans="X">❌ X</button>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- ── Q4 객관식 (보통) ─────────────────────── -->
+  <div class="quiz-card" id="qcard4">
+    <div class="q-meta">
+      <span class="q-num">Q4</span>
+      <span class="badge badge-medium">보통</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">엔비디아의 FY2024 순이익(Net Income)은 전년 대비 약 얼마나 증가했는가?</div>
+    <div class="options">
+      <button class="option-btn" data-q="4" data-ans="A">A. 약 100% 증가</button>
+      <button class="option-btn" data-q="4" data-ans="B">B. 약 300% 증가</button>
+      <button class="option-btn" data-q="4" data-ans="C">C. 약 580~860% 증가</button>
+      <button class="option-btn" data-q="4" data-ans="D">D. 약 50% 증가</button>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- ── Q5 단답형 (보통) ─────────────────────── -->
+  <div class="quiz-card" id="qcard5">
+    <div class="q-meta">
+      <span class="q-num">Q5</span>
+      <span class="badge badge-medium">보통</span>
+      <span class="badge badge-type">단답형</span>
+    </div>
+    <div class="q-text">엔비디아의 FY2023 EPS(주당순이익)는 약 $1.74였고, FY2024에는 약 $11.93이 되었다. 이것은 약 몇 배 증가한 것인가? (소수점 이하 버림)</div>
+    <input class="sa-input" type="text" id="sa5" placeholder="숫자만 입력 (예: 6)">
+    <button class="sa-submit" id="saBtn5" onclick="checkShort(5, ['6','7'], '약 6~7배 증가 (정확히는 약 6.86배). EPS가 이렇게 증가하면 주가도 비례해 오르는 것이 이론적으로 합리적입니다.')">확인</button>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <!-- ── Q6 OX (보통) ────────────────────────── -->
+  <div class="quiz-card" id="qcard6">
+    <div class="q-meta">
+      <span class="q-num">Q6</span>
+      <span class="badge badge-medium">보통</span>
+      <span class="badge badge-type">OX</span>
+    </div>
+    <div class="q-text">엔비디아의 FY2024 매출총이익률(Gross Profit Margin)은 FY2023(56%)보다 낮아졌다.</div>
+    <div class="ox-btns">
+      <button class="ox-btn" data-q="6" data-ans="O">⭕ O</button>
+      <button class="ox-btn" data-q="6" data-ans="X">❌ X</button>
+    </div>
+    <div class="feedback" id="fb6"></div>
+  </div>
+
+  <!-- ── Q7 객관식 (보통) ─────────────────────── -->
+  <div class="quiz-card" id="qcard7">
+    <div class="q-meta">
+      <span class="q-num">Q7</span>
+      <span class="badge badge-medium">보통</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">엔비디아가 자사주(Stock Buyback)를 매입할 경우 투자자 입장에서 어떤 영향이 있는가?</div>
+    <div class="options">
+      <button class="option-btn" data-q="7" data-ans="A">A. 유통 주식 수 증가로 주당 가치 희석</button>
+      <button class="option-btn" data-q="7" data-ans="B">B. 유통 주식 수 감소로 주당 가치 상승 효과</button>
+      <button class="option-btn" data-q="7" data-ans="C">C. 기업 부채가 증가하여 재무 건전성 악화</button>
+      <button class="option-btn" data-q="7" data-ans="D">D. 직원 복리후생 비용 절감</button>
+    </div>
+    <div class="feedback" id="fb7"></div>
+  </div>
+
+  <!-- ── Q8 단답형 (보통) ─────────────────────── -->
+  <div class="quiz-card" id="qcard8">
+    <div class="q-meta">
+      <span class="q-num">Q8</span>
+      <span class="badge badge-medium">보통</span>
+      <span class="badge badge-type">단답형</span>
+    </div>
+    <div class="q-text">10K에서 ESPP는 무엇의 약자인가? (영어 풀어쓰기)</div>
+    <input class="sa-input" type="text" id="sa8" placeholder="Employee Stock ...">
+    <button class="sa-submit" id="saBtn8" onclick="checkShort(8, ['employee stock purchase plan','employee stock purchase plans','espp'], 'ESPP(Employee Stock Purchase Plan)는 직원이 시장 가격보다 저렴하게 자사주를 구매할 수 있는 제도입니다.')">확인</button>
+    <div class="feedback" id="fb8"></div>
+  </div>
+
+  <!-- ── Q9 객관식 (어려움) ─────────────────────── -->
+  <div class="quiz-card" id="qcard9">
+    <div class="q-meta">
+      <span class="q-num">Q9</span>
+      <span class="badge badge-hard">어려움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">강의에서 엔비디아의 중국(홍콩 포함) 매출 비중 변화에 대해 언급했다. 다음 중 올바른 설명은?</div>
+    <div class="options">
+      <button class="option-btn" data-q="9" data-ans="A">A. FY2024 기준 중국 비중이 약 50%로 여전히 높다</button>
+      <button class="option-btn" data-q="9" data-ans="B">B. 과거 84% 수준이었던 해외 매출 비중이 56%로 줄어드는 추세이며, 중국 비중은 약 15~16%</button>
+      <button class="option-btn" data-q="9" data-ans="C">C. 중국 매출 비중 감소는 리스크 증가를 의미한다</button>
+      <button class="option-btn" data-q="9" data-ans="D">D. 중국 매출이 없어져 미국 매출만으로 성장하고 있다</button>
+    </div>
+    <div class="feedback" id="fb9"></div>
+  </div>
+
+  <!-- ── Q10 객관식 (어려움) ─────────────────────── -->
+  <div class="quiz-card" id="qcard10">
+    <div class="q-meta">
+      <span class="q-num">Q10</span>
+      <span class="badge badge-hard">어려움</span>
+      <span class="badge badge-type">객관식</span>
+    </div>
+    <div class="q-text">강의에서 엔비디아 장기 투자 시 '매도 시점 시그널'로 언급한 것은?</div>
+    <div class="options">
+      <button class="option-btn" data-q="10" data-ans="A">A. 주가가 1,000달러를 돌파할 때</button>
+      <button class="option-btn" data-q="10" data-ans="B">B. 경쟁사인 AMD가 신제품을 출시할 때</button>
+      <button class="option-btn" data-q="10" data-ans="C">C. 데이터 센터 비즈니스 성장 속도가 둔화되거나 줄어들 때</button>
+      <button class="option-btn" data-q="10" data-ans="D">D. 젠슨 황 CEO가 은퇴를 발표할 때</button>
+    </div>
+    <div class="feedback" id="fb10"></div>
+  </div>
+
+  <div class="divider">— ✦ —</div>
+
+  <button class="reset-all" onclick="resetAll()">↺ 전체 초기화 & 다시 풀기</button>
+
+  <!-- ANSWER SHEET (collapsed by default) -->
+  <button class="answer-sheet-toggle" onclick="toggleAnswers()" id="ansToggleBtn">
+    📋 정답 및 해설 보기 <span id="ansArrow">▼</span>
+  </button>
+  <div class="answer-sheet" id="answerSheet">
+    <div class="ans-item">
+      <div class="ans-q">Q1. Form 10K 제출 기관은?</div>
+      <div class="ans-a">정답: B — SEC (Securities and Exchange Commission, 미국 증권거래위원회)</div>
+      <div class="ans-exp">IRS는 세금을 관리하는 국세청이며, 기업 공시 보고서는 SEC에 제출합니다. 강의에서 IRS 번호(고유 납세자 번호)는 별도로 언급되었습니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q2. FY2024 최대 매출 세그먼트는?</div>
+      <div class="ans-a">정답: B — 데이터 센터 (Data Center)</div>
+      <div class="ans-exp">데이터 센터 매출은 약 $47.5B으로 전체 $60.9B의 78%에 달했습니다. AI 붐으로 폭발적으로 성장했으며, 강의 전반에 걸쳐 핵심 세그먼트로 강조됩니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q3. 불리한 리스크도 반드시 기재해야 하는가?</div>
+      <div class="ans-a">정답: O (맞음)</div>
+      <div class="ans-exp">미국 10K는 법적 의무로서 리스크를 숨기면 징벌적 결과를 맞습니다. 강의에서 "거짓이 없다, 나의 약점도 다 보여주는 것이 10K"라고 강조했습니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q4. FY2024 순이익 증가율은?</div>
+      <div class="ans-a">정답: C — 약 580~860% 증가</div>
+      <div class="ans-exp">순이익이 $4,368M에서 $29,760M으로 증가했습니다. 강의에서 "858%가 올라왔습니다, 5배 이상"이라고 언급했습니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q5. EPS 증가 배수는?</div>
+      <div class="ans-a">정답: 약 6~7배 (6.86배)</div>
+      <div class="ans-exp">$11.93 ÷ $1.74 ≈ 6.86배. 강의에서 "EPS가 거의 10배, 8~9배 이상 올라갔다"고 표현했으나 정확한 계산으로는 약 7배입니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q6. 매출총이익률이 낮아졌는가?</div>
+      <div class="ans-a">정답: X (틀림 — 오히려 높아졌다)</div>
+      <div class="ans-exp">FY2023 56% → FY2024 72%로 상승했습니다. 더 많이 팔수록 비용 효율이 좋아지는 구조입니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q7. 자사주 매입의 투자자 영향은?</div>
+      <div class="ans-a">정답: B — 유통 주식 수 감소 → 주당 가치 상승</div>
+      <div class="ans-exp">자사주를 매입하면 시장에 유통되는 주식 수가 줄어 EPS(주당순이익)이 올라가고, 주가에 긍정적 영향을 줍니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q8. ESPP 풀어쓰기는?</div>
+      <div class="ans-a">정답: Employee Stock Purchase Plan</div>
+      <div class="ans-exp">직원이 시장가보다 저렴하게 회사 주식을 살 수 있는 제도. 강의에서는 "이게 자기 돈이 아님"을 강조하며 베스팅(Vesting) 개념도 설명했습니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q9. 중국 매출 비중 변화는?</div>
+      <div class="ans-a">정답: B</div>
+      <div class="ans-exp">강의에서 과거에는 해외 비중이 84%였으나 현재 56%로 감소 중이며, 중국만 따지면 약 15~16%($10B/60B)라고 설명했습니다. 비중 감소는 리스크 감소를 의미합니다.</div>
+    </div>
+    <div class="ans-item">
+      <div class="ans-q">Q10. 매도 시그널은?</div>
+      <div class="ans-a">정답: C — 데이터 센터 성장 둔화</div>
+      <div class="ans-exp">강의에서 "데이터 센터 비즈니스 성장 속도가 떨어지거나 줄어들 때가 비중을 줄여야 할 시점"이라고 명확히 언급했습니다. 약 5~6년은 더 지켜봐야 한다고 했습니다.</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+const correctAnswers = {
+  1: 'B', 2: 'B', 3: 'O',
+  4: 'C', 6: 'X', 7: 'B',
+  9: 'B', 10: 'C'
+};
+const feedbackTexts = {
+  1: { c: '✅ 정답! SEC(증권거래위원회)에 제출합니다. IRS는 세금 관련 기관입니다.', w: '❌ 오답. 정답은 SEC(Securities and Exchange Commission)입니다.' },
+  2: { c: '✅ 정답! 데이터 센터가 전체 매출의 약 78%를 차지합니다.', w: '❌ 오답. FY2024 최대 세그먼트는 데이터 센터($47.5B)입니다.' },
+  3: { c: '✅ 정답! 10K는 리스크를 솔직하게 기재해야 하는 법적 의무가 있습니다.', w: '❌ 오답. 미국 10K는 불리한 리스크도 반드시 기재해야 합니다. 숨기면 징벌적 결과를 맞습니다.' },
+  4: { c: '✅ 정답! $4,368M → $29,760M으로 약 581~858% 증가했습니다.', w: '❌ 오답. 순이익은 약 5배 이상(581~858%) 증가했습니다.' },
+  6: { c: '✅ 정답! 매출총이익률은 56%에서 72%로 오히려 상승했습니다.', w: '❌ 오답. FY2024 매출총이익률은 72%로 FY2023(56%)보다 높아졌습니다.' },
+  7: { c: '✅ 정답! 자사주 매입 → 유통 주식 수 감소 → EPS·주당가치 상승 효과.', w: '❌ 오답. 자사주 매입은 유통 주식 수를 줄여 주당 가치를 높이는 효과가 있습니다.' },
+  9: { c: '✅ 정답! 중국 비중은 약 15~16%, 전반적으로 감소 추세입니다.', w: '❌ 오답. 중국(홍콩 포함) 비중은 약 15~16%이며, 과거에 비해 크게 줄었습니다.' },
+  10: { c: '✅ 정답! 데이터 센터 성장 둔화가 포트폴리오 비중 축소 시그널입니다.', w: '❌ 오답. 강의에서 명확히 "데이터 센터 비즈니스 성장 속도가 떨어질 때"가 매도 시그널이라고 했습니다.' }
+};
+
+let answered = {};
+let score = 0;
+
+function updateScore() {
+  document.getElementById('scoreNum').textContent = score;
+  const done = Object.keys(answered).length;
+  document.getElementById('progressFill').style.width = (done / 10 * 100) + '%';
+  document.getElementById('progressText').textContent = `${done} / 10 문제 완료`;
+}
+
+// MC / OX handler
+document.querySelectorAll('.option-btn, .ox-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = this.dataset.q;
+    if (answered[q]) return;
+    answered[q] = true;
+
+    const correct = correctAnswers[q];
+    const chosen = this.dataset.ans;
+    const isCorrect = chosen === correct;
+
+    // Mark buttons
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(b => {
+      b.disabled = true;
+      if (b.dataset.ans === correct) b.classList.add('correct');
+      else if (b === this && !isCorrect) b.classList.add('wrong');
+    });
+
+    if (isCorrect) score++;
+    updateScore();
+
+    const fb = document.getElementById('fb' + q);
+    fb.textContent = feedbackTexts[q][isCorrect ? 'c' : 'w'];
+    fb.className = 'feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+    fb.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong>` + feedbackTexts[q][isCorrect ? 'c' : 'w'].replace(/^[✅❌]\s*[정오답!]+\s*/, '');
+  });
+});
+
+// Short answer
+function checkShort(qNum, acceptedArr, explanation) {
+  if (answered[qNum]) return;
+  const input = document.getElementById('sa' + qNum);
+  const btn = document.getElementById('saBtn' + qNum);
+  const val = input.value.trim().toLowerCase();
+  if (!val) { input.style.borderColor = 'var(--accent)'; return; }
+
+  answered[qNum] = true;
+  btn.disabled = true;
+  input.disabled = true;
+
+  const isCorrect = acceptedArr.some(a => val.includes(a.toLowerCase()) || a.toLowerCase().includes(val));
+  if (isCorrect) score++;
+  updateScore();
+
+  const fb = document.getElementById('fb' + qNum);
+  fb.className = 'feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong>${explanation}`;
+}
+
+function resetAll() {
+  answered = {}; score = 0;
+  updateScore();
+  document.querySelectorAll('.option-btn, .ox-btn').forEach(b => {
+    b.disabled = false; b.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.innerHTML = ''; });
+  document.querySelectorAll('.sa-input').forEach(i => { i.value = ''; i.disabled = false; i.style.borderColor = ''; });
+  document.querySelectorAll('.sa-submit').forEach(b => b.disabled = false);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleAnswers() {
+  const sheet = document.getElementById('answerSheet');
+  const arrow = document.getElementById('ansArrow');
+  sheet.classList.toggle('open');
+  arrow.textContent = sheet.classList.contains('open') ? '▲' : '▼';
+}
+</script>
+</body>
+</html>
