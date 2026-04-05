@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 22회 — 미국기업의 특성이해와 엔비디아 13F</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .masthead {
+    border-bottom: 3px solid var(--text);
+    padding: 20px 20px 14px;
+    text-align: center;
+    background: var(--bg);
+    position: relative;
+  }
+  .masthead-label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 7vw, 40px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .masthead-sub {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  .masthead-bar {
+    width: 40px;
+    height: 3px;
+    background: var(--accent);
+    margin: 12px auto 0;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  /* SECTION TITLE */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 6px;
+    margin-top: 40px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 5vw, 26px);
+    font-weight: 700;
+    line-height: 1.25;
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    padding: 12px 16px;
+    margin: 24px 0;
+    background: var(--bg2);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* BODY TEXT */
+  p { margin-bottom: 14px; color: var(--text); font-size: 14.5px; }
+
+  /* TIMELINE */
+  .timeline { margin: 20px 0; }
+  .tl-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+  .tl-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 46px;
+    padding-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .tl-content { font-size: 14px; }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 16px;
+    margin: 18px 0;
+    border-radius: 2px;
+  }
+  .info-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .info-box ul { list-style: none; }
+  .info-box ul li {
+    font-size: 14px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .info-box ul li:last-child { border-bottom: none; }
+  .info-box ul li::before {
+    content: '▸';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 13px;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 500;
+  }
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  tr:nth-child(even) td { background: #f4f4f4; }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 18px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--chart4);
+    padding: 18px;
+    margin: 24px 0;
+    border-radius: 2px;
+  }
+  .sim-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--chart4);
+    margin-bottom: 14px;
+  }
+  .sim-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .sim-row label {
+    font-size: 13px;
+    min-width: 130px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .sim-row input[type=range] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: var(--chart4);
+    cursor: pointer;
+  }
+  .sim-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--chart4);
+    min-width: 50px;
+    text-align: right;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    padding: 14px;
+    border-radius: 2px;
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sim-result .r-item { }
+  .sim-result .r-label { font-size: 11px; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
+  .sim-result .r-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .sim-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  .sim-btn:hover { background: var(--accent2); }
+
+  /* OWNERSHIP TABLE interactive */
+  .ownership-row { cursor: pointer; transition: background 0.2s; }
+  .ownership-row:hover td { background: #fff0f3 !important; }
+  .own-bar-wrap { background: #e5e5e5; border-radius: 2px; height: 8px; width: 100%; margin-top: 4px; }
+  .own-bar { height: 8px; border-radius: 2px; background: var(--accent); transition: width 0.6s ease; }
+
+  /* STARTUP FUNNEL */
+  .funnel-wrap { margin: 20px 0; }
+  .funnel-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .funnel-label { font-size: 13px; min-width: 110px; font-weight: 500; }
+  .funnel-bar-wrap { flex: 1; background: #e5e5e5; border-radius: 2px; height: 24px; position: relative; overflow: hidden; }
+  .funnel-bar {
+    height: 100%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .funnel-count { font-size: 12px; color: var(--text2); min-width: 50px; text-align: right; }
+
+  /* CULTURE COMPARE */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin: 18px 0;
+    font-size: 13px;
+  }
+  .compare-header {
+    padding: 10px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .us-header { background: var(--accent); color: #fff; }
+  .kr-header { background: var(--text); color: #fff; }
+  .compare-cell {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .us-cell { background: #fff8f9; border-right: 1px solid var(--border); }
+  .kr-cell { background: var(--bg2); }
+
+  /* QUIZ SECTION */
+  .quiz-section {
+    background: var(--text);
+    color: #fff;
+    margin: 40px -18px 0;
+    padding: 30px 18px;
+  }
+  .quiz-section .section-title {
+    color: #fff;
+    border-color: var(--accent);
+    font-size: 22px;
+  }
+  .quiz-section .section-label { color: var(--accent2); }
+
+  .quiz-card {
+    background: #2a2a2a;
+    border-left: 4px solid var(--accent);
+    padding: 16px;
+    margin-bottom: 14px;
+    border-radius: 2px;
+  }
+  .quiz-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .quiz-badge {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .badge-easy { background: #16a34a; color: #fff; }
+  .badge-mid { background: #d97706; color: #fff; }
+  .badge-hard { background: var(--accent); color: #fff; }
+  .badge-type { background: #374151; color: #d1d5db; }
+
+  .quiz-q { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: #f3f4f6; }
+  .quiz-options { list-style: none; }
+  .quiz-options li {
+    font-size: 13px;
+    color: #d1d5db;
+    padding: 5px 0;
+    cursor: pointer;
+    border-radius: 2px;
+    padding-left: 4px;
+    transition: color 0.2s;
+  }
+  .quiz-options li:hover { color: var(--accent2); }
+  .quiz-options li.selected-correct { color: #4ade80; font-weight: 700; }
+  .quiz-options li.selected-wrong { color: #f87171; text-decoration: line-through; }
+
+  .quiz-answer-box {
+    display: none;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    padding: 10px 12px;
+    margin-top: 10px;
+    border-radius: 2px;
+    font-size: 13px;
+    color: #e5e7eb;
+    line-height: 1.6;
+  }
+  .quiz-answer-box .ans-label {
+    color: var(--accent2);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .show-answer-btn {
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .show-answer-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 30px 0;
+  }
+
+  /* TAGS */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 18px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-label">투자아카데미 · 제22회</div>
+  <div class="masthead-title">미국기업의 특성이해<br>& 엔비디아 13F</div>
+  <div class="masthead-sub">2026.04.05 · 경제 분석</div>
+  <div class="masthead-bar"></div>
+</div>
+
+<div class="container">
+
+  <!-- 핵심 키워드 -->
+  <div class="tag-row" style="margin-top:22px;">
+    <span class="tag">미국 증권법</span>
+    <span class="tag">스타트업 생존율</span>
+    <span class="tag">엔비디아 지분구조</span>
+    <span class="tag">Form 13F</span>
+    <span class="tag">기업 문화 비교</span>
+    <span class="tag">반독점법</span>
+  </div>
+
+  <!-- 1. 미국 법제도의 역사 -->
+  <p class="section-label">PART 1</p>
+  <h2 class="section-title">미국 법제도의 역사적 맥락</h2>
+
+  <p>미국 기업과 시장을 이해하려면 과거의 사건이 만들어낸 법제도를 알아야 한다. 사람의 어린 시절 환경이 행동 패턴을 형성하듯, 미국의 역사는 현재의 기업 규범과 투자 문화를 결정짓는다.</p>
+
+  <div class="timeline fade-in">
+    <div class="tl-item">
+      <span class="tl-year">19C 말</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>반독점법(Sherman Act)</strong> 제정 — 철도 사업의 과도한 독점으로 시민 불만이 쌓여 탄생. 현재도 유효하게 적용.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1929</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>대공황</strong> — 무제한 마진 대출로 주가 급락 시 빚 미상환, 대량 실업 발생. 거리 노숙자 급증.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1933</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>Securities Act of 1933</strong> — 신규 주식 발행·IPO에 관한 법률. 공시 의무 강화.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1934</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>Securities Exchange Act of 1934</strong> — 이미 발행된 구주(세컨더리 마켓) 거래 규율. 마진콜 제도 도입. <em>현재도 완전히 유효.</em></div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1945</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>2차 세계대전 종전</strong> — 여성 공장 대거 투입으로 실질적 남녀평등 시작. 중공업 발전의 계기.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1950~80</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>미국 기업 팽창기</strong> — 다우존스 30대 우량기업 안정적 성장. 글로벌 독자적 지위 확립.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">1980~</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>일본·독일과 경쟁</strong> — 전자·자동차·건축 분야에서 경쟁 심화. 약 20년간 체질 개선 노력.</div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-year">2000~</span>
+      <div class="tl-dot"></div>
+      <div class="tl-content"><strong>금융 비리 대응 법령</strong> — 회계 조작·내부자 거래 규제 강화. 투자자 보호 체계 고도화.</div>
+    </div>
+  </div>
+
+  <div class="info-box fade-in">
+    <h4>💡 마진콜(Margin Call)이란?</h4>
+    <ul>
+      <li>100만원을 갖고 추가로 100만원을 빌려 총 200만원으로 투자한 경우, 시장이 20% 하락하면 증거금이 부족해지므로 추가 납입을 요구받는 것</li>
+      <li>1929년 대공황 이후 과도한 레버리지를 방지하기 위해 1934년 법제화</li>
+      <li>현재 미국 증권시장에서 동일한 규칙이 적용됨</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 2. 스타트업 생존율 -->
+  <p class="section-label">PART 2</p>
+  <h2 class="section-title">미국 기업의 일생 — 스타트업 생존율</h2>
+
+  <div class="pull-quote fade-in">
+    "1,000개가 시작되면 IPO에 도달하는 건 약 8개. 대형주(Large Cap)가 되는 확률은 0.01% 미만이다."
+  </div>
+
+  <p>미국 실리콘밸리에서 스타트업 1,000개가 출발하면, 벤처캐피털(VC) 투자를 받더라도 80%가 폐업한다. 살아남은 20% 중 90%는 M&A로 흡수된다. 결국 IPO에 나가는 기업은 8개 안팎이다.</p>
+
+  <!-- 깔때기 차트 인터랙티브 -->
+  <div class="funnel-wrap fade-in" id="funnelWrap">
+    <div class="funnel-step" onclick="highlightFunnel(0)">
+      <span class="funnel-label">스타트업 출발</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%; background:#e11d48;">1,000개</div></div>
+      <span class="funnel-count">1,000</span>
+    </div>
+    <div class="funnel-step" onclick="highlightFunnel(1)">
+      <span class="funnel-label">VC 투자 생존</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:20%; background:#f43f5e;">200개</div></div>
+      <span class="funnel-count">200</span>
+    </div>
+    <div class="funnel-step" onclick="highlightFunnel(2)">
+      <span class="funnel-label">Pre-IPO 진출</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:2%; background:#6b7280; min-width:30px;">~10개</div></div>
+      <span class="funnel-count">~10</span>
+    </div>
+    <div class="funnel-step" onclick="highlightFunnel(3)">
+      <span class="funnel-label">정식 IPO</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.8%; background:#2563eb; min-width:28px;">8개</div></div>
+      <span class="funnel-count">~8</span>
+    </div>
+    <div class="funnel-step" onclick="highlightFunnel(4)">
+      <span class="funnel-label">스몰캡 성장</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.5%; background:#7c3aed; min-width:24px;">4~5개</div></div>
+      <span class="funnel-count">4~5</span>
+    </div>
+    <div class="funnel-step" onclick="highlightFunnel(5)">
+      <span class="funnel-label">라지캡 진입</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.1%; background:#1a1a1a; min-width:22px;">1개↓</div></div>
+      <span class="funnel-count">&lt;1</span>
+    </div>
+  </div>
+  <p id="funnelDesc" style="font-size:13px; color:var(--text2); margin-top:-8px; padding:8px 10px; background:var(--bg2); border-radius:2px; min-height:32px;">▲ 각 단계를 클릭하면 설명이 표시됩니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="survivalChart" height="240"></canvas>
+  </div>
+
+  <p>투자 전략 시사점: 스몰캡(Small Cap) 초기 단계에서 포트폴리오의 0.5% 비중으로 분산 투입하면, 한 종목이 수십 배 성장 시 전체 수익률을 크게 끌어올릴 수 있다. 슈퍼마이크로 사례처럼 스몰캡→미드캡→라지캡으로의 성장은 극소수지만, 그 한 종목이 전체를 바꾼다.</p>
+
+  <div class="divider"></div>
+
+  <!-- 3. 기업 라이프사이클 -->
+  <p class="section-label">PART 3</p>
+  <h2 class="section-title">기업 라이프사이클과 투자 단계</h2>
+
+  <table class="fade-in">
+    <thead>
+      <tr>
+        <th>단계</th>
+        <th>투자자 유형</th>
+        <th>관련 법률/제도</th>
+        <th>특징</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>개인기업</strong></td>
+        <td>엔젤투자자, VC, PE</td>
+        <td>MOU, IP 계약</td>
+        <td>대표이사 의결권, VC 지분 60%+ 요구 일반적</td>
+      </tr>
+      <tr>
+        <td><strong>Pre-IPO</strong></td>
+        <td>VC, 레이트스테이지 투자자</td>
+        <td>시리즈 A/B/C</td>
+        <td>기업가치 산정, 주요 지분 협상</td>
+      </tr>
+      <tr>
+        <td><strong>IPO</strong></td>
+        <td>투자은행(골드만삭스·메릴린치·모건스탠리)</td>
+        <td>Securities Act 1933</td>
+        <td>주식 공개·인수 수수료, 10-K 의무 공시</td>
+      </tr>
+      <tr>
+        <td><strong>상장 기업</strong></td>
+        <td>기관투자자, 펀드, 개인투자자</td>
+        <td>Securities Act 1934 (SEC)</td>
+        <td>내부자 거래·분기보고서 엄격 규제, 딜리스트 위험</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box fade-in">
+    <h4>⚠️ 주의 — 한국 기업 미국 IPO</h4>
+    <ul>
+      <li><strong>핑크슬립(Pink Sheet)/OTCBB:</strong> 정식 거래소가 아닌 장외 시장. 1~2달러 잡주 다수 — 한국 코스닥 기업가치 부풀리기 수단으로 활용되는 경우 있음</li>
+      <li><strong>백도어 리스팅(Backdoor Listing):</strong> 이미 상장된 유령회사를 역합병해 우회 상장하는 방식</li>
+      <li>판별 방법: SEC EDGAR에서 10-K 실적 보고서 유무, 거래소(NYSE·NASDAQ) 공식 등재 여부 확인</li>
+    </ul>
+  </div>
+
+  <!-- 포트폴리오 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <h4>📊 스몰캡 수익 시뮬레이터</h4>
+    <div class="sim-row">
+      <label>총 투자 원금</label>
+      <input type="range" id="principal" min="1000000" max="100000000" step="1000000" value="10000000" oninput="calcSim()">
+      <span class="sim-val" id="principalVal">1,000만원</span>
+    </div>
+    <div class="sim-row">
+      <label>스몰캡 배분 비율</label>
+      <input type="range" id="smallcapRatio" min="0.5" max="10" step="0.5" value="0.5" oninput="calcSim()">
+      <span class="sim-val" id="ratioVal">0.5%</span>
+    </div>
+    <div class="sim-row">
+      <label>종목 수익률 (배)</label>
+      <input type="range" id="returnX" min="1" max="100" step="1" value="10" oninput="calcSim()">
+      <span class="sim-val" id="returnVal">10배</span>
+    </div>
+    <div class="sim-result" id="simResult">
+      <div class="r-item">
+        <div class="r-label">스몰캡 투자금</div>
+        <div class="r-num" id="r1">50,000원</div>
+      </div>
+      <div class="r-item">
+        <div class="r-label">스몰캡 수익</div>
+        <div class="r-num" id="r2">500,000원</div>
+      </div>
+      <div class="r-item">
+        <div class="r-label">전체 포트폴리오 대비</div>
+        <div class="r-num" id="r3">4.5%</div>
+      </div>
+      <div class="r-item">
+        <div class="r-label">최종 총 자산</div>
+        <div class="r-num" id="r4">1,045만원</div>
+      </div>
+    </div>
+    <button class="sim-btn" onclick="resetSim()">↺ 초기화</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 4. 엔비디아 지분 구조 -->
+  <p class="section-label">PART 4</p>
+  <h2 class="section-title">엔비디아 지분 구조 분석</h2>
+
+  <div class="pull-quote fade-in">
+    "젠슨 황 CEO의 보유 지분은 단 0.21%. 그럼에도 시장은 그를 신뢰한다. 능력과 실적이 경영권을 지키는 나라다."
+  </div>
+
+  <p>엔비디아의 최대주주는 창업자가 아닌 뱅가드(Vanguard)와 블랙록(BlackRock)이다. 한국식 사고로 보면 언제든 쫓겨날 것 같지만, 미국에서는 기업을 성장시킨 CEO에 대한 신뢰와 리스펙이 경영권을 보호한다.</p>
+
+  <table class="fade-in" id="ownershipTable">
+    <thead>
+      <tr>
+        <th>주주</th>
+        <th>유형</th>
+        <th>지분율</th>
+        <th>보유 주식 수</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="ownership-row">
+        <td>뱅가드(Vanguard)</td>
+        <td>기관투자자</td>
+        <td>
+          7.7%
+          <div class="own-bar-wrap"><div class="own-bar" style="width:77%"></div></div>
+        </td>
+        <td>약 4,800만 주</td>
+      </tr>
+      <tr class="ownership-row">
+        <td>블랙록(BlackRock)</td>
+        <td>기관투자자</td>
+        <td>
+          7.2%
+          <div class="own-bar-wrap"><div class="own-bar" style="width:72%; background:var(--chart4)"></div></div>
+        </td>
+        <td>약 4,500만 주</td>
+      </tr>
+      <tr class="ownership-row">
+        <td>젠슨 황(Jensen Huang)</td>
+        <td>CEO·창업자</td>
+        <td>
+          0.21%
+          <div class="own-bar-wrap"><div class="own-bar" style="width:2.1%; background:#6b7280"></div></div>
+        </td>
+        <td>소액</td>
+      </tr>
+      <tr class="ownership-row">
+        <td>콜렛(CFO)</td>
+        <td>내부 임원</td>
+        <td>
+          0.03%
+          <div class="own-bar-wrap"><div class="own-bar" style="width:0.3%; background:#6b7280; min-width:3px"></div></div>
+        </td>
+        <td>극소</td>
+      </tr>
+      <tr class="ownership-row">
+        <td>마이클(공동 창업자)</td>
+        <td>초기 투자자</td>
+        <td>
+          0.03%
+          <div class="own-bar-wrap"><div class="own-bar" style="width:0.3%; background:#6b7280; min-width:3px"></div></div>
+        </td>
+        <td>잔여분</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="chart-container fade-in">
+    <canvas id="ownershipChart" height="220"></canvas>
+  </div>
+
+  <div class="info-box fade-in">
+    <h4>📄 Form 13F란?</h4>
+    <ul>
+      <li>미국 SEC에 의무 제출되는 기관투자자(1억 달러 이상 운용) 분기별 보유 주식 공시 보고서</li>
+      <li>상장 기업이 <strong>자사 주식 외</strong> 다른 회사 주식 보유 현황을 공개하는 수단</li>
+      <li><strong>속보:</strong> 엔비디아(젠슨 황)의 Form 13F에 사운드하운드(SoundHound) 주식 300만 달러 보유 신규 공시</li>
+      <li>13F 파일링은 기관의 투자 방향성을 읽는 중요한 참고 자료</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 5. 미국 vs 한국 기업문화 -->
+  <p class="section-label">PART 5</p>
+  <h2 class="section-title">미국 대기업 문화의 특징 — 한국과의 비교</h2>
+
+  <div class="compare-grid fade-in">
+    <div class="compare-header us-header">🇺🇸 미국</div>
+    <div class="compare-header kr-header">🇰🇷 한국</div>
+
+    <div class="compare-cell us-cell">능력과 실적이 경영권 보호<br><em style="color:var(--accent);font-size:12px;">젠슨 황 0.21% 보유로 경영권 유지</em></div>
+    <div class="compare-cell kr-cell">최대주주 지분율이 경영권 결정<br><em style="font-size:12px;color:var(--text2);">삼성 최대주주 지위에 목숨 걸어</em></div>
+
+    <div class="compare-cell us-cell">대주주(기관)가 경영에 간섭하지 않음<br><em style="color:var(--accent);font-size:12px;">투자 전문가 ≠ 경영 전문가</em></div>
+    <div class="compare-cell kr-cell">대주주(국민연금 등)가 경영 방향 좌우</div>
+
+    <div class="compare-cell us-cell">다문화·다양성 CEO 일반적<br><em style="color:var(--accent);font-size:12px;">구글·MS·AMD·엔비디아 인도·중국계 CEO</em></div>
+    <div class="compare-cell kr-cell">외국인 CEO 가능성 사실상 제로</div>
+
+    <div class="compare-cell us-cell">혁신 리스크에 수용적<br><em style="color:var(--accent);font-size:12px;">메타 메타버스 수천억 달러 투자 허용</em></div>
+    <div class="compare-cell kr-cell">실패에 보수적, 단기 성과 압박</div>
+
+    <div class="compare-cell us-cell">대량 해고 = 긍정적 신호<br><em style="color:var(--accent);font-size:12px;">효율화·비용 최적화로 해석</em></div>
+    <div class="compare-cell kr-cell">대량 해고 = 사회적 비판·법적 제약</div>
+
+    <div class="compare-cell us-cell">공매도는 시장 견제 역할(필요악)</div>
+    <div class="compare-cell kr-cell">공매도에 부정적 정서 강함</div>
+
+    <div class="compare-cell us-cell">직접적 소통, 액션 중심<br><em style="color:var(--accent);font-size:12px;">"해라·가라·사살" — 전쟁 영어</em></div>
+    <div class="compare-cell kr-cell">"긍정적으로 검토하겠다" — 모호한 답변</div>
+  </div>
+
+  <!-- 주가 긍정 요인 -->
+  <p class="section-label" style="margin-top:28px;">CHART</p>
+  <h3 style="font-family:'Playfair Display',serif; font-size:18px; margin-bottom:14px;">주가 상승 긍정 신호 체크리스트</h3>
+
+  <div class="chart-container fade-in">
+    <canvas id="positiveChart" height="240"></canvas>
+  </div>
+
+  <div class="info-box fade-in">
+    <h4>✅ 주가에 긍정적인 요인 (8가지)</h4>
+    <ul>
+      <li>매출·이익 성장 및 유동성 강화 (펀더멘탈)</li>
+      <li>M&A 피인수 가능성</li>
+      <li>자사주 매입 / 우선주 매입 / 채권 감소</li>
+      <li>주요 지수(S&P500·나스닥100 등) 편입</li>
+      <li>배당률 상승</li>
+      <li><strong>대량 해고</strong> — 비용 효율화 신호로 긍정 해석</li>
+      <li>기관 보유 비중 증가</li>
+      <li>검증된 C-Suite(경영진) 영입</li>
+    </ul>
+  </div>
+
+  <!-- 미국 증시 규모 -->
+  <div class="divider"></div>
+  <p class="section-label">PART 6</p>
+  <h2 class="section-title">미국 증시의 압도적 규모</h2>
+
+  <div class="chart-container fade-in">
+    <canvas id="marketCapChart" height="220"></canvas>
+  </div>
+
+  <p>미국 전체 상장사 시가총액은 <strong>53조 달러(약 50경 원)</strong>. S&P500만으로도 42조 달러(42경 원)에 달한다. 마이크로소프트 단 한 기업이 약 4,000조 원으로 한국 전체 상장사(약 2,500조 원)를 상회한다. 이 규모 차이가 투자 접근 방식과 심리를 완전히 다르게 만든다.</p>
+
+  <div class="pull-quote fade-in">
+    "미국은 태평양, 한국은 우물 안. 장어 한 마리에 놀라던 시각으로 태평양을 보면 안 된다."
+  </div>
+
+</div><!-- /container -->
+
+<!-- QUIZ SECTION -->
+<div class="quiz-section">
+  <div class="container">
+    <p class="section-label">EXAM</p>
+    <h2 class="section-title">시험문제 10선</h2>
+    <p style="color:#aaa; font-size:13px; margin-bottom:22px;">선택지를 클릭하거나 '정답 보기'를 눌러 확인하세요.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-easy">쉬움</span>
+        <span class="quiz-badge badge-type">객관식</span>
+      </div>
+      <p class="quiz-q">1. 1929년 대공황 이후 마진 어카운트 규제를 명문화한 법률은?</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">① Securities Act of 1933</li>
+        <li onclick="selectOpt(this, true)">② Securities Exchange Act of 1934</li>
+        <li onclick="selectOpt(this, false)">③ Sherman Antitrust Act</li>
+        <li onclick="selectOpt(this, false)">④ Dodd-Frank Act</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답 및 해설</div>
+        1929년 대공황으로 인한 투자자 피해를 막기 위해 1934년에 제정된 <strong>Securities Exchange Act of 1934</strong>는 이미 발행된 구주(세컨더리 마켓) 거래를 규율하며, 마진콜 제도를 포함한다. 현재도 SEC 규정의 근간이다.
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-easy">쉬움</span>
+        <span class="quiz-badge badge-type">OX</span>
+      </div>
+      <p class="quiz-q">2. 미국에서 벤처캐피털(VC)이 스타트업에 투자할 때 지분 60% 이상을 요구하는 것은 비정상적인 관행이다. (O/X)</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">O — 비정상적이다</li>
+        <li onclick="selectOpt(this, true)">X — 미국에서는 자연스러운 문화다</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답: X</div>
+        미국 VC 문화에서는 기업이 성장할수록 VC가 60% 이상의 지분을 가져가는 것이 일반적이다. 창업자는 지분보다 전문 능력과 실적으로 경영권을 인정받는다. 한국 창업자들이 지분 양도를 거부해 VC 투자를 받지 못하는 경우가 많다.
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-mid">보통</span>
+        <span class="quiz-badge badge-type">객관식</span>
+      </div>
+      <p class="quiz-q">3. Form 13F를 분기마다 SEC에 제출해야 하는 주체는?</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">① 모든 상장 기업의 CEO</li>
+        <li onclick="selectOpt(this, false)">② 1억 달러 미만 자산을 운용하는 소형 펀드</li>
+        <li onclick="selectOpt(this, true)">③ 1억 달러 이상 자산을 운용하는 기관투자자</li>
+        <li onclick="selectOpt(this, false)">④ 외국인 투자자만 해당</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답 및 해설</div>
+        Form 13F는 <strong>1억 달러 이상</strong>의 주식을 운용하는 기관투자자가 분기별로 보유 주식 내역을 SEC에 공시해야 하는 의무 보고서다. 이를 통해 기관의 투자 방향성 파악이 가능하다.
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-mid">보통</span>
+        <span class="quiz-badge badge-type">단답형</span>
+      </div>
+      <p class="quiz-q">4. 엔비디아의 최대 기관투자자(지분율 7.7%)는 어느 회사인가?</p>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답</div>
+        <strong>뱅가드(Vanguard)</strong> — 약 4,800만 주, 7.7% 보유. 2위는 블랙록(BlackRock) 7.2%. CEO 젠슨 황은 0.21%의 소액주주임에도 회사 성장 능력을 인정받아 경영권을 유지한다.
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-mid">보통</span>
+        <span class="quiz-badge badge-type">객관식</span>
+      </div>
+      <p class="quiz-q">5. 미국에서 기업의 대량 해고 발표가 주가에 미치는 일반적인 영향은?</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">① 항상 주가 급락을 유발한다</li>
+        <li onclick="selectOpt(this, true)">② 비용 효율화 신호로 긍정적으로 해석되는 경우가 많다</li>
+        <li onclick="selectOpt(this, false)">③ 주가에 전혀 영향을 미치지 않는다</li>
+        <li onclick="selectOpt(this, false)">④ 규제 당국이 즉시 조사에 착수한다</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답 및 해설</div>
+        미국 투자 문화에서 <strong>대량 해고는 비용 절감·효율화</strong>를 의미하는 긍정 신호로 읽힌다. 불필요한 인력 축소로 수익성이 개선되면 주가가 오히려 오르는 경우가 많다. 한국과 정반대의 해석이 필요한 대표적인 문화 차이다.
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-mid">보통</span>
+        <span class="quiz-badge badge-type">객관식</span>
+      </div>
+      <p class="quiz-q">6. 스타트업 1,000개가 출발했을 때 정식 IPO에 도달하는 기업 수는 대략 몇 개인가?</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">① 약 100개</li>
+        <li onclick="selectOpt(this, false)">② 약 50개</li>
+        <li onclick="selectOpt(this, true)">③ 약 8개</li>
+        <li onclick="selectOpt(this, false)">④ 약 200개</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답 및 해설</div>
+        VC 투자받은 기업 중 80%가 폐업하고, 살아남은 20% 중 90%가 M&A로 흡수된다. 최종적으로 <strong>약 8개</strong>만이 정식 IPO에 도달한다. 대형주(Large Cap)까지 성장하는 확률은 0.01% 미만이다.
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-mid">보통</span>
+        <span class="quiz-badge badge-type">OX</span>
+      </div>
+      <p class="quiz-q">7. 미국에서 투자은행(IB)은 상장 기업의 분기 실적 보고서 작성을 대신 해준다. (O/X)</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">O — 대신 작성해준다</li>
+        <li onclick="selectOpt(this, true)">X — 기업 자체가 작성해야 한다</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답: X</div>
+        투자은행(골드만삭스 등)은 주식 공개·인수 수수료 업무를 담당할 뿐, <strong>10-K(연간 보고서), 10-Q(분기 보고서)는 기업 자체적으로 작성</strong>해야 한다. 이를 누락(missing)하면 상장 폐지(delisting) 위험이 있다.
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-hard">어려움</span>
+        <span class="quiz-badge badge-type">단답형</span>
+      </div>
+      <p class="quiz-q">8. Securities Act of 1933과 Securities Exchange Act of 1934의 규율 대상 차이를 설명하시오.</p>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답</div>
+        <strong>1933년법:</strong> 신규 주식 발행 및 IPO에 관한 법률 — 최초로 주식을 찍어내 공개하는 1차 시장(Primary Market)에 적용.<br><br>
+        <strong>1934년법:</strong> 이미 발행된 구주(기존 주식)의 2차 시장(Secondary Market, 주식거래소) 매매에 관한 법률 — 내부자 거래 금지, 기업 보고서(10-K·10-Q) 공시 의무, 마진콜 규정 포함. SEC(미국 증권거래위원회)가 이 법에 의거해 설립됨.
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-hard">어려움</span>
+        <span class="quiz-badge badge-type">객관식</span>
+      </div>
+      <p class="quiz-q">9. 한국 기업과 미국 기업의 지배구조 차이에 대한 설명으로 <strong>가장 옳은 것</strong>은?</p>
+      <ul class="quiz-options">
+        <li onclick="selectOpt(this, false)">① 미국에서도 창업자가 반드시 최대주주여야 경영권을 유지할 수 있다</li>
+        <li onclick="selectOpt(this, false)">② 뱅가드·블랙록 같은 대주주는 경영 전문성이 있어 직접 경영에 참여한다</li>
+        <li onclick="selectOpt(this, true)">③ 미국에서는 능력·실적으로 인정받은 CEO가 소수 지분으로도 경영권을 유지할 수 있다</li>
+        <li onclick="selectOpt(this, false)">④ 미국 기업에서는 경영권 분쟁이 한국보다 더 자주 발생한다</li>
+      </ul>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답 및 해설</div>
+        미국의 성공한 대기업에서 경영권 분쟁은 매우 드물다. 기관투자자는 <strong>투자 전문가</strong>이지 경영 전문가가 아니므로, 실적으로 검증된 CEO의 경영 판단을 존중한다. 젠슨 황(0.21% 지분)이 대표적 사례.
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="quiz-card fade-in">
+      <div class="quiz-meta">
+        <span class="quiz-badge badge-hard">어려움</span>
+        <span class="quiz-badge badge-type">서술형</span>
+      </div>
+      <p class="quiz-q">10. 미국 증시에서 '공매도(Short Selling)'가 필요한 이유를 기업 지배구조 관점에서 설명하시오.</p>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">정답 보기</button>
+      <div class="quiz-answer-box">
+        <div class="ans-label">정답</div>
+        미국에서 공매도는 <strong>'필요악'</strong>으로 불리며 시장 견제 기능을 한다. 기업이 주주가치 향상 노력을 게을리하거나 실적이 부진할 경우, 공매도 세력이 해당 주식을 공격해 주가를 떨어뜨린다. 이는 CEO와 경영진에게 지속적인 성과 압박을 가함으로써 <strong>경영 긴장감을 유지</strong>시키는 기능을 한다. 즉, 공매도가 없다면 경영진이 방만하게 운영해도 견제받지 않는 도덕적 해이(moral hazard)가 발생할 수 있다.
+      </div>
+    </div>
+
+    <p style="color:#555; font-size:12px; margin-top:20px; text-align:center;">※ 문제는 강의 내용에 기반하며, 정답은 '정답 보기' 버튼으로 확인하세요.</p>
+  </div>
+</div>
+
+<div class="footer">
+  투자아카데미 22회 · 2026.04.05 · 본 자료는 교육 목적으로 작성되었습니다.
+</div>
+
+<script>
+// ========== FUNNEL DESC ==========
+const funnelDescs = [
+  "스타트업 1,000개 출발. 기술 또는 상품 하나를 가지고 시작. 엔젤투자자·VC 시리즈 A/B/C 단계를 거침.",
+  "VC 투자를 받은 기업의 80%가 폐업. 살아남은 20%(약 200개)도 대부분 고전 중.",
+  "Pre-IPO 단계까지 오는 기업은 약 1% 수준(약 10개). 대부분 VC의 M&A 대상이 됨.",
+  "정식 IPO 나가는 기업은 약 8개 안팎. 이 중에도 핑크슬립·OTCBB 잡주가 대부분.",
+  "IPO 이후 스몰캡 성장주로 자리잡는 기업은 4~5개. 여기서 투자 기회를 포착해야 함.",
+  "라지캡(시가총액 100억 달러 이상) 진입은 확률적으로 0.01% 미만. 슈퍼마이크로가 대표 사례."
+];
+function highlightFunnel(idx) {
+  document.getElementById('funnelDesc').textContent = funnelDescs[idx];
+}
+
+// ========== SIMULATOR ==========
+function fmt(n) {
+  if (n >= 100000000) return (n/100000000).toFixed(1) + '억원';
+  if (n >= 10000) return Math.round(n/10000) + '만원';
+  return n.toLocaleString() + '원';
+}
+function calcSim() {
+  const p = +document.getElementById('principal').value;
+  const r = +document.getElementById('smallcapRatio').value;
+  const x = +document.getElementById('returnX').value;
+  document.getElementById('principalVal').textContent = fmt(p);
+  document.getElementById('ratioVal').textContent = r + '%';
+  document.getElementById('returnVal').textContent = x + '배';
+  const invested = p * r / 100;
+  const profit = invested * x;
+  const gain = profit - invested;
+  const total = p + gain;
+  const pctGain = (gain / p * 100).toFixed(1);
+  document.getElementById('r1').textContent = fmt(invested);
+  document.getElementById('r2').textContent = fmt(profit);
+  document.getElementById('r3').textContent = pctGain + '%';
+  document.getElementById('r4').textContent = fmt(total);
+}
+function resetSim() {
+  document.getElementById('principal').value = 10000000;
+  document.getElementById('smallcapRatio').value = 0.5;
+  document.getElementById('returnX').value = 10;
+  calcSim();
+}
+calcSim();
+
+// ========== QUIZ ==========
+function selectOpt(el, correct) {
+  const siblings = el.parentElement.children;
+  for (let s of siblings) { s.classList.remove('selected-correct','selected-wrong'); }
+  el.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+}
+function toggleAnswer(btn) {
+  const box = btn.nextElementSibling;
+  const visible = box.style.display === 'block';
+  box.style.display = visible ? 'none' : 'block';
+  btn.textContent = visible ? '정답 보기' : '닫기';
+}
+
+// ========== CHARTS ==========
+const chartConfigs = {};
+
+chartConfigs['survivalChart'] = () => {
+  new Chart(document.getElementById('survivalChart'), {
+    type: 'bar',
+    data: {
+      labels: ['스타트업', 'VC 생존', 'Pre-IPO', 'IPO', '스몰캡', '라지캡'],
+      datasets: [{
+        label: '기업 수',
+        data: [1000, 200, 10, 8, 5, 1],
+        backgroundColor: ['#e11d48','#f43f5e','#6b7280','#2563eb','#7c3aed','#1a1a1a'],
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.parsed.y + '개 (1,000개 기준)'
+          }
+        }
+      },
+      scales: {
+        y: {
+          type: 'logarithmic',
+          ticks: { color: '#777' },
+          grid: { color: '#e5e5e5' }
+        },
+        x: { ticks: { color: '#777' }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['ownershipChart'] = () => {
+  new Chart(document.getElementById('ownershipChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['뱅가드 7.7%', '블랙록 7.2%', '젠슨 황 0.21%', '기타 임원 0.06%', '기타 주주'],
+      datasets: [{
+        data: [7.7, 7.2, 0.21, 0.06, 84.83],
+        backgroundColor: ['#e11d48','#2563eb','#6b7280','#1a1a1a','#d1d5db'],
+        borderWidth: 2,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#555' } },
+        tooltip: {
+          callbacks: { label: ctx => ' ' + ctx.label }
+        }
+      }
+    }
+  });
+};
+
+chartConfigs['positiveChart'] = () => {
+  new Chart(document.getElementById('positiveChart'), {
+    type: 'radar',
+    data: {
+      labels: ['매출·이익', 'M&A 피인수', '자사주 매입', '지수 편입', '배당 상승', '대량 해고', '기관 매수', 'C-Suite 영입'],
+      datasets: [{
+        label: '주가 긍정 강도',
+        data: [9, 7, 8, 8, 7, 6, 8, 7],
+        backgroundColor: 'rgba(225,29,72,0.15)',
+        borderColor: '#e11d48',
+        pointBackgroundColor: '#e11d48',
+        pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { display: false },
+          grid: { color: '#e5e5e5' },
+          pointLabels: { font: { size: 11 }, color: '#444' }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+};
+
+chartConfigs['marketCapChart'] = () => {
+  new Chart(document.getElementById('marketCapChart'), {
+    type: 'bar',
+    data: {
+      labels: ['미국 전체\n상장사', 'S&P500', '마이크로소프트\n(1개 기업)', '한국 전체\n상장사'],
+      datasets: [{
+        label: '시가총액 (조 달러)',
+        data: [53, 42, 4, 2.5],
+        backgroundColor: ['#e11d48','#f43f5e','#2563eb','#6b7280'],
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ' $' + ctx.parsed.x + ' 조 달러' }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#777', callback: v => '$' + v + 'T' }, grid: { color: '#e5e5e5' } },
+        y: { ticks: { color: '#555', font: { size: 12 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+// ========== INTERSECTION OBSERVERS ==========
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
