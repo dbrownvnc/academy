@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 28회 | 컨슈머 스펜딩과 미국 증시</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .cover {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .cover-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .cover h1 span { color: var(--accent2); }
+  .cover-meta {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cover-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* MAIN */
+  main { padding: 0 20px; max-width: 680px; margin: 0 auto; }
+
+  /* SECTIONS */
+  section { padding: 36px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 20px 0 8px;
+    padding-left: 10px;
+    border-left: 3px solid var(--accent);
+  }
+  p { color: var(--text); margin-bottom: 12px; }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: var(--bg2);
+    border-left: 4px solid var(--accent);
+    padding: 16px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 18px 0;
+  }
+  .highlight strong { color: var(--accent); }
+
+  /* KEY POINT CARDS */
+  .card-grid { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+  }
+  .card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--accent);
+    opacity: 0.15;
+    position: absolute;
+    top: 10px; right: 14px;
+    line-height: 1;
+  }
+  .card-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; color: var(--text); }
+  .card p { font-size: 13.5px; color: var(--text2); margin: 0; }
+
+  /* CHAIN DIAGRAM */
+  .chain {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+  }
+  .chain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .chain-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 36px;
+  }
+  .chain-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .chain-line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    min-height: 30px;
+    margin: 4px 0;
+  }
+  .chain-content {
+    padding: 8px 0 24px;
+  }
+  .chain-content .tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 3px;
+  }
+  .chain-content strong { font-size: 14px; display: block; color: var(--text); }
+  .chain-content span { font-size: 13px; color: var(--text2); }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* STAT BOXES */
+  .stats-row {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 140px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-label { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead tr { background: var(--accent); color: #fff; }
+  th { padding: 12px 14px; text-align: left; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-weight: 700; color: var(--text); }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-title::before {
+    content: '⚙️';
+    font-size: 16px;
+  }
+  .sim-row { margin-bottom: 14px; }
+  .sim-row label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 6px; }
+  .sim-row label strong { color: var(--text); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 14px;
+  }
+  .sim-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .sim-result-row:last-child { border-bottom: none; }
+  .sim-result-row .val { font-weight: 700; }
+  .val.up { color: #16a34a; }
+  .val.down { color: var(--accent); }
+  .val.neutral { color: var(--chart4); }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* QUOTE */
+  .pull-quote {
+    border-top: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+    padding: 20px 0;
+    margin: 24px 0;
+    text-align: center;
+  }
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text);
+    margin: 0;
+  }
+  .pull-quote cite { font-size: 12px; color: var(--text2); display: block; margin-top: 8px; font-style: normal; }
+
+  /* TAGS */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .tag-chip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .tag-chip.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 12px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-tag">투자아카데미 28회 · 미 거시경제 2편</div>
+  <h1>소비자 지출이<br><span>증시를 움직인다</span></h1>
+  <p style="color:#ccc;font-size:14px;margin-top:10px;">컨슈머 스펜딩과 미국 주식시장의 인과 연결고리</p>
+  <div class="cover-meta">
+    <span>📅 2026년 4월 11일</span>
+    <span>📺 투자는인생TV 아카데미</span>
+    <span>⏱ 핵심 정리본</span>
+  </div>
+</div>
+
+<main>
+
+<!-- 강의 개요 -->
+<section>
+  <div class="section-label">Overview</div>
+  <h2>강의 핵심 목표</h2>
+  <p>이 강의는 <strong>미국 주식시장에 직접 영향을 미치는 거시경제 지표</strong>가 무엇인지, 그리고 그 인과관계를 어떻게 실전 투자에 활용하는지를 다룹니다. 단순히 지표를 아는 것이 아니라 <em>변화율의 방향</em>을 읽어야 한다는 것이 핵심입니다.</p>
+
+  <div class="tag-row">
+    <span class="tag-chip accent">컨슈머 스펜딩</span>
+    <span class="tag-chip accent">선행지수</span>
+    <span class="tag-chip">PCE</span>
+    <span class="tag-chip">산업생산지수</span>
+    <span class="tag-chip">기업수익률</span>
+    <span class="tag-chip">S&P500 EPS</span>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>강사의 핵심 철학:</strong> AI는 데이터를 제공하고, 판단은 인간의 경험이 한다. 어떤 신호가 진짜이고 어떤 것이 노이즈인지 구분하는 것이 실력이다.
+  </div>
+</section>
+
+<!-- 소비와 경제 -->
+<section>
+  <div class="section-label">Concept 1</div>
+  <h2>소비자 지출 = 미국 경제의 엔진</h2>
+  <p>미국 GDP의 약 <strong>70%</strong>는 가계 소비(컨슈머 스펜딩)에서 나옵니다. 정부 지출, 기업 투자가 나머지를 차지하지만, 가장 강력한 드라이빙 포스는 소비자입니다.</p>
+
+  <div class="stats-row fade-in">
+    <div class="stat-box">
+      <span class="stat-val">70%</span>
+      <div class="stat-label">GDP에서 가계 소비 비중</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val">⅔</span>
+      <div class="stat-label">미국 경제 사이클을 이끄는 힘</div>
+    </div>
+  </div>
+
+  <div class="pull-quote fade-in">
+    <p>"남이 쓰고 내가 쓰고, 많이 쓰면 쓸수록 경제는 좋아진다. 소비를 줄이는 것은 경제를 죽이는 것이다."</p>
+    <cite>강사 코멘트 — 소비에 대한 인식의 전환 촉구</cite>
+  </div>
+
+  <h3>통화정책 vs 재정정책</h3>
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>구분</th><th>주체</th><th>주요 수단</th><th>목적</th></tr></thead>
+      <tbody>
+        <tr><td>통화정책</td><td>연준(Fed)</td><td>금리 조정, 유동성 공급</td><td>물가 안정, 소비 활성화</td></tr>
+        <tr><td>재정정책</td><td>재무부</td><td>정부 지출, 세금 조정</td><td>경기 부양, 소득 재분배</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 수요 체인 -->
+<section>
+  <div class="section-label">Concept 2</div>
+  <h2>수요 체인 — 인과관계의 흐름</h2>
+  <p>소비자 지출이 변하면 경제 전반에 <strong>시차를 두고 연쇄 반응</strong>이 일어납니다. 이 시차(Lag)를 이해하면 주식시장의 방향을 미리 읽을 수 있습니다.</p>
+
+  <div class="chain fade-in">
+    <div class="chain-item">
+      <div class="chain-left">
+        <div class="chain-dot">1</div>
+        <div class="chain-line"></div>
+      </div>
+      <div class="chain-content">
+        <div class="tag">선행지수 / Leading</div>
+        <strong>실질 소비자 지출 (Real PCE) 변화</strong>
+        <span>소비가 줄어들거나 늘어나는 신호 → 즉시 또는 2~6개월 내 반영</span>
+      </div>
+    </div>
+    <div class="chain-item">
+      <div class="chain-left">
+        <div class="chain-dot">2</div>
+        <div class="chain-line"></div>
+      </div>
+      <div class="chain-content">
+        <div class="tag">3~6개월 후 / Lagging</div>
+        <strong>산업 생산량 감소 (Industrial Production ↓)</strong>
+        <span>공장 생산량 조정, 재고 축소 시작</span>
+      </div>
+    </div>
+    <div class="chain-item">
+      <div class="chain-left">
+        <div class="chain-dot">3</div>
+        <div class="chain-line"></div>
+      </div>
+      <div class="chain-content">
+        <div class="tag">6~12개월 후</div>
+        <strong>기업 자본 투자 감소 (Capital Spending ↓)</strong>
+        <span>공장 신설 동결, 설비 투자 축소, 고용 감소</span>
+      </div>
+    </div>
+    <div class="chain-item">
+      <div class="chain-left">
+        <div class="chain-dot">4</div>
+        <div class="chain-line"></div>
+      </div>
+      <div class="chain-content">
+        <div class="tag">결과 / Result</div>
+        <strong>기업 이익률 하락 → 주가 하락</strong>
+        <span>S&P 500 EPS 감소, 증시 변동성(Volatility) 확대</span>
+      </div>
+    </div>
+    <div class="chain-item">
+      <div class="chain-left">
+        <div class="chain-dot">5</div>
+      </div>
+      <div class="chain-content">
+        <div class="tag">고용 충격</div>
+        <strong>실업 증가 → 소비 재감소 (악순환)</strong>
+        <span>생산량 감소 → 인력 감축 → 가처분소득 감소 → 소비 재감소</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>핵심 예시:</strong> 티셔츠 판매량이 연간 100장에서 90장으로 줄면 → 6개월 후 공장은 생산량을 240장으로 축소 → 이후 공장 신설 동결(Real Capital Spending 감소) → 고용 20% 감축
+  </div>
+</section>
+
+<!-- Elasticity & Volatility -->
+<section>
+  <div class="section-label">Concept 3</div>
+  <h2>탄력성(Elasticity)과 변동성</h2>
+
+  <h3>탄력성(Elasticity)이란?</h3>
+  <p>원인과 결과 간의 민감도 비율입니다. 소비자 지출이 1% 변화할 때 산업 생산은 2~3% 이상 변화합니다. 이 관계를 <strong>양(+)의 탄력성</strong>이라고 합니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>지표</th><th>변동성</th><th>타이밍</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td>실질 소비자 지출 (PCE)</td><td>낮음 (완만)</td><td>선행</td><td>선행지수 — 먼저 변화</td></tr>
+        <tr><td>산업 생산 (IP)</td><td>높음 (급격)</td><td>후행 3~6개월</td><td>소비에 민감하게 반응</td></tr>
+        <tr><td>기업 자본 지출 (CapEx)</td><td>매우 높음</td><td>후행 6~12개월</td><td>개구리 냄비 효과</td></tr>
+        <tr><td>S&P 500 EPS</td><td>높음</td><td>후행</td><td>기업 실적 반영</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="elasticityChart" height="230"></canvas>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>개구리 냄비 비유:</strong> 서서히 끓는 물에서 개구리가 위험을 인식 못 하듯, 기업의 자본 지출(CapEx)은 소비가 이미 한참 줄어든 후에야 급격히 꺾입니다. 그때는 이미 늦은 것입니다.
+  </div>
+</section>
+
+<!-- 성장률 변화 -->
+<section>
+  <div class="section-label">Concept 4</div>
+  <h2>성장률의 <em>절대값</em>이 아닌 <em>변화율</em>이 핵심</h2>
+
+  <p>강사가 가장 강조하는 개념입니다. 엔비디아가 성장을 해도 <strong>성장률이 꺾이는 순간 주가는 폭락</strong>합니다. 이것이 <em>Rate of Change(변화율)</em>의 힘입니다.</p>
+
+  <div class="card-grid fade-in">
+    <div class="card">
+      <div class="card-num">01</div>
+      <div class="card-title">로셋(Rosette) 법칙</div>
+      <p>성장률의 변화 방향이 주가 방향을 결정한다. 여전히 성장 중이더라도 성장률이 하락하면 시장은 폭락으로 반응한다.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">02</div>
+      <div class="card-title">AI 특수성 주의</div>
+      <p>엔비디아·아바고 등 AI 수요는 구조적 성장 중. 일시적 성장률 둔화를 침체로 해석하면 오판이 될 수 있다.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">03</div>
+      <div class="card-title">분기 vs 연간</div>
+      <p>계절성(Seasonality)을 제거한 연간 변화율이 인과관계(Causality) 분석에 더 유효하다. 분기 변화는 노이즈가 많다.</p>
+    </div>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="rateChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- PCE & IP 관계 -->
+<section>
+  <div class="section-label">Concept 5</div>
+  <h2>PCE와 산업생산지수 — 실전 데이터</h2>
+
+  <p>강사가 제시한 2023~2024년 현재 상황 분석입니다.</p>
+
+  <div class="highlight fade-in">
+    <strong>현재 상황 진단:</strong><br>
+    • PCE(실질 소비자 지출)는 2023~2024년 초부터 감소 추세<br>
+    • 산업생산지수(IP)는 아직 크게 떨어지지 않음 (래깅 중)<br>
+    • 인플레이션 탓에 PCE 감소가 가려졌으나 이제 본격화<br>
+    • 연준은 연 4회 이상 금리 인하로 대응 중
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="pceIpChart" height="230"></canvas>
+  </div>
+
+  <h3>왜 연준은 금리를 빠르게 내리려 하는가?</h3>
+  <p>PCE가 줄어 GDP 70%의 엔진이 식으면 <strong>소프트 랜딩(경착륙 없는 경기 둔화)</strong>을 유지하기 어렵습니다. 금리를 빠르게 낮춰 소비를 되살리는 것이 핵심 목표입니다.</p>
+</section>
+
+<!-- CapEx vs PCE -->
+<section>
+  <div class="section-label">Concept 6</div>
+  <h2>자본 투자(CapEx)는 소비를 만들지 않는다</h2>
+
+  <p>많은 사람이 오해하는 부분입니다. <strong>기업이 투자를 늘린다고 소비자 지출이 늘지는 않습니다.</strong> 인과관계는 단방향입니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>명제</th><th>사실 여부</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>소비↑ → 기업 투자↑</td><td>✅ 사실</td><td>소비 증가 → 수요 증가 → 생산·투자 확대</td></tr>
+        <tr><td>기업 투자↑ → 소비↑</td><td>❌ 오류</td><td>공급 측 자극만으로는 소비자 지갑이 열리지 않음</td></tr>
+        <tr><td>정부 권유로 기업 투자↑ → 소비↑</td><td>❌ 오류</td><td>19세기 케인즈식 논리, 21세기 정보 대칭 시대엔 작동 안 함</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>강사의 시각:</strong> 정보 비대칭(Asymmetric Information)이 거의 사라진 21세기에는 정부가 기업에 투자를 독려해도 소비자가 반응하지 않는다. 케인즈 이론은 이미 한계에 도달했다.
+  </div>
+</section>
+
+<!-- 비즈니스 사이클 -->
+<section>
+  <div class="section-label">Concept 7</div>
+  <h2>비즈니스 사이클과 현재 위치</h2>
+
+  <p>강사는 현재 미국 경제 사이클이 <strong>3기(Peak 이후 둔화 구간)</strong>에 있으며, 이 구간이 예상보다 짧을 수 있다(6~12개월)고 진단합니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="cycleChart" height="230"></canvas>
+  </div>
+
+  <div class="stats-row fade-in">
+    <div class="stat-box">
+      <span class="stat-val">90%+</span>
+      <div class="stat-label">소프트 랜딩 가능성 (강사 판단)</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val">6~12개월</span>
+      <div class="stat-label">현재 둔화 구간 예상 지속 기간</div>
+    </div>
+  </div>
+
+  <h3>베어마켓 vs 불마켓 — 1950년 이후 통계</h3>
+  <div class="stats-row fade-in">
+    <div class="stat-box">
+      <span class="stat-val" style="color:var(--accent);">-25%</span>
+      <div class="stat-label">베어마켓 평균 하락폭</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val" style="color:#16a34a;">+33%</span>
+      <div class="stat-label">불마켓 평균 상승폭</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val" style="color:var(--chart4);">+8%</span>
+      <div class="stat-label">장기 순수익 (평균)</div>
+    </div>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>"This time is different"는 없다.</strong> 1950년 이후 모든 하락 이후 시장은 반드시 더 높이 회복했습니다. 인플레이션보다 주식 수익률이, 월급 상승률보다 주식 수익률이 항상 높았습니다.
+  </div>
+</section>
+
+<!-- 기업 수익률과 주가 -->
+<section>
+  <div class="section-label">Concept 8</div>
+  <h2>기업 수익률 → 주가: 핵심 연결고리</h2>
+
+  <p>S&P 500 기업의 70% 이상이 예상 실적을 상회할 때 증시는 상승 압력을 받습니다. 반대로 미스 비율이 높아지면 시장은 민감하게 반응합니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="earningsChart" height="230"></canvas>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>강사의 실전 사례:</strong> 2024년 2분기 이후 성장률이 꺾이자 7~9월 폭락 가능성을 미리 경고 → 현금 비중 확대 권고. 예상 실적을 상회해도 성장률 자체가 둔화되면 주가는 하락했다(엔비디아, 아바고 사례).
+  </div>
+</section>
+
+<!-- 시뮬레이터 -->
+<section>
+  <div class="section-label">Simulator</div>
+  <h2>소비자 지출 변화 영향 시뮬레이터</h2>
+  <p>소비자 지출 변화율을 조정해 파급 효과를 시뮬레이션해보세요.</p>
+
+  <div class="sim-box fade-in">
+    <div class="sim-title">수요 체인 시뮬레이터</div>
+
+    <div class="sim-row">
+      <label>소비자 지출 변화율: <strong id="pce-val">-2%</strong></label>
+      <input type="range" id="pce-slider" min="-10" max="5" value="-2" step="0.5">
+    </div>
+    <div class="sim-row">
+      <label>탄력성 배율 (산업생산 반응도): <strong id="elas-val">2.0x</strong></label>
+      <input type="range" id="elas-slider" min="1" max="4" value="2" step="0.1">
+    </div>
+    <div class="sim-row">
+      <label>시차 (개월): <strong id="lag-val">6개월</strong></label>
+      <input type="range" id="lag-slider" min="1" max="18" value="6" step="1">
+    </div>
+
+    <div class="sim-result">
+      <div class="sim-result-row">
+        <span>🛒 소비자 지출 변화</span>
+        <span class="val" id="r-pce">-2.0%</span>
+      </div>
+      <div class="sim-result-row">
+        <span>🏭 산업 생산 변화 (약 <span id="r-lag-ip">6</span>개월 후)</span>
+        <span class="val" id="r-ip">-4.0%</span>
+      </div>
+      <div class="sim-result-row">
+        <span>💼 기업 자본 지출 변화 (약 <span id="r-lag-capex">12</span>개월 후)</span>
+        <span class="val" id="r-capex">-6.0%</span>
+      </div>
+      <div class="sim-result-row">
+        <span>📈 주가 방향성 예상</span>
+        <span class="val" id="r-stock">⚠️ 하락 압력</span>
+      </div>
+      <div class="sim-result-row">
+        <span>🔔 투자 시그널</span>
+        <span class="val" id="r-signal">현금 비중 확대 권고</span>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<!-- 핵심 요약 -->
+<section>
+  <div class="section-label">Summary</div>
+  <h2>오늘의 핵심 3가지</h2>
+  <div class="card-grid fade-in">
+    <div class="card">
+      <div class="card-num">A</div>
+      <div class="card-title">PCE 변화율을 선행지수로 활용하라</div>
+      <p>소비자 지출의 증감 방향과 속도는 3~12개월 후 산업생산, 기업 실적, 주가에 순서대로 반영된다.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">B</div>
+      <div class="card-title">절대값보다 변화율(Rate of Change)이 중요하다</div>
+      <p>성장 중이더라도 성장률이 꺾이면 시장은 폭락으로 반응한다. 이것이 투자의 핵심 시그널이다.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">C</div>
+      <div class="card-title">장기적으로 미국 주식은 우상향한다</div>
+      <p>1950년 이후 베어마켓(-25%)보다 불마켓(+33%)이 컸다. 인플레이션·월급보다 주식 수익률이 항상 높다. 폭락장도 견뎌야 한다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📺 투자는인생TV 아카데미 · 28회 미 거시경제 2편</p>
+  <p style="margin-top:6px;">본 자료는 강의 내용을 정리한 교육용 문서입니다. 투자 결정은 본인의 판단하에 하시기 바랍니다.</p>
+</footer>
+
+<script>
+// ===== FADE IN OBSERVER =====
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ===== CHART CONFIGS =====
+const chartConfigs = {};
+
+// 탄력성 비교 차트
+chartConfigs['elasticityChart'] = () => {
+  const labels = ['1Q','2Q','3Q','4Q','5Q','6Q','7Q','8Q'];
+  new Chart(document.getElementById('elasticityChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '소비자 지출 (PCE)',
+          data: [100,99,97,96,96,95,94,94],
+          borderColor: '#1a1a1a',
+          backgroundColor: 'rgba(26,26,26,0.05)',
+          tension: 0.4, pointRadius: 3, borderWidth: 2, fill: true
+        },
+        {
+          label: '산업 생산 (IP)',
+          data: [100,100,100,98,95,90,86,84],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4, pointRadius: 3, borderWidth: 2, fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: '소비자 지출 1% 감소 → 산업 생산 2~3% 이상 감소 (탄력성 효과)', font: { size: 11 }, color: '#777' },
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { mode: 'index' }
+      },
+      scales: {
+        y: { min: 80, max: 102, ticks: { callback: v => v + '' }, grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// 성장률 변화 차트
+chartConfigs['rateChart'] = () => {
+  const labels = ['1분기','2분기','3분기','4분기','5분기','6분기','7분기','8분기'];
+  new Chart(document.getElementById('rateChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '분기 성장률 (%)',
+          data: [35, 42, 38, 30, 20, 9, 5, 3],
+          backgroundColor: (ctx) => {
+            const v = ctx.raw;
+            return v > 20 ? 'rgba(37,99,235,0.7)' : v > 10 ? 'rgba(107,114,128,0.7)' : 'rgba(225,29,72,0.8)';
+          },
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: '성장률 자체가 하락하면 → 주가 급락 발생 (Rate of Change 효과)', font: { size: 11 }, color: '#777' },
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' 성장률: ' + ctx.raw + '%' } }
+      },
+      scales: {
+        y: { title: { display: true, text: '성장률 (%)', font: { size: 11 } }, grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// PCE vs IP 차트
+chartConfigs['pceIpChart'] = () => {
+  const labels = ['2022Q1','Q2','Q3','Q4','2023Q1','Q2','Q3','Q4','2024Q1','Q2'];
+  new Chart(document.getElementById('pceIpChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'PCE (실질 소비자 지출)',
+          data: [3.2, 2.9, 2.5, 2.3, 2.0, 1.8, 1.5, 1.3, 1.1, 0.9],
+          borderColor: '#e11d48', tension: 0.4, pointRadius: 4, borderWidth: 2.5,
+          backgroundColor: 'rgba(225,29,72,0.05)', fill: true
+        },
+        {
+          label: '산업 생산 (IP)',
+          data: [3.5, 3.4, 3.3, 3.2, 3.0, 2.8, 2.5, 2.0, 1.5, 1.0],
+          borderColor: '#2563eb', tension: 0.4, pointRadius: 4, borderWidth: 2.5,
+          backgroundColor: 'rgba(37,99,235,0.05)', fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'PCE 감소 선행 → IP 후행 급락 (래깅 패턴)', font: { size: 11 }, color: '#777' },
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { mode: 'index' }
+      },
+      scales: {
+        y: { title: { display: true, text: '연간 변화율 (%)', font: { size: 11 } }, grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// 비즈니스 사이클 차트
+chartConfigs['cycleChart'] = () => {
+  const labels = Array.from({length: 20}, (_, i) => i + 1);
+  const cycle = labels.map(x => Math.sin((x - 1) * 0.4) * 40 + 50);
+  new Chart(document.getElementById('cycleChart'), {
+    type: 'line',
+    data: {
+      labels: labels.map(x => x + ''),
+      datasets: [
+        {
+          label: '경기 사이클',
+          data: cycle,
+          borderColor: '#1a1a1a',
+          tension: 0.5, pointRadius: 0, borderWidth: 2.5, fill: false
+        },
+        {
+          label: '현재 위치 (추정)',
+          data: labels.map((x, i) => i === 12 ? cycle[i] : null),
+          borderColor: '#e11d48',
+          pointRadius: 10, pointBackgroundColor: '#e11d48', showLine: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: '비즈니스 사이클 — 현재 Peak 이후 둔화 구간 (빨간 점)', font: { size: 11 }, color: '#777' },
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } }
+      },
+      scales: {
+        y: { display: false },
+        x: { display: false }
+      }
+    }
+  });
+};
+
+// 기업 수익률 차트
+chartConfigs['earningsChart'] = () => {
+  new Chart(document.getElementById('earningsChart'), {
+    type: 'bar',
+    data: {
+      labels: ['PCE', 'S&P 500 EPS'],
+      datasets: [
+        { label: '상승 구간', data: [2, 8], backgroundColor: 'rgba(37,99,235,0.7)', borderRadius: 4 },
+        { label: '하락 구간', data: [-1.5, -6], backgroundColor: 'rgba(225,29,72,0.7)', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'PCE 소폭 변화 → EPS 큰 폭 변화 (탄력성 증명)', font: { size: 11 }, color: '#777' },
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } }
+      },
+      scales: {
+        y: { title: { display: true, text: '변화율 (%)', font: { size: 11 } }, grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// ===== CHART OBSERVER =====
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ===== SIMULATOR =====
+function updateSim() {
+  const pce = parseFloat(document.getElementById('pce-slider').value);
+  const elas = parseFloat(document.getElementById('elas-slider').value);
+  const lag = parseInt(document.getElementById('lag-slider').value);
+
+  document.getElementById('pce-val').textContent = (pce >= 0 ? '+' : '') + pce + '%';
+  document.getElementById('elas-val').textContent = elas.toFixed(1) + 'x';
+  document.getElementById('lag-val').textContent = lag + '개월';
+
+  const ip = (pce * elas).toFixed(1);
+  const capex = (pce * elas * 1.5).toFixed(1);
+
+  const pceEl = document.getElementById('r-pce');
+  const ipEl = document.getElementById('r-ip');
+  const capexEl = document.getElementById('r-capex');
+  const stockEl = document.getElementById('r-stock');
+  const signalEl = document.getElementById('r-signal');
+
+  pceEl.textContent = (pce >= 0 ? '+' : '') + pce.toFixed(1) + '%';
+  pceEl.className = 'val ' + (pce >= 0 ? 'up' : 'down');
+
+  ipEl.textContent = (parseFloat(ip) >= 0 ? '+' : '') + ip + '%';
+  ipEl.className = 'val ' + (parseFloat(ip) >= 0 ? 'up' : 'down');
+
+  capexEl.textContent = (parseFloat(capex) >= 0 ? '+' : '') + capex + '%';
+  capexEl.className = 'val ' + (parseFloat(capex) >= 0 ? 'up' : 'down');
+
+  document.getElementById('r-lag-ip').textContent = lag;
+  document.getElementById('r-lag-capex').textContent = Math.min(lag * 2, 24);
+
+  if (pce < -3) {
+    stockEl.textContent = '🔴 강한 하락 압력';
+    stockEl.className = 'val down';
+    signalEl.textContent = '현금 비중 대폭 확대';
+    signalEl.className = 'val down';
+  } else if (pce < 0) {
+    stockEl.textContent = '⚠️ 하락 압력';
+    stockEl.className = 'val down';
+    signalEl.textContent = '현금 비중 확대 권고';
+    signalEl.className = 'val down';
+  } else if (pce < 1) {
+    stockEl.textContent = '🟡 중립';
+    stockEl.className = 'val neutral';
+    signalEl.textContent = '보유 유지, 관망';
+    signalEl.className = 'val neutral';
+  } else {
+    stockEl.textContent = '🟢 상승 압력';
+    stockEl.className = 'val up';
+    signalEl.textContent = '비중 확대 고려';
+    signalEl.className = 'val up';
+  }
+}
+
+function resetSim() {
+  document.getElementById('pce-slider').value = -2;
+  document.getElementById('elas-slider').value = 2;
+  document.getElementById('lag-slider').value = 6;
+  updateSim();
+}
+
+document.getElementById('pce-slider').addEventListener('input', updateSim);
+document.getElementById('elas-slider').addEventListener('input', updateSim);
+document.getElementById('lag-slider').addEventListener('input', updateSim);
+updateSim();
+</script>
+</body>
+</html>

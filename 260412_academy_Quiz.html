@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 | 투자아카데미 28회 — 컨슈머 스펜딩</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a; --wrong: #dc2626;
+    --neutral: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; }
+
+  .cover {
+    background: var(--text); color: #fff;
+    padding: 44px 24px 36px;
+  }
+  .cover-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); font-weight: 700; margin-bottom: 12px; }
+  .cover h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; line-height: 1.25; }
+  .cover h1 span { color: var(--accent2); }
+  .cover-sub { font-size: 13px; color: #aaa; margin-top: 10px; }
+
+  .score-board {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 20px;
+    text-align: center;
+  }
+  .score-board .score-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .score-board .score-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 4px; margin: 14px 0 0; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; width: 0%; transition: width 0.6s ease; }
+
+  main { padding: 0 20px; max-width: 680px; margin: 0 auto; }
+
+  .quiz-section-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 28px 0 14px;
+  }
+
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .q-card.answered-correct { border-color: var(--correct); }
+  .q-card.answered-wrong { border-color: var(--wrong); }
+
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .q-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-badge {
+    font-size: 10px; padding: 3px 8px; border-radius: 10px;
+    font-weight: 700; letter-spacing: 0.5px;
+  }
+  .badge-easy { background: #dcfce7; color: #16a34a; }
+  .badge-mid { background: #fef3c7; color: #d97706; }
+  .badge-hard { background: #fee2e2; color: #dc2626; }
+  .badge-type { background: #e0e7ff; color: #4338ca; }
+
+  .q-text { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.6; margin-bottom: 16px; }
+
+  /* OX */
+  .ox-btns { display: flex; gap: 10px; }
+  .ox-btn {
+    flex: 1; padding: 14px; border-radius: 10px;
+    border: 2px solid var(--border);
+    background: #fff; font-size: 22px; cursor: pointer;
+    transition: all 0.2s; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover { border-color: var(--accent); transform: scale(1.02); }
+  .ox-btn.selected-correct { background: #dcfce7; border-color: var(--correct); }
+  .ox-btn.selected-wrong { background: #fee2e2; border-color: var(--wrong); }
+  .ox-btn.reveal-correct { background: #dcfce7; border-color: var(--correct); }
+
+  /* MCQ */
+  .mc-options { display: flex; flex-direction: column; gap: 8px; }
+  .mc-opt {
+    padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff; cursor: pointer;
+    font-size: 14px; text-align: left;
+    transition: all 0.2s; font-family: 'Noto Sans KR', sans-serif;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .mc-opt:hover { border-color: var(--accent); background: #fff5f7; }
+  .mc-opt.correct { background: #dcfce7; border-color: var(--correct); }
+  .mc-opt.wrong { background: #fee2e2; border-color: var(--wrong); }
+  .mc-opt.reveal { background: #dcfce7; border-color: var(--correct); }
+  .opt-label { font-weight: 700; color: var(--accent); min-width: 18px; }
+
+  /* SHORT ANSWER */
+  .short-wrap { display: flex; gap: 8px; align-items: stretch; }
+  .short-input {
+    flex: 1; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--border); font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+  .short-btn {
+    padding: 10px 16px; border-radius: 8px;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .short-btn:hover { background: var(--accent2); }
+
+  /* FEEDBACK */
+  .feedback {
+    display: none;
+    margin-top: 12px; padding: 14px;
+    border-radius: 8px; font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #dcfce7; border-left: 4px solid var(--correct); }
+  .feedback.wrong { background: #fee2e2; border-left: 4px solid var(--wrong); }
+  .feedback-icon { font-size: 16px; margin-right: 4px; }
+  .feedback strong { display: block; margin-bottom: 4px; }
+  .explanation { font-size: 13px; color: #444; margin-top: 6px; }
+
+  /* RESULT */
+  .result-section {
+    display: none;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 20px;
+    margin: 20px 0; text-align: center;
+  }
+  .result-section.show { display: block; }
+  .result-emoji { font-size: 48px; margin-bottom: 10px; }
+  .result-grade { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--accent); }
+  .result-msg { color: var(--text2); font-size: 14px; margin-top: 8px; }
+  .retry-btn {
+    margin-top: 16px; padding: 12px 28px;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 24px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  footer { text-align: center; padding: 28px 20px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-tag">시험문제 | 투자아카데미 28회</div>
+  <h1>컨슈머 스펜딩과<br><span>미국 증시 연동 이해</span></h1>
+  <div class="cover-sub">총 10문제 · 객관식 / OX / 단답형 혼합 · 즉각 피드백 제공</div>
+</div>
+
+<div class="score-board">
+  <div class="score-val"><span id="score-num">0</span> / 10</div>
+  <div class="score-label">현재 점수</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+</div>
+
+<main>
+
+<!-- 난이도 쉬움 3문제 -->
+<div class="quiz-section-title">📗 난이도: 쉬움</div>
+
+<!-- Q1 OX -->
+<div class="q-card" id="q1">
+  <div class="q-header">
+    <div class="q-num">1</div>
+    <span class="q-badge badge-easy">쉬움</span>
+    <span class="q-badge badge-type">OX형</span>
+  </div>
+  <div class="q-text">미국 GDP에서 가계 소비(소비자 지출)가 차지하는 비중은 약 70%이다.</div>
+  <div class="ox-btns">
+    <button class="ox-btn" onclick="answerOX('q1', 'O', 'O')">⭕</button>
+    <button class="ox-btn" onclick="answerOX('q1', 'X', 'O')">❌</button>
+  </div>
+  <div class="feedback" id="fb-q1"></div>
+</div>
+
+<!-- Q2 OX -->
+<div class="q-card" id="q2">
+  <div class="q-header">
+    <div class="q-num">2</div>
+    <span class="q-badge badge-easy">쉬움</span>
+    <span class="q-badge badge-type">OX형</span>
+  </div>
+  <div class="q-text">자본주의 경제에서 경제가 어려울 때는 소비를 줄이는 것이 경제에 도움이 된다.</div>
+  <div class="ox-btns">
+    <button class="ox-btn" onclick="answerOX('q2', 'O', 'X')">⭕</button>
+    <button class="ox-btn" onclick="answerOX('q2', 'X', 'X')">❌</button>
+  </div>
+  <div class="feedback" id="fb-q2"></div>
+</div>
+
+<!-- Q3 객관식 -->
+<div class="q-card" id="q3">
+  <div class="q-header">
+    <div class="q-num">3</div>
+    <span class="q-badge badge-easy">쉬움</span>
+    <span class="q-badge badge-type">객관식</span>
+  </div>
+  <div class="q-text">연준(Fed)의 주요 역할과 가장 관계 깊은 것은?</div>
+  <div class="mc-options">
+    <button class="mc-opt" onclick="answerMC('q3', 'A', 'B')"><span class="opt-label">A</span> 재정 지출 결정</button>
+    <button class="mc-opt" onclick="answerMC('q3', 'B', 'B')"><span class="opt-label">B</span> 통화정책 (금리 조정)</button>
+    <button class="mc-opt" onclick="answerMC('q3', 'C', 'B')"><span class="opt-label">C</span> 기업 투자 감독</button>
+    <button class="mc-opt" onclick="answerMC('q3', 'D', 'B')"><span class="opt-label">D</span> 무역 협상</button>
+  </div>
+  <div class="feedback" id="fb-q3"></div>
+</div>
+
+<!-- 난이도 보통 5문제 -->
+<div class="quiz-section-title">📘 난이도: 보통</div>
+
+<!-- Q4 객관식 -->
+<div class="q-card" id="q4">
+  <div class="q-header">
+    <div class="q-num">4</div>
+    <span class="q-badge badge-mid">보통</span>
+    <span class="q-badge badge-type">객관식</span>
+  </div>
+  <div class="q-text">소비자 지출이 감소했을 때 산업 생산(IP)은 평균 어느 시점에 급락하는 경향이 있는가?</div>
+  <div class="mc-options">
+    <button class="mc-opt" onclick="answerMC('q4', 'A', 'B')"><span class="opt-label">A</span> 즉시 (동시에)</button>
+    <button class="mc-opt" onclick="answerMC('q4', 'B', 'B')"><span class="opt-label">B</span> 평균 3~6개월 후 급락</button>
+    <button class="mc-opt" onclick="answerMC('q4', 'C', 'B')"><span class="opt-label">C</span> 2~3년 후</button>
+    <button class="mc-opt" onclick="answerMC('q4', 'D', 'B')"><span class="opt-label">D</span> 소비 감소와 무관</button>
+  </div>
+  <div class="feedback" id="fb-q4"></div>
+</div>
+
+<!-- Q5 OX -->
+<div class="q-card" id="q5">
+  <div class="q-header">
+    <div class="q-num">5</div>
+    <span class="q-badge badge-mid">보통</span>
+    <span class="q-badge badge-type">OX형</span>
+  </div>
+  <div class="q-text">기업의 자본 투자(Capital Spending)가 늘어나면 소비자 지출도 자동으로 증가한다.</div>
+  <div class="ox-btns">
+    <button class="ox-btn" onclick="answerOX('q5', 'O', 'X')">⭕</button>
+    <button class="ox-btn" onclick="answerOX('q5', 'X', 'X')">❌</button>
+  </div>
+  <div class="feedback" id="fb-q5"></div>
+</div>
+
+<!-- Q6 객관식 -->
+<div class="q-card" id="q6">
+  <div class="q-header">
+    <div class="q-num">6</div>
+    <span class="q-badge badge-mid">보통</span>
+    <span class="q-badge badge-type">객관식</span>
+  </div>
+  <div class="q-text">강사가 "로셋(Rosette)"으로 표현한 핵심 투자 원칙은?</div>
+  <div class="mc-options">
+    <button class="mc-opt" onclick="answerMC('q6', 'A', 'C')"><span class="opt-label">A</span> 절대 수치(절대값)의 크기가 주가를 결정한다</button>
+    <button class="mc-opt" onclick="answerMC('q6', 'B', 'C')"><span class="opt-label">B</span> 분기 실적 상회 여부가 가장 중요하다</button>
+    <button class="mc-opt" onclick="answerMC('q6', 'C', 'C')"><span class="opt-label">C</span> 성장률의 변화율(Rate of Change)이 주가 방향을 결정한다</button>
+    <button class="mc-opt" onclick="answerMC('q6', 'D', 'C')"><span class="opt-label">D</span> AI 섹터는 일반 경기 사이클에서 완전히 독립적이다</button>
+  </div>
+  <div class="feedback" id="fb-q6"></div>
+</div>
+
+<!-- Q7 객관식 -->
+<div class="q-card" id="q7">
+  <div class="q-header">
+    <div class="q-num">7</div>
+    <span class="q-badge badge-mid">보통</span>
+    <span class="q-badge badge-type">객관식</span>
+  </div>
+  <div class="q-text">1950년 이후 미국 주식시장 통계에 따르면, 베어마켓 평균 하락폭과 불마켓 평균 상승폭으로 올바른 것은?</div>
+  <div class="mc-options">
+    <button class="mc-opt" onclick="answerMC('q7', 'A', 'C')"><span class="opt-label">A</span> 하락 -10%, 상승 +15%</button>
+    <button class="mc-opt" onclick="answerMC('q7', 'B', 'C')"><span class="opt-label">B</span> 하락 -50%, 상승 +60%</button>
+    <button class="mc-opt" onclick="answerMC('q7', 'C', 'C')"><span class="opt-label">C</span> 하락 -25%, 상승 +33%</button>
+    <button class="mc-opt" onclick="answerMC('q7', 'D', 'C')"><span class="opt-label">D</span> 하락 -25%, 상승 +25%</button>
+  </div>
+  <div class="feedback" id="fb-q7"></div>
+</div>
+
+<!-- Q8 단답형 -->
+<div class="q-card" id="q8">
+  <div class="q-header">
+    <div class="q-num">8</div>
+    <span class="q-badge badge-mid">보통</span>
+    <span class="q-badge badge-type">단답형</span>
+  </div>
+  <div class="q-text">원인과 결과 사이의 민감도 비율을 나타내는 경제학 용어로, 소비자 지출이 1% 변할 때 산업 생산이 2~3% 변하는 관계를 설명하는 단어는? (영어로 입력)</div>
+  <div class="short-wrap">
+    <input type="text" class="short-input" id="inp-q8" placeholder="영어로 입력하세요...">
+    <button class="short-btn" onclick="answerShort('q8', ['elasticity','Elasticity','ELASTICITY'])">확인</button>
+  </div>
+  <div class="feedback" id="fb-q8"></div>
+</div>
+
+<!-- 난이도 어려움 2문제 -->
+<div class="quiz-section-title">📕 난이도: 어려움</div>
+
+<!-- Q9 객관식 -->
+<div class="q-card" id="q9">
+  <div class="q-header">
+    <div class="q-num">9</div>
+    <span class="q-badge badge-hard">어려움</span>
+    <span class="q-badge badge-type">객관식</span>
+  </div>
+  <div class="q-text">강사는 경제 분석 시 '계절성(Seasonality)을 제거한 연간 변화율'이 분기 변화율보다 유용하다고 했다. 그 이유로 가장 적절한 것은?</div>
+  <div class="mc-options">
+    <button class="mc-opt" onclick="answerMC('q9', 'A', 'D')"><span class="opt-label">A</span> 연간 데이터가 구하기 더 쉬워서</button>
+    <button class="mc-opt" onclick="answerMC('q9', 'B', 'D')"><span class="opt-label">B</span> 분기 변화율은 항상 정확하지 않아서</button>
+    <button class="mc-opt" onclick="answerMC('q9', 'C', 'D')"><span class="opt-label">C</span> 연간 데이터는 정부가 공식 발표하지 않아서</button>
+    <button class="mc-opt" onclick="answerMC('q9', 'D', 'D')"><span class="opt-label">D</span> 계절 요인 제거 시 인과관계(Causality)가 더 명확하게 드러나서</button>
+  </div>
+  <div class="feedback" id="fb-q9"></div>
+</div>
+
+<!-- Q10 단답형 -->
+<div class="q-card" id="q10">
+  <div class="q-header">
+    <div class="q-num">10</div>
+    <span class="q-badge badge-hard">어려움</span>
+    <span class="q-badge badge-type">단답형</span>
+  </div>
+  <div class="q-text">강사가 "개구리 냄비 비유"로 설명한 현상은 무엇인가? — 소비자 지출이 이미 한참 감소했는데도 ( )은/는 뒤늦게 급격히 꺾인다는 경제 현상. 괄호 안의 단어를 쓰시오. (한글로 입력, 예: 기업재고)</div>
+  <div class="short-wrap">
+    <input type="text" class="short-input" id="inp-q10" placeholder="한글로 입력하세요...">
+    <button class="short-btn" onclick="answerShort('q10', ['기업자본지출','자본지출','캐피탈스팬딩','capital spending','Capital Spending','CapEx','capex','기업 자본 지출'])">확인</button>
+  </div>
+  <div class="feedback" id="fb-q10"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-section" id="result-section">
+  <div class="result-emoji" id="result-emoji">🎉</div>
+  <div class="result-grade" id="result-grade"></div>
+  <div class="result-msg" id="result-msg"></div>
+  <button class="retry-btn" onclick="retryAll()">↺ 다시 풀기</button>
+</div>
+
+</main>
+
+<footer>
+  <p>📺 투자는인생TV 아카데미 28회 시험문제 | 투자아카데미 교육용 자료</p>
+</footer>
+
+<script>
+let answered = {};
+let score = 0;
+
+const explanations = {
+  q1: { correct: true,  text: "미국 GDP의 약 70%가 가계(소비자) 지출로 구성됩니다. 이것이 소비자 지출을 미국 경제의 핵심 드라이빙 포스라고 부르는 이유입니다." },
+  q2: { correct: false, text: "자본주의·시장경제에서 소비를 줄이면 수요가 감소해 기업 생산·고용이 줄고 경기가 악화됩니다. '경제가 어려우면 아껴야 한다'는 생각은 시장경제 논리와 반대입니다." },
+  q3: { correct: 'B',  text: "연준(Federal Reserve)은 금리를 조정하고 통화량을 조절하는 통화정책의 주체입니다. 재정 지출은 재무부(Treasury)의 역할입니다." },
+  q4: { correct: 'B',  text: "소비자 지출 감소 시 산업 생산은 바로 반응하지 않고, 평균 3~6개월의 시차(래깅, Lagging)를 두고 급격히 감소합니다. 이 급작스러운 하락이 핵심 위험입니다." },
+  q5: { correct: false, text: "기업의 자본 투자(Capital Spending)가 늘어도 소비자 지출은 자동으로 늘지 않습니다. 인과관계는 '소비자 지출 → 기업 투자'이며, 역방향은 성립하지 않습니다." },
+  q6: { correct: 'C',  text: "'로셋(Rate of Change의 변화율)'이 핵심입니다. 엔비디아가 여전히 성장 중이어도 성장률이 30%에서 9%로 꺾이면 주가는 폭락합니다. 절대값이 아닌 변화율의 방향이 중요합니다." },
+  q7: { correct: 'C',  text: "1950년 이후 데이터에 따르면 베어마켓 평균 하락 -25%, 불마켓 평균 상승 +33%입니다. 순수익(+8%)이 항상 양수이므로 장기 보유가 유리합니다." },
+  q8: { correct: 'Elasticity', text: "Elasticity(탄력성)는 원인과 결과 간의 민감도 비율입니다. 소비자 지출 1% 변화 → 산업 생산 2~3% 변화처럼, 결과의 변화율이 원인의 변화율보다 클 때 '탄력적'이라고 합니다." },
+  q9: { correct: 'D',  text: "분기 데이터에는 계절적 요인(명절, 연말 소비 등)이 섞여 있어 노이즈가 큽니다. 연간 변화율은 이를 제거해 진짜 트렌드와 인과관계(Causality)를 더 명확히 보여줍니다." },
+  q10:{ correct: '기업자본지출', text: "기업 자본 지출(Capital Spending/CapEx)은 소비가 이미 오래전부터 감소해도 뒤늦게야 꺾입니다. 이를 '서서히 끓는 물 속 개구리'에 비유했습니다. 이 시차를 인식하지 못하면 투자 타이밍을 놓칩니다." }
+};
+
+function updateScore() {
+  document.getElementById('score-num').textContent = score;
+  const pct = (score / 10) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+  if (Object.keys(answered).length === 10) showResult();
+}
+
+function markCard(qid, isCorrect) {
+  const card = document.getElementById(qid);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+}
+
+function showFeedback(qid, isCorrect) {
+  const fb = document.getElementById('fb-' + qid);
+  const exp = explanations[qid];
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = `<span class="feedback-icon">${isCorrect ? '✅' : '❌'}</span>
+    <strong>${isCorrect ? '정답입니다!' : '오답입니다.'}</strong>
+    <div class="explanation">${exp.text}</div>`;
+}
+
+function answerOX(qid, choice, correct) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const isCorrect = choice === correct;
+  if (isCorrect) score++;
+  markCard(qid, isCorrect);
+  showFeedback(qid, isCorrect);
+  // highlight buttons
+  const btns = document.querySelectorAll('#' + qid + ' .ox-btn');
+  btns.forEach(btn => {
+    const val = btn.textContent.trim() === '⭕' ? 'O' : 'X';
+    if (val === choice) btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+    if (val === correct && !isCorrect) btn.classList.add('reveal-correct');
+    btn.disabled = true;
+  });
+  updateScore();
+}
+
+function answerMC(qid, choice, correct) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const isCorrect = choice === correct;
+  if (isCorrect) score++;
+  markCard(qid, isCorrect);
+  showFeedback(qid, isCorrect);
+  const opts = document.querySelectorAll('#' + qid + ' .mc-opt');
+  opts.forEach(opt => {
+    const lbl = opt.querySelector('.opt-label').textContent.trim();
+    if (lbl === choice) opt.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (lbl === correct && !isCorrect) opt.classList.add('reveal');
+    opt.disabled = true;
+  });
+  updateScore();
+}
+
+function answerShort(qid, acceptedAnswers) {
+  if (answered[qid]) return;
+  const inp = document.getElementById('inp-' + qid);
+  const val = inp.value.trim();
+  if (!val) { inp.style.borderColor = '#e11d48'; setTimeout(() => inp.style.borderColor = '', 1000); return; }
+  answered[qid] = true;
+  const isCorrect = acceptedAnswers.some(a => a.toLowerCase() === val.toLowerCase());
+  if (isCorrect) score++;
+  markCard(qid, isCorrect);
+  inp.disabled = true;
+  document.querySelector('#' + qid + ' .short-btn').disabled = true;
+  showFeedback(qid, isCorrect);
+  updateScore();
+}
+
+function showResult() {
+  const rs = document.getElementById('result-section');
+  rs.classList.add('show');
+  const emoji = document.getElementById('result-emoji');
+  const grade = document.getElementById('result-grade');
+  const msg = document.getElementById('result-msg');
+  if (score >= 9) { emoji.textContent = '🏆'; grade.textContent = score + '/10 — 투자 마스터'; msg.textContent = '완벽합니다! 소비자 지출과 경기 사이클을 완전히 이해하셨습니다.'; }
+  else if (score >= 7) { emoji.textContent = '🎯'; grade.textContent = score + '/10 — 우수'; msg.textContent = '핵심 개념을 잘 이해하고 있습니다. 틀린 문제를 다시 복습해보세요.'; }
+  else if (score >= 5) { emoji.textContent = '📘'; grade.textContent = score + '/10 — 보통'; msg.textContent = '기초는 잡혔습니다. 래깅 개념과 Rate of Change를 다시 학습하세요.'; }
+  else { emoji.textContent = '📖'; grade.textContent = score + '/10 — 재학습 필요'; msg.textContent = '강의를 한 번 더 수강하고 핵심 개념(PCE, 탄력성, 변화율)을 정리해보세요.'; }
+}
+
+function retryAll() {
+  answered = {}; score = 0;
+  document.getElementById('score-num').textContent = 0;
+  document.getElementById('prog').style.width = '0%';
+  document.getElementById('result-section').classList.remove('show');
+  document.querySelectorAll('.q-card').forEach(c => { c.className = 'q-card'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.innerHTML = ''; });
+  document.querySelectorAll('.ox-btn').forEach(b => { b.className = 'ox-btn'; b.disabled = false; });
+  document.querySelectorAll('.mc-opt').forEach(b => { b.className = 'mc-opt'; b.disabled = false; });
+  document.querySelectorAll('.short-input').forEach(i => { i.value = ''; i.disabled = false; });
+  document.querySelectorAll('.short-btn').forEach(b => { b.disabled = false; });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
