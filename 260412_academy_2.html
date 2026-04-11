@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 29회 — 기업 예상주가 예측법</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* FADE-IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+
+  /* HEADER */
+  .issue-bar {
+    border-top: 3px solid var(--accent);
+    padding-top: 10px;
+    margin-top: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text2);
+    text-transform: uppercase;
+  }
+  .issue-label { color: var(--accent); font-weight: 700; }
+
+  h1.headline {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin: 20px 0 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .sub-headline {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .hero-rule {
+    height: 1px;
+    background: var(--border);
+    margin: 0 0 28px;
+  }
+
+  /* SECTIONS */
+  h2.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 44px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  h3.subsection {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 24px 0 8px;
+    letter-spacing: 0.03em;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    padding: 14px 18px;
+    margin: 28px 0;
+    background: var(--bg2);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* KEY CONCEPT BOX */
+  .concept-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 18px 20px;
+    margin: 20px 0;
+    border-radius: 2px;
+  }
+  .concept-box .label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .concept-box .title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .concept-box p { font-size: 13.5px; color: var(--text2); margin: 0; }
+
+  /* CAUSAL CHAIN */
+  .chain-wrap {
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .chain-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 4px;
+  }
+  .chain-step:last-child { border-bottom: none; }
+  .chain-step:hover { background: #fff5f7; padding-left: 6px; }
+  .chain-num {
+    min-width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .chain-content { flex: 1; }
+  .chain-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .chain-desc { font-size: 13px; color: var(--text2); }
+  .chain-detail {
+    display: none;
+    font-size: 13px;
+    color: var(--accent);
+    margin-top: 6px;
+    background: #fff5f7;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border-left: 3px solid var(--accent);
+  }
+  .chain-step.open .chain-detail { display: block; }
+  .chain-arrow { color: var(--accent); font-size: 22px; text-align: center; line-height: 1; margin: -4px 0; font-weight: 300; }
+
+  /* TIMELINE TAG */
+  .lag-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* SECTOR TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fff; }
+
+  /* 7-STEP */
+  .step-list { list-style: none; counter-reset: steps; }
+  .step-list li {
+    counter-increment: steps;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-list li::before {
+    content: counter(steps);
+    min-width: 28px;
+    height: 28px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .step-body { flex: 1; }
+  .step-name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .step-note { font-size: 13px; color: var(--text2); }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-title span { font-size: 11px; background: var(--accent); color: #fff; padding: 2px 8px; border-radius: 2px; }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .slider-group { display: flex; flex-direction: column; gap: 4px; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .slider-val { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    height: 4px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .result-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .result-card .r-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .result-card .r-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; }
+  .result-card .r-value.up { color: var(--accent); }
+  .result-card .r-value.down { color: var(--c4); }
+  .result-card .r-dir { font-size: 11px; margin-top: 2px; }
+  .sim-reset {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 16px;
+    background: var(--text);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .sim-reset:hover { background: var(--accent); }
+
+  /* LAG SIMULATOR */
+  .lag-vis {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 18px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .lag-timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 14px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .lag-item {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+    position: relative;
+  }
+  .lag-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border);
+    margin: 0 auto 6px;
+    transition: background 0.4s, transform 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .lag-dot.active { background: var(--accent); transform: scale(1.3); }
+  .lag-line {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .lag-line.active { background: var(--accent); }
+  .lag-item:last-child .lag-line { display: none; }
+  .lag-label { font-size: 11px; color: var(--text2); line-height: 1.3; }
+  .lag-label strong { display: block; font-size: 12px; color: var(--text); font-weight: 700; }
+  .lag-btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .lag-btn {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .lag-btn:hover, .lag-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .lag-desc {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text2);
+    min-height: 40px;
+    transition: all 0.3s;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin: 2px 3px;
+  }
+  .badge.red { background: #fff5f7; border-color: var(--accent); color: var(--accent); }
+
+  /* KEY NUMBERS */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .kpi-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px 12px;
+    text-align: center;
+    border-top: 3px solid var(--accent);
+  }
+  .kpi-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+  .kpi-unit { font-size: 12px; color: var(--text2); }
+  .kpi-desc { font-size: 12px; color: var(--text); margin-top: 4px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="issue-bar fade-in">
+  <span class="issue-label">투자아카데미 · Episode 29</span>
+  <span>2026.04.12</span>
+</div>
+
+<h1 class="headline fade-in">기업 예상주가를<br>예측하는 방법</h1>
+<p class="sub-headline fade-in">거시경제 → 소비자 지출 → 기업이익 → 주가<br>인과관계로 읽는 미국 주식시장 분석 프레임</p>
+<div class="hero-rule"></div>
+
+<!-- KPI -->
+<div class="kpi-row fade-in">
+  <div class="kpi-card">
+    <div class="kpi-num">6~9</div>
+    <div class="kpi-unit">개월</div>
+    <div class="kpi-desc">통화정책 효과<br>반영 시차</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">70%</div>
+    <div class="kpi-unit">이상</div>
+    <div class="kpi-desc">미국 GDP에서<br>소비자 지출 비중</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">1년</div>
+    <div class="kpi-unit">단위</div>
+    <div class="kpi-desc">변화율(YoY) 기준<br>분석 권장</div>
+  </div>
+</div>
+
+<!-- 핵심 개요 -->
+<h2 class="section-title fade-in">강의 핵심 요약</h2>
+
+<div class="fade-in">
+<p>이번 강의는 <strong>'거시경제 지표를 이용해 기업의 미래 실적과 주가를 예측하는 방법'</strong>을 다룬다. 핵심 논리는 단순하다. 소비자가 얼마나 쓰느냐가 기업 매출을 결정하고, 그것이 기업이익과 주가로 연결된다는 것이다.</p>
+
+<div class="pull-quote">
+"소비자 지출이 기업이익(Corporate Profit)과 주가의 직접적인 영향을 미친다. S&P 500 EPS는 Consumer Spending과 직접적인 관련이 있다."
+</div>
+
+<p>단, 모든 산업과 기업을 동일한 방식으로 예측할 수는 없다. 국제 정세·정치·심리 변수가 큰 섹터(에너지, 방산, 제약 등)는 이 인과관계가 성립하기 어렵다.</p>
+</div>
+
+<!-- 인과관계 사슬 -->
+<h2 class="section-title fade-in">핵심 인과관계 사슬</h2>
+<p class="fade-in" style="font-size:13px;color:var(--text2);margin-bottom:10px;">각 단계를 눌러 자세한 설명을 확인하세요.</p>
+
+<div class="chain-wrap fade-in" id="causalChain">
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">1</div>
+    <div class="chain-content">
+      <div class="chain-title">인플레이션 변화</div>
+      <div class="chain-desc">물가 상승률의 방향과 속도 — <em>절대값보다 변화율(Rate of Change)이 핵심</em></div>
+      <div class="chain-detail">인플레이션이 <strong>내려가는 이유</strong>는 사람들이 덜 쓰기 때문. 이는 경기 둔화 신호다. 연준(Fed)은 이를 감지하면 금리를 인하해 소비를 부양하려 한다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">2</div>
+    <div class="chain-content">
+      <div class="chain-title">금리 정책 변화 <span class="lag-tag">즉각~3개월</span></div>
+      <div class="chain-desc">연준의 금리 인하 → 시중 유동성 증가</div>
+      <div class="chain-detail">금리가 내려가면 대출 비용이 줄어 기업과 소비자 모두 더 쉽게 돈을 빌릴 수 있다. 이것은 경기를 방어하기 위한 수단이지, 경기가 좋아서 하는 행동이 아님을 명심해야 한다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">3</div>
+    <div class="chain-content">
+      <div class="chain-title">소비자 차입(Borrowing) 증가 <span class="lag-tag">3~6개월</span></div>
+      <div class="chain-desc">주택담보대출·신용카드 사용 증가</div>
+      <div class="chain-detail">금리 인하 후 6~9개월 안에 소비자 차입이 늘어난다. 하지만 만약 이 시기에도 소비가 늘지 않으면 리세션 확률이 급등한다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">4</div>
+    <div class="chain-content">
+      <div class="chain-title">소비자 지출 증가 (Real Consumer Spending) <span class="lag-tag">6~9개월</span></div>
+      <div class="chain-desc">실질 소비 증가 → 기업 매출 상승</div>
+      <div class="chain-detail">이것이 분석의 <strong>'원류(한강의 원천)'</strong>다. 소비자 지출 데이터를 매월/분기별이 아닌 <strong>연간(YoY) 변화율</strong>로 추적해야 정확한 방향을 잡을 수 있다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">5</div>
+    <div class="chain-content">
+      <div class="chain-title">기업 자본 지출 증가 (Real Capital Spending) <span class="lag-tag">6~12개월</span></div>
+      <div class="chain-desc">기업이 생산 설비·인력에 투자 확대</div>
+      <div class="chain-detail">소비가 늘어나면 기업은 생산을 늘리기 위해 투자(CapEx)를 확대한다. 이 시점이 6~12개월 후. 홈디포·로우즈 같은 기업의 실적이 좋아지는 시점이 여기다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">6</div>
+    <div class="chain-content">
+      <div class="chain-title">기업이익 증가 (Corporate Profit)</div>
+      <div class="chain-desc">분기 실적 발표에서 확인 → 일자리 증가</div>
+      <div class="chain-detail">기업이익이 늘면 고용을 늘리고, 고용이 늘면 다시 소비자 소득이 증가해 사이클이 반복된다. S&P 500 EPS가 이 흐름을 수치로 보여준다.</div>
+    </div>
+  </div>
+  <div class="chain-arrow fade-in">↓</div>
+  <div class="chain-step" onclick="toggleChain(this)">
+    <div class="chain-num">7</div>
+    <div class="chain-content">
+      <div class="chain-title">주가 상승 (Stock Market)</div>
+      <div class="chain-desc">기업이익 예상 실적 초과 → 주가 반응</div>
+      <div class="chain-detail">주식시장은 기업이익 예상치와 실제치의 <strong>차이(서프라이즈)</strong>에 반응한다. 따라서 6~12개월 전에 선행지표를 보고 매수 타이밍을 잡는 것이 핵심 전략이다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 시뮬레이터: 경제 변수 -->
+<h2 class="section-title fade-in">📊 경제 시나리오 시뮬레이터</h2>
+<p class="fade-in" style="font-size:13px;color:var(--text2);margin-bottom:10px;">슬라이더를 조작해 경제 변수 변화에 따른 예상 방향을 확인하세요.</p>
+
+<div class="sim-box fade-in" id="ecoSim">
+  <div class="sim-title">경제 변수 → 주식시장 방향 예측 <span>시뮬레이터</span></div>
+  <div class="slider-row">
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>인플레이션 변화율</span>
+        <span class="slider-val" id="inflVal">-0.5%</span>
+      </div>
+      <input type="range" id="inflSlider" min="-3" max="3" step="0.5" value="-0.5">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>소비자 지출 증가율 (YoY)</span>
+        <span class="slider-val" id="cspendVal">+2.0%</span>
+      </div>
+      <input type="range" id="cspendSlider" min="-5" max="8" step="0.5" value="2">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>금리 변화 (bps)</span>
+        <span class="slider-val" id="rateVal">-50bps</span>
+      </div>
+      <input type="range" id="rateSlider" min="-200" max="200" step="25" value="-50">
+    </div>
+  </div>
+  <div class="result-grid">
+    <div class="result-card">
+      <div class="r-label">기업이익 방향</div>
+      <div class="r-value" id="profitDir">↑</div>
+      <div class="r-dir" id="profitNote">확대 예상</div>
+    </div>
+    <div class="result-card">
+      <div class="r-label">주식시장 전망</div>
+      <div class="r-value" id="mktDir">↑</div>
+      <div class="r-dir" id="mktNote">6~12개월 내 긍정</div>
+    </div>
+    <div class="result-card">
+      <div class="r-label">리세션 리스크</div>
+      <div class="r-value" id="recDir">낮음</div>
+      <div class="r-dir" id="recNote">소프트랜딩 가능</div>
+    </div>
+    <div class="result-card">
+      <div class="r-label">투자 전략</div>
+      <div class="r-value" style="font-size:16px;" id="stratDir">매수</div>
+      <div class="r-dir" id="stratNote">경기민감주 비중 확대</div>
+    </div>
+  </div>
+  <button class="sim-reset" onclick="resetSim()">↺ 초기값으로</button>
+</div>
+
+<!-- 시차 시각화 -->
+<h2 class="section-title fade-in">⏱ 선행·후행지수 시차 시각화</h2>
+<p class="fade-in" style="font-size:13px;color:var(--text2);margin-bottom:6px;">이벤트를 선택해 시간 흐름에 따른 효과를 확인하세요.</p>
+
+<div class="lag-vis fade-in">
+  <div class="lag-btn-row">
+    <button class="lag-btn active" onclick="setLag(this, 0)" data-idx="0">금리 인하</button>
+    <button class="lag-btn" onclick="setLag(this, 1)" data-idx="1">주택거래 증가</button>
+    <button class="lag-btn" onclick="setLag(this, 2)" data-idx="2">소비 지출 둔화</button>
+  </div>
+  <div class="lag-timeline" id="lagTimeline"></div>
+  <div class="lag-desc" id="lagDesc"></div>
+</div>
+
+<!-- 소비자 지출 차트 -->
+<h2 class="section-title fade-in">소비자 지출 데이터 읽기</h2>
+<p class="fade-in" style="font-size:13px;color:var(--text2);margin-bottom:10px;">예상치(Forecast)와 실제치(Actual)의 <strong>차이(Gap)</strong>가 시장에 신호를 보낸다.</p>
+
+<div class="chart-container fade-in">
+  <canvas id="spendChart" height="220"></canvas>
+</div>
+
+<div class="fade-in">
+<div class="concept-box">
+  <div class="label">핵심 원칙</div>
+  <div class="title">절대값보다 변화율(Rate of Change)이 중요하다</div>
+  <p>인플레이션이 높다/낮다가 아니라, <strong>내려가는 속도</strong>와 <strong>방향</strong>이 시장에 더 큰 영향을 미친다. 연간(YoY) 변화율을 기준으로 분석해야 노이즈를 제거할 수 있다.</p>
+</div>
+</div>
+
+<!-- 하우징 사례 -->
+<h2 class="section-title fade-in">실전 사례: 하우징 터노버 → 홈디포</h2>
+
+<div class="fade-in">
+<p>강의에서 제시된 가장 구체적인 인과관계 사례다.</p>
+<table>
+  <tr>
+    <th>단계</th><th>지표/현상</th><th>해당 기업</th>
+  </tr>
+  <tr>
+    <td><strong>선행지수</strong></td>
+    <td>신규·기존 주택 거래량 증가</td>
+    <td>주택 관련 리츠</td>
+  </tr>
+  <tr>
+    <td>중간</td>
+    <td>카펫, 잔디깎기, 창문·문짝 교체 수요 증가</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><strong>후행지수</strong></td>
+    <td>홈디포·로우즈 분기 실적 서프라이즈</td>
+    <td>HD, LOW</td>
+  </tr>
+  <tr>
+    <td>결과</td>
+    <td>주가 상승 (1~2분기 후)</td>
+    <td>HD, LOW, WMT</td>
+  </tr>
+</table>
+<div class="pull-quote">
+"하우징 터노버가 선행지수. 1~2분기 지나면 홈디포·로우즈의 분기 실적이 예상보다 좋게 나타난다. 그 전에 사야 한다."
+</div>
+</div>
+
+<!-- 섹터 분류 -->
+<h2 class="section-title fade-in">예측 가능한 섹터 vs 어려운 섹터</h2>
+
+<div class="fade-in">
+<table>
+  <tr>
+    <th style="width:50%">✅ 예측 비교적 가능</th>
+    <th>❌ 예측 어려움</th>
+  </tr>
+  <tr>
+    <td>홈인테리어 (홈디포, 로우즈)<br>소매유통 (월마트)<br>AI·데이터센터 (무조건 투자)<br>일부 헬스케어 (CI, UNH)</td>
+    <td>에너지 (국제정세 의존)<br>방산·무기 (정치적 변수)<br>제약·바이오텍 (임상 결과)<br>패션·스포츠 (트렌드)<br>교육·미디어·OTT</td>
+  </tr>
+</table>
+<p style="font-size:13px;color:var(--text2);">넷플릭스는 경제 사이클과 인과관계가 약해 분석 대상에서 제외. 삼성전자는 AI 전환 실패로 인해 기업이익 감소 → 고용 축소 패턴이 나타나는 사례로 언급됨.</p>
+</div>
+
+<!-- 7단계 프레임워크 -->
+<h2 class="section-title fade-in">투자 분석 7단계 프레임워크</h2>
+<p class="fade-in" style="font-size:13px;color:var(--text2);margin-bottom:14px;">강사가 실제로 사용하는 CIO급 분석 프로세스</p>
+
+<ul class="step-list fade-in">
+  <li>
+    <div class="step-body">
+      <div class="step-name">거시경제 선행지수 분석</div>
+      <div class="step-note">소비자지출, 주택지표, 고용지표 등 핵심 선행지수 수집·분석</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">대형 기관의 포트폴리오 변화 추적</div>
+      <div class="step-note">블랙락 등 1조달러 규모 기관의 매수·매도 동향 확인 (같은 방향으로 움직이는지 검증)</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">소비자 지출 예상치 vs 실제치 차이 분석</div>
+      <div class="step-note">예상보다 낮으면 경기 둔화 신호. 3개월 연속 하회 시 주의</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">고용지표 변화율 추적</div>
+      <div class="step-note">실업급여 신청 건수, 실업률, 비농업 고용 등 복수 지표</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">기업 자본 지출(CapEx) 분석</div>
+      <div class="step-note">대형 기업의 설비·인프라 투자 증감 → 미래 생산 계획의 신호</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">섹터별 자금 흐름 분석</div>
+      <div class="step-note">어떤 섹터에서 돈이 빠지고 들어오는지 → 섹터 로테이션 파악</div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <div class="step-name">포트폴리오 적용 (섹터 로테이션 + 리밸런싱)</div>
+      <div class="step-note">매수·매도 결정 후 → 다시 1단계로 순환. 끝이 없는 사이클</div>
+    </div>
+  </li>
+</ul>
+
+<!-- 해열제 비유 -->
+<h2 class="section-title fade-in">금리 인하의 역설 — 해열제 비유</h2>
+
+<div class="fade-in">
+<div class="concept-box">
+  <div class="label">핵심 비유</div>
+  <div class="title">"아이가 열이 나서 해열제를 줬다"</div>
+  <p>금리 인하는 경기가 좋아서 하는 것이 아니라, <strong>나빠질 것을 우려해서</strong> 하는 방어 수단이다. 해열제를 먹여도 열이 안 내려가면 더 심각한 병이다. 마찬가지로 금리를 내렸는데 소비가 살아나지 않으면 리세션 확률이 급등한다.</p>
+</div>
+
+<p>강사는 2024년 9월 금리 인하 후, <strong>6~9개월 뒤인 2025년 3~4월</strong>에 통화정책 효과 여부를 확인해야 한다고 강조했다. 만약 이 시점에 소비가 늘지 않았다면 장기 하락장 진입 가능성이 높다.</p>
+</div>
+
+<!-- 차트2: 금리 vs 소비 -->
+<h2 class="section-title fade-in">금리 인하 후 소비 반응 시차</h2>
+<div class="chart-container fade-in">
+  <canvas id="lagChart" height="220"></canvas>
+</div>
+
+<!-- 한국 경제 언급 -->
+<h2 class="section-title fade-in">한국 경제에 대한 시각</h2>
+
+<div class="fade-in">
+<p>강사는 미국의 분석 프레임이 한국에 그대로 적용되기 어렵다고 말한다. 이유는 다음과 같다.</p>
+<table>
+  <tr><th>구분</th><th>미국</th><th>한국</th></tr>
+  <tr><td>경제 구조</td><td>내수 99%, 소비 중심</td><td>수출 의존, 내수 한계</td></tr>
+  <tr><td>인구</td><td>3억+ (소비 기반 대형)</td><td>4천만 (구매력 보유자 절반 미만)</td></tr>
+  <tr><td>예측 가능성</td><td>통계·심리 안정적, 예측 용이</td><td>유행·정치 변동성 크고 예측 어려움</td></tr>
+  <tr><td>장기 과제</td><td>이민 수용으로 인구 유지</td><td>통일 등을 통한 구매력 인구 확대 필요</td></tr>
+</table>
+</div>
+
+<!-- 주요 개념 정리 -->
+<h2 class="section-title fade-in">주요 용어 해설</h2>
+<div class="fade-in">
+  <div class="concept-box">
+    <div class="label">용어</div>
+    <div class="title">선행지수(Leading Indicator) vs 후행지수(Lagging Indicator)</div>
+    <p><strong>선행지수</strong>: 미래의 경제 변화를 미리 알려주는 지표 (주택거래량, 소비자 지출 등). <strong>후행지수</strong>: 경제 변화가 이미 일어난 후 확인되는 지표 (기업 분기 실적, 고용률 등). 투자는 선행지수를 보고, 후행지수로 검증한다.</p>
+  </div>
+  <div class="concept-box">
+    <div class="label">용어</div>
+    <div class="title">섹터 로테이션(Sector Rotation)</div>
+    <p>경기 사이클에 따라 유리한 산업 섹터가 바뀌는 현상. 경기 확장기에는 소비재·IT, 수축기에는 헬스케어·유틸리티로 자금이 이동하는 패턴을 이용해 포트폴리오를 조정하는 전략.</p>
+  </div>
+  <div class="concept-box">
+    <div class="label">용어</div>
+    <div class="title">소프트 랜딩(Soft Landing)</div>
+    <p>경제 과열을 식히기 위해 금리를 올렸다가 낮추는 과정에서, 경기침체(리세션) 없이 성장세가 완만하게 유지되는 이상적인 시나리오.</p>
+  </div>
+  <div class="concept-box">
+    <div class="label">용어</div>
+    <div class="title">CapEx (Capital Expenditure, 자본 지출)</div>
+    <p>기업이 미래 수익을 위해 생산 설비, 인프라, 기술에 투자하는 비용. CapEx가 늘어난다는 것은 기업이 미래를 낙관적으로 본다는 신호.</p>
+  </div>
+  <div class="concept-box">
+    <div class="label">용어</div>
+    <div class="title">리커런트(Rip Current, 이안류)</div>
+    <p>강사가 하락장의 힘을 설명할 때 사용한 비유. 바다에서 파도가 해안으로 밀려왔다가 좁은 통로로 빠르게 빠져나가는 강한 역류. 한번 휩쓸리면 빠져나오기 어렵다.</p>
+  </div>
+</div>
+
+<div class="footer fade-in">
+  투자아카데미 29회 · 원본 출처: YouTube<br>
+  본 문서는 학습 목적의 요약·분석 자료입니다. 투자 권유가 아닙니다.
+</div>
+
+<script>
+// === FADE OBSERVER ===
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// === CHART CONFIGS ===
+const chartConfigs = {};
+
+chartConfigs['spendChart'] = () => {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'];
+  const forecast = [3.1, 3.0, 2.9, 2.8, 2.9, 3.0, 2.9, 2.8, 2.9, 2.8];
+  const actual =   [3.0, 2.8, 2.7, 2.9, 3.1, 2.8, 2.7, 2.9, 2.0, null];
+  new Chart(document.getElementById('spendChart'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: '예상치 (Forecast)',
+          data: forecast,
+          borderColor: '#6b7280',
+          borderDash: [5,4],
+          borderWidth: 2,
+          pointRadius: 3,
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: '실제치 (Actual)',
+          data: actual,
+          borderColor: '#e11d48',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: '#e11d48',
+          fill: {target: '-1', above: 'rgba(225,29,72,0.06)', below: 'rgba(37,99,235,0.07)'},
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 12 }, boxWidth: 14 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y !== null ? ctx.parsed.y + '%' : '미발표'}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 1.5, max: 3.5,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['lagChart'] = () => {
+  const labels = ['M0\n금리인하', 'M3', 'M6\n소비증가', 'M9', 'M12\n기업실적', 'M15', 'M18\n주가반영'];
+  new Chart(document.getElementById('lagChart'), {
+    type: 'line',
+    data: {
+      labels: ['M0 금리인하','M3','M6 소비증가','M9','M12 기업실적','M15','M18 주가반영'],
+      datasets: [
+        {
+          label: '정책 효과 강도',
+          data: [10, 20, 45, 60, 75, 85, 90],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2.5,
+          pointBackgroundColor: ['#e11d48','#e11d48','#e11d48','#e11d48','#2563eb','#2563eb','#2563eb'],
+          pointRadius: 5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `효과 강도: ${ctx.parsed.y}%` } }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+// === CHART OBSERVER ===
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// === CAUSAL CHAIN TOGGLE ===
+function toggleChain(el) {
+  el.classList.toggle('open');
+}
+
+// === ECO SIMULATOR ===
+function updateSim() {
+  const infl = parseFloat(document.getElementById('inflSlider').value);
+  const cspend = parseFloat(document.getElementById('cspendSlider').value);
+  const rate = parseFloat(document.getElementById('rateSlider').value);
+
+  document.getElementById('inflVal').textContent = (infl >= 0 ? '+' : '') + infl + '%';
+  document.getElementById('cspendVal').textContent = (cspend >= 0 ? '+' : '') + cspend + '%';
+  document.getElementById('rateVal').textContent = (rate >= 0 ? '+' : '') + rate + 'bps';
+
+  // Score calculation
+  let score = 0;
+  if (infl < 0) score += 1; else if (infl > 1) score -= 1;
+  if (cspend > 2) score += 2; else if (cspend > 0) score += 1; else if (cspend < 0) score -= 2;
+  if (rate < 0) score += 1; else if (rate > 50) score -= 1;
+
+  const profitEl = document.getElementById('profitDir');
+  const mktEl = document.getElementById('mktDir');
+  const recEl = document.getElementById('recDir');
+  const stratEl = document.getElementById('stratDir');
+
+  if (score >= 2) {
+    profitEl.textContent = '↑'; profitEl.className = 'r-value up';
+    document.getElementById('profitNote').textContent = '확대 예상';
+    mktEl.textContent = '↑'; mktEl.className = 'r-value up';
+    document.getElementById('mktNote').textContent = '6~12개월 내 긍정';
+    recEl.textContent = '낮음'; recEl.className = 'r-value up';
+    document.getElementById('recNote').textContent = '소프트랜딩 가능';
+    stratEl.textContent = '매수'; stratEl.className = 'r-value up';
+    document.getElementById('stratNote').textContent = '경기민감주 비중 확대';
+  } else if (score <= -1) {
+    profitEl.textContent = '↓'; profitEl.className = 'r-value down';
+    document.getElementById('profitNote').textContent = '감소 우려';
+    mktEl.textContent = '↓'; mktEl.className = 'r-value down';
+    document.getElementById('mktNote').textContent = '하락 압력 주의';
+    recEl.textContent = '높음'; recEl.className = 'r-value down';
+    document.getElementById('recNote').textContent = '리세션 경계';
+    stratEl.textContent = '현금'; stratEl.className = 'r-value down';
+    document.getElementById('stratNote').textContent = '방어적 포트폴리오';
+  } else {
+    profitEl.textContent = '→'; profitEl.className = 'r-value';
+    document.getElementById('profitNote').textContent = '혼조세';
+    mktEl.textContent = '→'; mktEl.className = 'r-value';
+    document.getElementById('mktNote').textContent = '방향성 불확실';
+    recEl.textContent = '중간'; recEl.className = 'r-value';
+    document.getElementById('recNote').textContent = '모니터링 필요';
+    stratEl.textContent = '중립'; stratEl.className = 'r-value';
+    document.getElementById('stratNote').textContent = '섹터 로테이션 검토';
+  }
+}
+
+function resetSim() {
+  document.getElementById('inflSlider').value = -0.5;
+  document.getElementById('cspendSlider').value = 2;
+  document.getElementById('rateSlider').value = -50;
+  updateSim();
+}
+
+['inflSlider','cspendSlider','rateSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateSim);
+});
+updateSim();
+
+// === LAG TIMELINE ===
+const lagScenarios = [
+  {
+    steps: [
+      { label: '금리 인하', time: 'M0', active: true },
+      { label: '대출 증가', time: 'M2', active: true },
+      { label: '소비자 차입↑', time: 'M4', active: true },
+      { label: '소비 지출↑', time: 'M6~9', active: false },
+      { label: '기업 CapEx↑', time: 'M9~12', active: false },
+      { label: '기업이익↑', time: 'M12~15', active: false },
+      { label: '주가 반응', time: 'M15~18', active: false },
+    ],
+    desc: '금리 인하 후 6~9개월 내 소비 반응이 없으면 리세션 확률 급등. 통화정책은 경기 방어 수단이지 호황 신호가 아님.'
+  },
+  {
+    steps: [
+      { label: '주택거래 증가', time: 'M0', active: true },
+      { label: '인테리어 수요↑', time: 'M1~2', active: true },
+      { label: '카펫·가구 주문↑', time: 'M2~3', active: true },
+      { label: '홈디포 매출↑', time: 'M3~6', active: false },
+      { label: '분기 실적 서프라이즈', time: 'M6', active: false },
+      { label: '주가 상승', time: 'M6~9', active: false },
+    ],
+    desc: '주택거래량 증가 → 1~2분기 후 홈디포·로우즈 실적 개선. 거시지표를 보고 미리 매수하면 실적 발표 전에 수익 실현 가능.'
+  },
+  {
+    steps: [
+      { label: '소비 지출 둔화', time: 'M0', active: true },
+      { label: '기업 매출 감소', time: 'M3~6', active: false },
+      { label: 'CapEx 축소', time: 'M6~9', active: false },
+      { label: '고용 감축', time: 'M9~12', active: false },
+      { label: '기업이익↓', time: 'M12', active: false },
+      { label: '주가 하락', time: 'M12~18', active: false },
+    ],
+    desc: '소비 둔화 신호가 나타나면 6~18개월 후 기업이익 감소와 주가 하락으로 이어진다. 이것이 하락장을 미리 준비해야 하는 이유.'
+  }
+];
+
+let currentLag = 0;
+let lagStep = 0;
+let lagTimer = null;
+
+function renderLag(scenario) {
+  const tl = document.getElementById('lagTimeline');
+  tl.innerHTML = '';
+  scenario.steps.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'lag-item';
+    item.innerHTML = `
+      <div class="lag-line" id="lagLine${i}"></div>
+      <div class="lag-dot" id="lagDot${i}"></div>
+      <div class="lag-label"><strong>${s.time}</strong>${s.label}</div>
+    `;
+    tl.appendChild(item);
+  });
+  document.getElementById('lagDesc').textContent = scenario.desc;
+  animateLag(scenario);
+}
+
+function animateLag(scenario) {
+  if (lagTimer) clearInterval(lagTimer);
+  let step = 0;
+  function activate() {
+    if (step < scenario.steps.length) {
+      document.getElementById('lagDot' + step)?.classList.add('active');
+      if (step > 0) document.getElementById('lagLine' + (step - 1))?.classList.add('active');
+      step++;
+    } else {
+      clearInterval(lagTimer);
+    }
+  }
+  activate();
+  lagTimer = setInterval(activate, 600);
+}
+
+function setLag(btn, idx) {
+  document.querySelectorAll('.lag-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentLag = idx;
+  renderLag(lagScenarios[idx]);
+}
+
+renderLag(lagScenarios[0]);
+</script>
+</body>
+</html>

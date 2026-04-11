@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 29회 — 시험문제 & 정답</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5; --c4: #2563eb;
+    --correct: #16a34a; --wrong: #dc2626;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px; line-height: 1.75;
+    max-width: 680px; margin: 0 auto; padding: 0 20px 80px;
+  }
+  .issue-bar {
+    border-top: 3px solid var(--accent); padding-top: 10px; margin-top: 36px;
+    display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: 0.1em; color: var(--text2); text-transform: uppercase;
+  }
+  .issue-label { color: var(--accent); font-weight: 700; }
+  h1.headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 36px); font-weight: 900; line-height: 1.2;
+    margin: 18px 0 6px;
+  }
+  .sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* SECTION TABS */
+  .tab-row {
+    display: flex; gap: 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 28px;
+  }
+  .tab-btn {
+    flex: 1; padding: 11px 10px; text-align: center; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; background: var(--bg2); color: var(--text2); transition: all 0.2s;
+  }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* QUESTION CARDS */
+  .q-card {
+    border: 1px solid var(--border); border-radius: 4px; margin-bottom: 18px; overflow: hidden;
+  }
+  .q-header {
+    background: var(--bg2); padding: 12px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .q-num {
+    min-width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .q-meta { display: flex; gap: 6px; align-items: center; margin-bottom: 5px; flex-wrap: wrap; }
+  .badge {
+    font-size: 10px; padding: 2px 7px; border-radius: 2px; font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .badge-easy { background: #dcfce7; color: #16a34a; }
+  .badge-mid { background: #fef9c3; color: #ca8a04; }
+  .badge-hard { background: #fee2e2; color: #dc2626; }
+  .badge-type { background: var(--bg); border: 1px solid var(--border); color: var(--text2); }
+  .q-text { font-size: 14.5px; font-weight: 500; line-height: 1.65; }
+  .q-body { padding: 14px 16px; }
+
+  /* OPTIONS */
+  .opt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .opt-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 4px;
+    cursor: pointer; transition: all 0.15s; font-size: 13.5px;
+    background: #fff;
+  }
+  .opt-item:hover { border-color: var(--accent); background: #fff5f7; }
+  .opt-item.selected { border-color: var(--accent); background: #fff5f7; }
+  .opt-item.correct { border-color: var(--correct); background: #f0fdf4; }
+  .opt-item.wrong { border-color: var(--wrong); background: #fef2f2; }
+  .opt-item.reveal-correct { border-color: var(--correct); background: #f0fdf4; }
+  .opt-label {
+    min-width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    background: var(--bg2);
+  }
+
+  /* OX */
+  .ox-row { display: flex; gap: 10px; margin-top: 10px; }
+  .ox-btn {
+    flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: 4px;
+    font-size: 24px; text-align: center; cursor: pointer; background: #fff; transition: all 0.15s;
+  }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.selected { border-color: var(--accent); background: #fff5f7; }
+  .ox-btn.correct { border-color: var(--correct); background: #f0fdf4; }
+  .ox-btn.wrong { border-color: var(--wrong); background: #fef2f2; }
+
+  /* SHORT ANSWER */
+  .short-input {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 4px;
+    font-size: 14px; font-family: inherit; margin-top: 8px; outline: none; transition: border 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+
+  /* CHECK BTN */
+  .check-btn {
+    margin-top: 10px; padding: 8px 16px; background: var(--text); color: #fff;
+    font-size: 12px; font-weight: 600; border: none; cursor: pointer; border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .check-btn:hover { background: var(--accent); }
+  .feedback {
+    margin-top: 10px; font-size: 13px; padding: 10px 12px;
+    border-radius: 4px; display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #f0fdf4; color: var(--correct); border-left: 3px solid var(--correct); }
+  .feedback.wrong-fb { background: #fef2f2; color: var(--wrong); border-left: 3px solid var(--wrong); }
+
+  /* ANSWER SECTION */
+  .ans-card {
+    border: 1px solid var(--border); border-radius: 4px; margin-bottom: 16px; overflow: hidden;
+  }
+  .ans-header {
+    padding: 12px 16px; background: var(--bg2);
+    display: flex; gap: 10px; align-items: center;
+  }
+  .ans-num {
+    min-width: 28px; height: 28px; background: var(--c4); color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .ans-body { padding: 14px 16px; font-size: 13.5px; }
+  .ans-correct { color: var(--correct); font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .ans-explain { color: var(--text); line-height: 1.7; }
+
+  /* SCORE */
+  .score-box {
+    background: var(--bg2); border: 1px solid var(--border); border-top: 3px solid var(--accent);
+    padding: 20px; text-align: center; margin-bottom: 24px; border-radius: 4px;
+  }
+  .score-val { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; color: var(--accent); }
+  .score-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .reset-all-btn {
+    margin-top: 14px; padding: 10px 24px; background: var(--text); color: #fff;
+    font-size: 13px; font-weight: 600; border: none; cursor: pointer; border-radius: 2px;
+  }
+  .reset-all-btn:hover { background: var(--accent); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text2); text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="issue-bar">
+  <span class="issue-label">투자아카데미 29회 · 시험</span>
+  <span>10문제</span>
+</div>
+<h1 class="headline">학습 확인 시험</h1>
+<p class="sub">문제를 풀고 정답을 확인하세요. 문제와 정답·해설이 분리되어 있습니다.</p>
+<hr>
+
+<div class="tab-row">
+  <button class="tab-btn active" onclick="switchTab('questions')">📝 문제 풀기</button>
+  <button class="tab-btn" onclick="switchTab('answers')">✅ 정답 & 해설</button>
+</div>
+
+<!-- ==================== 문제 탭 ==================== -->
+<div class="tab-panel active" id="tab-questions">
+
+<div class="score-box" id="scoreBox" style="display:none">
+  <div class="score-val" id="scoreVal">0/10</div>
+  <div class="score-label">정답 수</div>
+  <button class="reset-all-btn" onclick="resetAll()">↺ 다시 풀기</button>
+</div>
+
+<!-- Q1 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">1</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-easy">쉬움</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">강사가 미국 주식시장 분석에서 가장 근본적인 '원류(원천)'라고 강조한 지표는?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q1-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q1',1)"><span class="opt-label">①</span>기업 자본 지출(CapEx)</li>
+      <li class="opt-item" onclick="selectOpt(this,'q1',2)"><span class="opt-label">②</span>S&P 500 EPS</li>
+      <li class="opt-item" onclick="selectOpt(this,'q1',3)"><span class="opt-label">③</span>실질 소비자 지출(Real Consumer Spending)</li>
+      <li class="opt-item" onclick="selectOpt(this,'q1',4)"><span class="opt-label">④</span>연방 기준금리</li>
+    </ul>
+    <div class="feedback" id="q1-fb"></div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">2</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-easy">쉬움</span>
+        <span class="badge badge-type">OX</span>
+      </div>
+      <div class="q-text">금리 인하는 경제가 좋아서 하는 긍정적인 신호이므로, 금리 인하 발표 즉시 주식을 매수하는 것이 최선의 전략이다.</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="ox-row">
+      <div class="ox-btn" id="q2-O" onclick="selectOX('q2','O')">⭕ O</div>
+      <div class="ox-btn" id="q2-X" onclick="selectOX('q2','X')">❌ X</div>
+    </div>
+    <div class="feedback" id="q2-fb"></div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">3</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-mid">보통</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">강의에서 제시된 인과관계 사례 중, '하우징 터노버 증가' 이후 실적이 좋아질 것으로 예측된 기업들은?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q3-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q3',1)"><span class="opt-label">①</span>넷플릭스, 디즈니</li>
+      <li class="opt-item" onclick="selectOpt(this,'q3',2)"><span class="opt-label">②</span>홈디포, 로우즈, 월마트</li>
+      <li class="opt-item" onclick="selectOpt(this,'q3',3)"><span class="opt-label">③</span>엔비디아, AMD</li>
+      <li class="opt-item" onclick="selectOpt(this,'q3',4)"><span class="opt-label">④</span>화이자, 모더나</li>
+    </ul>
+    <div class="feedback" id="q3-fb"></div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">4</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-mid">보통</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">강사가 소비자 지출 데이터를 분석할 때 권장한 기준 단위는?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q4-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q4',1)"><span class="opt-label">①</span>일별 변화</li>
+      <li class="opt-item" onclick="selectOpt(this,'q4',2)"><span class="opt-label">②</span>월별 변화</li>
+      <li class="opt-item" onclick="selectOpt(this,'q4',3)"><span class="opt-label">③</span>분기별 변화</li>
+      <li class="opt-item" onclick="selectOpt(this,'q4',4)"><span class="opt-label">④</span>연간 변화율(Year-over-Year)</li>
+    </ul>
+    <div class="feedback" id="q4-fb"></div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">5</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-mid">보통</span>
+        <span class="badge badge-type">OX</span>
+      </div>
+      <div class="q-text">에너지 섹터와 방산 섹터는 국제 정세와 정치적 변수의 영향을 많이 받아, 경제 사이클 기반의 인과관계 분석으로 예측하기 어렵다.</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="ox-row">
+      <div class="ox-btn" id="q5-O" onclick="selectOX('q5','O')">⭕ O</div>
+      <div class="ox-btn" id="q5-X" onclick="selectOX('q5','X')">❌ X</div>
+    </div>
+    <div class="feedback" id="q5-fb"></div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">6</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-mid">보통</span>
+        <span class="badge badge-type">단답형</span>
+      </div>
+      <div class="q-text">강사가 설명한 투자 분석 7단계 프레임워크의 <strong>첫 번째 단계</strong>는 무엇인가? (한 문장으로 답하시오)</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <input type="text" class="short-input" id="q6-input" placeholder="첫 번째 단계를 입력하세요">
+    <button class="check-btn" onclick="checkShort('q6', ['거시경제','선행지수','거시경제 선행지수'])">확인</button>
+    <div class="feedback" id="q6-fb"></div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">7</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-mid">보통</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">강사가 '해열제 비유'로 설명한 금리 인하의 의미로 가장 적절한 것은?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q7-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q7',1)"><span class="opt-label">①</span>경기가 과열되었으니 냉각시키는 수단이다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q7',2)"><span class="opt-label">②</span>경기가 악화될 것을 우려해 방어하는 수단이다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q7',3)"><span class="opt-label">③</span>인플레이션을 높이기 위한 공격적 정책이다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q7',4)"><span class="opt-label">④</span>기업의 직접 투자를 유도하는 재정 정책이다</li>
+    </ul>
+    <div class="feedback" id="q7-fb"></div>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">8</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-hard">어려움</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">금리 인하 후 소비자 지출이 증가하기까지의 시차와, 소비 증가 후 기업이익에 반영되기까지의 시차를 합산한 총 기간은?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q8-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q8',1)"><span class="opt-label">①</span>1~3개월</li>
+      <li class="opt-item" onclick="selectOpt(this,'q8',2)"><span class="opt-label">②</span>3~6개월</li>
+      <li class="opt-item" onclick="selectOpt(this,'q8',3)"><span class="opt-label">③</span>12~18개월</li>
+      <li class="opt-item" onclick="selectOpt(this,'q8',4)"><span class="opt-label">④</span>2~3년</li>
+    </ul>
+    <div class="feedback" id="q8-fb"></div>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">9</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-hard">어려움</span>
+        <span class="badge badge-type">단답형</span>
+      </div>
+      <div class="q-text">강사는 삼성전자의 주가 하락을 어떤 핵심 원인으로 설명했는가? (2가지 키워드 포함)</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <input type="text" class="short-input" id="q9-input" placeholder="키워드 포함 답변 입력">
+    <button class="check-btn" onclick="checkShort('q9', ['AI','기업이익','코퍼레이트 프로핏','corporate profit','실적','전환'])">확인</button>
+    <div class="feedback" id="q9-fb"></div>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card">
+  <div class="q-header">
+    <div class="q-num">10</div>
+    <div>
+      <div class="q-meta">
+        <span class="badge badge-hard">어려움</span>
+        <span class="badge badge-type">객관식</span>
+      </div>
+      <div class="q-text">강사가 미국 경제가 통계적으로 예측하기 쉽다고 한 근거로 <em>올바르지 않은</em> 것은?</div>
+    </div>
+  </div>
+  <div class="q-body">
+    <ul class="opt-list" id="q10-opts">
+      <li class="opt-item" onclick="selectOpt(this,'q10',1)"><span class="opt-label">①</span>유권자들이 투표 의향을 쉽게 바꾸지 않아 예측 가능하다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q10',2)"><span class="opt-label">②</span>소비 패턴이 한국보다 다양해 유행 의존도가 낮다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q10',3)"><span class="opt-label">③</span>우수한 통계 시스템으로 경제 데이터의 신뢰도가 높다</li>
+      <li class="opt-item" onclick="selectOpt(this,'q10',4)"><span class="opt-label">④</span>경제가 수출에 크게 의존하여 대외 변수를 통제하기 쉽다</li>
+    </ul>
+    <div class="feedback" id="q10-fb"></div>
+  </div>
+</div>
+
+<button class="reset-all-btn" onclick="resetAll()" style="width:100%;padding:12px;">↺ 전체 초기화</button>
+
+</div><!-- end questions tab -->
+
+<!-- ==================== 정답 탭 ==================== -->
+<div class="tab-panel" id="tab-answers">
+
+<div style="background:#fafafa;border:1px solid var(--border);border-top:3px solid var(--c4);padding:14px 16px;margin-bottom:24px;border-radius:4px;">
+  <div style="font-size:11px;font-weight:700;color:var(--c4);letter-spacing:0.08em;margin-bottom:6px;">정답 & 해설</div>
+  <p style="font-size:13px;color:var(--text2);">문제를 먼저 풀고 이 페이지를 확인하세요. 각 문제의 핵심 개념을 함께 정리했습니다.</p>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">1</div><div style="font-weight:600;font-size:14px;">객관식 · 쉬움</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ③ 실질 소비자 지출(Real Consumer Spending)</div>
+    <div class="ans-explain">강사는 소비자 지출을 '한강의 원천이 되는 산의 샘물'에 비유했다. 인과관계의 가장 상류에 있는 지표로, 여기서 흐름이 시작되어 기업 매출 → 기업이익 → 주가로 이어진다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">2</div><div style="font-weight:600;font-size:14px;">OX · 쉬움</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: X (틀림)</div>
+    <div class="ans-explain">금리 인하는 경기가 '나빠질 것을 우려'해서 하는 방어적 수단이다. 강사는 이를 '열이 나는 아이에게 해열제를 주는 것'에 비유했다. 금리 인하 후 실제 소비가 살아나는지를 6~9개월 후에 확인해야 하며, 만약 소비가 반응하지 않으면 오히려 리세션 신호다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">3</div><div style="font-weight:600;font-size:14px;">객관식 · 보통</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ② 홈디포, 로우즈, 월마트</div>
+    <div class="ans-explain">주택 거래가 늘면 카펫, 가구, 잔디깎기, 문·창문 교체 등 홈 인테리어 수요가 증가한다. 이를 주로 판매하는 홈디포(HD), 로우즈(LOW), 월마트(WMT)의 매출이 1~2분기 후 증가한다. 이것이 '선행지수로 후행 실적을 예측'하는 전형적 사례다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">4</div><div style="font-weight:600;font-size:14px;">객관식 · 보통</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ④ 연간 변화율(Year-over-Year)</div>
+    <div class="ans-explain">월별·분기별 데이터는 계절적 노이즈가 많다. 강사는 연간(YoY) 변화율을 기준으로 데이터를 분석해야 정확한 방향성을 파악할 수 있다고 강조했다. "절대적인 값보다 변화의 속도와 방향이 더 중요하다"는 원칙이 여기에 해당한다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">5</div><div style="font-weight:600;font-size:14px;">OX · 보통</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: O (맞음)</div>
+    <div class="ans-explain">에너지와 방산 섹터는 전쟁, 외교, 정치 결정 등 경제 사이클 외적 변수에 크게 좌우된다. 강사는 이러한 섹터는 원인과 결과의 인과관계를 정의하기 어려워 투자를 피하거나 비중을 줄인다고 밝혔다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">6</div><div style="font-weight:600;font-size:14px;">단답형 · 보통</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: 거시경제 선행지수 분석</div>
+    <div class="ans-explain">7단계 중 1단계는 거시경제 선행지수 분석이다. 소비자 지출, 주택 거래, 고용 등의 선행지표를 먼저 분석해 전체 경제 방향을 파악하고, 이를 바탕으로 나머지 단계를 진행한다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">7</div><div style="font-weight:600;font-size:14px;">객관식 · 보통</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ② 경기가 악화될 것을 우려해 방어하는 수단이다</div>
+    <div class="ans-explain">강사는 "열이 나는 아이가 건강해서 열이 나는 게 아니다"라고 비유했다. 금리를 내린다는 것은 경제에 이상 신호가 생겼다는 뜻이며, 이를 방어하기 위한 통화정책이다. 금리 인하를 긍정 신호로만 해석하면 1차원적 사고가 된다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">8</div><div style="font-weight:600;font-size:14px;">객관식 · 어려움</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ③ 12~18개월</div>
+    <div class="ans-explain">강의에 따르면 금리 인하 후 소비 지출 반응까지 6~9개월, 소비 증가 후 기업이익(산업 생산·CapEx) 반영까지 추가 6~9개월이 필요하다. 합산하면 대략 12~18개월이다. 강사는 이 시간차를 이용해 선행지수를 보고 미리 투자하는 것이 핵심이라고 설명했다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">9</div><div style="font-weight:600;font-size:14px;">단답형 · 어려움</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: AI 전환 실패로 인한 기업이익(Corporate Profit) 감소</div>
+    <div class="ans-explain">강사는 삼성전자가 AI·반도체 전환 시기에 선제 대응을 하지 못해 TSMC에 경쟁에서 뒤처졌다고 분석했다. 이로 인해 기업 고객들의 Real Capital Spending이 삼성으로 유입되지 않았고, 기업이익이 감소하면서 고용 축소(레이오프)로 이어지는 전형적인 하락 사이클을 밟고 있다고 설명했다.</div>
+  </div>
+</div>
+
+<div class="ans-card">
+  <div class="ans-header"><div class="ans-num">10</div><div style="font-weight:600;font-size:14px;">객관식 · 어려움</div></div>
+  <div class="ans-body">
+    <div class="ans-correct">정답: ④ 경제가 수출에 크게 의존하여 대외 변수를 통제하기 쉽다</div>
+    <div class="ans-explain">오히려 반대다. 강사는 미국은 내수가 GDP의 99% 수준이며, 소비 중심 경제이기 때문에 예측이 쉽다고 했다. 반면 한국처럼 수출 의존도가 높은 나라는 대외 변수 때문에 예측이 어렵다. 나머지 ①②③은 강의에서 직접 언급된 미국 예측 용이성의 근거들이다.</div>
+  </div>
+</div>
+
+</div><!-- end answers tab -->
+
+<div class="footer">투자아카데미 29회 · 학습 확인 시험<br>본 문제는 학습 목적으로 제작되었습니다.</div>
+
+<script>
+// TAB SWITCH
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ANSWERS
+const correctAnswers = {
+  q1: 3, q2: 'X', q3: 2, q4: 4, q5: 'O',
+  q7: 2, q8: 3, q10: 4
+};
+const explanations = {
+  q1: '실질 소비자 지출이 모든 인과관계의 출발점(원류)입니다.',
+  q2: '금리 인하는 경기 방어 수단이지 긍정 신호가 아닙니다.',
+  q3: '주택 거래 증가 → 홈인테리어 수요 증가 → 홈디포·로우즈 매출 증가',
+  q4: '연간(YoY) 변화율로 보아야 계절·노이즈를 제거할 수 있습니다.',
+  q5: '에너지·방산은 정치·국제정세 의존으로 예측이 어렵습니다.',
+  q7: '금리 인하 = 경기 방어 수단 (해열제 비유)',
+  q8: '6~9개월 + 6~9개월 = 약 12~18개월',
+  q10: '미국은 내수 99% 경제로 수출 의존이 낮아 예측이 쉽습니다.'
+};
+
+let answered = {};
+let score = 0;
+
+function selectOpt(el, qid, val) {
+  if (answered[qid] !== undefined) return;
+  answered[qid] = val;
+
+  const opts = document.querySelectorAll(`#${qid}-opts .opt-item`);
+  opts.forEach((o, i) => {
+    if (i + 1 === val) o.classList.add('selected');
+  });
+
+  const correct = correctAnswers[qid];
+  const fb = document.getElementById(`${qid}-fb`);
+  if (val === correct) {
+    el.classList.add('correct');
+    fb.textContent = '✅ 정답입니다! ' + (explanations[qid] || '');
+    fb.className = 'feedback show correct-fb';
+    score++;
+  } else {
+    el.classList.add('wrong');
+    opts[correct - 1].classList.add('reveal-correct');
+    fb.textContent = '❌ 오답입니다. ' + (explanations[qid] || '');
+    fb.className = 'feedback show wrong-fb';
+  }
+  checkAllAnswered();
+}
+
+function selectOX(qid, val) {
+  if (answered[qid] !== undefined) return;
+  answered[qid] = val;
+
+  const oBtn = document.getElementById(`${qid}-O`);
+  const xBtn = document.getElementById(`${qid}-X`);
+  const correct = correctAnswers[qid];
+  const fb = document.getElementById(`${qid}-fb`);
+
+  if (val === 'O') oBtn.classList.add('selected');
+  else xBtn.classList.add('selected');
+
+  if (val === correct) {
+    (val === 'O' ? oBtn : xBtn).classList.add('correct');
+    fb.textContent = '✅ 정답입니다! ' + (explanations[qid] || '');
+    fb.className = 'feedback show correct-fb';
+    score++;
+  } else {
+    (val === 'O' ? oBtn : xBtn).classList.add('wrong');
+    (correct === 'O' ? oBtn : xBtn).classList.add('reveal-correct');
+    fb.textContent = '❌ 오답입니다. ' + (explanations[qid] || '');
+    fb.className = 'feedback show wrong-fb';
+  }
+  checkAllAnswered();
+}
+
+function checkShort(qid, keywords) {
+  if (answered[qid] !== undefined) return;
+  const input = document.getElementById(`${qid}-input`).value.trim();
+  if (!input) return;
+  answered[qid] = input;
+
+  const fb = document.getElementById(`${qid}-fb`);
+  const hit = keywords.some(k => input.includes(k));
+  if (hit) {
+    fb.textContent = '✅ 정답입니다! 핵심 키워드가 포함되었습니다.';
+    fb.className = 'feedback show correct-fb';
+    score++;
+  } else {
+    fb.textContent = '❌ 핵심 키워드가 부족합니다. 정답 탭에서 해설을 확인하세요.';
+    fb.className = 'feedback show wrong-fb';
+  }
+  checkAllAnswered();
+}
+
+function checkAllAnswered() {
+  if (Object.keys(answered).length >= 10) {
+    const box = document.getElementById('scoreBox');
+    box.style.display = 'block';
+    document.getElementById('scoreVal').textContent = score + '/10';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function resetAll() {
+  answered = {}; score = 0;
+  document.querySelectorAll('.opt-item').forEach(el => el.className = 'opt-item');
+  document.querySelectorAll('.ox-btn').forEach(el => el.className = 'ox-btn');
+  document.querySelectorAll('.feedback').forEach(el => { el.className = 'feedback'; el.textContent = ''; });
+  document.querySelectorAll('.short-input').forEach(el => el.value = '');
+  document.getElementById('scoreBox').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Re-bind opts
+  const qids = ['q1','q3','q4','q7','q8','q10'];
+  qids.forEach(qid => {
+    document.querySelectorAll(`#${qid}-opts .opt-item`).forEach((el, i) => {
+      el.onclick = () => selectOpt(el, qid, i+1);
+    });
+  });
+  ['q2','q5'].forEach(qid => {
+    document.getElementById(`${qid}-O`).onclick = () => selectOX(qid, 'O');
+    document.getElementById(`${qid}-X`).onclick = () => selectOX(qid, 'X');
+  });
+}
+</script>
+</body>
+</html>
