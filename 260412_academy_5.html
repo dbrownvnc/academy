@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 42회 — 기업 펀더멘털 분석의 기본</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --table-bg: #fafafa;
+    --table-header: #e11d48;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .hero-title em {
+    color: var(--accent2);
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 16px;
+  }
+
+  /* ── SECTION ── */
+  .section { padding: 28px 20px; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 18px 0 6px;
+  }
+  p { margin-bottom: 10px; color: var(--text); }
+  .muted { color: var(--text2); font-size: 13px; }
+
+  /* ── QUOTE ── */
+  .quote-block {
+    border-left: 4px solid var(--accent);
+    background: var(--bg2);
+    padding: 14px 16px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .quote-block p { font-size: 14px; font-style: italic; color: #333; margin: 0; }
+  .quote-block .quote-author { font-size: 12px; color: var(--text2); margin-top: 6px; font-style: normal; }
+
+  /* ── KEY CARD ── */
+  .key-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+  }
+  .key-card .kc-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .key-card p { font-size: 13px; margin: 0; color: var(--text2); }
+
+  /* ── TAG ROW ── */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .tag {
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .tag.outline {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 14px 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: var(--table-bg); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── CHART ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 16px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+
+  /* ── SIMULATOR ── */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    margin: 16px 0;
+  }
+  .sim-box .sim-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-box .sim-title span.badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .slider-row { margin: 10px 0; }
+  .slider-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .slider-label strong { color: var(--accent); font-size: 13px; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: #fff;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .sim-result .res-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .sim-result .res-row:last-child { border-bottom: none; font-weight: 700; }
+  .sim-result .res-row span:last-child { color: var(--accent); font-weight: 700; }
+  .btn-reset {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+  }
+  .btn-reset:hover { background: var(--accent); color: #fff; }
+
+  /* ── FUNNEL / STEPS ── */
+  .step-list { margin: 12px 0; }
+  .step-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content { font-size: 13.5px; line-height: 1.6; }
+  .step-content strong { color: var(--text); }
+
+  /* ── QUIZ SECTION ── */
+  .quiz-section { background: #1a1a1a; padding: 28px 20px; }
+  .quiz-section .section-label { color: var(--accent2); }
+  .quiz-section h2 { color: #fff; }
+  .quiz-card {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    border-left: 4px solid var(--accent);
+  }
+  .quiz-card .q-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .quiz-card .q-text { color: #f0f0f0; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+  .quiz-options { list-style: none; }
+  .quiz-options li {
+    background: #333;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 5px 0;
+    font-size: 13px;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+  .quiz-options li:hover { border-color: var(--accent); color: #fff; }
+  .quiz-options li.correct { background: #064e3b; border-color: #10b981; color: #6ee7b7; }
+  .quiz-options li.wrong { background: #4c0519; border-color: var(--accent); color: #fda4af; }
+  .quiz-options li.disabled { cursor: default; pointer-events: none; }
+  .q-hint { font-size: 12px; color: #888; margin-top: 8px; display: none; }
+  .q-hint.show { display: block; }
+  .diff-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 6px;
+    font-weight: 700;
+  }
+  .easy { background: #065f46; color: #6ee7b7; }
+  .mid { background: #78350f; color: #fcd34d; }
+  .hard { background: #4c0519; color: #fda4af; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    margin: 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--bg2);
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+  }
+  .footer strong { color: var(--accent); }
+
+  /* ── FLIP CARD ── */
+  .flip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .flip-card { height: 100px; perspective: 800px; cursor: pointer; }
+  .flip-inner {
+    width: 100%; height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .flip-front { background: var(--accent); color: #fff; }
+  .flip-back { background: var(--text); color: #fff; transform: rotateY(180deg); font-size: 11px; font-weight: 400; line-height: 1.4; }
+  .flip-hint { font-size: 11px; color: var(--text2); text-align: center; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">투자아카데미 42회</div>
+  <div class="hero-title">기업 <em>펀더멘털</em><br>분석의 기본 접근법</div>
+  <p style="color:rgba(255,255,255,0.7);font-size:13px;margin-top:10px;">데이빗 형님의 탑다운 어프로치 —<br>EPS · PE · ROE의 올바른 해석법</p>
+  <div class="hero-sub">2026년 04월 12일 · 투자아카데미</div>
+</div>
+<div class="divider"></div>
+
+<!-- 핵심 전제 -->
+<div class="section fade-in">
+  <div class="section-label">핵심 전제</div>
+  <h2>절대적으로 맞는 분석법은 없다</h2>
+  <div class="quote-block">
+    <p>"주식시장은 항상 보수적으로 생각할 필요가 있다. 겸손한 자세가 없으면 당한다."</p>
+    <div class="quote-author">— 데이빗 형님</div>
+  </div>
+  <p>어떤 분석 방법도 100% 정확하지 않다. 70%만 맞춰도 우수한 수준이며, 시장은 <strong>심리·거시경제·정치·이벤트</strong> 등 복합 요인으로 움직인다. 이론에 함몰되는 것이 가장 위험하다.</p>
+  <div class="tag-row">
+    <span class="tag">탑다운 어프로치</span>
+    <span class="tag outline">참조용 분석</span>
+    <span class="tag outline">겸손한 자세</span>
+  </div>
+</div>
+
+<!-- 분석 3단계 -->
+<div class="section fade-in">
+  <div class="section-label">분석 프레임워크</div>
+  <h2>탑다운 3단계 구조</h2>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>거시경제 분석 (Economy)</strong><br>인플레이션, 금리, GDP 등 미국 거시경제 환경 파악. EPS가 아무리 좋아도 경제가 뒷받침되지 않으면 의미 없음.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>산업 분석 (Industry)</strong><br>섹터 로테이션, 경쟁 구도, 프로핏 마진. 같은 IT도 AI 반도체 vs. 일반 소프트웨어는 다른 잣대로 평가.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>기업 분석 (Company)</strong><br>EPS·PE·ROE·배당수익률·부채비율 등 펀더멘털 지표로 동일 섹터 내 기업 비교.</div>
+    </div>
+  </div>
+
+  <!-- Flow diagram SVG -->
+  <svg viewBox="0 0 340 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:10px 0;">
+    <rect x="0" y="10" width="100" height="40" rx="8" fill="#e11d48"/>
+    <text x="50" y="35" text-anchor="middle" fill="#fff" font-size="12" font-family="sans-serif" font-weight="bold">거시경제</text>
+    <polygon points="108,30 118,24 118,36" fill="#6b7280"/>
+    <rect x="120" y="10" width="100" height="40" rx="8" fill="#1a1a1a"/>
+    <text x="170" y="35" text-anchor="middle" fill="#fff" font-size="12" font-family="sans-serif" font-weight="bold">산업 분석</text>
+    <polygon points="228,30 238,24 238,36" fill="#6b7280"/>
+    <rect x="240" y="10" width="100" height="40" rx="8" fill="#2563eb"/>
+    <text x="290" y="35" text-anchor="middle" fill="#fff" font-size="12" font-family="sans-serif" font-weight="bold">기업 분석</text>
+  </svg>
+  <p class="muted">※ 경제·산업이 받쳐주지 않으면 기업 지표만으로 투자 판단 금지</p>
+</div>
+
+<!-- 기술적 분석 주의 -->
+<div class="section fade-in">
+  <div class="section-label">기술적 분석</div>
+  <h2>차팅은 참조일 뿐, 맹신 금물</h2>
+  <p>기술적 분석(차팅)은 주가 방향을 예측하려는 시도다. RSI 70 이상은 <strong>과매수(Overbought)</strong>, 30 이하는 <strong>과매도(Oversold)</strong> 신호로 참고하되, 이론에 함몰되면 실패한다.</p>
+  <div class="key-card">
+    <div class="kc-title">⚠️ 핵심 경고</div>
+    <p>"주식 전문가"를 자칭하며 차트만으로 예측하는 사람을 경계하라. 기업·포트폴리오·자산 운용 전문가는 있지만, "주식 전문가"란 말 자체가 성립하지 않는다.</p>
+  </div>
+
+  <!-- RSI 인터랙티브 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">📊 RSI 신호 확인기 <span class="badge">INTERACTIVE</span></div>
+    <div class="slider-row">
+      <div class="slider-label"><span>RSI 값</span><strong id="rsiVal">55</strong></div>
+      <input type="range" min="0" max="100" value="55" id="rsiSlider">
+    </div>
+    <div class="sim-result" id="rsiResult">
+      <div class="res-row"><span>신호</span><span id="rsiSignal">중립</span></div>
+      <div class="res-row"><span>해석</span><span id="rsiDesc">과매수/과매도 아님</span></div>
+      <div class="res-row"><span>신뢰도</span><span id="rsiTrust">참조용</span></div>
+    </div>
+    <button class="btn-reset" onclick="resetRSI()">초기화</button>
+  </div>
+</div>
+
+<!-- EPS -->
+<div class="section fade-in">
+  <div class="section-label">펀더멘털 지표 ①</div>
+  <h2>EPS — 주당순이익</h2>
+  <p><strong>EPS(Earnings Per Share)</strong>는 기업이 1주당 얼마나 벌었는지를 나타내는 지표. 회사의 성장성을 가늠하는 가장 기본적인 수치다.</p>
+
+  <div class="key-card">
+    <div class="kc-title">EPS 사용 핵심 원칙</div>
+    <p>✅ <strong>같은 섹터 내</strong> 기업끼리만 비교<br>
+    ❌ IT 기업 EPS ↔ 유통 기업 EPS 비교 = 무의미<br>
+    ✅ 현재 EPS + <strong>EPS 트렌드</strong>(지난 3년) 함께 봐야 함</p>
+  </div>
+
+  <h3>EPS 트렌드가 중요한 이유</h3>
+  <p>EPS가 지금 높아도 하락 추세라면 투자 부적합. 반드시 <strong>최소 3년 추이</strong>를 확인하라.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="epsChart" height="220"></canvas>
+  </div>
+
+  <h3>포트폴리오 비중 결정에 활용</h3>
+  <p>같은 섹터 A·B 기업 모두 편입 시, EPS가 높은 기업에 더 높은 비중 배분 (예: A=7%, B=3%)</p>
+</div>
+
+<!-- PE Ratio -->
+<div class="section fade-in">
+  <div class="section-label">펀더멘털 지표 ②</div>
+  <h2>PE Ratio — 주가수익비율</h2>
+  <p><strong>PE = 주가 ÷ EPS(연간)</strong>. 현재 주가가 이익 대비 얼마나 비싼지를 나타내는 상대적 지표.</p>
+
+  <table>
+    <tr><th>구분</th><th>설명</th><th>비고</th></tr>
+    <tr><td><strong>Trailing PE</strong></td><td>지난 12개월 실제 EPS 기준</td><td>과거형</td></tr>
+    <tr><td><strong>Forward PE</strong></td><td>향후 12개월 예상 EPS 기준</td><td>미래형</td></tr>
+    <tr><td><strong>Current PE</strong></td><td>현재 시점 PE</td><td>현재형</td></tr>
+  </table>
+
+  <div class="key-card">
+    <div class="kc-title">성장주 vs 가치주 PE 특성</div>
+    <p>
+    📈 <strong>성장주</strong>: PE 높음 → 미래 이익 기대치가 반영됨. 기대치보다 조금만 낮아도 급락<br>
+    📉 <strong>가치주</strong>: PE 낮음 → 안정적·변동성 낮음. 베타(β)가 낮아 경기 하락에 방어적
+    </p>
+  </div>
+
+  <!-- PE 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">🔢 PE Ratio 시뮬레이터 <span class="badge">INTERACTIVE</span></div>
+    <div class="slider-row">
+      <div class="slider-label"><span>주가 (달러)</span><strong id="priceVal">$150</strong></div>
+      <input type="range" min="10" max="500" value="150" id="priceSlider">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>EPS (달러)</span><strong id="epsVal">$5.00</strong></div>
+      <input type="range" min="1" max="50" value="5" step="0.5" id="epsSlider">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>내년 예상 EPS 성장률 (%)</span><strong id="growthVal">15%</strong></div>
+      <input type="range" min="-20" max="60" value="15" id="growthSlider">
+    </div>
+    <div class="sim-result" id="peResult">
+      <div class="res-row"><span>현재 PE</span><span id="peRatio">30.0</span></div>
+      <div class="res-row"><span>Forward PE (예상)</span><span id="forwardPe">26.1</span></div>
+      <div class="res-row"><span>유형 판단</span><span id="peType">성장주 영역</span></div>
+      <div class="res-row"><span>주가 유지 조건</span><span id="peCondition">성장 유지 필요</span></div>
+    </div>
+    <button class="btn-reset" onclick="resetPE()">초기화</button>
+  </div>
+
+  <!-- Beta 차트 -->
+  <div class="chart-container fade-in">
+    <canvas id="betaChart" height="220"></canvas>
+  </div>
+</div>
+
+<!-- ROE -->
+<div class="section fade-in">
+  <div class="section-label">펀더멘털 지표 ③</div>
+  <h2>ROE — 자기자본이익률</h2>
+  <p><strong>ROE(Return on Equity)</strong> = 당기순이익 ÷ 자기자본. 기업이 주주의 돈을 얼마나 효율적으로 운용하는지 측정.</p>
+
+  <div class="key-card">
+    <div class="kc-title">대차대조표 구조 이해</div>
+    <p>
+    <strong>자산(Asset)</strong> − <strong>부채(Liability)</strong> = <strong>자기자본(Shareholders' Equity)</strong><br>
+    ROE 15% = 자기자본 $1당 $0.15 이익 창출<br>
+    ⚠️ 산업별 차이가 크므로 반드시 동일 섹터 내 비교
+    </p>
+  </div>
+
+  <div class="flip-hint">👆 카드를 눌러 의미를 확인하세요</div>
+  <div class="flip-grid">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">ROE</div>
+        <div class="flip-back">자기자본 대비 이익률. CFO 역량 측정 지표</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">재무 레버리지</div>
+        <div class="flip-back">빌린 돈으로 투자 시 이익이 얼마나 나오는지</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">Intrinsic Value</div>
+        <div class="flip-back">장부가치 기반 내재가치. 자산 매각 후 주가가 높으냐를 판단</div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">부채비율</div>
+        <div class="flip-back">Debt/Equity Ratio. 소형주일수록 높음 → 금리 인하 시 수혜</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 성장주 vs 가치주 -->
+<div class="section fade-in">
+  <div class="section-label">투자 전략</div>
+  <h2>성장주 vs 가치주, 나의 유형은?</h2>
+  <p>개인마다 리스크 성향이 다르다. IT 비중을 40%로 하든 70%로 하든 <strong>본인의 목적·리스크 허용 범위에 맞게</strong> 결정해야 한다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="compareChart" height="240"></canvas>
+  </div>
+
+  <table>
+    <tr><th>구분</th><th>성장주</th><th>가치주</th></tr>
+    <tr><td>PE</td><td>높음</td><td>낮음</td></tr>
+    <tr><td>베타(β)</td><td>>1 (변동성 큼)</td><td><1 (변동성 낮음)</td></tr>
+    <tr><td>기대치 민감도</td><td>매우 높음</td><td>낮음</td></tr>
+    <tr><td>적합 대상</td><td>30~40대, 공격적</td><td>보수적, 안정 추구</td></tr>
+    <tr><td>예시</td><td>엔비디아, 메타</td><td>존슨앤존슨, 코카콜라</td></tr>
+  </table>
+</div>
+
+<!-- 소형주와 금리 -->
+<div class="section fade-in">
+  <div class="section-label">거시경제 연결</div>
+  <h2>금리와 소형주(Small Cap)의 관계</h2>
+  <p>소형주는 신용도가 낮아 채권 발행 시 중앙금리 + 추가 금리(스프레드)를 지불. 금리 인하 시 가장 큰 수혜.</p>
+  <div class="key-card">
+    <div class="kc-title">📌 실전 포인트</div>
+    <p>데이빗 형님 30대 그룹에는 소형주 없음. 최소 미드캡(하이 미드캡) 이상만 편입. 소형주는 Account Receivable(매출채권) 디폴트 리스크가 더 높음.</p>
+  </div>
+
+  <!-- 금리 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">📉 금리 변화 영향 시뮬레이터 <span class="badge">INTERACTIVE</span></div>
+    <div class="slider-row">
+      <div class="slider-label"><span>현재 중앙금리 (%)</span><strong id="rateVal">4.5%</strong></div>
+      <input type="range" min="0" max="8" value="4.5" step="0.25" id="rateSlider">
+    </div>
+    <div class="sim-result">
+      <div class="res-row"><span>대형주 조달금리</span><span id="largeCap">~4.5%</span></div>
+      <div class="res-row"><span>소형주 조달금리 (BB급)</span><span id="smallCap">~11.5%</span></div>
+      <div class="res-row"><span>소형주 부담 스프레드</span><span id="spread">+7.0%p</span></div>
+      <div class="res-row"><span>금리 인하 시 소형주 수혜</span><span id="benefit">높음</span></div>
+    </div>
+    <button class="btn-reset" onclick="resetRate()">초기화</button>
+  </div>
+</div>
+
+<!-- 핵심 요약 -->
+<div class="section fade-in">
+  <div class="section-label">핵심 정리</div>
+  <h2>오늘의 5가지 원칙</h2>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">①</div>
+      <div class="step-content">분석은 참조용. 70% 적중도도 우수함.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">②</div>
+      <div class="step-content">EPS·PE·ROE는 <strong>동일 섹터 내</strong>에서만 비교 유효.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">③</div>
+      <div class="step-content">EPS 트렌드(3년) 확인 필수. 현재값만 보면 안 됨.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">④</div>
+      <div class="step-content">성장주 기대치는 민감. 예상치 미달 시 급락.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">⑤</div>
+      <div class="step-content">개인 리스크 성향에 맞는 포트폴리오 구성. 남의 비중 따라 하지 말 것.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 시험 문제 -->
+<div class="quiz-section">
+  <div class="section-label">📝 이해도 확인</div>
+  <h2 style="margin-bottom:6px;">10문제 퀴즈</h2>
+  <p style="color:#888;font-size:12px;margin-bottom:16px;">클릭하여 정답을 확인하세요 (정답·해설은 하단 별도 파일 참조)</p>
+
+  <!-- Q1 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q1 · 객관식 <span class="diff-badge easy">쉬움</span></div>
+    <div class="q-text">RSI 지표에서 과매도(Oversold) 신호는 어느 수준인가?</div>
+    <ul class="quiz-options" data-answer="1">
+      <li onclick="checkAnswer(this)">① 30 이하</li>
+      <li onclick="checkAnswer(this)">② 50 이하</li>
+      <li onclick="checkAnswer(this)">③ 70 이상</li>
+      <li onclick="checkAnswer(this)">④ 80 이상</li>
+    </ul>
+    <div class="q-hint">해설: RSI 30 이하 = 과매도(Oversold), 70 이상 = 과매수(Overbought)</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q2 · OX <span class="diff-badge easy">쉬움</span></div>
+    <div class="q-text">EPS는 서로 다른 섹터의 기업 간 비교에 활용해도 유효하다.</div>
+    <ul class="quiz-options" data-answer="1">
+      <li onclick="checkAnswer(this)">① X — 동일 섹터 내에서만 유효</li>
+      <li onclick="checkAnswer(this)">② O — 절대적 수치이므로 비교 가능</li>
+    </ul>
+    <div class="q-hint">해설: IT 기업과 유통기업의 EPS를 비교하면 'Trash in, Trash out' — 아무 의미 없는 비교가 됨.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q3 · 객관식 <span class="diff-badge easy">쉬움</span></div>
+    <div class="q-text">PE Ratio의 계산 공식으로 올바른 것은?</div>
+    <ul class="quiz-options" data-answer="0">
+      <li onclick="checkAnswer(this)">① 주가 ÷ EPS</li>
+      <li onclick="checkAnswer(this)">② EPS ÷ 주가</li>
+      <li onclick="checkAnswer(this)">③ 배당금 ÷ 주가</li>
+      <li onclick="checkAnswer(this)">④ 주가 ÷ 배당금</li>
+    </ul>
+    <div class="q-hint">해설: PE = Stock Price ÷ EPS(연간). 현재 주가가 이익 대비 얼마나 비싼지를 나타냄.</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q4 · 단답형 <span class="diff-badge mid">보통</span></div>
+    <div class="q-text">탑다운 분석의 3단계를 순서대로 쓰시오.</div>
+    <ul class="quiz-options" data-answer="0">
+      <li onclick="checkAnswer(this)">① 거시경제 → 산업 → 기업</li>
+      <li onclick="checkAnswer(this)">② 기업 → 산업 → 거시경제</li>
+      <li onclick="checkAnswer(this)">③ 산업 → 거시경제 → 기업</li>
+      <li onclick="checkAnswer(this)">④ 기업 → 거시경제 → 산업</li>
+    </ul>
+    <div class="q-hint">해설: Economy(거시경제) → Industry(산업) → Company(기업) 순서. 아래 단계가 좋아도 위 단계가 나쁘면 의미 없음.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q5 · 객관식 <span class="diff-badge mid">보통</span></div>
+    <div class="q-text">성장주의 일반적인 특성으로 옳지 않은 것은?</div>
+    <ul class="quiz-options" data-answer="3">
+      <li onclick="checkAnswer(this)">① PE가 높다</li>
+      <li onclick="checkAnswer(this)">② 베타(β)가 1보다 크다</li>
+      <li onclick="checkAnswer(this)">③ 기대치 미달 시 주가가 급락한다</li>
+      <li onclick="checkAnswer(this)">④ 변동성이 낮아 보수적 투자자에게 적합하다</li>
+    </ul>
+    <div class="q-hint">해설: 변동성이 낮고 보수적 투자자에게 적합한 것은 가치주(Value Stock)의 특성이다.</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q6 · OX <span class="diff-badge mid">보통</span></div>
+    <div class="q-text">Forward PE는 지난 12개월의 실제 EPS를 기준으로 산출한다.</div>
+    <ul class="quiz-options" data-answer="1">
+      <li onclick="checkAnswer(this)">① O — 과거 실적 기반</li>
+      <li onclick="checkAnswer(this)">② X — 향후 12개월 예상 EPS 기반</li>
+    </ul>
+    <div class="q-hint">해설: Forward PE = 현재 주가 ÷ 향후 12개월 예상 EPS. 과거 실적 기반은 Trailing PE.</div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q7 · 단답형 <span class="diff-badge mid">보통</span></div>
+    <div class="q-text">ROE를 계산하는 공식에서 '자기자본(Shareholders Equity)'을 구하는 방법은?</div>
+    <ul class="quiz-options" data-answer="1">
+      <li onclick="checkAnswer(this)">① 자산 + 부채</li>
+      <li onclick="checkAnswer(this)">② 자산 − 부채</li>
+      <li onclick="checkAnswer(this)">③ 부채 − 자산</li>
+      <li onclick="checkAnswer(this)">④ 순이익 ÷ 자산</li>
+    </ul>
+    <div class="q-hint">해설: Assets − Liabilities = Shareholders' Equity. 10-K(기업 연간보고서)의 대차대조표에서 확인.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q8 · 객관식 <span class="diff-badge mid">보통</span></div>
+    <div class="q-text">중앙금리 인하 시 가장 큰 수혜를 받는 기업 유형은?</div>
+    <ul class="quiz-options" data-answer="2">
+      <li onclick="checkAnswer(this)">① 대형주(Large Cap)</li>
+      <li onclick="checkAnswer(this)">② 미드캡(Mid Cap)</li>
+      <li onclick="checkAnswer(this)">③ 소형주(Small Cap)</li>
+      <li onclick="checkAnswer(this)">④ 메가캡(Mega Cap)</li>
+    </ul>
+    <div class="q-hint">해설: 소형주는 신용도가 낮아 중앙금리 + 스프레드를 부담. 금리 인하 시 이 부담이 줄어 가장 큰 수혜를 받음.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q9 · 서술형 <span class="diff-badge hard">어려움</span></div>
+    <div class="q-text">EPS가 높아도 경제·산업 환경이 뒷받침되지 않으면 의미가 없다고 강조한다. 이를 탑다운 관점에서 설명하시오.</div>
+    <ul class="quiz-options" data-answer="0">
+      <li onclick="checkAnswer(this)">① EPS는 기업 단계의 지표. 경제(금리·경기)와 산업(경쟁·성장성)이 악화되면 이익이 아무리 좋아도 주가는 하락할 수 있음.</li>
+      <li onclick="checkAnswer(this)">② EPS가 높으면 어떤 환경에서도 주가는 상승한다.</li>
+      <li onclick="checkAnswer(this)">③ 산업 분석만 충분하면 EPS는 볼 필요 없다.</li>
+    </ul>
+    <div class="q-hint">해설: 시스테매틱 리스크(분산 불가 리스크)처럼 전체 경제가 무너지면 아무리 좋은 기업도 주가가 하락함. 탑다운 순서대로 경제→산업→기업 확인이 필수.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card fade-in">
+    <div class="q-num">Q10 · 객관식 <span class="diff-badge hard">어려움</span></div>
+    <div class="q-text">성장주 A의 올해 EPS 성장률이 15%였다. 내년 예상 성장률이 23%면 주가에 어떤 영향이 예상되는가? (단, 현재 주가는 이미 높은 PE에 형성되어 있음)</div>
+    <ul class="quiz-options" data-answer="1">
+      <li onclick="checkAnswer(this)">① 기대 충족으로 주가 급등</li>
+      <li onclick="checkAnswer(this)">② 기대치가 올해보다 낮아지므로 주가 하락 가능</li>
+      <li onclick="checkAnswer(this)">③ 영향 없음</li>
+      <li onclick="checkAnswer(this)">④ 배당이 늘어 주가 상승</li>
+    </ul>
+    <div class="q-hint">해설: 성장주는 현재보다 더 높은 성장률을 기대. 올해 15% → 내년 23%는 상승이지만, 시장이 25~30%를 기대했다면 기대 미달로 주가가 하락할 수 있음. 모멘텀 스탁의 기대치 민감도 속성.</div>
+  </div>
+
+  <p style="color:#555;font-size:12px;text-align:center;margin-top:16px;">📌 정답 클릭 시 색상으로 정오 확인 · 해설 자동 표시</p>
+</div>
+
+<div class="footer">
+  <strong>투자아카데미 42회</strong> 분석 요약<br>
+  본 문서는 학습 목적으로 작성되었습니다. 투자 결정의 책임은 본인에게 있습니다.
+</div>
+
+<script>
+// ── RSI 시뮬레이터 ──
+const rsiSlider = document.getElementById('rsiSlider');
+function updateRSI() {
+  const v = parseFloat(rsiSlider.value);
+  document.getElementById('rsiVal').textContent = v;
+  let signal, desc, trust;
+  if (v < 30) { signal = '🔴 과매도 (Oversold)'; desc = '반등 가능성 참조'; trust = '주의 참조'; }
+  else if (v > 70) { signal = '🟠 과매수 (Overbought)'; desc = '조정 가능성 참조'; trust = '주의 참조'; }
+  else { signal = '⚪ 중립'; desc = '과매수/과매도 아님'; trust = '참조용'; }
+  document.getElementById('rsiSignal').textContent = signal;
+  document.getElementById('rsiDesc').textContent = desc;
+  document.getElementById('rsiTrust').textContent = trust;
+}
+rsiSlider.addEventListener('input', updateRSI);
+function resetRSI() { rsiSlider.value = 55; updateRSI(); }
+updateRSI();
+
+// ── PE 시뮬레이터 ──
+const priceSlider = document.getElementById('priceSlider');
+const epsSlider2 = document.getElementById('epsSlider');
+const growthSlider = document.getElementById('growthSlider');
+
+function updatePE() {
+  const price = parseFloat(priceSlider.value);
+  const eps = parseFloat(epsSlider2.value);
+  const growth = parseFloat(growthSlider.value);
+  document.getElementById('priceVal').textContent = '$' + price;
+  document.getElementById('epsVal').textContent = '$' + eps.toFixed(2);
+  document.getElementById('growthVal').textContent = growth + '%';
+  const pe = (price / eps).toFixed(1);
+  const fwdEps = eps * (1 + growth / 100);
+  const fwdPe = (price / fwdEps).toFixed(1);
+  document.getElementById('peRatio').textContent = pe + 'x';
+  document.getElementById('forwardPe').textContent = fwdPe + 'x';
+  const peNum = parseFloat(pe);
+  let type, cond;
+  if (peNum > 30) { type = '성장주 영역'; cond = '지속 성장 필수'; }
+  else if (peNum > 15) { type = '혼합형'; cond = '안정적 성장 유지'; }
+  else { type = '가치주 영역'; cond = '수익성 유지'; }
+  document.getElementById('peType').textContent = type;
+  document.getElementById('peCondition').textContent = cond;
+}
+[priceSlider, epsSlider2, growthSlider].forEach(s => s.addEventListener('input', updatePE));
+function resetPE() { priceSlider.value = 150; epsSlider2.value = 5; growthSlider.value = 15; updatePE(); }
+updatePE();
+
+// ── 금리 시뮬레이터 ──
+const rateSlider = document.getElementById('rateSlider');
+function updateRate() {
+  const rate = parseFloat(rateSlider.value);
+  document.getElementById('rateVal').textContent = rate.toFixed(2) + '%';
+  const smallCapRate = rate + 7.0;
+  document.getElementById('largeCap').textContent = '~' + rate.toFixed(2) + '%';
+  document.getElementById('smallCap').textContent = '~' + smallCapRate.toFixed(2) + '%';
+  document.getElementById('spread').textContent = '+7.0%p (BB급 스프레드)';
+  document.getElementById('benefit').textContent = rate > 4 ? '매우 높음' : rate > 2 ? '높음' : '보통';
+}
+rateSlider.addEventListener('input', updateRate);
+function resetRate() { rateSlider.value = 4.5; updateRate(); }
+updateRate();
+
+// ── 퀴즈 ──
+function checkAnswer(li) {
+  const ul = li.parentElement;
+  if (ul.dataset.answered) return;
+  ul.dataset.answered = true;
+  const answerIdx = parseInt(ul.dataset.answer);
+  const items = ul.querySelectorAll('li');
+  items.forEach((item, idx) => {
+    item.classList.add('disabled');
+    if (idx === answerIdx) item.classList.add('correct');
+    else if (item === li && idx !== answerIdx) item.classList.add('wrong');
+  });
+  const hint = ul.parentElement.querySelector('.q-hint');
+  if (hint) hint.classList.add('show');
+}
+
+// ── CHARTS ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['epsChart'] = () => {
+  new Chart(document.getElementById('epsChart'), {
+    type: 'line',
+    data: {
+      labels: ['2021', '2022', '2023', '2024', '2025(예상)'],
+      datasets: [
+        {
+          label: '성장주 A (EPS 상승)',
+          data: [2.1, 3.5, 5.2, 7.8, 11.0],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4, fill: true, pointRadius: 4
+        },
+        {
+          label: '침체주 B (EPS 하락)',
+          data: [5.0, 4.2, 3.1, 2.0, 1.2],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.06)',
+          tension: 0.4, fill: true, pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        title: { display: true, text: 'EPS 트렌드 비교 (동일 섹터 예시)', font: { size: 13 } } },
+      scales: { y: { beginAtZero: true, title: { display: true, text: 'EPS ($)' } } }
+    }
+  });
+};
+
+chartConfigs['betaChart'] = () => {
+  new Chart(document.getElementById('betaChart'), {
+    type: 'bar',
+    data: {
+      labels: ['가치주\n(저PE)', 'S&P500\n인덱스', '성장주\n(고PE)', '모멘텀\n성장주'],
+      datasets: [{
+        label: '베타(β) — 변동성',
+        data: [0.6, 1.0, 1.4, 1.9],
+        backgroundColor: ['#2563eb', '#6b7280', '#f43f5e', '#e11d48'],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false },
+        title: { display: true, text: '주식 유형별 베타(β) 비교', font: { size: 13 } } },
+      scales: {
+        y: { beginAtZero: true, max: 2.5, title: { display: true, text: 'Beta (β)' } }
+      }
+    }
+  });
+};
+
+chartConfigs['compareChart'] = () => {
+  new Chart(document.getElementById('compareChart'), {
+    type: 'radar',
+    data: {
+      labels: ['수익 성장성', 'PE 수준', '변동성(β)', '배당 안정성', '경기 방어성'],
+      datasets: [
+        {
+          label: '성장주',
+          data: [90, 85, 80, 20, 25],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.15)',
+          pointRadius: 4
+        },
+        {
+          label: '가치주',
+          data: [40, 30, 25, 80, 80],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.12)',
+          pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        title: { display: true, text: '성장주 vs 가치주 특성 비교', font: { size: 13 } } },
+      scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25 } } }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
