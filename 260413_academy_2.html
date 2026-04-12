@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자는인생TV 아카데미 3회 — 기업 펀더멘털 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+    --border: #e5e5e5;
+    --tbl-head: #e11d48;
+    --tbl-bg: #fafafa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 60px 24px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 40px);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    font-weight: 900;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 20px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  /* SECTION HEADER */
+  .sec-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  p { color: var(--text); margin-bottom: 14px; font-family: 'Noto Serif KR', serif; font-size: 14.5px; }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-left: 4px solid var(--accent);
+    padding: 14px 20px;
+    background: var(--bg2);
+    margin: 24px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* KEY POINT BOX */
+  .keybox {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 20px 0;
+  }
+  .keybox-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; font-weight: 600; }
+  .keybox ul { list-style: none; }
+  .keybox ul li { padding: 5px 0; font-size: 14px; display: flex; align-items: flex-start; gap: 8px; color: rgba(255,255,255,0.88); }
+  .keybox ul li::before { content: '→'; color: var(--accent2); flex-shrink: 0; margin-top: 1px; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 20px 0; border-radius: 8px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--tbl-head); color: #fff; }
+  thead th { padding: 10px 12px; text-align: left; font-weight: 600; letter-spacing: 0.5px; }
+  tbody tr { background: var(--tbl-bg); }
+  tbody tr:nth-child(even) { background: #f0f0f0; }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody td:first-child { font-weight: 600; color: var(--text); }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    background: var(--bg2);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* BADGE ROW */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .badge {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .badge.red { background: #fff0f3; border-color: var(--accent); color: var(--accent); }
+  .badge.dark { background: var(--text); color: #fff; border-color: var(--text); }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .sim-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-title::before {
+    content: '⚡';
+    font-size: 16px;
+  }
+  .sim-row { margin-bottom: 14px; }
+  .sim-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .sim-label span { font-weight: 700; color: var(--accent); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    height: 4px;
+    cursor: pointer;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .sim-result .big { font-size: 28px; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--accent2); }
+  .sim-result .sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* SECTOR VIZ */
+  .sector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .sector-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sector-item:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(225,29,72,0.1); }
+  .sector-item.active { border-color: var(--accent); background: #fff0f3; }
+  .s-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .s-pct { font-size: 22px; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--accent); }
+  .s-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .s-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.8s ease; }
+  .sector-desc { font-size: 12px; color: var(--text2); margin-top: 10px; display: none; }
+  .sector-item.active .sector-desc { display: block; }
+
+  /* DEBT SIMULATOR */
+  .debt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .debt-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .debt-label { font-size: 11px; color: var(--text2); }
+  .debt-val { font-size: 20px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--text); }
+  .debt-signal { font-size: 11px; margin-top: 4px; font-weight: 600; }
+  .signal-ok { color: #16a34a; }
+  .signal-warn { color: #d97706; }
+  .signal-bad { color: var(--accent); }
+
+  /* DIVIDEND CHECKER */
+  .div-check {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 16px 0;
+  }
+  .div-q {
+    background: #e8f5e9;
+    border-radius: 6px;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    color: #16a34a;
+  }
+  .div-q.miss {
+    background: #fff0f3;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .div-q.normal { background: #e8f5e9; color: #16a34a; border-color: transparent; }
+  .div-note { font-size: 12px; color: var(--text2); margin-top: 8px; background: var(--bg2); padding: 10px 12px; border-radius: 6px; }
+
+  /* COMPARISON TABLE */
+  .cmp-row {
+    display: flex;
+    gap: 10px;
+    margin: 6px 0;
+    align-items: flex-start;
+  }
+  .cmp-label { font-size: 12px; color: var(--text2); min-width: 90px; padding-top: 2px; }
+  .cmp-bars { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .cmp-bar { height: 22px; border-radius: 3px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 700; color: #fff; transition: width 0.6s ease; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 24px; margin: 20px 0; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 18px; }
+  .tl-dot {
+    position: absolute;
+    left: -20px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .tl-year { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+  .tl-text { font-size: 13px; color: var(--text); margin-top: 2px; }
+
+  /* NUMBER HIGHLIGHT */
+  .num-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .num-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .num-val { font-size: 28px; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--accent); }
+  .num-desc { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  footer strong { color: var(--accent2); }
+
+  @media (max-width: 420px) {
+    .sector-grid { grid-template-columns: 1fr; }
+    .num-grid { grid-template-columns: 1fr; }
+    .debt-grid { grid-template-columns: 1fr; }
+    .div-check { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자는인생TV · 아카데미 3회차</div>
+    <h1>기업의 <span>펀더멘털</span>을<br>읽는 법</h1>
+    <p style="color:rgba(255,255,255,0.65); font-size:14px; font-family:'DM Sans',sans-serif; margin:0;">성장주 vs 가치주 · PE·EPS·배당 · 부채 구조 완전 정리</p>
+    <div class="hero-meta">
+      <span>📅 2026.04.13</span>
+      <span>⏱ 핵심 요약</span>
+      <span>📊 미국 주식 투자</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ① 펀더멘털이란 -->
+<section>
+  <div class="sec-label">Chapter 01</div>
+  <div class="sec-title">펀더멘털이란 무엇인가</div>
+  <p>펀더멘털(Fundamental)이란 기업의 본질적 경쟁력을 수치로 나타낸 것입니다. 좋은 상품·서비스 → 시장 경쟁력 → 이익 창출 → 재투자 → 사회 공헌으로 이어지는 <strong>선순환 구조</strong>가 건강한 기업의 핵심입니다.</p>
+  <div class="pullquote">
+    "펀더멘털을 보는 이유는 단순히 회사가 잘되는구나를 확인하기 위함이 아니라, 궁극적으로 주가의 방향을 예측하기 위함이다."
+  </div>
+  <div class="keybox">
+    <div class="keybox-title">핵심 메시지</div>
+    <ul>
+      <li>주가는 현재 가치가 아니라 <strong>미래 가치</strong>를 반영한다</li>
+      <li>단기 노이즈(단발성 실적 뉴스)에 흔들리지 말고 <strong>추세</strong>를 봐야 한다</li>
+      <li>펀더멘털 분석은 사진(스냅샷)이 아니라 <strong>영화(무빙 픽처)</strong>처럼 봐야 한다</li>
+      <li>5년의 흐름을 읽어야 기업이 어디서 와서 어디로 가는지 보인다</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ② 성장주 vs 가치주 -->
+<section>
+  <div class="sec-label">Chapter 02</div>
+  <div class="sec-title">성장주 vs 가치주 — 보는 눈이 다르다</div>
+
+  <p>두 가지 유형의 주식은 분석 기준 자체가 달라야 합니다. 가치주의 잣대를 성장주에 그대로 적용하면 성장주는 단 한 주도 살 수 없게 됩니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>구분</th><th>성장주 (Growth Stock)</th><th>가치주 (Value Stock)</th></tr></thead>
+      <tbody>
+        <tr><td>주요 지표</td><td>5년 매출 성장률, 캐시플로우 방향성, ROI 증가 여부</td><td>시장점유율, 배당 안정성, 주가 안정성</td></tr>
+        <tr><td>이익률</td><td>초기 마이너스 → 플러스 전환 기대</td><td>꾸준한 이익률 유지 및 증가</td></tr>
+        <tr><td>변동성</td><td>높음 — 거시경제 악화 시 가장 먼저 하락</td><td>낮음 — 안정적 배당으로 기관 선호</td></tr>
+        <tr><td>현금 필요</td><td>많음 — 성장 투자에 지속 소요</td><td>적음 — 성숙 단계의 안정적 현금 창출</td></tr>
+        <tr><td>진입 타이밍</td><td>수익 플러스 전환 <em>이전</em>에 선점 필요</td><td>배당 감소 신호 전 보유, 이상 징후 시 매도</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>꾸준성(Consistency)</strong>이 핵심입니다. 어느 해는 폭락, 어느 해는 100% 급등하는 수익 마진을 보인 기업은 주가에 악영향을 줍니다. 매년 조금씩 개선되는 기업이 신뢰를 얻습니다.</p>
+
+  <!-- 성장주 수익률 궤적 시뮬레이터 -->
+  <div class="chart-container fade-in" style="margin-top:24px;">
+    <div class="chart-title">📈 성장주 수익마진 궤적 — 이런 기업을 사야 한다</div>
+    <canvas id="growthChart" height="220"></canvas>
+  </div>
+
+  <div class="pullquote">
+    "이미 플러스 30%가 된 다음에는 모두가 달려들어 주가가 비싸진다. 플러스 전환 <em>이전에</em> 선점하는 것이 성장주 투자의 핵심이다."
+  </div>
+</section>
+
+<!-- ③ PE 비율 -->
+<section>
+  <div class="sec-label">Chapter 03</div>
+  <div class="sec-title">PE 비율 — 시장이 매기는 가치 배수</div>
+
+  <p>PE(Price-to-Earnings)란 현재 주가를 주당순이익(EPS)으로 나눈 값입니다. 시장이 이 기업의 이익에 <strong>몇 배의 프리미엄을 부여하는가</strong>를 나타냅니다.</p>
+
+  <div class="badge-row">
+    <div class="badge dark">PETTM = 현주가 ÷ 과거 4분기 EPS</div>
+    <div class="badge red">PEForward = 현주가 ÷ 향후 4분기 예상 EPS</div>
+  </div>
+
+  <p>강의에서 언급된 S&P500 PE: 한때 <strong>26배</strong> → 19배로 하락 → 다시 23~25배 수준으로 회복. 이는 시장 전체가 기업 이익에 부여하는 프리미엄의 변화입니다.</p>
+
+  <!-- PE 계산기 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">PE 비율 실시간 계산기</div>
+    <div class="sim-row">
+      <div class="sim-label">현재 주가 (USD) <span id="priceVal">$150</span></div>
+      <input type="range" id="priceSlider" min="10" max="500" value="150" step="5">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">연간 EPS (USD) <span id="epsVal">$6.00</span></div>
+      <input type="range" id="epsSlider" min="0.5" max="30" value="6" step="0.5">
+    </div>
+    <div class="sim-result">
+      <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:4px;">산출된 PE 배수</div>
+      <div class="big" id="peResult">25.0배</div>
+      <div class="sub" id="peComment">S&P500 평균 수준 (시장이 적정 평가)</div>
+    </div>
+    <button class="reset-btn" onclick="resetPE()">↩ 초기화</button>
+  </div>
+</section>
+
+<!-- ④ 배당금 -->
+<section>
+  <div class="sec-label">Chapter 04</div>
+  <div class="sec-title">배당금 — 기업 살림의 거울</div>
+
+  <p>가치주에서 배당금은 단순한 수익 이상의 의미를 가집니다. 강의에서는 이를 <strong>"감자 캐기"</strong>에 비유했습니다. 배당금이라는 줄기를 잡고 당기면 그 기업의 현금 흐름, 경쟁력, 재무 건전성이 모두 따라 나온다는 뜻입니다.</p>
+
+  <div class="keybox">
+    <div class="keybox-title">배당금으로 읽는 기업 신호</div>
+    <ul>
+      <li>배당금 지급은 법적 의무가 아니다 — 자발적 경영 의지의 표현</li>
+      <li>기관들이 배당주를 선호 → 주가 안정성 제고</li>
+      <li>배당을 유지하려면 경쟁력 유지가 필수 → 선순환</li>
+      <li>빚으로 배당 지급 → 심각한 경고 신호</li>
+    </ul>
+  </div>
+
+  <!-- 배당 시나리오 체크 -->
+  <p style="font-size:13px; color:var(--text2);">아래 분기 배당 이력을 클릭해 보세요 — 각 시나리오별 투자자 행동을 확인하세요.</p>
+  <div class="div-check" id="divCheck">
+    <div class="div-q normal" onclick="setDiv(0)" title="Q1 2023">Q1✅</div>
+    <div class="div-q normal" onclick="setDiv(1)" title="Q2 2023">Q2✅</div>
+    <div class="div-q normal" onclick="setDiv(2)" title="Q3 2023">Q3✅</div>
+    <div class="div-q normal" onclick="setDiv(3)" title="Q4 2023">Q4✅</div>
+    <div class="div-q normal" onclick="setDiv(4)" title="Q1 2024">Q1✅</div>
+    <div class="div-q normal" onclick="setDiv(5)" title="Q2 2024">Q2✅</div>
+    <div class="div-q normal" onclick="setDiv(6)" title="Q3 2024">Q3✅</div>
+    <div class="div-q normal" onclick="setDiv(7)" title="Q4 2024">Q4✅</div>
+  </div>
+  <div class="div-note" id="divNote">✅ 8분기 연속 배당 지급 — 매우 안정적. 보유 유지 신호.</div>
+
+  <!-- 배당 차트 -->
+  <div class="chart-container fade-in">
+    <div class="chart-title">💰 배당 패턴별 주가 영향 (가상 시나리오)</div>
+    <canvas id="divChart" height="220"></canvas>
+  </div>
+</section>
+
+<!-- ⑤ 재무제표 보는 법 -->
+<section>
+  <div class="sec-label">Chapter 05</div>
+  <div class="sec-title">재무제표 — 3가지 문서의 역할</div>
+
+  <p>10-K(연간 보고서)와 10-Q(분기 보고서)는 미국 주식 분석의 기본 자료입니다. <strong>최소 3년치</strong>를 비교해야 추세를 파악할 수 있습니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>문서</th><th>주요 내용</th><th>핵심 관찰 포인트</th></tr></thead>
+      <tbody>
+        <tr><td>손익계산서<br>(Income Statement)</td><td>매출, 영업이익, 순이익, 세금</td><td>매출 성장률, 영업이익률(Profit Margin) 변화</td></tr>
+        <tr><td>대차대조표<br>(Balance Sheet)</td><td>자산·부채·자본 현황</td><td>현금 증가 여부, 부채비율, 자기자본 변화</td></tr>
+        <tr><td>현금흐름표<br>(Cash Flow)</td><td>실제 현금의 유출입</td><td>Free Cash Flow 증가 여부, 투자 활동 규모</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pullquote">
+    "10-K 한 해만 보는 것은 사진을 보는 것. 5년을 이어 보는 것이 영화를 보는 것. 기업 분석은 영화여야 한다."
+  </div>
+</section>
+
+<!-- ⑥ 부채 분석 -->
+<section>
+  <div class="sec-label">Chapter 06</div>
+  <div class="sec-title">부채 구조 — 유동성 리스크 감지</div>
+
+  <p>부채의 <strong>종류</strong>와 <strong>방향성</strong>이 중요합니다. 특히 단기부채(Short-term Debt) 증가는 기업의 자금 압박을 나타내는 강력한 경고 신호입니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>부채 유형</th><th>내용</th><th>신호</th></tr></thead>
+      <tbody>
+        <tr><td>Short-term Debt</td><td>1년 내 만기 채무, 고이자 급전 대출</td><td>🔴 증가 = 심각한 경고</td></tr>
+        <tr><td>Account Payable</td><td>매입채무 (협력사에 줄 돈)</td><td>🟡 급증 시 유동성 주의</td></tr>
+        <tr><td>Long-term Debt</td><td>채권, 우선주, 장기차입금</td><td>🟡 단독으로는 일반적</td></tr>
+        <tr><td>Revolving Loan</td><td>담보(재고·부동산·매출채권) 기반 대출</td><td>🔴 출현 = 자금 압박 신호</td></tr>
+        <tr><td>Debt-to-Equity</td><td>총부채 / 자기자본</td><td>🔴 상승 추세 = 유동성 문제</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 부채 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">부채비율(D/E Ratio) 건전성 진단기</div>
+    <div class="sim-row">
+      <div class="sim-label">총 부채 (억 달러) <span id="debtVal">50억</span></div>
+      <input type="range" id="debtSlider" min="0" max="300" value="50" step="5">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">자기자본 (억 달러) <span id="equityVal">100억</span></div>
+      <input type="range" id="equitySlider" min="10" max="300" value="100" step="5">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">단기부채 비중 <span id="stDebtVal">20%</span></div>
+      <input type="range" id="stDebtSlider" min="0" max="100" value="20" step="5">
+    </div>
+    <div class="debt-grid" id="debtResult">
+      <div class="debt-card"><div class="debt-label">D/E Ratio</div><div class="debt-val" id="deRatio">0.50</div><div class="debt-signal" id="deSignal"></div></div>
+      <div class="debt-card"><div class="debt-label">단기부채 비중</div><div class="debt-val" id="stPct">20%</div><div class="debt-signal" id="stSignal"></div></div>
+    </div>
+    <button class="reset-btn" onclick="resetDebt()">↩ 초기화</button>
+  </div>
+
+  <div class="keybox">
+    <div class="keybox-title">유동성 체크 지표</div>
+    <ul>
+      <li><strong>Current Ratio</strong> — 1년 내 유동자산 ÷ 유동부채 (1.5 이상 양호)</li>
+      <li><strong>Quick Ratio</strong> — 현금성 자산 ÷ 유동부채 (단기 지급 능력)</li>
+      <li><strong>Free Cash Flow</strong> — 실제 쓸 수 있는 잉여 현금 (증가 추세 = 긍정)</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ⑦ 뮤추얼펀드 vs 개별주 -->
+<section>
+  <div class="sec-label">Chapter 07</div>
+  <div class="sec-title">뮤추얼펀드의 한계 — 직접 운용이 더 강한 이유</div>
+
+  <p>강의에서는 APGYX (대형 성장주 뮤추얼펀드)를 예시로 뮤추얼펀드의 구조적 한계를 설명했습니다.</p>
+
+  <div class="num-grid fade-in">
+    <div class="num-card">
+      <div class="num-val">MSFT 9.73%</div>
+      <div class="num-desc">APGYX 내 마이크로소프트 비중</div>
+    </div>
+    <div class="num-card">
+      <div class="num-val">UNH ~5%</div>
+      <div class="num-desc">유나이티드헬스그룹 비중</div>
+    </div>
+    <div class="num-card">
+      <div class="num-val">95%+</div>
+      <div class="num-desc">해당 펀드의 주식 비중</div>
+    </div>
+    <div class="num-card">
+      <div class="num-val">Closed-End</div>
+      <div class="num-desc">설정 시 제한 묶임 → 탄력 대응 불가</div>
+    </div>
+  </div>
+
+  <!-- 섹터 배분 인터랙티브 -->
+  <p style="font-size:13px; color:var(--text2); margin-bottom:8px;">섹터를 눌러 비중과 특징을 확인하세요</p>
+  <div class="sector-grid" id="sectorGrid">
+    <div class="sector-item" onclick="toggleSector(this, '테크놀로지 섹터는 성장 엔진입니다. 변동성이 높지만 시장 대비 초과 수익을 기대할 수 있습니다. 리스크 발생 시 가장 먼저 타격을 받습니다.')">
+      <div class="s-name">Technology</div>
+      <div class="s-pct">40%</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:40%"></div></div>
+      <div class="sector-desc"></div>
+    </div>
+    <div class="sector-item" onclick="toggleSector(this, '경기 민감주는 경제 사이클에 따라 크게 움직입니다. 경기 회복기에 강하고 침체기에 약합니다.')">
+      <div class="s-name">Cyclicals</div>
+      <div class="s-pct">48%</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:48%"></div></div>
+      <div class="sector-desc"></div>
+    </div>
+    <div class="sector-item" onclick="toggleSector(this, '헬스케어는 경기 방어적 성격이 강합니다. UNH 등 보험사가 포함되며 안정적 현금흐름을 제공합니다.')">
+      <div class="s-name">Healthcare</div>
+      <div class="s-pct">25%</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:25%"></div></div>
+      <div class="sector-desc"></div>
+    </div>
+    <div class="sector-item" onclick="toggleSector(this, '방어주(Defensive)는 경기 불황에도 안정적입니다. 전체 포트폴리오의 하방 리스크를 줄여주는 완충재 역할을 합니다.')">
+      <div class="s-name">Defensive</div>
+      <div class="s-pct">32%</div>
+      <div class="s-bar"><div class="s-bar-fill" style="width:32%"></div></div>
+      <div class="sector-desc"></div>
+    </div>
+  </div>
+
+  <p>뮤추얼펀드의 핵심 한계: <strong>Closed-End Fund</strong> 구조상 초기 설정한 투자 비중을 SEC 규정 때문에 임의로 변경할 수 없습니다. 엔비디아가 200~300% 올라도 비중을 3.75%로 유지해야 하는 이유가 여기에 있습니다.</p>
+</section>
+
+<!-- ⑧ 포트폴리오 전략 -->
+<section>
+  <div class="sec-label">Chapter 08</div>
+  <div class="sec-title">자산 규모별 포트폴리오 전략</div>
+
+  <p>강의에서는 자산 규모에 따라 위험 자산 비중을 다르게 가져가야 한다고 강조했습니다.</p>
+
+  <!-- 자산규모 슬라이더 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">자산 규모별 포트폴리오 배분 가이드</div>
+    <div class="sim-row">
+      <div class="sim-label">보유 자산 규모 <span id="assetVal">5억원</span></div>
+      <input type="range" id="assetSlider" min="1" max="50" value="5" step="1">
+    </div>
+    <div class="sim-result" id="assetResult">
+      <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:8px;">권장 배분</div>
+      <div id="assetAlloc"></div>
+    </div>
+    <button class="reset-btn" onclick="resetAsset()">↩ 초기화</button>
+  </div>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">📊 자산규모별 위험 자산 비중 가이드</div>
+    <canvas id="assetChart" height="220"></canvas>
+  </div>
+</section>
+
+<!-- ⑨ 실전 체크리스트 -->
+<section>
+  <div class="sec-label">Chapter 09</div>
+  <div class="sec-title">기업 분석 실전 체크리스트</div>
+
+  <div class="timeline">
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 1 · 성장성 확인</div>
+      <div class="tl-text">5년간 매출 추세 ↑, 캐시플로우 방향성, ROI 증가 여부 체크</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 2 · 수익성 확인</div>
+      <div class="tl-text">Profit Margin 연도별 추이 — 마이너스→0→플러스 전환 궤적 확인</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 3 · 밸류에이션 확인</div>
+      <div class="tl-text">Market Cap, PETTM, PEForward, PS Ratio 변화 추적</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 4 · EPS 모멘텀</div>
+      <div class="tl-text">분기별 EPS 변화 추적 — 예상 EPS와 실제 EPS 비교</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 5 · 부채 건전성</div>
+      <div class="tl-text">Short-term Debt 증가 여부, Revolving Loan 출현, D/E Ratio 추이</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 6 · 배당 신호</div>
+      <div class="tl-text">배당 지급 지속 여부, 금액 변화 방향 — 미지급 분기 발생 시 즉시 검토</div>
+    </div>
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-year">STEP 7 · 기관 동향</div>
+      <div class="tl-text">주요 펀드 내 해당 기업 비중 변화 — 비중 축소 = 리스크 신호</div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    "이 세상에 공짜는 없다. 성실하게 공부하고, 펀더멘털을 통해 훈련된 투자자만이 장기적으로 시장에서 보상받는다."
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>투자는인생TV 아카데미 3회</strong> · 내용 요약 분석본 · 투자 권유 아님<br>
+  모든 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다
+</footer>
+
+<script>
+// ========== FADE + CHART OBSERVER ==========
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['growthChart'] = () => {
+  new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: ['2019', '2020', '2021', '2022', '2023', '2024 (예상)'],
+      datasets: [
+        {
+          label: '💡 선점 기업 (이상적 궤적)',
+          data: [-100, -60, -20, 0, 30, 52],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4, fill: true, pointRadius: 5,
+          pointBackgroundColor: '#e11d48'
+        },
+        {
+          label: '🔴 불안정 기업 (위험 패턴)',
+          data: [10, -50, 80, -30, 90, 20],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.05)',
+          tension: 0.1, fill: false, borderDash: [5,5], pointRadius: 4,
+          pointBackgroundColor: '#6b7280'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14 } },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` }
+        }
+      },
+      scales: {
+        y: {
+          ticks: { callback: v => v + '%', font: { size: 10 } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['divChart'] = () => {
+  new Chart(document.getElementById('divChart'), {
+    type: 'bar',
+    data: {
+      labels: ['안정 유지', '점진 증가', '갑자기 중단', '감소 후 회복'],
+      datasets: [
+        {
+          label: '주가 영향 지수',
+          data: [60, 90, -40, 20],
+          backgroundColor: ['#2563eb','#e11d48','#6b7280','#f43f5e'],
+          borderRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ` 영향 지수: ${ctx.raw > 0 ? '+' : ''}${ctx.raw}` }
+        }
+      },
+      scales: {
+        y: {
+          ticks: { font: { size: 10 } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['assetChart'] = () => {
+  new Chart(document.getElementById('assetChart'), {
+    type: 'line',
+    data: {
+      labels: ['1억', '2억', '5억', '10억', '20억', '50억+'],
+      datasets: [
+        {
+          label: '안전 자산 비중',
+          data: [80, 75, 70, 70, 75, 80],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          tension: 0.4, fill: true, pointRadius: 4
+        },
+        {
+          label: '위험 자산 비중 (성장주)',
+          data: [20, 25, 30, 10, 10, 10],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4, fill: true, pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14 } }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          ticks: { callback: v => v + '%', font: { size: 10 } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ========== PE CALCULATOR ==========
+function updatePE() {
+  const price = parseFloat(document.getElementById('priceSlider').value);
+  const eps = parseFloat(document.getElementById('epsSlider').value);
+  document.getElementById('priceVal').textContent = '$' + price;
+  document.getElementById('epsVal').textContent = '$' + eps.toFixed(2);
+  const pe = price / eps;
+  document.getElementById('peResult').textContent = pe.toFixed(1) + '배';
+  let comment = '';
+  if (pe < 10) comment = '📉 매우 저평가 — 가치주 혹은 위기 기업 가능성';
+  else if (pe < 18) comment = '🟢 저평가 — 시장 평균 이하, 가치주 영역';
+  else if (pe < 28) comment = '🟡 적정 — S&P500 평균 수준 (19~26배)';
+  else if (pe < 50) comment = '🟠 고평가 — 성장 기대감 반영, 성장주 가능성';
+  else comment = '🔴 매우 고평가 — 강한 성장 기대 or 버블 주의';
+  document.getElementById('peComment').textContent = comment;
+}
+document.getElementById('priceSlider').addEventListener('input', updatePE);
+document.getElementById('epsSlider').addEventListener('input', updatePE);
+function resetPE() {
+  document.getElementById('priceSlider').value = 150;
+  document.getElementById('epsSlider').value = 6;
+  updatePE();
+}
+updatePE();
+
+// ========== DIVIDEND CHECKER ==========
+let divMissed = new Set();
+function setDiv(idx) {
+  if (divMissed.has(idx)) divMissed.delete(idx);
+  else divMissed.add(idx);
+  const quarters = document.querySelectorAll('.div-q');
+  quarters.forEach((q, i) => {
+    if (divMissed.has(i)) { q.classList.add('miss'); q.classList.remove('normal'); q.textContent = 'Q' + (i % 4 + 1) + '❌'; }
+    else { q.classList.remove('miss'); q.classList.add('normal'); q.textContent = 'Q' + (i % 4 + 1) + '✅'; }
+  });
+  const note = document.getElementById('divNote');
+  if (divMissed.size === 0) note.textContent = '✅ 모든 분기 배당 지급 — 매우 안정적. 보유 유지 신호.';
+  else if (divMissed.size === 1) note.textContent = '⚠️ 1분기 미지급 발생! 강의 원칙: 즉시 알림 확인 후 비중 축소 또는 매도 검토.';
+  else note.textContent = '🔴 ' + divMissed.size + '분기 미지급 — 강의 원칙: 즉시 매도 또는 비중 대폭 축소. 기업 재무 긴급 점검 필요.';
+}
+
+// ========== DEBT SIMULATOR ==========
+function updateDebt() {
+  const debt = parseFloat(document.getElementById('debtSlider').value);
+  const equity = parseFloat(document.getElementById('equitySlider').value);
+  const stPct = parseFloat(document.getElementById('stDebtSlider').value);
+  document.getElementById('debtVal').textContent = debt + '억';
+  document.getElementById('equityVal').textContent = equity + '억';
+  document.getElementById('stDebtVal').textContent = stPct + '%';
+  const de = (debt / equity).toFixed(2);
+  document.getElementById('deRatio').textContent = de;
+  document.getElementById('stPct').textContent = stPct + '%';
+  const deN = parseFloat(de);
+  let deClass = 'signal-ok', deTxt = '✅ 양호';
+  if (deN > 2) { deClass = 'signal-bad'; deTxt = '🔴 위험 — 부채 과다'; }
+  else if (deN > 1) { deClass = 'signal-warn'; deTxt = '⚠️ 주의 필요'; }
+  document.getElementById('deSignal').className = 'debt-signal ' + deClass;
+  document.getElementById('deSignal').textContent = deTxt;
+  let stClass = 'signal-ok', stTxt = '✅ 안전';
+  if (stPct > 50) { stClass = 'signal-bad'; stTxt = '🔴 급전 압박 경고'; }
+  else if (stPct > 30) { stClass = 'signal-warn'; stTxt = '⚠️ 모니터링 필요'; }
+  document.getElementById('stSignal').className = 'debt-signal ' + stClass;
+  document.getElementById('stSignal').textContent = stTxt;
+}
+['debtSlider','equitySlider','stDebtSlider'].forEach(id => document.getElementById(id).addEventListener('input', updateDebt));
+function resetDebt() {
+  document.getElementById('debtSlider').value = 50;
+  document.getElementById('equitySlider').value = 100;
+  document.getElementById('stDebtSlider').value = 20;
+  updateDebt();
+}
+updateDebt();
+
+// ========== ASSET ALLOCATOR ==========
+function updateAsset() {
+  const val = parseInt(document.getElementById('assetSlider').value);
+  document.getElementById('assetVal').textContent = val + '억원';
+  let safe, risky, note;
+  if (val < 3) { safe = 80; risky = 20; note = '소액 투자자 — 리스크 최소화가 핵심'; }
+  else if (val < 10) { safe = 70; risky = 30; note = '중간 자산 — 성장주 일부 편입 가능'; }
+  else { safe = 80; risky = 10; note = '10억 이상 — 80% 보수적, 10% 고위험 고수익 전략'; }
+  document.getElementById('assetAlloc').innerHTML =
+    `<div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+      <div>
+        <div class="big" style="font-size:20px;">${safe}%</div>
+        <div class="sub">안전·가치 자산</div>
+      </div>
+      <div style="font-size:20px; color:rgba(255,255,255,0.3);">+</div>
+      <div>
+        <div class="big" style="font-size:20px;">${risky}%</div>
+        <div class="sub">성장·위험 자산</div>
+      </div>
+    </div>
+    <div style="font-size:12px; color:rgba(255,255,255,0.6);">${note}</div>`;
+}
+document.getElementById('assetSlider').addEventListener('input', updateAsset);
+function resetAsset() {
+  document.getElementById('assetSlider').value = 5;
+  updateAsset();
+}
+updateAsset();
+
+// ========== SECTOR TOGGLE ==========
+function toggleSector(el, desc) {
+  const isActive = el.classList.contains('active');
+  document.querySelectorAll('.sector-item').forEach(s => {
+    s.classList.remove('active');
+    s.querySelector('.sector-desc').style.display = 'none';
+    s.querySelector('.sector-desc').textContent = '';
+  });
+  if (!isActive) {
+    el.classList.add('active');
+    const d = el.querySelector('.sector-desc');
+    d.style.display = 'block';
+    d.textContent = desc;
+  }
+}
+</script>
+</body>
+</html>

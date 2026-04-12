@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 투자는인생TV 아카데미 3회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --green: #16a34a; --amber: #d97706;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .hero {
+    background: var(--text); color: #fff;
+    padding: 48px 24px 36px;
+  }
+  .hero-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px, 6vw, 34px); font-weight: 900; line-height: 1.25; }
+  .hero h1 span { color: var(--accent2); }
+  .hero p { color: rgba(255,255,255,0.55); font-size: 13px; margin-top: 12px; }
+
+  .score-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .score-label { color: var(--text2); }
+  .score-val { font-size: 18px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--accent); }
+  .submit-btn {
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 20px;
+    padding: 7px 18px; font-size: 12px;
+    font-weight: 600; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+  .reset-all-btn {
+    background: none; border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: var(--text2);
+    cursor: pointer; margin-left: 8px;
+    transition: all 0.2s;
+  }
+  .reset-all-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+  .section-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 32px 0 20px;
+  }
+  .section-divider span {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; white-space: nowrap;
+  }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .q-card.correct-card { border-color: var(--green); background: #f0fdf4; }
+  .q-card.wrong-card { border-color: var(--accent); background: #fff0f3; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+  .q-num {
+    background: var(--text); color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .q-num.easy { background: var(--green); }
+  .q-num.med { background: var(--amber); }
+  .q-num.hard { background: var(--accent); }
+
+  .q-meta { display: flex; gap: 6px; margin-bottom: 6px; }
+  .q-tag {
+    font-size: 10px; padding: 2px 8px;
+    border-radius: 10px; font-weight: 600;
+  }
+  .tag-easy { background: #dcfce7; color: var(--green); }
+  .tag-med { background: #fef9c3; color: var(--amber); }
+  .tag-hard { background: #fff0f3; color: var(--accent); }
+  .tag-type { background: #e0e7ff; color: #3730a3; }
+
+  .q-text { font-family: 'Noto Serif KR', serif; font-size: 14.5px; color: var(--text); }
+
+  .options { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    display: block; width: 100%;
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13.5px; font-family: 'Noto Serif KR', serif;
+    color: var(--text); text-align: left;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff0f3; }
+  .option-btn.selected { border-color: var(--accent); background: #fff0f3; color: var(--accent); font-weight: 600; }
+  .option-btn.correct-opt { border-color: var(--green); background: #dcfce7; color: var(--green); font-weight: 600; }
+  .option-btn.wrong-opt { border-color: var(--accent); background: #fff0f3; color: var(--accent); }
+  .option-btn:disabled { cursor: default; }
+
+  .short-input {
+    width: 100%; margin-top: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 14px; font-family: 'Noto Serif KR', serif;
+    color: var(--text); background: #fff;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { outline: none; border-color: var(--accent); }
+  .short-input:disabled { background: var(--bg2); }
+
+  .ox-row { display: flex; gap: 10px; margin-top: 12px; }
+  .ox-btn {
+    flex: 1; padding: 14px;
+    border-radius: 8px; border: 1.5px solid var(--border);
+    font-size: 24px; cursor: pointer;
+    background: #fff; transition: all 0.15s;
+  }
+  .ox-btn:hover:not(:disabled) { transform: scale(1.05); }
+  .ox-btn[data-v="O"].selected { border-color: var(--green); background: #dcfce7; }
+  .ox-btn[data-v="X"].selected { border-color: var(--accent); background: #fff0f3; }
+  .ox-btn[data-v="O"].correct-opt { border-color: var(--green); background: #dcfce7; }
+  .ox-btn[data-v="X"].correct-opt { border-color: var(--accent); background: #fff0f3; }
+  .ox-btn:disabled { cursor: default; }
+
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Noto Serif KR', serif;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #dcfce7; color: var(--green); }
+  .feedback.wrong { background: #fff0f3; color: #9f1239; }
+
+  .result-box {
+    display: none;
+    background: var(--text);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+    margin: 32px 0;
+  }
+  .result-box.show { display: block; }
+  .result-big { font-size: 52px; font-family: 'Playfair Display', serif; font-weight: 900; color: var(--accent2); }
+  .result-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .result-msg { font-size: 16px; margin-top: 14px; font-family: 'Noto Serif KR', serif; }
+
+  /* ANSWER KEY */
+  .answer-section {
+    border-top: 3px solid var(--accent);
+    margin-top: 40px;
+    padding-top: 24px;
+  }
+  .answer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .answer-title::before { content: '📋'; }
+
+  .ans-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .ans-header {
+    background: var(--tbl-head, #e11d48);
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ans-header:hover { background: var(--accent2); }
+  .ans-body {
+    background: var(--bg2);
+    padding: 14px 16px;
+    font-size: 13.5px;
+    font-family: 'Noto Serif KR', serif;
+    line-height: 1.7;
+    display: none;
+    color: var(--text);
+  }
+  .ans-body.open { display: block; }
+  .ans-answer { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 14px; }
+
+  footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 24px 20px; font-size: 11px; letter-spacing: 1px; margin-top: 40px; }
+  footer strong { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자는인생TV · 아카데미 3회 · 시험문제</div>
+    <h1>기업 펀더멘털<br><span>10문제 테스트</span></h1>
+    <p>문제를 풀고 채점 버튼을 누르세요. 정답 해설은 하단에서 확인하세요.</p>
+  </div>
+</div>
+
+<div class="score-bar">
+  <div>
+    <div class="score-label">점수</div>
+    <div class="score-val" id="scoreDisplay">0 / 10</div>
+  </div>
+  <div>
+    <button class="submit-btn" onclick="gradeAll()">채점하기</button>
+    <button class="reset-all-btn" onclick="resetAll()">초기화</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Q1 -->
+<div class="section-divider"><span>쉬움 (30%)</span></div>
+
+<div class="q-card" id="q1">
+  <div class="q-header">
+    <div class="q-num easy">1</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-easy">쉬움</span>
+        <span class="q-tag tag-type">OX형</span>
+      </div>
+      <div class="q-text">기업의 펀더멘털 분석은 주가의 단기 변동을 예측하기 위한 것이 아니라, 주가의 <strong>장기적 방향성</strong>을 파악하기 위한 것이다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" data-v="O" onclick="selectOX('q1','O',this)">⭕</button>
+    <button class="ox-btn" data-v="X" onclick="selectOX('q1','X',this)">❌</button>
+  </div>
+  <div class="feedback" id="fb1"></div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card" id="q2">
+  <div class="q-header">
+    <div class="q-num easy">2</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-easy">쉬움</span>
+        <span class="q-tag tag-type">객관식</span>
+      </div>
+      <div class="q-text">다음 중 성장주(Growth Stock)를 분석할 때 가장 중요한 지표는?</div>
+    </div>
+  </div>
+  <ul class="options">
+    <li><button class="option-btn" onclick="selectMC('q2', 1, this)">① 현재 배당수익률</button></li>
+    <li><button class="option-btn" onclick="selectMC('q2', 2, this)">② 5년간 매출 성장 추세</button></li>
+    <li><button class="option-btn" onclick="selectMC('q2', 3, this)">③ 시장점유율 순위</button></li>
+    <li><button class="option-btn" onclick="selectMC('q2', 4, this)">④ 주가 안정성 지수</button></li>
+  </ul>
+  <div class="feedback" id="fb2"></div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card" id="q3">
+  <div class="q-header">
+    <div class="q-num easy">3</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-easy">쉬움</span>
+        <span class="q-tag tag-type">OX형</span>
+      </div>
+      <div class="q-text">미국 기업은 배당금을 지급하지 않으면 법적 제재를 받는다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" data-v="O" onclick="selectOX('q3','O',this)">⭕</button>
+    <button class="ox-btn" data-v="X" onclick="selectOX('q3','X',this)">❌</button>
+  </div>
+  <div class="feedback" id="fb3"></div>
+</div>
+
+<!-- Q4 -->
+<div class="section-divider"><span>보통 (50%)</span></div>
+
+<div class="q-card" id="q4">
+  <div class="q-header">
+    <div class="q-num med">4</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-med">보통</span>
+        <span class="q-tag tag-type">객관식</span>
+      </div>
+      <div class="q-text">PE(주가수익비율)에 대한 설명으로 <u>올바른</u> 것은?</div>
+    </div>
+  </div>
+  <ul class="options">
+    <li><button class="option-btn" onclick="selectMC('q4', 1, this)">① PE가 낮을수록 무조건 좋은 기업이다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q4', 2, this)">② PETTM은 현재 주가를 향후 4분기 예상 EPS로 나눈 것이다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q4', 3, this)">③ PE는 시장이 해당 기업의 이익에 부여하는 배수(프리미엄)를 나타낸다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q4', 4, this)">④ PE 변화는 즉각적으로 주가에 반영된다</button></li>
+  </ul>
+  <div class="feedback" id="fb4"></div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card" id="q5">
+  <div class="q-header">
+    <div class="q-num med">5</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-med">보통</span>
+        <span class="q-tag tag-type">단답형</span>
+      </div>
+      <div class="q-text">강의에서는 기업 재무 분석을 "사진 한 장"이 아닌 "<strong>○○○</strong>"처럼 봐야 한다고 표현했습니다. 빈칸을 채우세요.</div>
+    </div>
+  </div>
+  <input type="text" class="short-input" id="sa5" placeholder="답을 입력하세요 (3글자)">
+  <div class="feedback" id="fb5"></div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card" id="q6">
+  <div class="q-header">
+    <div class="q-num med">6</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-med">보통</span>
+        <span class="q-tag tag-type">객관식</span>
+      </div>
+      <div class="q-text">다음 중 가치주(Value Stock)를 분석할 때 특히 중요한 지표가 <u>아닌</u> 것은?</div>
+    </div>
+  </div>
+  <ul class="options">
+    <li><button class="option-btn" onclick="selectMC('q6', 1, this)">① 시장점유율 변화</button></li>
+    <li><button class="option-btn" onclick="selectMC('q6', 2, this)">② 배당금 지급의 안정성</button></li>
+    <li><button class="option-btn" onclick="selectMC('q6', 3, this)">③ 5년간 마이너스 수익에서 플러스 전환 예상 시점</button></li>
+    <li><button class="option-btn" onclick="selectMC('q6', 4, this)">④ 주가 안정성 (과거 주가 패턴)</button></li>
+  </ul>
+  <div class="feedback" id="fb6"></div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card" id="q7">
+  <div class="q-header">
+    <div class="q-num med">7</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-med">보통</span>
+        <span class="q-tag tag-type">객관식</span>
+      </div>
+      <div class="q-text">뮤추얼펀드가 시장 상황에 유연하게 대응하기 어려운 근본적 이유는?</div>
+    </div>
+  </div>
+  <ul class="options">
+    <li><button class="option-btn" onclick="selectMC('q7', 1, this)">① 펀드 매니저의 실력 부족</button></li>
+    <li><button class="option-btn" onclick="selectMC('q7', 2, this)">② Closed-End 구조로 SEC 규정상 초기 투자 비중을 임의 변경할 수 없다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q7', 3, this)">③ 투자 대상이 주식에만 한정되기 때문이다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q7', 4, this)">④ 장기 투자를 금지하는 규정이 있기 때문이다</button></li>
+  </ul>
+  <div class="feedback" id="fb7"></div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card" id="q8">
+  <div class="q-header">
+    <div class="q-num med">8</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-med">보통</span>
+        <span class="q-tag tag-type">OX형</span>
+      </div>
+      <div class="q-text">기업에서 Revolving Loan(담보대출)이 새로 발생했다면, 이는 해당 기업의 자금 압박 가능성을 나타내는 긍정적 신호다.</div>
+    </div>
+  </div>
+  <div class="ox-row">
+    <button class="ox-btn" data-v="O" onclick="selectOX('q8','O',this)">⭕</button>
+    <button class="ox-btn" data-v="X" onclick="selectOX('q8','X',this)">❌</button>
+  </div>
+  <div class="feedback" id="fb8"></div>
+</div>
+
+<!-- Q9 -->
+<div class="section-divider"><span>어려움 (20%)</span></div>
+
+<div class="q-card" id="q9">
+  <div class="q-header">
+    <div class="q-num hard">9</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-hard">어려움</span>
+        <span class="q-tag tag-type">객관식</span>
+      </div>
+      <div class="q-text">어떤 대형 성장주 뮤추얼펀드의 포트폴리오에서 A사의 비중이 10%에서 갑자기 6%로 줄었다. 강의 내용에 근거했을 때 투자자가 취해야 할 가장 적절한 행동은?</div>
+    </div>
+  </div>
+  <ul class="options">
+    <li><button class="option-btn" onclick="selectMC('q9', 1, this)">① 펀드 비중 축소는 일상적인 리밸런싱이므로 무시한다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q9', 2, this)">② A사의 리스크가 커졌을 가능성으로 보고, A사 펀더멘털을 재점검한다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q9', 3, this)">③ 주가가 올라서 자연스럽게 비중이 늘었을 것이므로 매수 기회로 본다</button></li>
+    <li><button class="option-btn" onclick="selectMC('q9', 4, this)">④ 뮤추얼펀드는 신뢰할 수 없으므로 해당 정보를 무시한다</button></li>
+  </ul>
+  <div class="feedback" id="fb9"></div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card" id="q10">
+  <div class="q-header">
+    <div class="q-num hard">10</div>
+    <div>
+      <div class="q-meta">
+        <span class="q-tag tag-hard">어려움</span>
+        <span class="q-tag tag-type">단답형</span>
+      </div>
+      <div class="q-text">다음은 B기업의 연도별 수익마진 변화입니다:<br>
+      <code style="background:#f5f5f5; padding:4px 8px; border-radius:4px; font-size:13px; display:inline-block; margin-top:6px;">
+        2020: -100% → 2021: -30% → 2022: 0% → 2023: +30% 예상
+      </code><br><br>
+      강의의 성장주 투자 원칙에 따르면, 이 기업에 투자하기에 <u>가장 이상적인 시점</u>은 언제입니까? (연도로 답하세요)</div>
+    </div>
+  </div>
+  <input type="text" class="short-input" id="sa10" placeholder="예: 2021년 또는 2022년">
+  <div class="feedback" id="fb10"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-box" id="resultBox">
+  <div class="result-big" id="resultScore">0/10</div>
+  <div class="result-sub">채점 완료</div>
+  <div class="result-msg" id="resultMsg"></div>
+</div>
+
+<!-- ANSWER KEY -->
+<div class="answer-section">
+  <div class="answer-title">정답 & 해설</div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q1 · OX형 — 펀더멘털 분석의 목적 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ⭕ (O)</div>
+      강의에서 "펀더멘털을 보는 이유는 단순히 회사가 잘되는구나가 아니라, 궁극적으로 주가의 방향이 보인다"고 명확히 설명했습니다. 다만 이는 단기 변동이 아닌 <strong>장기적 주가 방향성</strong>을 파악하기 위함입니다. 하루 이틀 만에 결과가 나오는 것이 아니라 한 달, 한 분기, 1년이 쌓이면서 펀더멘털이 강한 기업이 보상을 준다고 강조했습니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q2 · 객관식 — 성장주 핵심 지표 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ② 5년간 매출 성장 추세</div>
+      성장주는 "5년간의 매출을 쭉 본다"고 강의에서 직접 언급했습니다. 현재 배당이나 시장점유율 순위보다 <strong>매출 성장 궤적의 방향성</strong>이 핵심입니다. 아직 이익을 내지 못하더라도 매출이 꾸준히 성장하고 있다면 높은 점수를 부여합니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q3 · OX형 — 배당금 법적 의무 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ❌ (X)</div>
+      강의에서 "배당금을 지불할 기업의 의무는 없습니다. 오늘부터 배당금을 지급 안 하겠다고 해도 법적인 제재나 제한이 없다"고 명확하게 설명했습니다. 배당 지급은 주가 안정성 유지와 기관 투자자 유치를 위한 <strong>자발적 경영 전략</strong>입니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q4 · 객관식 — PE 비율의 의미 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ③ PE는 시장이 해당 기업의 이익에 부여하는 배수를 나타낸다</div>
+      ① PE가 낮다고 무조건 좋은 것은 아닙니다(위기 기업일 수도). ② PETTM은 과거 4분기 EPS 기준(Trailing), PEForward가 예상 EPS 기준입니다. ④ PE 변화는 즉각 반영되지 않고, 시간의 흐름에 따라 확인되어야 주가에 영향을 줍니다. 강의에서 "한마디로 얘기하면 미래의 가치"라고 설명했습니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q5 · 단답형 — 기업 분석 비유 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: 영화 (무빙 픽처)</div>
+      강의 원문: "펀더멘탈 보기에는 사진을 보는 것이 아니라 영화를 한 편을 보는 것 같습니다." 10-K 한 해치만 보는 것은 사진, 5년의 흐름을 이어 보는 것이 영화(무빙 픽처)입니다. 기업이 어디서 와서 어디로 향하는지 입체적으로 파악해야 한다는 의미입니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q6 · 객관식 — 가치주 분석 지표 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ③ 마이너스에서 플러스 전환 예상 시점</div>
+      이는 <strong>성장주</strong>에 해당하는 분석 관점입니다. 가치주는 이미 성숙한 기업으로, 시장점유율 유지·배당 안정성·주가 안정성·이익률 변화가 핵심 분석 지표입니다. 강의에서 "가치주에 성장주 잣대를 들이대면 성장주는 하나도 사면 안 된다"고 했는데, 반대로 성장주 잣대를 가치주에 쓰는 것도 부적절합니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q7 · 객관식 — 뮤추얼펀드 한계 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ② Closed-End 구조로 SEC 규정상 초기 투자 비중을 임의 변경할 수 없다</div>
+      강의에서 "뮤추얼펀드를 이렇게 만들어 놓으면 딱 정해져 있는 거, Closed-End Fund라고 그래요. 한 번 들어가면 더 이상 조정이 안 된 거, 딱 묶여져 있습니다"라고 설명했습니다. 엔비디아가 200% 올라도 비중을 3.75%로 유지해야 하는 구조적 한계입니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q8 · OX형 — Revolving Loan 신호 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ❌ (X)</div>
+      강의에서 "Revolving Loan은 하는 자체가 이 회사의 자금의 문제가 있다라고 보시면 됩니다"라고 했습니다. 담보(재고·부동산·매출채권)를 잡아 은행 융자를 받는 것은 <strong>자금 압박을 나타내는 경고 신호</strong>이지, 긍정적 신호가 아닙니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q9 · 객관식 — 기관 포트폴리오 변화 해석 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: ② A사의 리스크가 커졌을 가능성으로 보고 펀더멘털을 재점검한다</div>
+      강의에서 마이크로소프트 예시를 들어 "성장주의 중심에 있는데 포트폴리오에서 줄었네? 그러면 뭔가 리스크가 커졌나보다라고 생각할 수밖에 없다"고 설명했습니다. 대형 기관의 비중 축소는 단순 리밸런싱이 아니라 해당 기업에 대한 신뢰 변화의 간접 신호입니다.
+    </div>
+  </div>
+
+  <div class="ans-card">
+    <div class="ans-header" onclick="toggleAns(this)">Q10 · 단답형 — 성장주 최적 진입 시점 <span>▼</span></div>
+    <div class="ans-body">
+      <div class="ans-answer">정답: 2021년 또는 2022년 (플러스 전환 이전)</div>
+      강의에서 "이미 플러스 30%가 되면 다 달려들어 주가가 비싸진다. 플러스 30% 하면 주가는 이미 많이 올라 있다"고 했습니다. 수익마진이 마이너스에서 0을 향해 개선되는 <strong>2021~2022년 구간</strong>이 선점 기회입니다. 2023년에 +30%가 확인될 때는 이미 늦은 것입니다.
+    </div>
+  </div>
+
+</div><!-- answer-section -->
+</div><!-- container -->
+
+<footer>
+  <strong>투자는인생TV 아카데미 3회 — 시험문제지</strong><br>
+  학습 목적으로 제작된 요약 분석본입니다. 투자 권유가 아닙니다.
+</footer>
+
+<script>
+// Answer key
+const answers = {
+  q1: { type: 'ox', correct: 'O', fb_correct: '정답입니다! 펀더멘털은 장기 주가 방향성을 파악하는 도구입니다.', fb_wrong: '틀렸습니다. 펀더멘털 분석은 주가의 장기 방향성을 파악하기 위한 것입니다.' },
+  q2: { type: 'mc', correct: 2, fb_correct: '정답! 성장주는 5년간 매출 성장 추세가 핵심 지표입니다.', fb_wrong: '틀렸습니다. 성장주 분석에서는 5년간 매출 성장 추세가 가장 중요합니다.' },
+  q3: { type: 'ox', correct: 'X', fb_correct: '정답! 배당금 지급은 법적 의무가 아닌 자발적 경영 전략입니다.', fb_wrong: '틀렸습니다. 미국에서 배당금 미지급에 대한 법적 제재는 없습니다.' },
+  q4: { type: 'mc', correct: 3, fb_correct: '정답! PE는 시장이 이익에 부여하는 배수(프리미엄)입니다.', fb_wrong: '틀렸습니다. PE는 "시장이 이익에 몇 배를 쳐주느냐"를 나타냅니다.' },
+  q5: { type: 'short', correct: ['영화', '무빙픽처', '무빙 픽처', '영화처럼'], fb_correct: '정답! 기업 분석은 사진이 아닌 영화(무빙 픽처)처럼 봐야 합니다.', fb_wrong: '정답은 "영화(무빙 픽처)"입니다. 5년의 흐름을 영화처럼 연속적으로 봐야 합니다.' },
+  q6: { type: 'mc', correct: 3, fb_correct: '정답! 마이너스→플러스 전환은 성장주 관점입니다.', fb_wrong: '틀렸습니다. 마이너스에서 플러스 전환 분석은 가치주가 아닌 성장주에 적용합니다.' },
+  q7: { type: 'mc', correct: 2, fb_correct: '정답! Closed-End 구조로 SEC 규정상 비중 변경이 제한됩니다.', fb_wrong: '틀렸습니다. Closed-End Fund 구조로 인해 설정 시 묶인 비중을 임의 변경할 수 없습니다.' },
+  q8: { type: 'ox', correct: 'X', fb_correct: '정답! Revolving Loan은 자금 압박의 경고 신호입니다.', fb_wrong: '틀렸습니다. Revolving Loan 발생은 자금 문제의 경고 신호이지 긍정적 신호가 아닙니다.' },
+  q9: { type: 'mc', correct: 2, fb_correct: '정답! 기관의 비중 축소는 해당 기업 리스크 증가 신호입니다.', fb_wrong: '틀렸습니다. 기관의 비중 축소는 리스크 증가 가능성을 시사하며 펀더멘털 재점검이 필요합니다.' },
+  q10: { type: 'short', correct: ['2021', '2022', '2021년', '2022년', '2021~2022', '2021~2022년'], fb_correct: '정답! 수익이 플러스 전환 이전인 2021~2022년이 성장주 선점 시기입니다.', fb_wrong: '정답은 2021년 또는 2022년입니다. 2023년 +30% 확인 후에는 이미 주가가 반영되어 늦습니다.' }
+};
+
+const selected = {};
+
+function selectMC(qId, val, btn) {
+  if (selected[qId] && selected[qId].graded) return;
+  document.querySelectorAll(`#${qId} .option-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[qId] = { val };
+}
+
+function selectOX(qId, val, btn) {
+  if (selected[qId] && selected[qId].graded) return;
+  document.querySelectorAll(`#${qId} .ox-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[qId] = { val };
+}
+
+let scoreCount = 0;
+function gradeAll() {
+  scoreCount = 0;
+  const qIds = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+  qIds.forEach(qId => {
+    const ans = answers[qId];
+    const sel = selected[qId];
+    const fb = document.getElementById('fb' + qId.slice(1));
+    const card = document.getElementById(qId);
+
+    let isCorrect = false;
+
+    if (!sel) {
+      fb.className = 'feedback show wrong';
+      fb.textContent = '⚠️ 답을 선택하지 않았습니다. ' + ans.fb_wrong;
+      card.classList.add('wrong-card');
+    } else if (ans.type === 'mc') {
+      const correctBtn = card.querySelectorAll('.option-btn')[ans.correct - 1];
+      if (sel.val === ans.correct) {
+        isCorrect = true;
+        fb.className = 'feedback show correct';
+        fb.textContent = '✅ ' + ans.fb_correct;
+        card.classList.add('correct-card');
+        correctBtn.classList.add('correct-opt');
+      } else {
+        fb.className = 'feedback show wrong';
+        fb.textContent = '❌ ' + ans.fb_wrong;
+        card.classList.add('wrong-card');
+        card.querySelectorAll('.option-btn')[sel.val - 1].classList.add('wrong-opt');
+        correctBtn.classList.add('correct-opt');
+      }
+      card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+    } else if (ans.type === 'ox') {
+      const btns = card.querySelectorAll('.ox-btn');
+      if (sel.val === ans.correct) {
+        isCorrect = true;
+        fb.className = 'feedback show correct';
+        fb.textContent = '✅ ' + ans.fb_correct;
+        card.classList.add('correct-card');
+      } else {
+        fb.className = 'feedback show wrong';
+        fb.textContent = '❌ ' + ans.fb_wrong;
+        card.classList.add('wrong-card');
+      }
+      btns.forEach(b => { b.disabled = true; if (b.dataset.v === ans.correct) b.classList.add('correct-opt'); });
+    } else if (ans.type === 'short') {
+      const inp = document.getElementById('sa' + qId.slice(1));
+      const userAns = inp.value.trim().replace(/\s/g,'');
+      const match = ans.correct.some(c => userAns.includes(c.replace(/\s/g,'')) || c.replace(/\s/g,'').includes(userAns));
+      inp.disabled = true;
+      if (match && userAns.length > 0) {
+        isCorrect = true;
+        fb.className = 'feedback show correct';
+        fb.textContent = '✅ ' + ans.fb_correct;
+        card.classList.add('correct-card');
+      } else {
+        fb.className = 'feedback show wrong';
+        fb.textContent = '❌ ' + ans.fb_wrong;
+        card.classList.add('wrong-card');
+      }
+    }
+    if (isCorrect) scoreCount++;
+    if (sel) sel.graded = true;
+  });
+
+  document.getElementById('scoreDisplay').textContent = scoreCount + ' / 10';
+  const box = document.getElementById('resultBox');
+  box.classList.add('show');
+  document.getElementById('resultScore').textContent = scoreCount + '/10';
+  const pct = scoreCount * 10;
+  let msg = '';
+  if (pct >= 90) msg = '🏆 탁월합니다! 펀더멘털 분석 전문가 수준입니다.';
+  else if (pct >= 70) msg = '👍 훌륭합니다! 핵심 개념을 잘 이해하셨습니다.';
+  else if (pct >= 50) msg = '📚 보통 수준. 틀린 문제의 해설을 다시 복습하세요.';
+  else msg = '🔄 다시 강의를 들으며 복습하는 것을 권장합니다.';
+  document.getElementById('resultMsg').textContent = msg;
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetAll() {
+  location.reload();
+}
+
+function toggleAns(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.querySelector('span').textContent = isOpen ? '▼' : '▲';
+}
+</script>
+</body>
+</html>
