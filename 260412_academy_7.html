@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국 주식시장 밸류에이션 분석</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #ffffff; color: #1a1a1a; font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; font-size: 16px; line-height: 1.7; max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
+
+  /* FADE-IN */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* CHART */
+  .chart-container { position: relative; max-height: 340px; }
+  .chart-container canvas { opacity: 0; transition: opacity 0.4s ease; max-height: 300px; }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* MAGAZINE HEADER */
+  .mag-header { border-top: 3px solid #e11d48; border-bottom: 1px solid #e5e5e5; padding: 28px 0 20px; margin-bottom: 32px; }
+  .mag-label { font-size: 11px; letter-spacing: 2px; color: #e11d48; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .mag-title { font-size: 28px; font-weight: 700; line-height: 1.3; color: #1a1a1a; margin-bottom: 12px; }
+  .mag-sub { font-size: 15px; color: #777777; line-height: 1.6; }
+  .mag-meta { font-size: 12px; color: #aaaaaa; margin-top: 14px; border-top: 1px solid #e5e5e5; padding-top: 12px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 40px; }
+  .section-label { font-size: 10px; letter-spacing: 2px; color: #e11d48; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+  .section-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; border-bottom: 2px solid #f43f5e; padding-bottom: 8px; display: inline-block; }
+  .section p { color: #333333; margin-bottom: 12px; font-size: 15px; }
+
+  /* METRIC CARDS */
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .metric-card { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 8px; padding: 14px 16px; }
+  .metric-label { font-size: 11px; color: #777777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .metric-value { font-size: 24px; font-weight: 700; color: #1a1a1a; }
+  .metric-note { font-size: 11px; color: #aaaaaa; margin-top: 4px; }
+  .metric-value.up { color: #e11d48; }
+  .metric-value.ok { color: #2563eb; }
+  .metric-value.warn { color: #f59e0b; }
+
+  /* STATUS BADGE */
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+  .badge-ok { background: #dbeafe; color: #1d4ed8; }
+  .badge-warn { background: #fef3c7; color: #92400e; }
+  .badge-danger { background: #fee2e2; color: #991b1b; }
+
+  /* TIMELINE */
+  .timeline { border-left: 2px solid #e11d48; padding-left: 20px; margin: 20px 0; }
+  .timeline-item { margin-bottom: 20px; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: -25px; top: 6px; width: 8px; height: 8px; background: #e11d48; border-radius: 50%; }
+  .timeline-month { font-size: 12px; font-weight: 700; color: #e11d48; text-transform: uppercase; letter-spacing: 1px; }
+  .timeline-text { font-size: 14px; color: #333333; margin-top: 4px; }
+
+  /* QUOTE */
+  .pullquote { border-left: 4px solid #e11d48; background: #fafafa; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+  .pullquote p { font-size: 17px; font-style: italic; color: #333333; margin: 0; }
+  .pullquote cite { font-size: 12px; color: #777777; display: block; margin-top: 8px; }
+
+  /* DATA TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th { background: #e11d48; color: #ffffff; padding: 10px 12px; text-align: left; font-weight: 600; }
+  td { padding: 9px 12px; border-bottom: 1px solid #e5e5e5; }
+  tr:nth-child(even) td { background: #fafafa; }
+  tr:last-child td { border-bottom: none; }
+
+  /* SIMULATOR */
+  .sim-box { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; margin: 20px 0; }
+  .sim-box h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .sim-box h3::before { content: ''; display: inline-block; width: 4px; height: 16px; background: #e11d48; border-radius: 2px; }
+  .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .slider-label { font-size: 13px; color: #555; min-width: 120px; }
+  .slider-row input[type=range] { flex: 1; accent-color: #e11d48; }
+  .slider-val { font-size: 13px; font-weight: 600; color: #e11d48; min-width: 50px; text-align: right; }
+  .sim-result { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .sim-result-item { background: #ffffff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 12px; text-align: center; }
+  .sim-result-label { font-size: 11px; color: #777; margin-bottom: 4px; }
+  .sim-result-val { font-size: 18px; font-weight: 700; color: #e11d48; }
+  .reset-btn { display: block; width: 100%; margin-top: 14px; padding: 9px; background: transparent; border: 1px solid #e11d48; color: #e11d48; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+  .reset-btn:hover { background: #e11d48; color: #ffffff; }
+
+  /* QUIZ SECTION */
+  .quiz-section { margin-top: 48px; padding-top: 32px; border-top: 3px solid #1a1a1a; }
+  .quiz-header { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .quiz-sub { font-size: 13px; color: #777; margin-bottom: 24px; }
+  .quiz-item { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .quiz-num { font-size: 11px; font-weight: 700; color: #e11d48; letter-spacing: 1px; margin-bottom: 6px; }
+  .quiz-q { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px; line-height: 1.5; }
+  .quiz-options label { display: block; font-size: 14px; color: #333; padding: 6px 0; cursor: pointer; }
+  .quiz-options input[type=radio] { margin-right: 8px; accent-color: #e11d48; }
+  .quiz-answer { display: none; margin-top: 12px; padding: 12px; background: #fff; border-left: 3px solid #2563eb; border-radius: 4px; font-size: 13px; color: #333; }
+  .quiz-answer.show { display: block; }
+  .quiz-answer strong { color: #2563eb; }
+  .quiz-check-btn { margin-top: 10px; padding: 7px 16px; background: #e11d48; color: #fff; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .quiz-check-btn:hover { background: #be123c; }
+  .quiz-input { width: 100%; padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 14px; margin-top: 4px; }
+  .divider { border: none; border-top: 1px solid #e5e5e5; margin: 32px 0; }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .metric-grid { grid-template-columns: 1fr; }
+    .sim-result { grid-template-columns: 1fr; }
+    .mag-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MAGAZINE HEADER -->
+<header class="mag-header fade-in">
+  <div class="mag-label">투자 아카데미 45편 · 2026.04.12</div>
+  <h1 class="mag-title">미국 주식시장,<br>지금 비싼가?</h1>
+  <p class="mag-sub">관세 충격 이후 반등한 S&P 500의 밸류에이션을 데이터로 점검한다. 단기 변동성 vs. 중장기 투자 논리를 분석한다.</p>
+  <div class="mag-meta">출처: 투자아카데미 유튜브 방송 자막 분석 · 편집자 요약</div>
+</header>
+
+<!-- 1. 현재 시장 상황 -->
+<section class="section fade-in">
+  <div class="section-label">Market Overview</div>
+  <h2 class="section-title">현재 시장 상황</h2>
+  <p>S&P 500과 나스닥이 최근 반등세를 이어가고 있다. 특히 IT(기술) 섹터가 하락장에서 30~40% 떨어졌다가 다시 치고 올라오면서 지수 상승을 주도했다. 기관 투자자들은 지난 금요일부터 IT주를 집중 매수했으며, 메타·Palantir 등이 강세를 보였다.</p>
+  <p>그러나 낙관론과 함께 <strong>뚜렷한 위험 요인</strong>도 존재한다. 트럼프 행정부의 관세 정책(리버레이션 데이, 4월)이 기업 투자와 신규 채용을 위축시키고 있으며, 그 여파는 한 분기 뒤인 <strong>7~9월에 본격화</strong>될 가능성이 크다.</p>
+
+  <!-- 주요 지표 카드 -->
+  <div class="metric-grid fade-in">
+    <div class="metric-card">
+      <div class="metric-label">S&P 500 P/E (현재)</div>
+      <div class="metric-value ok">19배</div>
+      <div class="metric-note">역대 고점 23배보다 낮음</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">배당 수익률 (S&P)</div>
+      <div class="metric-value">1.29%</div>
+      <div class="metric-note">역사 평균 2.9% 대비 낮음</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">주가/매출 비율 (P/S)</div>
+      <div class="metric-value warn">2.9배</div>
+      <div class="metric-note">평균 1.9~2.5배 상회</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">어닝 vs 국채 스프레드</div>
+      <div class="metric-value ok">+3.19%p</div>
+      <div class="metric-note">역사 평균 4%p보다 낮음</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 밸류에이션 차트 -->
+<section class="section fade-in">
+  <div class="section-label">Valuation</div>
+  <h2 class="section-title">핵심 밸류에이션 지표 비교</h2>
+  <p>현재 수치를 역사 평균과 비교한 방송 내용을 시각화한 차트다. 수치가 높을수록 고평가, 낮을수록 저평가 신호다.</p>
+
+  <div class="chart-container fade-in" style="margin: 20px 0;">
+    <canvas id="valChart" height="240" role="img" aria-label="주요 밸류에이션 지표를 현재와 역사 평균으로 비교한 막대 차트">밸류에이션 비교 차트</canvas>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: #777;">
+    <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; border-radius: 2px; background: #e11d48; display:inline-block;"></span>현재 수치</span>
+    <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; border-radius: 2px; background: #6b7280; display:inline-block;"></span>역사 평균</span>
+  </div>
+</section>
+
+<!-- 3. 위험 시나리오 타임라인 -->
+<section class="section fade-in">
+  <div class="section-label">Risk Timeline</div>
+  <h2 class="section-title">관세 충격 전파 타임라인</h2>
+  <p>방송에서는 관세 정책의 실물 경제 타격이 즉각 나타나지 않고, 한 분기 뒤에 집중된다고 분석했다.</p>
+
+  <div class="timeline fade-in">
+    <div class="timeline-item">
+      <div class="timeline-month">4월 — 리버레이션 데이</div>
+      <div class="timeline-text">트럼프 관세 선언. 기업들은 재고를 선제적으로 2~3배 늘림 → 단기 매출은 오히려 증가해 보임.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-month">5~6월 — 완충 구간</div>
+      <div class="timeline-text">쌓아둔 재고가 소진되는 시기. 표면적으로는 충격이 크지 않아 보임.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-month">7~9월 — 충격 본격화 <span class="badge badge-danger">주의 구간</span></div>
+      <div class="timeline-text">재고 추가 주문 둔화 → 매출 하락 가능성. 스태그플레이션(물가 상승 + 경기침체) 리스크 현실화 여부가 판가름 나는 시기.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-month">이후 — 연준 대응</div>
+      <div class="timeline-text">인플레이션 경로가 불확실해 금리 인하 결정이 지연될 수 있음. 스태그플레이션이 풀리지 않으면 기업 수익성·생산성 동반 하락.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 채권 vs 주식 비교 차트 -->
+<section class="section fade-in">
+  <div class="section-label">Asset Allocation</div>
+  <h2 class="section-title">채권 vs 주식: 기관 배분 논리</h2>
+  <p>S&P 500의 주당순이익 수익률(Earning Yield)과 10년 국채 금리의 차이(스프레드)는 기관이 주식·채권 배분을 결정하는 핵심 기준이다. 스프레드가 클수록 주식이 상대적으로 매력적이다.</p>
+
+  <div class="chart-container fade-in" style="margin: 20px 0;">
+    <canvas id="spreadChart" height="220" role="img" aria-label="주식 어닝 수익률과 10년 국채 금리 스프레드 비교">스프레드 차트</canvas>
+  </div>
+
+  <div class="pullquote fade-in">
+    <p>"S&P 어닝 수익률과 10년 국채 벤치마크의 차이가 약 3.19%p로, 역사적 평균 4%p보다 낮지만 여전히 주식에 더 투자할 기관이 있다는 뜻이다."</p>
+    <cite>— 방송 내용 요약</cite>
+  </div>
+</section>
+
+<!-- 5. 인터랙티브 시뮬레이터 -->
+<section class="section fade-in">
+  <div class="section-label">Simulator</div>
+  <h2 class="section-title">투자 시나리오 시뮬레이터</h2>
+  <p>방송에서 언급된 핵심 변수를 직접 조정해 S&P 500의 예상 방향성을 체감해보자.</p>
+
+  <div class="sim-box fade-in">
+    <h3>조건 설정</h3>
+
+    <div class="slider-row">
+      <span class="slider-label">P/E 비율</span>
+      <input type="range" id="peSlider" min="14" max="28" value="19" step="0.5">
+      <span class="slider-val" id="peVal">19.0배</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">어닝-국채 스프레드</span>
+      <input type="range" id="spreadSlider" min="0" max="6" value="3.19" step="0.1">
+      <span class="slider-val" id="spreadVal">3.19%p</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">P/S 비율</span>
+      <input type="range" id="psSlider" min="1" max="5" value="2.9" step="0.1">
+      <span class="slider-val" id="psVal">2.9배</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">관세 충격 강도</span>
+      <input type="range" id="tariffSlider" min="0" max="10" value="5" step="1">
+      <span class="slider-val" id="tariffVal">보통</span>
+    </div>
+
+    <div class="sim-result" id="simResult">
+      <div class="sim-result-item">
+        <div class="sim-result-label">밸류에이션 평가</div>
+        <div class="sim-result-val" id="simValuation">적정</div>
+      </div>
+      <div class="sim-result-item">
+        <div class="sim-result-label">주식 매력도</div>
+        <div class="sim-result-val" id="simAppeal">높음</div>
+      </div>
+      <div class="sim-result-item">
+        <div class="sim-result-label">단기 리스크</div>
+        <div class="sim-result-val" id="simRisk">중간</div>
+      </div>
+      <div class="sim-result-item">
+        <div class="sim-result-label">중장기 전망</div>
+        <div class="sim-result-val" id="simOutlook">긍정적</div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetSim()">초기값으로 리셋</button>
+  </div>
+</section>
+
+<!-- 6. 미국 증시 vs 금 비교 -->
+<section class="section fade-in">
+  <div class="section-label">Gold vs Stocks</div>
+  <h2 class="section-title">금 vs 주식: 상대 가치</h2>
+  <p>방송에서는 미국 주가와 금 1온스 가격의 비율이 현재 <strong>1.8</strong>로 역사 평균보다 낮다고 언급했다. 이는 금이 경제적 불안을 과도하게 반영해 고평가된 상태일 수 있으며, 반대로 주식이 아직 추가 상승 여력이 있다는 신호로 해석된다.</p>
+
+  <div class="chart-container fade-in" style="margin: 20px 0;">
+    <canvas id="goldChart" height="220" role="img" aria-label="주가 대비 금 비율 트렌드">주가/금 비율 차트</canvas>
+  </div>
+</section>
+
+<!-- 7. IT 섹터 특이성 -->
+<section class="section fade-in">
+  <div class="section-label">IT Sector</div>
+  <h2 class="section-title">IT 섹터가 비싼 두 가지 이유</h2>
+
+  <table class="fade-in">
+    <thead>
+      <tr><th>이유</th><th>내용</th><th>평가</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. 매출 성장률</strong></td>
+        <td>엔비디아 등 AI 기업의 매출이 두 자릿수 성장 중. 가이던스도 높음.</td>
+        <td><span class="badge badge-ok">정당화 가능</span></td>
+      </tr>
+      <tr>
+        <td><strong>2. AI 혁명 CAPEX</strong></td>
+        <td>AI 인프라 투자 집중. 단기적으로 비용 증가하나 중장기적으로 인건비(엔트리 레벨 30% 감축) 절감 효과.</td>
+        <td><span class="badge badge-ok">장기 긍정</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pullquote fade-in">
+    <p>"닷컴 버블 때와 달리 현재 IT 주식은 실제 매출이 받쳐주고 있어 34% 이상 낮은 수준이다. 닷컴 때처럼 왕창 깨질 가능성은 적다."</p>
+    <cite>— 방송 결론</cite>
+  </div>
+</section>
+
+<!-- 8. 국민연금 분석 (보조) -->
+<section class="section fade-in">
+  <div class="section-label">Pension Fund</div>
+  <h2 class="section-title">국민연금과 한국 인구 구조 리스크</h2>
+  <p>방송에서 국민연금의 자산 배분 의사결정 역량을 비판적으로 다루었다. 채권·주식 비중을 조정해야 할 인플렉션 포인트에서 반대 방향으로 움직이는 경향이 있다는 지적이다.</p>
+  <p>한국의 합계출산율이 약 <strong>0.7</strong> 수준으로 추락하면서, 현재 2명이 1명의 노인을 부양하는 구조가 심화되고 있다. 방송에서는 특히 30대 이하 세대는 국민연금을 노후 주요 소득으로 기대하지 말 것을 권고했다.</p>
+
+  <div class="chart-container fade-in" style="margin: 20px 0;">
+    <canvas id="pensionChart" height="220" role="img" aria-label="연령대별 부양비 구조 변화">부양비 구조 차트</canvas>
+  </div>
+</section>
+
+<!-- 9. 결론 -->
+<section class="section fade-in">
+  <div class="section-label">Conclusion</div>
+  <h2 class="section-title">종합 투자 결론</h2>
+
+  <table class="fade-in">
+    <thead>
+      <tr><th>기간</th><th>전략</th><th>이유</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>단기 (7~9월)</strong></td>
+        <td>보수적 유지, 비중 감소 금지</td>
+        <td>관세 충격 여파, 5% 콜렉션 가능</td>
+      </tr>
+      <tr>
+        <td><strong>중장기 (이후)</strong></td>
+        <td>미국 주식 지속 투자</td>
+        <td>기업 이익 성장, 금리 하락 기대, AI 혁명 지속</td>
+      </tr>
+      <tr>
+        <td><strong>금</strong></td>
+        <td>비중 확대 자제</td>
+        <td>경제 불안 과도 반영, 고평가 상태</td>
+      </tr>
+      <tr>
+        <td><strong>채권</strong></td>
+        <td>기관 기준 70:30 유지</td>
+        <td>국채 매력도 일부 회복되나 주식 우위 지속</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pullquote fade-in">
+    <p>"S&P 500이 단기 하락 가능성이 있지만, 중장기적으로 6,300 이상 상승할 가능성이 크다. 7~8월은 보수적으로 가되, 빠져나와서는 안 된다."</p>
+    <cite>— 방송 최종 결론</cite>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ========== 시험문제 ========== -->
+<section class="quiz-section fade-in">
+  <div class="quiz-header">시험문제 10선</div>
+  <div class="quiz-sub">방송 내용을 바탕으로 출제 · 문제를 읽고 [정답 확인] 버튼을 누르세요</div>
+
+  <!-- Q1 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q1 · 객관식 · 쉬움</div>
+    <div class="quiz-q">방송에서 언급한 S&P 500의 현재 P/E(주가수익비율)는?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q1" value="a"> ① 14배</label>
+      <label><input type="radio" name="q1" value="b"> ② 19배</label>
+      <label><input type="radio" name="q1" value="c"> ③ 23배</label>
+      <label><input type="radio" name="q1" value="d"> ④ 28배</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q1','b','answer1')">정답 확인</button>
+    <div class="quiz-answer" id="answer1"><strong>정답: ② 19배</strong><br>방송에서 "S&P의 파이브랜드(P/E)가 19"라고 명시. 과거 고점 23배보다 낮고 아직 정상 범위라고 설명했다.</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q2 · 객관식 · 쉬움</div>
+    <div class="quiz-q">S&P 500의 배당 수익률(Dividend Yield) 역사적 평균은?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q2" value="a"> ① 1.29%</label>
+      <label><input type="radio" name="q2" value="b"> ② 2.9%</label>
+      <label><input type="radio" name="q2" value="c"> ③ 3.19%</label>
+      <label><input type="radio" name="q2" value="d"> ④ 4.0%</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q2','b','answer2')">정답 확인</button>
+    <div class="quiz-answer" id="answer2"><strong>정답: ② 2.9%</strong><br>방송에서 현재 배당 수익률이 1.29%이며 역사 평균 2.9%보다 낮다고 설명했다.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q3 · OX · 쉬움</div>
+    <div class="quiz-q">방송 분석에 따르면, 미국 주가와 금 1온스 비율(현재 1.8)이 역사 평균보다 낮다는 것은 금이 과도하게 고평가된 신호일 수 있다. (O/X)</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q3" value="o"> O</label>
+      <label><input type="radio" name="q3" value="x"> X</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q3','o','answer3')">정답 확인</button>
+    <div class="quiz-answer" id="answer3"><strong>정답: O</strong><br>비율이 평균보다 낮다는 것은 금 가격이 주가 대비 상대적으로 더 많이 올랐다는 뜻. 방송에서도 "금이 평균 이상으로 사졌다"고 표현했다.</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q4 · 객관식 · 보통</div>
+    <div class="quiz-q">방송에서 관세 충격(리버레이션 데이)의 여파가 본격화될 시기로 지목한 구간은?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q4" value="a"> ① 4~5월</label>
+      <label><input type="radio" name="q4" value="b"> ② 5~6월</label>
+      <label><input type="radio" name="q4" value="c"> ③ 7~9월</label>
+      <label><input type="radio" name="q4" value="d"> ④ 10~12월</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q4','c','answer4')">정답 확인</button>
+    <div class="quiz-answer" id="answer4"><strong>정답: ③ 7~9월</strong><br>"리버레이션 데이 여파가 한 분기 뒤에 나타난다"고 설명. 4월 조치 → 7~9월 충격 본격화.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q5 · 단답형 · 보통</div>
+    <div class="quiz-q">방송에서 S&P 500 어닝 수익률과 10년 국채 금리의 스프레드(차이)는 약 몇 %p라고 언급했나?</div>
+    <input class="quiz-input" type="text" id="q5input" placeholder="숫자로 입력 (예: 3.19)">
+    <button class="quiz-check-btn" onclick="checkText('q5input','answer5',['3.19','3.2','약 3.19','약 3.2'])">정답 확인</button>
+    <div class="quiz-answer" id="answer5"><strong>정답: 3.19%p</strong><br>"S&P Earning Yield와 10년 국채 벤치마크 차이가 약 3.19%"라고 명시. 역사 평균 4%p보다 낮다.</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q6 · 객관식 · 보통</div>
+    <div class="quiz-q">방송에서 현재 S&P 500의 P/S(주가/매출) 비율을 몇 배라고 언급했나?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q6" value="a"> ① 1.9배</label>
+      <label><input type="radio" name="q6" value="b"> ② 2.5배</label>
+      <label><input type="radio" name="q6" value="c"> ③ 2.9배</label>
+      <label><input type="radio" name="q6" value="d"> ④ 3.5배</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q6','c','answer6')">정답 확인</button>
+    <div class="quiz-answer" id="answer6"><strong>정답: ③ 2.9배</strong><br>"매출대비 주가의 비율은 현재 2.9"이며 평균 1.9~2.5보다 높은 상황이라고 언급.</div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q7 · 객관식 · 보통</div>
+    <div class="quiz-q">방송에서 IT 섹터의 주가가 높은 두 가지 이유로 옳은 것은?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q7" value="a"> ① 배당 수익률 상승 + 정부 보조금</label>
+      <label><input type="radio" name="q7" value="b"> ② 두 자릿수 매출 성장률 + AI 혁명에 따른 CAPEX 증가</label>
+      <label><input type="radio" name="q7" value="c"> ③ 인플레이션 헤지 + 달러 약세</label>
+      <label><input type="radio" name="q7" value="d"> ④ 금리 인하 기대 + 무역 흑자</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q7','b','answer7')">정답 확인</button>
+    <div class="quiz-answer" id="answer7"><strong>정답: ② 두 자릿수 매출 성장률 + AI 혁명 CAPEX</strong><br>방송에서 "매출 성장률이 높고, AI 혁명으로 CAPEX가 높아지며 장기적으로 인건비 절감"이라고 설명.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q8 · OX · 보통</div>
+    <div class="quiz-q">방송 분석에 따르면, 현재 미국 주식의 밸류에이션은 닷컴 버블 수준과 동일하므로 즉시 주식을 매도해야 한다. (O/X)</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q8" value="o"> O</label>
+      <label><input type="radio" name="q8" value="x"> X</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q8','x','answer8')">정답 확인</button>
+    <div class="quiz-answer" id="answer8"><strong>정답: X</strong><br>방송에서는 현재 IT 주식이 닷컴 때보다 34% 이상 낮은 수준이며, "닷컴처럼 왕창 깨질 가능성은 적다"고 판단. 중장기 투자 지속을 권고했다.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q9 · 단답형 · 어려움</div>
+    <div class="quiz-q">방송에서 '스태그플레이션'이란 무엇이며, 이것이 발생할 경우 연준(Fed)의 금리 정책에 어떤 영향을 미친다고 설명했나? (자유 서술)</div>
+    <input class="quiz-input" type="text" id="q9input" placeholder="핵심 키워드 포함하여 입력">
+    <button class="quiz-check-btn" onclick="showAnswer('answer9')">해설 보기</button>
+    <div class="quiz-answer" id="answer9"><strong>해설:</strong> 스태그플레이션은 물가 상승(인플레이션)과 경기침체(스태그네이션)가 동시에 발생하는 현상. 방송에서는 관세 충격으로 물가는 오르고 경기는 위축될 수 있다고 분석했다. 이 경우 인플레이션이 어떻게 될지 불확실해 연준이 금리 인하를 결정하기 어렵게 되어 인하 시점이 지연될 수 있다고 설명했다.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-num">Q10 · 객관식 · 어려움</div>
+    <div class="quiz-q">방송에서 현재 표준편차(Standard Deviation) 분석 결과 σ(시그마) 프리미엄이 0.09로 약간 높은 이유로 지목한 원인은?</div>
+    <div class="quiz-options">
+      <label><input type="radio" name="q10" value="a"> ① 에너지 섹터 급등</label>
+      <label><input type="radio" name="q10" value="b"> ② 금 가격 상승</label>
+      <label><input type="radio" name="q10" value="c"> ③ IT(기술) 섹터의 두 자릿수 매출 성장</label>
+      <label><input type="radio" name="q10" value="d"> ④ 달러 약세로 인한 수출 기업 실적 개선</label>
+    </div>
+    <button class="quiz-check-btn" onclick="checkMC('q10','c','answer10')">정답 확인</button>
+    <div class="quiz-answer" id="answer10"><strong>정답: ③ IT 섹터 매출 성장</strong><br>"스탠더드 디비에이션 1.05, 시그마 프리미엄 0.09로 약간 높은 이유가 IT 때문"이라고 명시. IT 섹터만 유일하게 두 자릿수 매출 성장을 기록 중.</div>
+  </div>
+
+</section>
+
+<!-- ========== JS ========== -->
+<script>
+/* FADE-IN + CHART OBSERVER */
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['valChart'] = () => {
+  new Chart(document.getElementById('valChart'), {
+    type: 'bar',
+    data: {
+      labels: ['P/E 비율', '배당 수익률(%)', 'P/S 비율', '어닝-국채\n스프레드(%p)'],
+      datasets: [
+        {
+          label: '현재',
+          data: [19, 1.29, 2.9, 3.19],
+          backgroundColor: '#e11d48',
+          borderRadius: 4,
+        },
+        {
+          label: '역사 평균',
+          data: [21, 2.9, 2.2, 4.0],
+          backgroundColor: '#6b7280',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['spreadChart'] = () => {
+  new Chart(document.getElementById('spreadChart'), {
+    type: 'line',
+    data: {
+      labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','현재'],
+      datasets: [
+        {
+          label: '어닝 수익률-국채 스프레드',
+          data: [3.8, 4.2, 3.6, 2.8, 4.5, 5.1, 3.9, 2.1, 2.9, 3.5, 3.19],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+        },
+        {
+          label: '역사 평균 (4%p)',
+          data: Array(11).fill(4.0),
+          borderColor: '#6b7280',
+          borderDash: [5,5],
+          pointRadius: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 7, grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, callback: v => v + '%p' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } }
+      }
+    }
+  });
+};
+
+chartConfigs['goldChart'] = () => {
+  new Chart(document.getElementById('goldChart'), {
+    type: 'line',
+    data: {
+      labels: ['2010','2012','2014','2016','2018','2020','2022','2024','현재'],
+      datasets: [
+        {
+          label: '주가/금 비율',
+          data: [0.9, 0.7, 1.4, 2.1, 2.4, 1.5, 1.7, 2.2, 1.8],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+        },
+        {
+          label: '역사 평균',
+          data: Array(9).fill(2.0),
+          borderColor: '#6b7280',
+          borderDash: [5,5],
+          pointRadius: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 3.5, grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['pensionChart'] = () => {
+  new Chart(document.getElementById('pensionChart'), {
+    type: 'bar',
+    data: {
+      labels: ['1990년대\n(4:1)', '2000년대\n(3:1)', '2010년대\n(2.5:1)', '현재\n(2:1)', '2040년\n예상(1.2:1)'],
+      datasets: [{
+        label: '생산가능인구 대비 노인 부양비율',
+        data: [4, 3, 2.5, 2, 1.2],
+        backgroundColor: ['#6b7280','#6b7280','#f59e0b','#e11d48','#991b1b'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 5, grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, callback: v => v + '명' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+/* SIMULATOR */
+const tariffLabels = ['없음','매우약','약함','약중','보통약','보통','보통강','강함','매우강','심각','극심'];
+
+function updateSim() {
+  const pe = parseFloat(document.getElementById('peSlider').value);
+  const spread = parseFloat(document.getElementById('spreadSlider').value);
+  const ps = parseFloat(document.getElementById('psSlider').value);
+  const tariff = parseInt(document.getElementById('tariffSlider').value);
+
+  document.getElementById('peVal').textContent = pe.toFixed(1) + '배';
+  document.getElementById('spreadVal').textContent = spread.toFixed(2) + '%p';
+  document.getElementById('psVal').textContent = ps.toFixed(1) + '배';
+  document.getElementById('tariffVal').textContent = tariffLabels[tariff];
+
+  let score = 0;
+  if (pe < 18) score += 2; else if (pe < 22) score += 1; else score -= 1;
+  if (spread > 3.5) score += 2; else if (spread > 2) score += 1; else score -= 1;
+  if (ps < 2.5) score += 1; else if (ps > 3.5) score -= 1;
+  score -= Math.floor(tariff / 4);
+
+  const valuation = pe < 18 ? '저평가' : pe < 22 ? '적정' : pe < 25 ? '고평가' : '버블주의';
+  const appeal = spread > 4 ? '매우높음' : spread > 2.5 ? '높음' : spread > 1.5 ? '보통' : '낮음';
+  const risk = tariff >= 7 ? '높음' : tariff >= 4 ? '중간' : '낮음';
+  const outlook = score >= 3 ? '매우긍정' : score >= 1 ? '긍정적' : score >= -1 ? '중립' : '부정적';
+
+  document.getElementById('simValuation').textContent = valuation;
+  document.getElementById('simAppeal').textContent = appeal;
+  document.getElementById('simRisk').textContent = risk;
+  document.getElementById('simOutlook').textContent = outlook;
+}
+
+['peSlider','spreadSlider','psSlider','tariffSlider'].forEach(id =>
+  document.getElementById(id).addEventListener('input', updateSim)
+);
+
+function resetSim() {
+  document.getElementById('peSlider').value = 19;
+  document.getElementById('spreadSlider').value = 3.19;
+  document.getElementById('psSlider').value = 2.9;
+  document.getElementById('tariffSlider').value = 5;
+  updateSim();
+}
+updateSim();
+
+/* QUIZ */
+function checkMC(name, correct, answerId) {
+  const sel = document.querySelector(`input[name="${name}"]:checked`);
+  if (!sel) { alert('보기를 선택해주세요.'); return; }
+  document.getElementById(answerId).classList.add('show');
+}
+function checkText(inputId, answerId, correctList) {
+  const val = document.getElementById(inputId).value.trim();
+  document.getElementById(answerId).classList.add('show');
+}
+function showAnswer(answerId) {
+  document.getElementById(answerId).classList.add('show');
+}
+</script>
+</body>
+</html>
