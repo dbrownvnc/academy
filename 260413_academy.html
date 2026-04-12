@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자는인생TV 아카데미 1.2 | 기업 펀더멘털 분석 기초</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* FADE-IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+
+  /* HEADER */
+  .cover {
+    padding: 56px 0 36px;
+    border-bottom: 3px solid var(--accent);
+    margin-bottom: 40px;
+  }
+  .cover-label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .cover-title span { color: var(--accent); }
+  .cover-subtitle {
+    font-size: 14px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .cover-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 44px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin: 18px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+  .highlight strong { color: var(--accent); }
+
+  /* CARDS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  @media(max-width:400px){ .card-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+  .card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .card-label { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f4f4f4; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .tag.gray { background: var(--chart3); }
+  .tag.blue { background: var(--chart4); }
+
+  /* STEP FLOW */
+  .step-flow {
+    margin: 16px 0;
+  }
+  .step-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .step-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 32px 0;
+  }
+
+  /* INTERACTIVE SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .sim-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 14px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sim-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .sim-row label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 110px;
+  }
+  input[type=range] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 50px;
+    text-align: right;
+  }
+  .sim-result {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-top: 14px;
+  }
+  .sim-result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sim-metric { text-align: center; }
+  .sim-metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .sim-metric-label { font-size: 11px; color: var(--text2); }
+  .sim-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .sim-btn:hover { background: var(--accent2); }
+
+  /* FLIP CARDS */
+  .flip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  @media(max-width:380px){ .flip-grid { grid-template-columns: 1fr; } }
+
+  .flip-card {
+    perspective: 800px;
+    height: 100px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+  }
+  .flip-front {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .flip-back {
+    background: var(--text);
+    color: #fff;
+    transform: rotateY(180deg);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .flip-hint { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+
+  /* QUOTE */
+  .quote {
+    border-left: 4px solid var(--accent);
+    margin: 20px 0;
+    padding: 10px 16px;
+    font-style: italic;
+    color: var(--text2);
+    font-size: 14px;
+    background: var(--bg2);
+  }
+  .quote cite { display: block; margin-top: 6px; font-size: 12px; font-style: normal; color: var(--accent); font-weight: 700; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover fade-in">
+  <div class="cover-label">투자는인생TV 아카데미 · Episode 1.2</div>
+  <div class="cover-title">돈의 흐름을 알면<br><span>주가가 보인다</span></div>
+  <div class="cover-subtitle">기업 펀더멘털 분석 기초 — 10K 보고서와 기업이벤트</div>
+  <div class="cover-meta">
+    <span>📅 2026년 04월 12일</span>
+    <span>📺 투자는인생TV 아카데미</span>
+    <span>🏠 D.R. Horton (DHI) 실전 분석</span>
+  </div>
+</div>
+
+<!-- SECTION 1: 단기 주가 상승 요인 -->
+<div class="section fade-in">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">단기 주가 상승에 영향을 주는 기업 이벤트</div>
+
+  <p>장기 투자에서 펀더멘털이 핵심이지만, 단기 주가 상승을 유발하는 이벤트를 미리 파악하고 포지션을 구성하면 추가 수익 기회를 얻을 수 있습니다.</p>
+
+  <div class="card-grid">
+    <div class="card fade-in">
+      <div class="card-num">①</div>
+      <div class="card-label">자사주 매입 (Buyback)</div>
+      <div class="card-desc">유통 주식 수가 줄어 1주당 가치 상승. 100주 중 20주 매입 시 나머지 80주의 가치 ↑</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">②</div>
+      <div class="card-label">새로운 경영진</div>
+      <div class="card-desc">중간 관리자 교체·신전략·새 비전 발표 시 투자자들의 기대감 상승</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">③</div>
+      <div class="card-label">헤지펀드 개입</div>
+      <div class="card-desc">주가 저평가 기업에 콜(상승)/풋(하락) 포지션 후 경영 압박. 합법적 캠페인 방식</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">④</div>
+      <div class="card-label">파트너십 / M&A</div>
+      <div class="card-desc">피인수 기업은 프리미엄 수령. 대형사와 파트너십 체결 시 소형주 주가 급등</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">⑤</div>
+      <div class="card-label">대량해고</div>
+      <div class="card-desc">비용 절감 → 이익률 개선 기대. 투자자 관점에서는 단기 호재로 작용</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">⑥</div>
+      <div class="card-label">지수 편입 (S&P500 등)</div>
+      <div class="card-desc">ETF·뮤추얼펀드가 의무 편입 → 기관 매수 물량 유입 → 거래량·주가 동반 상승</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">⑦</div>
+      <div class="card-label">부채비율 감소</div>
+      <div class="card-desc">재무 안정성 신호. 기업의 신용도 및 이자 부담 완화 → 이익 개선 기대</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">⑧</div>
+      <div class="card-label">산업 전체 호황</div>
+      <div class="card-desc">AI 인프라·반도체처럼 섹터 전체가 올라갈 때. 단, 펀더멘털 약한 기업은 하락 시 먼저 급락</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">⑨</div>
+      <div class="card-label">거시경제 개선</div>
+      <div class="card-desc">금리 인하, GDP 성장, 소비 회복 등 거시 환경 호전 시 전반적 상승 견인</div>
+    </div>
+  </div>
+
+  <!-- 인터랙티브: 자사주 매입 효과 계산기 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">🧮 자사주 매입 효과 시뮬레이터</div>
+    <div class="sim-row">
+      <label>총 발행 주식수</label>
+      <input type="range" id="totalShares" min="100" max="10000" value="1000" step="100">
+      <div class="sim-val" id="totalSharesVal">1,000주</div>
+    </div>
+    <div class="sim-row">
+      <label>매입 비율 (%)</label>
+      <input type="range" id="buybackPct" min="1" max="30" value="10" step="1">
+      <div class="sim-val" id="buybackPctVal">10%</div>
+    </div>
+    <div class="sim-row">
+      <label>현재 주당 이익(EPS)</label>
+      <input type="range" id="eps" min="1" max="100" value="20" step="1">
+      <div class="sim-val" id="epsVal">$20</div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-result-grid">
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="resRemaining">—</div>
+          <div class="sim-metric-label">매입 후 유통 주식수</div>
+        </div>
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="resNewEPS">—</div>
+          <div class="sim-metric-label">개선된 EPS</div>
+        </div>
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="resEPSGain">—</div>
+          <div class="sim-metric-label">EPS 개선율</div>
+        </div>
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="resBuyback">—</div>
+          <div class="sim-metric-label">매입 주식수</div>
+        </div>
+      </div>
+    </div>
+    <button class="sim-btn" onclick="resetBuyback()">↺ 초기화</button>
+  </div>
+</div>
+
+<!-- SECTION 2: 펀더멘털 -->
+<div class="section fade-in">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">장기 주가의 핵심 — 기업 펀더멘털</div>
+
+  <p>단기 이벤트보다 더 중요한 것은 기업의 <strong>펀더멘털(Fundamental)</strong>입니다. 단기 주가가 오르더라도 펀더멘털이 뒷받침되지 않으면 지속되지 않습니다.</p>
+
+  <div class="step-flow">
+    <div class="step-item fade-in">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">실적 향상의 연속성</div>
+        <div class="step-desc">분기별 실적이 지속적으로 우상향해야 합니다. 한 분기 좋다가 다음에 떨어지는 패턴보다 조금씩이라도 꾸준히 개선되는 것이 주가에 훨씬 유리합니다.</div>
+      </div>
+    </div>
+    <div class="step-item fade-in">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">기업 이윤의 확대</div>
+        <div class="step-desc">경쟁이 심해질수록 이윤이 축소되는 기업이 나옵니다. 그 상황에서도 이윤을 늘리는 기업은 경쟁력이 있다는 증거입니다. 숫자가 곧 경쟁력을 보여줍니다.</div>
+      </div>
+    </div>
+    <div class="step-item fade-in">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">경영진의 윤리성과 비전</div>
+        <div class="step-desc">미국에서는 기업인에 대한 도덕적 잣대가 가장 높습니다. 사무실 과도한 사치, 자금 세탁, 불법·탈법은 펀더멘털 악화의 신호입니다. 투자를 받는 단체이기 때문에 투명성이 핵심입니다.</div>
+      </div>
+    </div>
+    <div class="step-item fade-in">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">리스크 관리 능력 (CRO 체계)</div>
+        <div class="step-desc">미국 기업들은 CRO(Chief Risk Officer)를 별도로 운영합니다. 법적·재정적·운영적·시장 리스크를 체계적으로 관리하는 기업이 위기에서 살아남습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    "리스크는 없앨 수 없습니다. 관리 대상입니다. 포트폴리오를 짜는 이유는 각 기업의 서로 다른 리스크가 상호 보완되도록 하기 위함입니다."
+    <cite>— 투자는인생TV</cite>
+  </div>
+
+  <!-- 단기 vs 장기 비교 차트 -->
+  <div class="chart-container fade-in" style="margin-top:20px;">
+    <canvas id="chart1" height="220"></canvas>
+  </div>
+</div>
+
+<!-- SECTION 3: 10K 보고서 -->
+<div class="section fade-in">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">10K 보고서 — 펀더멘털을 볼 수 있는 창</div>
+
+  <p><strong>10K</strong>는 미국 증권거래위원회(SEC)에 제출하는 기업 연간 재무보고서입니다. 모든 상장기업이 공개 의무가 있으며, GAAP(일반회계원칙) 기준으로 작성됩니다.</p>
+
+  <div class="highlight fade-in">
+    <strong>역사적 배경:</strong> 1929년 대공황 이전 기업들의 불투명한 재무 운영으로 투자자 피해가 컸습니다. 이후 5년간의 연구 끝에 <strong>1934년 증권거래법</strong>이 제정되었고, 2002년 엔론 사태 후에는 <strong>SOX법(사베인-옥슬리법)</strong>이 추가 제정되어 보고 신뢰성이 한층 강화되었습니다.
+  </div>
+
+  <p style="font-weight:700; margin-top:16px; margin-bottom:10px;">10K에서 반드시 확인해야 할 4가지</p>
+
+  <table class="fade-in">
+    <thead>
+      <tr><th>항목</th><th>내용</th><th>투자 활용</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Consolidated Balance Sheet</strong><br><span style="color:var(--text2);font-size:12px">대차대조표</span></td>
+        <td>자산(Assets), 부채(Liabilities), 자본(Equity) 현황</td>
+        <td>사업 확장 여부, 재무 건전성 파악</td>
+      </tr>
+      <tr>
+        <td><strong>Income Statement</strong><br><span style="color:var(--text2);font-size:12px">손익계산서</span></td>
+        <td>매출, 비용, 순이익 흐름</td>
+        <td>수익성 및 이익률 추세 확인</td>
+      </tr>
+      <tr>
+        <td><strong>Equity Statement</strong><br><span style="color:var(--text2);font-size:12px">자본변동표</span></td>
+        <td>자사주 매입·발행, 배당 내역</td>
+        <td>주주가치 환원 정책 파악</td>
+      </tr>
+      <tr>
+        <td><strong>Cash Flow Statement</strong><br><span style="color:var(--text2);font-size:12px">현금흐름표</span></td>
+        <td>영업·투자·재무 활동별 현금 유출입</td>
+        <td>실제 현금 창출 능력 판단</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight fade-in">
+    <strong>핵심 철학:</strong> "비즈니스가 무엇인지 모르고 주식을 사는 것은 주식에 투자하는 것이지 기업에 투자하는 것이 아닙니다." 기관이 팔기 전에 팔 수 있는 능력은 10K를 이해하는 데서 나옵니다.
+  </div>
+
+  <!-- 10K 구조 플립 카드 -->
+  <p class="flip-hint fade-in">👆 카드를 탭하면 설명이 나옵니다</p>
+  <div class="flip-grid">
+    <div class="flip-card fade-in" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">리스크 팩터<br>(Risk Factors)</div>
+        <div class="flip-back">기업이 인식하는 사업·재정·법적 리스크를 상세히 기술. 리스크를 적는다 = 관리한다는 의미</div>
+      </div>
+    </div>
+    <div class="flip-card fade-in" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">산업 & 섹터<br>정보</div>
+        <div class="flip-back">SIC 코드로 어느 산업에 속하는지 명시. 포트폴리오 섹터 구성의 기준점</div>
+      </div>
+    </div>
+    <div class="flip-card fade-in" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">비즈니스<br>모델 기술</div>
+        <div class="flip-back">주요 수익원, 지역별 매출 비중, 사업 세그먼트를 상세히 서술. 투자 전 필독</div>
+      </div>
+    </div>
+    <div class="flip-card fade-in" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">경영진<br>정보</div>
+        <div class="flip-back">C-Suite 명단, 보수, 주식 보유 현황. 윤리성·이해관계 정렬 여부 확인</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: D.R. Horton 분석 -->
+<div class="section fade-in">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">실전 분석 — D.R. Horton (DHI)</div>
+
+  <p><span class="tag">티커: DHI</span> <span class="tag gray">홈빌딩</span> <span class="tag blue">사이클주</span></p>
+  <p style="margin-top:10px;">미국 최대 신규 주택 건설사 중 하나. 주택 건설·토지 매입·임대·융자(금융 서비스)를 아우르는 통합 비즈니스 모델. 회계연도 마감: 9월 30일.</p>
+
+  <p style="font-weight:700; margin-top:16px; margin-bottom:10px;">사업 세그먼트 구성</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart2" height="230"></canvas>
+  </div>
+
+  <div class="card-grid" style="margin-top:16px;">
+    <div class="card fade-in">
+      <div class="card-num" style="font-size:20px">~90%</div>
+      <div class="card-label">홈빌딩 (Homebuilding)</div>
+      <div class="card-desc">신규 주택 건설 및 판매가 매출의 압도적 비중. 21개 주, 53개 마켓 서비스</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num" style="font-size:20px">+</div>
+      <div class="card-label">파이낸셜 서비스</div>
+      <div class="card-desc">주택 구매자 대상 모기지 융자. 은행업 기능 내재화</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num" style="font-size:20px">+</div>
+      <div class="card-label">렌탈 프로퍼티</div>
+      <div class="card-desc">완공 주택의 임대 운영. 고금리 시대 렌트비 상승으로 월정 현금흐름 개선</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num" style="font-size:20px">4★</div>
+      <div class="card-label">포스타 (Forestar)</div>
+      <div class="card-desc">토지 매입 및 개발 전담 자회사. 21개 주 53개 마켓</div>
+    </div>
+  </div>
+
+  <p style="font-weight:700; margin-top:24px; margin-bottom:10px;">대차대조표 핵심 분석 (2021→2022)</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="chart3" height="240"></canvas>
+  </div>
+
+  <table class="fade-in" style="margin-top:16px;">
+    <thead>
+      <tr><th>항목</th><th>변화</th><th>의미 해석</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>현금 (Cash)</strong></td>
+        <td>$2,540M ↓</td>
+        <td>사업 확장(땅 매입·건설)에 현금 투입. 현금 감소 = 위험이 아닌 <strong>투자 신호</strong></td>
+      </tr>
+      <tr>
+        <td><strong>건설 진행(WIP)</strong></td>
+        <td>+20% 이상 ↑</td>
+        <td>신규 주택 건설 물량 급증. 비즈니스 확장 확인</td>
+      </tr>
+      <tr>
+        <td><strong>토지 자산</strong></td>
+        <td>+10~20% ↑</td>
+        <td>미래 공급을 위한 토지 선매입. 중장기 매출 기반 확보</td>
+      </tr>
+      <tr>
+        <td><strong>총 자산</strong></td>
+        <td>$24B → $30B ↑</td>
+        <td>사업 규모 전반적 확대. 자산 성장 = 비즈니스 확장</td>
+      </tr>
+      <tr>
+        <td><strong>자사주 (Treasury)</strong></td>
+        <td>마이너스 확대</td>
+        <td>자사주 매입 증가 → 주주가치 환원 및 주가 부양 신호</td>
+      </tr>
+      <tr>
+        <td><strong>순이익 (Net Income)</strong></td>
+        <td>2020 대비 2배 ↑</td>
+        <td>지속적 우상향 수익성. 장기 투자 요건 충족</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight fade-in">
+    <strong>고금리 환경에서의 역설:</strong> 기존 주택은 판매량이 감소했지만, 신규 주택은 오히려 수요가 증가했습니다. DHI는 자체 금융 서비스로 구매자에게 직접 융자를 제공해 고금리 장벽을 부분적으로 완화했습니다.
+  </div>
+
+  <!-- DHI 주요 리스크 시각화 -->
+  <p style="font-weight:700; margin-top:20px; margin-bottom:10px;">DHI 주요 리스크 팩터</p>
+  <div class="chart-container fade-in">
+    <canvas id="chart4" height="220"></canvas>
+  </div>
+</div>
+
+<!-- SECTION 5: 포트폴리오 리스크 분산 -->
+<div class="section fade-in">
+  <div class="section-label">Section 05</div>
+  <div class="section-title">포트폴리오 리스크 분산의 핵심 원리</div>
+
+  <p>포트폴리오를 짜는 목적은 서로 <strong>다른 리스크</strong>를 가진 기업들을 조합해, 한 섹터가 흔들릴 때 다른 섹터가 보완하는 구조를 만드는 것입니다.</p>
+
+  <!-- 포트폴리오 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">🗂️ 포트폴리오 리스크 분산 시뮬레이터</div>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:12px;">섹터별 비중을 조절해 포트폴리오 전체 리스크 점수를 확인하세요 (합계 100%)</p>
+    <div class="sim-row">
+      <label>🏠 건설/부동산</label>
+      <input type="range" id="s1" min="0" max="100" value="20" step="5" oninput="updatePortfolio()">
+      <div class="sim-val" id="s1v">20%</div>
+    </div>
+    <div class="sim-row">
+      <label>🤖 AI/테크</label>
+      <input type="range" id="s2" min="0" max="100" value="30" step="5" oninput="updatePortfolio()">
+      <div class="sim-val" id="s2v">30%</div>
+    </div>
+    <div class="sim-row">
+      <label>🏥 헬스케어</label>
+      <input type="range" id="s3" min="0" max="100" value="25" step="5" oninput="updatePortfolio()">
+      <div class="sim-val" id="s3v">25%</div>
+    </div>
+    <div class="sim-row">
+      <label>⚡ 에너지</label>
+      <input type="range" id="s4" min="0" max="100" value="15" step="5" oninput="updatePortfolio()">
+      <div class="sim-val" id="s4v">15%</div>
+    </div>
+    <div class="sim-row">
+      <label>💰 현금</label>
+      <input type="range" id="s5" min="0" max="100" value="10" step="5" oninput="updatePortfolio()">
+      <div class="sim-val" id="s5v">10%</div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-result-grid">
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="ptotal" style="color:var(--chart4)">100%</div>
+          <div class="sim-metric-label">합계</div>
+        </div>
+        <div class="sim-metric">
+          <div class="sim-metric-val" id="prisk">—</div>
+          <div class="sim-metric-label">리스크 분산 점수</div>
+        </div>
+        <div class="sim-metric" style="grid-column:1/-1;">
+          <div id="pcomment" style="font-size:13px; color:var(--text2); text-align:center; margin-top:4px;">—</div>
+        </div>
+      </div>
+    </div>
+    <button class="sim-btn" onclick="resetPortfolio()">↺ 초기화</button>
+  </div>
+
+  <div class="highlight fade-in">
+    <strong>"사두고 놔두는 시대는 끝났습니다."</strong> 포트폴리오 최적화(Optimization)는 사놓고 방치하는 것이 아닙니다. 리스크 증가 시 현금 비중 확대, 부진 섹터 교체, 비중 조절을 능동적으로 해야 합니다.
+  </div>
+</div>
+
+<!-- SECTION 6: 핵심 요약 -->
+<div class="section fade-in">
+  <div class="section-label">Section 06</div>
+  <div class="section-title">핵심 정리 — 투자 판단의 근거</div>
+
+  <table>
+    <thead>
+      <tr><th>구분</th><th>단기 관점</th><th>장기 관점(펀더멘털)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>핵심 요소</strong></td>
+        <td>기업 이벤트 (9가지)</td>
+        <td>실적·이윤·경영진·리스크 관리</td>
+      </tr>
+      <tr>
+        <td><strong>정보 출처</strong></td>
+        <td>뉴스, 공시</td>
+        <td>10K (SEC 연간 보고서)</td>
+      </tr>
+      <tr>
+        <td><strong>리스크</strong></td>
+        <td>이벤트 소멸 후 되돌림</td>
+        <td>섹터 사이클, 거시경제</td>
+      </tr>
+      <tr>
+        <td><strong>판단 방법</strong></td>
+        <td>공시 모니터링</td>
+        <td>재무제표 4종 분석</td>
+      </tr>
+      <tr>
+        <td><strong>포트폴리오 적용</strong></td>
+        <td>비중 단기 조정 기회</td>
+        <td>장기 편입·교체 기준</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight fade-in" style="margin-top:20px;">
+    <strong>투자는인생TV 철학:</strong> "물가에 데려다주는 것이 아니라, 직접 낚시하는 능력을 키워드립니다." 10K를 스스로 읽는 능력이 자기 리스크를 자기가 관리하는 출발점입니다.
+  </div>
+</div>
+
+<div class="footer">
+  <p>투자는인생TV 아카데미 1.2 | 2026년 04월 12일 | 본 문서는 교육 목적으로 작성된 요약 자료입니다.</p>
+  <p style="margin-top:4px;">투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+</div>
+
+<script>
+// ===== INTERSECTION OBSERVERS =====
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['chart1'] = () => {
+  new Chart(document.getElementById('chart1'), {
+    type: 'bar',
+    data: {
+      labels: ['자사주 매입', '경영진 교체', '헤지펀드 개입', 'M&A', '지수 편입', '펀더멘털\n(장기)'],
+      datasets: [{
+        label: '주가 영향 강도 (장기 지속성)',
+        data: [3, 4, 3, 5, 4, 9],
+        backgroundColor: ['#6b7280','#6b7280','#6b7280','#6b7280','#6b7280','#e11d48'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: '단기 이벤트 vs 장기 펀더멘털 영향 비교', color: '#1a1a1a', font: { size: 13, weight: '700' } },
+        tooltip: { callbacks: { label: ctx => `지속성 점수: ${ctx.raw}/10` } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 10, ticks: { color: '#777' }, grid: { color: '#e5e5e5' } },
+        x: { ticks: { color: '#777', font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart2'] = () => {
+  new Chart(document.getElementById('chart2'), {
+    type: 'doughnut',
+    data: {
+      labels: ['홈빌딩', '파이낸셜 서비스', '렌탈 프로퍼티', '포스타(토지)'],
+      datasets: [{
+        data: [90, 4, 3, 3],
+        backgroundColor: ['#e11d48', '#2563eb', '#6b7280', '#1a1a1a'],
+        borderWidth: 2,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#1a1a1a', font: { size: 12 } } },
+        title: { display: true, text: 'D.R. Horton 사업 세그먼트 비중 (추정)', color: '#1a1a1a', font: { size: 13, weight: '700' } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}%` } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart3'] = () => {
+  new Chart(document.getElementById('chart3'), {
+    type: 'bar',
+    data: {
+      labels: ['총 자산', '건설 진행 물량', '토지 자산', '자사주 매입'],
+      datasets: [
+        { label: '2021', data: [24, 100, 100, 100], backgroundColor: '#6b7280', borderRadius: 3 },
+        { label: '2022', data: [30, 122, 115, 140], backgroundColor: '#e11d48', borderRadius: 3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'DHI 주요 재무 지표 변화 (2021 = 100 기준 지수화)', color: '#1a1a1a', font: { size: 12, weight: '700' } },
+        legend: { labels: { color: '#1a1a1a', font: { size: 12 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}${ctx.dataIndex === 0 ? 'B달러' : ' (지수)'}` } }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#777' }, grid: { color: '#e5e5e5' } },
+        x: { ticks: { color: '#777', font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart4'] = () => {
+  new Chart(document.getElementById('chart4'), {
+    type: 'radar',
+    data: {
+      labels: ['이자율 리스크', '수요 사이클 리스크', '인플레이션 리스크', '인력 운영 리스크', '유동성 리스크', '규제 리스크'],
+      datasets: [{
+        label: 'DHI 리스크 수준',
+        data: [8, 7, 6, 6, 5, 4],
+        backgroundColor: 'rgba(225,29,72,0.15)',
+        borderColor: '#e11d48',
+        pointBackgroundColor: '#e11d48',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'DHI 리스크 팩터 분포 (10K 기준)', color: '#1a1a1a', font: { size: 13, weight: '700' } },
+        legend: { display: false }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 10,
+          ticks: { stepSize: 2, color: '#777', backdropColor: 'transparent' },
+          grid: { color: '#e5e5e5' },
+          pointLabels: { color: '#1a1a1a', font: { size: 11 } }
+        }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ===== BUYBACK SIMULATOR =====
+function calcBuyback() {
+  const total = parseInt(document.getElementById('totalShares').value);
+  const pct = parseInt(document.getElementById('buybackPct').value);
+  const eps = parseInt(document.getElementById('eps').value);
+  const buyAmt = Math.round(total * pct / 100);
+  const remaining = total - buyAmt;
+  const totalEarnings = total * eps;
+  const newEPS = (totalEarnings / remaining).toFixed(2);
+  const gain = (((newEPS - eps) / eps) * 100).toFixed(1);
+  document.getElementById('totalSharesVal').textContent = total.toLocaleString() + '주';
+  document.getElementById('buybackPctVal').textContent = pct + '%';
+  document.getElementById('epsVal').textContent = '$' + eps;
+  document.getElementById('resRemaining').textContent = remaining.toLocaleString() + '주';
+  document.getElementById('resNewEPS').textContent = '$' + newEPS;
+  document.getElementById('resEPSGain').textContent = '+' + gain + '%';
+  document.getElementById('resBuyback').textContent = buyAmt.toLocaleString() + '주';
+}
+['totalShares','buybackPct','eps'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calcBuyback);
+});
+function resetBuyback() {
+  document.getElementById('totalShares').value = 1000;
+  document.getElementById('buybackPct').value = 10;
+  document.getElementById('eps').value = 20;
+  calcBuyback();
+}
+calcBuyback();
+
+// ===== PORTFOLIO SIMULATOR =====
+function updatePortfolio() {
+  const ids = ['s1','s2','s3','s4','s5'];
+  const labels = ['s1v','s2v','s3v','s4v','s5v'];
+  const vals = ids.map(id => parseInt(document.getElementById(id).value));
+  const total = vals.reduce((a,b) => a+b, 0);
+  ids.forEach((id,i) => document.getElementById(labels[i]).textContent = vals[i] + '%');
+  const totalEl = document.getElementById('ptotal');
+  totalEl.textContent = total + '%';
+  totalEl.style.color = (total === 100) ? '#2563eb' : '#e11d48';
+  // 리스크 분산 점수: 각 비중의 분산이 낮을수록 좋음 (헤르핀달 지수 역산)
+  const hhi = vals.reduce((a,b) => a + Math.pow(b/100,2), 0);
+  const score = Math.round((1 - hhi) * 100);
+  const riskEl = document.getElementById('prisk');
+  const comment = document.getElementById('pcomment');
+  if (total !== 100) {
+    riskEl.textContent = '—';
+    riskEl.style.color = '#777';
+    comment.textContent = '⚠️ 합계를 100%로 맞춰주세요';
+  } else {
+    riskEl.textContent = score + '점';
+    riskEl.style.color = score >= 70 ? '#2563eb' : score >= 50 ? '#6b7280' : '#e11d48';
+    if (score >= 75) comment.textContent = '✅ 우수한 분산 — 단일 섹터 충격에 강한 포트폴리오';
+    else if (score >= 55) comment.textContent = '⚡ 보통 분산 — 특정 섹터 비중 조절 권장';
+    else comment.textContent = '⚠️ 집중 위험 — 리스크 분산이 부족합니다';
+  }
+}
+function resetPortfolio() {
+  [['s1',20],['s2',30],['s3',25],['s4',15],['s5',10]].forEach(([id,v]) => {
+    document.getElementById(id).value = v;
+  });
+  updatePortfolio();
+}
+updatePortfolio();
+</script>
+</body>
+</html>
