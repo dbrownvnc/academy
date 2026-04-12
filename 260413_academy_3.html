@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뮤추얼 펀드 포트폴리오 핵심 가이드 | 3min Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+    --table-bg: #fafafa;
+    --table-header: #e11d48;
+    --border: #e5e5e5;
+    --serif: 'Playfair Display', 'Noto Serif KR', serif;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+  }
+
+  /* ── HEADER ── */
+  .masthead {
+    background: var(--text);
+    color: #fff;
+    padding: 36px 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .issue-tag {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .masthead h1 {
+    font-family: var(--serif);
+    font-size: 26px;
+    line-height: 1.3;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .masthead h1 span { color: var(--accent2); }
+  .masthead-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 10px;
+  }
+  .source-chip {
+    display: inline-block;
+    margin-top: 16px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 28px 20px 8px; }
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  p { font-size: 14px; color: var(--text); margin-bottom: 12px; }
+  .lead {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.8;
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+    margin-bottom: 18px;
+  }
+
+  /* ── DIVIDER ── */
+  .rule {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 20px;
+  }
+  .rule-thick {
+    height: 3px;
+    background: var(--accent);
+    margin: 0 20px 0;
+  }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    background: var(--bg2);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 13.5px;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* ── KEY POINTS ── */
+  .kp-list { list-style: none; margin: 12px 0; }
+  .kp-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13.5px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .kp-list li::before {
+    content: '▶';
+    color: var(--accent);
+    font-size: 9px;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* ── CHARTS ── */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: var(--text2);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ── FADE-IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; border-radius: 10px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 500;
+    text-align: left;
+  }
+  tbody td {
+    background: var(--table-bg);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: #f3f3f3; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  /* ── SIMULATOR ── */
+  .sim-card {
+    background: var(--bg2);
+    border-radius: 14px;
+    padding: 20px 18px;
+    margin: 14px 0;
+    border: 1px solid var(--border);
+  }
+  .sim-card h3 {
+    font-family: var(--serif);
+    font-size: 16px;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .slider-group { margin-bottom: 16px; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .slider-label span:last-child {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    height: 4px;
+    cursor: pointer;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .sim-result .big-num {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--accent2);
+    display: block;
+    margin: 4px 0;
+  }
+  .reset-btn {
+    display: inline-block;
+    margin-top: 12px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* ── SECTOR BARS ── */
+  .sector-bars { margin: 14px 0; }
+  .sector-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .sector-name { width: 90px; flex-shrink: 0; font-weight: 500; }
+  .sector-bar-wrap { flex: 1; background: #eee; border-radius: 4px; height: 10px; overflow: hidden; }
+  .sector-bar {
+    height: 100%;
+    border-radius: 4px;
+    width: 0;
+    transition: width 1.2s cubic-bezier(.22,.61,.36,1);
+  }
+  .sector-pct { width: 36px; text-align: right; font-weight: 700; color: var(--accent); font-size: 13px; }
+
+  /* ── QUIZ ── */
+  .quiz-section {
+    background: var(--text);
+    padding: 32px 20px;
+    margin-top: 30px;
+  }
+  .quiz-section .section-label { color: var(--accent2); }
+  .quiz-section .section-label::after { background: rgba(255,255,255,0.15); }
+  .quiz-section h2 { color: #fff; font-size: 20px; margin-bottom: 4px; }
+  .quiz-note { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 22px; }
+  .quiz-item {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 3px solid var(--accent);
+  }
+  .quiz-q {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .quiz-q strong { color: var(--accent2); font-size: 11px; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--sans);
+    transition: all 0.15s;
+  }
+  .quiz-opt:hover { background: rgba(225,29,72,0.25); border-color: var(--accent2); }
+  .quiz-opt.correct { background: rgba(34,197,94,0.2); border-color: #22c55e; color: #86efac; }
+  .quiz-opt.wrong { background: rgba(225,29,72,0.2); border-color: var(--accent); color: #fda4af; }
+  .quiz-input {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: var(--sans);
+    outline: none;
+  }
+  .quiz-submit {
+    margin-top: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--sans);
+  }
+  .quiz-feedback {
+    margin-top: 8px;
+    font-size: 12.5px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(34,197,94,0.15); color: #86efac; }
+  .quiz-feedback.no { background: rgba(225,29,72,0.15); color: #fda4af; }
+
+  /* ── ANSWER KEY ── */
+  .answer-section {
+    background: #fafafa;
+    border-top: 4px solid var(--accent);
+    padding: 32px 20px;
+  }
+  .answer-section h2 { font-size: 20px; margin-bottom: 18px; }
+  .ans-item {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .ans-item:last-child { border-bottom: none; }
+  .ans-num { font-weight: 700; color: var(--accent); font-size: 12px; letter-spacing: 1px; margin-bottom: 3px; }
+  .ans-q { font-weight: 500; margin-bottom: 4px; }
+  .ans-a { color: var(--accent); font-weight: 700; margin-bottom: 3px; }
+  .ans-exp { color: var(--text2); font-size: 12.5px; line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text2);
+    padding: 24px 20px 0;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="issue-tag">3min Academy · 투자 인사이트</div>
+  <h1>개인 포트폴리오를 위한<br><span>뮤추얼 펀드</span> 핵심 전략</h1>
+  <p class="masthead-sub">섹터 분산 투자와 리스크 관리의 실전 원칙</p>
+  <div class="source-chip">📺 YouTube · 2026.04.13</div>
+</div>
+<div class="rule-thick"></div>
+
+<!-- INTRO -->
+<section class="fade-in">
+  <div class="section-label">핵심 요약</div>
+  <p class="lead">개인 투자자도 섹터별 자산 배분과 분산 투자를 통해 시장 리스크에 유연하게 대응할 수 있다. 핵심은 '몰빵' 없이 균형 잡힌 포트폴리오를 구성하는 것이다.</p>
+
+  <ul class="kp-list">
+    <li>타깃 펀드(BlackRock 등)를 <strong>리스크 탐지 도구</strong>로 간접 활용 가능</li>
+    <li>섹터별 변동성 차이를 이용해 <strong>상호 상쇄(offset)</strong> 효과 창출</li>
+    <li>단일 자산 집중 투자(몰빵)는 <strong>최대 위험 요인</strong></li>
+    <li>자산 규모가 클수록 <strong>정교한 분산 전략</strong>이 필수</li>
+  </ul>
+</section>
+
+<div class="rule"></div>
+
+<!-- SECTOR ALLOCATION -->
+<section>
+  <div class="section-label fade-in">섹터 배분 현황</div>
+  <h2 class="fade-in">포트폴리오 섹터별 비중</h2>
+  <p class="fade-in" style="color:var(--text2);font-size:13px;">강의에서 언급된 예시 포트폴리오의 섹터별 비중입니다.</p>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">섹터 비중 (%) — 예시 포트폴리오</div>
+    <canvas id="sectorChart" height="230"></canvas>
+  </div>
+
+  <div class="sector-bars fade-in" id="sectorBars">
+    <div class="sector-row">
+      <span class="sector-name">경기민감주</span>
+      <div class="sector-bar-wrap"><div class="sector-bar" style="background:var(--c1)" data-pct="48"></div></div>
+      <span class="sector-pct">48%</span>
+    </div>
+    <div class="sector-row">
+      <span class="sector-name">기술주</span>
+      <div class="sector-bar-wrap"><div class="sector-bar" style="background:var(--c4)" data-pct="40"></div></div>
+      <span class="sector-pct">40%</span>
+    </div>
+    <div class="sector-row">
+      <span class="sector-name">경기방어주</span>
+      <div class="sector-bar-wrap"><div class="sector-bar" style="background:var(--c3)" data-pct="32"></div></div>
+      <span class="sector-pct">32%</span>
+    </div>
+    <div class="sector-row">
+      <span class="sector-name">헬스케어</span>
+      <div class="sector-bar-wrap"><div class="sector-bar" style="background:var(--c2)" data-pct="25"></div></div>
+      <span class="sector-pct">25%</span>
+    </div>
+  </div>
+
+  <div class="callout fade-in">
+    <strong>💡 헬스케어 25% 비중</strong>에는 UNH(유나이티드헬스그룹)이 핵심 종목으로 포함. 경기방어주 특성으로 시장 변동성 완충 역할.
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- RISK CONCEPT -->
+<section>
+  <div class="section-label fade-in">핵심 개념</div>
+  <h2 class="fade-in">섹터별 리스크 반응 속도가 다르다</h2>
+  <p class="fade-in">같은 시장 충격이 와도 각 섹터는 서로 다른 속도와 크기로 반응합니다. 기술주 섹터에 문제가 발생해도, 방어주·헬스케어가 변동성을 흡수(offset)해 전체 손실을 줄여줍니다.</p>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">시장 충격 시 섹터별 변동성 반응 (개념도)</div>
+    <canvas id="volatilityChart" height="220"></canvas>
+  </div>
+
+  <div class="callout fade-in">
+    <strong>건물의 내진 설계</strong>처럼 — 횡적·종적 구조로 짜인 포트폴리오는 리스크라는 '지진'이 왔을 때 훨씬 잘 버팁니다.
+  </div>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr>
+          <th>섹터</th>
+          <th>변동성</th>
+          <th>역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>기술주</td><td>높음 🔴</td><td>성장 드라이버</td></tr>
+        <tr><td>경기민감주</td><td>높음 🔴</td><td>경기 확장 수혜</td></tr>
+        <tr><td>헬스케어</td><td>중간 🟡</td><td>방어+성장 혼합</td></tr>
+        <tr><td>경기방어주</td><td>낮음 🟢</td><td>변동성 완충</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- TARGET FUND -->
+<section>
+  <div class="section-label fade-in">투자 도구</div>
+  <h2 class="fade-in">타깃 펀드를 리스크 탐지계로 쓰는 법</h2>
+  <p class="fade-in">블랙락(BlackRock) 등의 <strong>타깃 펀드</strong>는 운용사가 자산 배분을 자동으로 조정합니다. 개인 투자자는 이 펀드의 배분 변화를 관찰함으로써 <em>시장 리스크 수준을 간접적으로 파악</em>하는 지표로 활용할 수 있습니다.</p>
+
+  <div class="callout fade-in">
+    <strong>📌 타깃 펀드(Target Fund)란?</strong><br>
+    목표 은퇴 시점에 맞춰 자동으로 주식↔채권 비율을 조정하는 펀드. 주식 비중이 갑자기 낮아진다면 → 운용사가 리스크 증가를 인지했다는 신호.
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- SIMULATOR -->
+<section>
+  <div class="section-label fade-in">인터랙티브</div>
+  <h2 class="fade-in">자산 규모별 포트폴리오 전략 시뮬레이터</h2>
+  <p class="fade-in" style="font-size:13px;color:var(--text2);">자산 총액과 공격적 비중을 조절해 권장 배분을 확인해보세요.</p>
+
+  <div class="sim-card fade-in">
+    <h3>🧮 배분 전략 계산기</h3>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>총 자산 규모</span>
+        <span id="totalAssetLabel">5억 원</span>
+      </div>
+      <input type="range" id="totalAsset" min="1" max="30" value="5" step="1">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>공격적 투자 비중</span>
+        <span id="aggressivePctLabel">5%</span>
+      </div>
+      <input type="range" id="aggressivePct" min="0" max="30" value="5" step="1">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>보수적 투자 비중</span>
+        <span id="conservativePctLabel">80%</span>
+      </div>
+      <input type="range" id="conservativePct" min="50" max="95" value="80" step="5">
+    </div>
+
+    <div class="sim-result" id="simResult">
+      <!-- 동적 -->
+    </div>
+
+    <button class="reset-btn" onclick="resetSim()">↺ 초기값으로</button>
+  </div>
+
+  <!-- 원형 차트 -->
+  <div class="chart-container fade-in">
+    <div class="chart-title">포트폴리오 배분 구성</div>
+    <canvas id="allocChart" height="220"></canvas>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- BILLION CLUB -->
+<section>
+  <div class="section-label fade-in">고자산 전략</div>
+  <h2 class="fade-in">10억 이상 투자자를 위한 원칙</h2>
+
+  <ul class="kp-list fade-in">
+    <li>자산이 클수록 보수적 기반(<strong>70~80%</strong>)을 유지하면서 공격적 비중(<strong>10%</strong>)도 함께 운용 가능</li>
+    <li>10%의 고위험 포지션에서 나오는 수익이 전체 자산 성장에 <strong>레버리지 효과</strong>를 냄</li>
+    <li>자산이 커질수록 성장의 <strong>절대 금액</strong>이 커지므로 리스크 관리가 더욱 중요</li>
+    <li>고자산 구간은 <strong>개인 맞춤형 전략</strong>으로 별도 설계 필요</li>
+  </ul>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">자산 규모 증가에 따른 배분 전략 변화</div>
+    <canvas id="growthChart" height="220"></canvas>
+  </div>
+
+  <div class="callout fade-in">
+    <strong>핵심 원칙:</strong> 돈이 커질수록 자산 성장성도 커진다. 단, 이를 위해서는 리스크 비중을 <strong>의도적으로 설계</strong>해야 하며, 무작위 집중투자와는 전혀 다른 접근이다.
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- KEY TAKEAWAYS -->
+<section>
+  <div class="section-label fade-in">핵심 원칙</div>
+  <h2 class="fade-in">분산 투자 3대 원칙</h2>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>원칙</th><th>내용</th><th>적용 방법</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>① 몰빵 금지</td>
+          <td>단일 섹터·종목 집중 위험</td>
+          <td>4개 이상 섹터 분산</td>
+        </tr>
+        <tr>
+          <td>② 상쇄 구조</td>
+          <td>고변동↔저변동 조합</td>
+          <td>기술주 + 방어주 혼합</td>
+        </tr>
+        <tr>
+          <td>③ 규모별 설계</td>
+          <td>자산 크기에 맞는 비중</td>
+          <td>10억+ 시 별도 전략 필요</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─────────── QUIZ SECTION ─────────── -->
+<div class="quiz-section">
+  <div class="section-label">시험 문제</div>
+  <h2>📝 이해도 확인 퀴즈</h2>
+  <p class="quiz-note">문제를 클릭하거나 답을 입력해 즉각 피드백을 받으세요. (정답은 하단 정답지 참조)</p>
+
+  <!-- Q1 객관식 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q1 · 객관식 · 쉬움</strong>
+      분산 투자에서 서로 다른 섹터의 변동성이 상호 상쇄되는 효과를 무엇이라 하는가?
+    </div>
+    <div class="quiz-options" data-correct="1">
+      <button class="quiz-opt" onclick="checkMC(this,false)">① 레버리지 효과</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">② 옵셋(Offset) 효과</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">③ 모멘텀 효과</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">④ 알파 효과</button>
+    </div>
+  </div>
+
+  <!-- Q2 OX -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q2 · OX · 쉬움</strong>
+      타깃 펀드의 주식 비중이 갑자기 감소하면, 운용사가 시장 리스크 증가를 인지했다는 신호로 볼 수 있다. (O/X)
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,true)">O (맞다)</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">X (틀리다)</button>
+    </div>
+  </div>
+
+  <!-- Q3 객관식 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q3 · 객관식 · 쉬움</strong>
+      강의 예시에서 헬스케어 섹터가 차지하는 비중은?
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,false)">① 32%</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">② 40%</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">③ 25%</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">④ 48%</button>
+    </div>
+  </div>
+
+  <!-- Q4 단답 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q4 · 단답형 · 보통</strong>
+      강의에서 언급된 헬스케어 섹터의 핵심 종목(티커 심볼)을 쓰시오.
+    </div>
+    <input class="quiz-input" id="q4input" type="text" placeholder="답을 입력하세요 (영문 대문자)">
+    <br><button class="quiz-submit" onclick="checkShort('q4input','UNH','q4fb')">제출</button>
+    <div class="quiz-feedback" id="q4fb"></div>
+  </div>
+
+  <!-- Q5 객관식 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q5 · 객관식 · 보통</strong>
+      경기민감주와 기술주를 같은 포트폴리오에 담는 이유로 가장 적절한 것은?
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,false)">① 두 섹터의 변동성이 동일하기 때문</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">② 두 섹터 모두 항상 상승하기 때문</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">③ 섹터별 리스크 반응 차이를 이용한 균형 확보</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">④ 두 섹터 모두 방어적 성격이기 때문</button>
+    </div>
+  </div>
+
+  <!-- Q6 OX -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q6 · OX · 보통</strong>
+      자산 규모가 10억 원 미만인 투자자도 10% 이상의 고위험 비중을 항상 가져가는 것이 권장된다. (O/X)
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,false)">O (맞다)</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">X (틀리다)</button>
+    </div>
+  </div>
+
+  <!-- Q7 객관식 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q7 · 객관식 · 보통</strong>
+      강의에서 분산 투자를 건물 설계에 비유한 이유로 가장 적절한 것은?
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,false)">① 건물처럼 자산도 높이 쌓아야 한다</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">② 횡적·종적 구조로 충격(지진)을 분산시키듯 리스크를 흡수</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">③ 건물은 항상 안전하기 때문</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">④ 자산도 건물처럼 고정되어야 한다</button>
+    </div>
+  </div>
+
+  <!-- Q8 단답 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q8 · 단답형 · 보통</strong>
+      강의에서 경기방어주(Defensive)의 비중은 몇 %로 제시되었는가?
+    </div>
+    <input class="quiz-input" id="q8input" type="text" placeholder="숫자만 입력 (예: 30)">
+    <br><button class="quiz-submit" onclick="checkShort('q8input','32','q8fb')">제출</button>
+    <div class="quiz-feedback" id="q8fb"></div>
+  </div>
+
+  <!-- Q9 객관식 (어려움) -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q9 · 객관식 · 어려움</strong>
+      자산이 10억 원 이상일 때 권장되는 전략으로 강의에서 언급된 원칙에 가장 부합하는 것은?
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkMC(this,false)">① 전체를 기술주에 집중해 최대 성장</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">② 100% 채권으로 원금 보존</button>
+      <button class="quiz-opt" onclick="checkMC(this,true)">③ 70~80% 보수적 운용 + 10% 고위험 비중으로 성장성 확보</button>
+      <button class="quiz-opt" onclick="checkMC(this,false)">④ 자산을 동일 비중으로 10개 섹터에 분산</button>
+    </div>
+  </div>
+
+  <!-- Q10 단답 (어려움) -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <strong>Q10 · 단답형 · 어려움</strong>
+      강의에서 타깃 펀드를 활용하는 핵심 목적은 무엇인지, '리스크'라는 단어를 포함하여 한 문장으로 서술하시오.
+    </div>
+    <input class="quiz-input" id="q10input" type="text" placeholder="한 문장으로 입력">
+    <br><button class="quiz-submit" onclick="checkQ10()">제출</button>
+    <div class="quiz-feedback" id="q10fb"></div>
+  </div>
+</div>
+
+<!-- ─────────── ANSWER KEY ─────────── -->
+<div class="answer-section">
+  <div class="section-label">정답 및 해설</div>
+  <h2>📋 정답지</h2>
+
+  <div class="ans-item">
+    <div class="ans-num">Q1 · 객관식 · 쉬움</div>
+    <div class="ans-q">섹터 변동성 상호 상쇄 효과의 명칭은?</div>
+    <div class="ans-a">정답: ② 옵셋(Offset) 효과</div>
+    <div class="ans-exp">강의에서 기술주에 문제 발생 시 방어주가 변동성이 적어 '옵셋(offset)'된다고 명시적으로 언급함.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q2 · OX · 쉬움</div>
+    <div class="ans-q">타깃 펀드 주식 비중 감소 = 리스크 증가 신호?</div>
+    <div class="ans-a">정답: O</div>
+    <div class="ans-exp">타깃 펀드는 리스크 탐지계 역할을 하며, 배분 변화를 통해 시장 리스크 수준을 간접 파악할 수 있다.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q3 · 객관식 · 쉬움</div>
+    <div class="ans-q">헬스케어 섹터 비중?</div>
+    <div class="ans-a">정답: ③ 25%</div>
+    <div class="ans-exp">강의 원문: "헬케어가 25% 타니까 UNH가 되겠죠" — 헬스케어 25% 명시.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q4 · 단답형 · 보통</div>
+    <div class="ans-q">헬스케어 핵심 종목 티커?</div>
+    <div class="ans-a">정답: UNH (유나이티드헬스그룹)</div>
+    <div class="ans-exp">강의 원문에서 헬스케어 25% 비중의 대표 종목으로 UNH를 명시함.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q5 · 객관식 · 보통</div>
+    <div class="ans-q">경기민감주+기술주 혼합 이유?</div>
+    <div class="ans-a">정답: ③ 섹터별 리스크 반응 차이를 이용한 균형 확보</div>
+    <div class="ans-exp">섹터마다 리스크 반응 속도와 변동성이 달라, 이를 조합하면 전체 포트폴리오 변동성을 줄일 수 있다.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q6 · OX · 보통</div>
+    <div class="ans-q">10억 미만도 고위험 10% 이상 권장?</div>
+    <div class="ans-a">정답: X</div>
+    <div class="ans-exp">강의에서 10억 이상부터 별도 고위험 비중 전략이 권장되며, 소규모 자산에는 이러한 언급이 없음.</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q7 · 객관식 · 보통</div>
+    <div class="ans-q">건물 내진 설계 비유의 의미?</div>
+    <div class="ans-a">정답: ② 횡적·종적 구조로 충격을 분산시키듯 리스크 흡수</div>
+    <div class="ans-exp">강의 원문: "집도 횡적으로 하는 게 있고 종적으로 하는 게 있죠. 잘 하면은 서로 지진이나 좀 잘 버티듯이…"</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q8 · 단답형 · 보통</div>
+    <div class="ans-q">경기방어주 비중?</div>
+    <div class="ans-a">정답: 32%</div>
+    <div class="ans-exp">강의 원문: "디펜스닥이 성장률에도 32%로 차지하고 있고"</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q9 · 객관식 · 어려움</div>
+    <div class="ans-q">10억+ 투자자 권장 전략?</div>
+    <div class="ans-a">정답: ③ 70~80% 보수적 + 10% 고위험</div>
+    <div class="ans-exp">강의: "80%, 70%는 보수적으로 가더라도 10%는 리스크를 크게 걸 수가 있습니다. 그때 딸 수가 있습니다."</div>
+  </div>
+
+  <div class="ans-item">
+    <div class="ans-num">Q10 · 단답형 · 어려움</div>
+    <div class="ans-q">타깃 펀드 활용 핵심 목적?</div>
+    <div class="ans-a">정답 예시: 타깃 펀드의 자산 배분 변화를 관찰함으로써 시장 리스크 수준을 간접적으로 탐지하기 위해.</div>
+    <div class="ans-exp">핵심 키워드: ① 배분 변화 관찰, ② 리스크 탐지/감지, ③ 간접 활용. 세 개념이 포함되면 정답으로 인정.</div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>3min Academy · 분석 기준일 2026.04.13</p>
+  <p style="margin-top:4px;">본 자료는 교육 목적이며 투자 권유가 아닙니다.</p>
+</div>
+
+<script>
+// ── FADE-IN OBSERVER ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── SECTOR BARS TRIGGER ──
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.sector-bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+const barEl = document.getElementById('sectorBars');
+if (barEl) barObs.observe(barEl);
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['sectorChart'] = () => {
+  new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['경기민감주', '기술주', '경기방어주', '헬스케어'],
+      datasets: [{
+        label: '비중 (%)',
+        data: [48, 40, 32, 25],
+        backgroundColor: ['#e11d48','#2563eb','#6b7280','#1a1a1a'],
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}%` } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#777' } },
+        y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, color: '#777', callback: v => v + '%' }, max: 60 }
+      }
+    }
+  });
+};
+
+chartConfigs['volatilityChart'] = () => {
+  const labels = ['충격 발생','1주','2주','3주','4주','5주','6주'];
+  new Chart(document.getElementById('volatilityChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '기술주', data: [0,-18,-22,-15,-8,-5,-2], borderColor:'#e11d48', backgroundColor:'rgba(225,29,72,0.08)', tension:0.4, fill:true, pointRadius:3 },
+        { label: '경기민감주', data: [0,-14,-17,-12,-6,-3,-1], borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.05)', tension:0.4, fill:true, pointRadius:3 },
+        { label: '헬스케어', data: [0,-5,-7,-5,-3,-1,0], borderColor:'#6b7280', backgroundColor:'rgba(107,114,128,0.05)', tension:0.4, fill:true, pointRadius:3 },
+        { label: '경기방어주', data: [0,-2,-3,-2,-1,0,1], borderColor:'#1a1a1a', backgroundColor:'rgba(26,26,26,0.03)', tension:0.4, fill:true, pointRadius:3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12, padding: 8 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}%` } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#777' } },
+        y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 }, color: '#777', callback: v => v + '%' } }
+      }
+    }
+  });
+};
+
+let allocChartInstance = null;
+chartConfigs['allocChart'] = () => {
+  const ctx = document.getElementById('allocChart');
+  allocChartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['보수적 투자', '공격적 투자', '현금/기타'],
+      datasets: [{
+        data: [80, 5, 15],
+        backgroundColor: ['#1a1a1a','#e11d48','#6b7280'],
+        borderWidth: 0,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed}%` } }
+      }
+    }
+  });
+};
+
+chartConfigs['growthChart'] = () => {
+  new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: ['1억','3억','5억','10억','20억','50억'],
+      datasets: [
+        { label: '보수적 비중(%)', data: [90,85,82,80,78,75], borderColor:'#1a1a1a', tension:0.4, pointRadius:4, fill:false },
+        { label: '공격적 비중(%)', data: [5,7,8,10,12,15], borderColor:'#e11d48', tension:0.4, pointRadius:4, fill:false },
+        { label: '현금/기타(%)', data: [5,8,10,10,10,10], borderColor:'#6b7280', tension:0.4, pointRadius:4, fill:false, borderDash:[4,4] }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { position:'bottom', labels:{ font:{size:10}, boxWidth:12, padding:8 } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:10},color:'#777'} },
+        y: { grid:{color:'#f0f0f0'}, ticks:{font:{size:10},color:'#777',callback:v=>v+'%'}, max:100 }
+      }
+    }
+  });
+};
+
+// ── CHART INTERSECTION OBSERVER ──
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── SIMULATOR ──
+const DEF = { totalAsset: 5, aggressivePct: 5, conservativePct: 80 };
+
+function fmt(n) { return n >= 10 ? n + '억 원' : n + '억 원'; }
+function updateSim() {
+  const total = +document.getElementById('totalAsset').value;
+  const agg = +document.getElementById('aggressivePct').value;
+  const con = +document.getElementById('conservativePct').value;
+  const rest = Math.max(0, 100 - agg - con);
+
+  document.getElementById('totalAssetLabel').textContent = fmt(total);
+  document.getElementById('aggressivePctLabel').textContent = agg + '%';
+  document.getElementById('conservativePctLabel').textContent = con + '%';
+
+  const aggAmt = (total * agg / 100).toFixed(2);
+  const conAmt = (total * con / 100).toFixed(2);
+  const restAmt = (total * rest / 100).toFixed(2);
+
+  const warning = (agg > 10 && total < 10) ? '<br>⚠️ 10억 미만 자산에서 고위험 비중이 높습니다. 신중히 검토하세요.' : '';
+  const tip = total >= 10 ? '✅ 10억 이상: 별도 맞춤 전략 권장' : '📌 소규모 자산: 안전성 우선 권장';
+
+  document.getElementById('simResult').innerHTML = `
+    <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;">총 자산 ${fmt(total)} 배분 결과</div>
+    <span class="big-num">${conAmt}억</span>
+    <span style="font-size:12px;color:rgba(255,255,255,0.7);">보수적 운용 (${con}%)</span><br>
+    <span style="font-weight:700;color:#f43f5e;font-size:18px;">${aggAmt}억</span>
+    <span style="font-size:12px;color:rgba(255,255,255,0.7);"> 공격적 운용 (${agg}%)</span><br>
+    <span style="font-size:13px;color:rgba(255,255,255,0.6);">현금/기타: ${restAmt}억 (${rest}%)</span>
+    <br><span style="font-size:11px;color:rgba(255,255,255,0.5);">${tip}${warning}</span>
+  `;
+
+  // update doughnut
+  if (allocChartInstance) {
+    allocChartInstance.data.datasets[0].data = [con, agg, rest];
+    allocChartInstance.update();
+  }
+}
+
+['totalAsset','aggressivePct','conservativePct'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateSim);
+});
+
+function resetSim() {
+  document.getElementById('totalAsset').value = DEF.totalAsset;
+  document.getElementById('aggressivePct').value = DEF.aggressivePct;
+  document.getElementById('conservativePct').value = DEF.conservativePct;
+  updateSim();
+}
+updateSim();
+
+// ── QUIZ LOGIC ──
+function checkMC(btn, isCorrect) {
+  const parent = btn.closest('.quiz-options');
+  if (parent.dataset.answered) return;
+  parent.dataset.answered = '1';
+  parent.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    parent.querySelectorAll('.quiz-opt').forEach(b => {
+      if (b.onclick.toString().includes('true')) b.classList.add('correct');
+    });
+  }
+}
+
+function checkShort(inputId, answer, fbId) {
+  const val = document.getElementById(inputId).value.trim().toUpperCase();
+  const fb = document.getElementById(fbId);
+  fb.classList.add('show');
+  if (val === answer.toUpperCase()) {
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✅ 정답입니다!';
+  } else {
+    fb.className = 'quiz-feedback show no';
+    fb.textContent = `❌ 오답. 정답은 "${answer}" 입니다.`;
+  }
+  document.getElementById(inputId).disabled = true;
+}
+
+function checkQ10() {
+  const val = document.getElementById('q10input').value.trim();
+  const fb = document.getElementById('q10fb');
+  fb.classList.add('show');
+  const hasRisk = val.includes('리스크') || val.includes('위험');
+  const hasIndirect = val.includes('간접') || val.includes('탐지') || val.includes('감지') || val.includes('파악');
+  if (hasRisk && hasIndirect && val.length > 10) {
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✅ 우수! 핵심 개념이 포함되었습니다.';
+  } else {
+    fb.className = 'quiz-feedback show no';
+    fb.textContent = '❌ 아쉬워요. 예시 정답: "타깃 펀드의 배분 변화를 관찰해 시장 리스크를 간접 탐지하기 위해."';
+  }
+  document.getElementById('q10input').disabled = true;
+}
+</script>
+</body>
+</html>
