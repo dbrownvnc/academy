@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 & 정답 — 투자는인생TV 오리엔테이션</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+    --blue: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  header {
+    background: var(--text);
+    color: #fff;
+    padding: 40px 24px 30px;
+    text-align: center;
+    position: relative;
+  }
+  header::before {
+    content:''; position:absolute; top:0;left:0;right:0;height:4px;
+    background: linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));
+  }
+  .header-tag { font-size:11px; letter-spacing:3px; color:var(--accent2); margin-bottom:10px; font-weight:500; }
+  header h1 { font-family:'Playfair Display',serif; font-size:clamp(20px,6vw,32px); font-weight:900; color:#fff; }
+  header p { font-size:13px; color:#aaa; margin-top:10px; }
+
+  .container { max-width:680px; margin:0 auto; padding:0 20px 60px; }
+
+  /* ─── 탭 ─── */
+  .tabs { display:flex; border-bottom:2px solid var(--border); margin:28px 0 0; }
+  .tab-btn {
+    flex:1; padding:12px 8px; border:none; background:none;
+    font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:700;
+    color:var(--text2); cursor:pointer; border-bottom:3px solid transparent;
+    margin-bottom:-2px; transition:all 0.2s;
+  }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-content { display:none; padding-top:24px; }
+  .tab-content.active { display:block; }
+
+  /* ─── 문제 카드 ─── */
+  .q-card {
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:20px;
+    margin-bottom:18px;
+  }
+  .q-meta {
+    display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;
+  }
+  .badge {
+    display:inline-block; font-size:10px; font-weight:700;
+    padding:2px 8px; border-radius:2px; letter-spacing:0.5px;
+  }
+  .badge-easy { background:#dcfce7; color:#16a34a; }
+  .badge-mid  { background:#fef9c3; color:#ca8a04; }
+  .badge-hard { background:#fee2e2; color:#dc2626; }
+  .badge-type { background:var(--text); color:#fff; }
+  .q-num {
+    font-family:'Playfair Display',serif; font-size:20px; font-weight:700;
+    color:var(--accent); margin-bottom:8px;
+  }
+  .q-text { font-size:14px; font-weight:600; color:var(--text); margin-bottom:14px; line-height:1.6; }
+
+  /* 객관식 선택지 */
+  .options { list-style:none; padding:0; }
+  .options li {
+    padding:9px 14px; margin-bottom:6px;
+    border:1px solid var(--border);
+    border-radius:4px; cursor:pointer;
+    font-size:13px; color:var(--text);
+    transition:all 0.15s;
+    user-select:none;
+  }
+  .options li:hover { border-color:var(--accent); background:#fff5f7; }
+  .options li.correct { background:#dcfce7; border-color:var(--correct); color:var(--correct); font-weight:700; }
+  .options li.wrong   { background:#fee2e2; border-color:var(--wrong);   color:var(--wrong);  }
+  .options li.reveal-correct { background:#dcfce7; border-color:var(--correct); color:var(--correct); }
+
+  /* OX 버튼 */
+  .ox-wrap { display:flex; gap:12px; }
+  .ox-btn {
+    flex:1; padding:14px; font-size:28px; border:1px solid var(--border);
+    border-radius:4px; background:var(--bg); cursor:pointer;
+    text-align:center; transition:all 0.15s;
+  }
+  .ox-btn:hover { border-color:var(--accent); background:#fff5f7; }
+  .ox-btn.correct { background:#dcfce7; border-color:var(--correct); }
+  .ox-btn.wrong   { background:#fee2e2; border-color:var(--wrong); }
+
+  /* 단답형 */
+  .short-input {
+    width:100%; padding:10px 12px;
+    border:1px solid var(--border); border-radius:4px;
+    font-family:'Noto Sans KR',sans-serif; font-size:14px;
+    color:var(--text); background:var(--bg);
+    margin-bottom:8px;
+  }
+  .short-input:focus { outline:none; border-color:var(--accent); }
+  .check-btn {
+    padding:9px 18px; background:var(--accent); color:#fff;
+    border:none; border-radius:4px; font-size:13px; font-weight:700;
+    cursor:pointer; font-family:'Noto Sans KR',sans-serif;
+    transition:background 0.2s;
+  }
+  .check-btn:hover { background:var(--accent2); }
+
+  /* 피드백 */
+  .feedback {
+    margin-top:10px; padding:10px 14px; border-radius:4px;
+    font-size:13px; display:none;
+  }
+  .feedback.show { display:block; }
+  .feedback.ok  { background:#dcfce7; color:var(--correct); }
+  .feedback.no  { background:#fee2e2; color:var(--wrong); }
+  .feedback.ans { background:#eff6ff; color:var(--blue); }
+
+  /* 스코어 */
+  .score-bar {
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:6px; padding:16px 20px;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:24px; position:sticky; top:0; z-index:10;
+  }
+  .score-val { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .score-lbl { font-size:11px; color:var(--text2); margin-top:2px; }
+  .reset-all {
+    background:none; border:1px solid var(--border); color:var(--text2);
+    padding:7px 14px; border-radius:3px; font-size:12px; cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; transition:all 0.2s;
+  }
+  .reset-all:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* 정답 탭 */
+  .ans-card {
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:6px; padding:20px; margin-bottom:16px;
+  }
+  .ans-card .q-num { font-size:16px; }
+  .ans-q { font-size:14px; font-weight:600; margin-bottom:10px; }
+  .ans-box {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    color:#fff; border-radius:4px; padding:12px 16px;
+    font-size:13px; font-weight:700; margin-bottom:8px;
+  }
+  .ans-exp { font-size:13px; color:var(--text2); line-height:1.65; }
+
+  footer {
+    background:var(--bg2); border-top:1px solid var(--border);
+    text-align:center; padding:20px; font-size:12px; color:var(--text2);
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-tag">📝 시험문제 & 정답 · 투자는인생TV 오리엔테이션</div>
+  <h1>오리엔테이션 확인 테스트</h1>
+  <p>총 10문제 · 객관식 / OX / 단답형 혼합 · 쉬움 30% / 보통 50% / 어려움 20%</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('quiz')">🖊 문제 풀기</button>
+    <button class="tab-btn" onclick="switchTab('answer')">📖 정답 & 해설</button>
+  </div>
+
+  <!-- ════ 문제 탭 ════ -->
+  <div id="tab-quiz" class="tab-content active">
+    <div class="score-bar">
+      <div>
+        <div class="score-val"><span id="correct-cnt">0</span> / 10</div>
+        <div class="score-lbl">정답 수 (답한 문제만 집계)</div>
+      </div>
+      <button class="reset-all" onclick="resetAll()">↺ 전체 초기화</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card" id="qcard1">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-easy">쉬움</span>
+      </div>
+      <div class="q-num">Q1</div>
+      <div class="q-text">진행자가 방송에서 강조하는 두 가지 핵심 투자 전략은 무엇인가?</div>
+      <ul class="options" id="opts1">
+        <li onclick="checkMC(1, this, false)">① 분산 투자 & 장기 보유</li>
+        <li onclick="checkMC(1, this, true)">② 리밸런싱 & 섹터 로테이션</li>
+        <li onclick="checkMC(1, this, false)">③ 달러 코스트 애버리징 & 지수 추종</li>
+        <li onclick="checkMC(1, this, false)">④ 단기 매매 & 손절 전략</li>
+      </ul>
+      <div id="fb1" class="feedback"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="qcard2">
+      <div class="q-meta">
+        <span class="badge badge-type">OX</span>
+        <span class="badge badge-easy">쉬움</span>
+      </div>
+      <div class="q-num">Q2</div>
+      <div class="q-text">진행자는 "주식시장이 폭락할 때 즉시 매도하는 것이 현명한 투자자의 행동이다"라고 말했다.</div>
+      <div class="ox-wrap" id="ox2">
+        <button class="ox-btn" onclick="checkOX(2, this, false)">⭕</button>
+        <button class="ox-btn" onclick="checkOX(2, this, true)">❌</button>
+      </div>
+      <div id="fb2" class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="qcard3">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-easy">쉬움</span>
+      </div>
+      <div class="q-num">Q3</div>
+      <div class="q-text">미국 S&P 500은 총 몇 개의 섹터로 구성되어 있는가?</div>
+      <ul class="options" id="opts3">
+        <li onclick="checkMC(3, this, false)">① 7개</li>
+        <li onclick="checkMC(3, this, false)">② 9개</li>
+        <li onclick="checkMC(3, this, true)">③ 11개</li>
+        <li onclick="checkMC(3, this, false)">④ 15개</li>
+      </ul>
+      <div id="fb3" class="feedback"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="qcard4">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-mid">보통</span>
+      </div>
+      <div class="q-num">Q4</div>
+      <div class="q-text">진행자가 "노이즈"로 분류한 사건은 무엇인가?</div>
+      <ul class="options" id="opts4">
+        <li onclick="checkMC(4, this, false)">① 미국 연방준비제도의 금리 인상</li>
+        <li onclick="checkMC(4, this, false)">② 미국 거시경제 침체 신호</li>
+        <li onclick="checkMC(4, this, true)">③ 트럼프 관세 정책 발표로 인한 폭락</li>
+        <li onclick="checkMC(4, this, false)">④ 대형 금융기관 파산</li>
+      </ul>
+      <div id="fb4" class="feedback"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" id="qcard5">
+      <div class="q-meta">
+        <span class="badge badge-type">OX</span>
+        <span class="badge badge-mid">보통</span>
+      </div>
+      <div class="q-num">Q5</div>
+      <div class="q-text">진행자에 따르면, "자산 증식"은 명확한 투자 목적으로 적합하다.</div>
+      <div class="ox-wrap" id="ox5">
+        <button class="ox-btn" onclick="checkOX(5, this, false)">⭕</button>
+        <button class="ox-btn" onclick="checkOX(5, this, true)">❌</button>
+      </div>
+      <div id="fb5" class="feedback"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card" id="qcard6">
+      <div class="q-meta">
+        <span class="badge badge-type">단답형</span>
+        <span class="badge badge-mid">보통</span>
+      </div>
+      <div class="q-num">Q6</div>
+      <div class="q-text">진행자가 설명한 "60:40 법칙"에서 하락장 시 기관 자금의 몇 %가 시장에 유입되는가? (숫자만 입력)</div>
+      <input type="number" class="short-input" id="short6" placeholder="숫자를 입력하세요">
+      <button class="check-btn" onclick="checkShort(6, ['40'])">확인</button>
+      <div id="fb6" class="feedback"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card" id="qcard7">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-mid">보통</span>
+      </div>
+      <div class="q-num">Q7</div>
+      <div class="q-text">리밸런싱 전략의 핵심 목적으로 가장 올바른 것은?</div>
+      <ul class="options" id="opts7">
+        <li onclick="checkMC(7, this, false)">① 외부 신규 자금을 투입해 투자금을 늘린다</li>
+        <li onclick="checkMC(7, this, false)">② 하락 주식만 빠르게 손절해 손실을 줄인다</li>
+        <li onclick="checkMC(7, this, true)">③ 기존 보유 자산을 재배분해 같은 리스크 내 수익률을 극대화한다</li>
+        <li onclick="checkMC(7, this, false)">④ 배당 수익률이 높은 종목으로만 교체한다</li>
+      </ul>
+      <div id="fb7" class="feedback"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card" id="qcard8">
+      <div class="q-meta">
+        <span class="badge badge-type">단답형</span>
+        <span class="badge badge-mid">보통</span>
+      </div>
+      <div class="q-num">Q8</div>
+      <div class="q-text">진행자가 투자 역량의 5대 영역으로 제시한 것 중 "주가가 아닌 ○○○○ 전체의 등락폭을 봐야 한다"에서 빈칸에 들어갈 단어는?</div>
+      <input type="text" class="short-input" id="short8" placeholder="입력하세요">
+      <button class="check-btn" onclick="checkShort(8, ['포트폴리오','portfolio','폴폴리오'])">확인</button>
+      <div id="fb8" class="feedback"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card" id="qcard9">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-hard">어려움</span>
+      </div>
+      <div class="q-num">Q9</div>
+      <div class="q-text">트럼프의 관세 정책으로 미국 국채 금리가 급등(3.9% → 4.5%+)한 직접적인 원인은?</div>
+      <ul class="options" id="opts9">
+        <li onclick="checkMC(9, this, false)">① 미국 연준이 긴급 금리를 인상했기 때문</li>
+        <li onclick="checkMC(9, this, true)">② 중국·유럽 등이 미국 국채를 대량 매각했기 때문</li>
+        <li onclick="checkMC(9, this, false)">③ 미국 투자자들이 국채로 대거 이동했기 때문</li>
+        <li onclick="checkMC(9, this, false)">④ 달러 가치 급등으로 국채 수요가 증가했기 때문</li>
+      </ul>
+      <div id="fb9" class="feedback"></div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card" id="qcard10">
+      <div class="q-meta">
+        <span class="badge badge-type">객관식</span>
+        <span class="badge badge-hard">어려움</span>
+      </div>
+      <div class="q-num">Q10</div>
+      <div class="q-text">진행자의 "종형 포트폴리오(4.1 법칙)"에서 신생기업(하이리스크) 투자에 대한 설명으로 옳은 것은?</div>
+      <ul class="options" id="opts10">
+        <li onclick="checkMC(10, this, false)">① 신생기업에는 안정적 수익을 위해 10% 이상 투자한다</li>
+        <li onclick="checkMC(10, this, false)">② 신생기업은 모두 망하므로 포트폴리오에서 제외한다</li>
+        <li onclick="checkMC(10, this, true)">③ 종목당 0.5~1% 소액 편입, 10종 중 2~3종이 1000% 이상 상승하는 것을 기대한다</li>
+        <li onclick="checkMC(10, this, false)">④ 신생기업은 IPO 직후에만 매수하고 즉시 매도한다</li>
+      </ul>
+      <div id="fb10" class="feedback"></div>
+    </div>
+
+  </div><!-- /tab-quiz -->
+
+  <!-- ════ 정답 탭 ════ -->
+  <div id="tab-answer" class="tab-content">
+
+    <div class="ans-card">
+      <div class="q-num">Q1 <span style="font-size:12px;color:var(--text2)">객관식 · 쉬움</span></div>
+      <div class="ans-q">진행자가 방송에서 강조하는 두 가지 핵심 투자 전략은 무엇인가?</div>
+      <div class="ans-box">정답: ② 리밸런싱(Rebalancing) & 섹터 로테이션(Sector Rotation)</div>
+      <div class="ans-exp">진행자는 "우리가 하는 가장 핵심적인 투자 원칙"으로 리밸런싱과 섹터 로테이션 두 가지를 명시했다. 이 두 전략이 방송 전체의 중심축이다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q2 <span style="font-size:12px;color:var(--text2)">OX · 쉬움</span></div>
+      <div class="ans-q">폭락 시 즉시 매도하는 것이 현명한 투자자의 행동이다.</div>
+      <div class="ans-box">정답: ❌ (X)</div>
+      <div class="ans-exp">진행자는 "잔꾀 부리다 망한다", "팔지 말라는 뜻"이라며 폭락장 매도를 강하게 경계했다. 폭락장에서 매도하고 반등 시 미리 들어가지 못하면 오히려 35%를 잃는 결과가 된다고 설명했다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q3 <span style="font-size:12px;color:var(--text2)">객관식 · 쉬움</span></div>
+      <div class="ans-q">미국 S&P 500의 섹터 수</div>
+      <div class="ans-box">정답: ③ 11개</div>
+      <div class="ans-exp">진행자는 "11개 섹터가 아주 체계적으로, 과학적으로, 통계적으로 잘 정리되어 있다"고 설명했다. 이 11개 섹터 중 현재 사이클에 맞는 4개 내외의 리딩 섹터에 집중한다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q4 <span style="font-size:12px;color:var(--text2)">객관식 · 보통</span></div>
+      <div class="ans-q">진행자가 "노이즈"로 분류한 사건</div>
+      <div class="ans-box">정답: ③ 트럼프 관세 정책 발표로 인한 폭락</div>
+      <div class="ans-exp">진행자는 관세 정책을 "일관성이 없어 더욱 혼란만 이야기하는 노이즈"로 규정했다. "관세로 폭락했다면 관세 때문에 폭등할 것"이라고 예측했고, 실제로 그렇게 되었다. 반면 통화정책, 거시경제 악화, 기업 파산, 전쟁은 신호로 구분했다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q5 <span style="font-size:12px;color:var(--text2)">OX · 보통</span></div>
+      <div class="ans-q">"자산 증식"은 명확한 투자 목적으로 적합하다.</div>
+      <div class="ans-box">정답: ❌ (X)</div>
+      <div class="ans-exp">진행자는 "자산 증식은 투자 목적이 될 수 없다"고 명확히 말했다. 올바른 투자 목적은 "언제, 무엇을 위해 자산이 필요한가"를 구체적으로 정의하는 것이다. 예: 20년 후 은퇴 자금 마련, 10년 후 자녀 교육비 등.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q6 <span style="font-size:12px;color:var(--text2)">단답형 · 보통</span></div>
+      <div class="ans-q">60:40 법칙에서 하락장 시 기관 자금의 유입 비율</div>
+      <div class="ans-box">정답: 40 (%)</div>
+      <div class="ans-exp">60:40 법칙에서 하락장에는 60%가 빠져나가고 40%는 들어온다. 반대로 상승장에서는 60%가 들어오고 40%가 나간다. 70:30 법칙은 더 극단적인 상황에 적용된다. 이를 통해 어떤 상황에서도 시장에 항상 자금 유입이 있다는 것을 이해할 수 있다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q7 <span style="font-size:12px;color:var(--text2)">객관식 · 보통</span></div>
+      <div class="ans-q">리밸런싱 전략의 핵심 목적</div>
+      <div class="ans-box">정답: ③ 기존 보유 자산을 재배분해 같은 리스크 내 수익률을 극대화한다</div>
+      <div class="ans-exp">진행자는 "외부로부터 새로 유입되는 자산이 없다"는 현실을 전제로, 가지고 있는 자산을 활용해 "같은 리스크에 투자해서 어떻게 하면 더 빨리, 더 많이 볼 수 있게끔 하는 전략"이 리밸런싱이라고 정의했다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q8 <span style="font-size:12px;color:var(--text2)">단답형 · 보통</span></div>
+      <div class="ans-q">주가가 아닌 ○○○○ 전체의 등락폭을 봐야 한다</div>
+      <div class="ans-box">정답: 포트폴리오</div>
+      <div class="ans-exp">진행자는 "주가를 매일 보는데 포트폴리오의 이동은 안 본다"는 점을 투자자들의 가장 큰 실수로 지적했다. 개별 주식의 주가 등락보다 포트폴리오 전체가 S&P 500 대비 몇 % 올라가고 내려갔는지를 먼저 확인해야 한다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q9 <span style="font-size:12px;color:var(--text2)">객관식 · 어려움</span></div>
+      <div class="ans-q">트럼프 관세 정책 이후 미국 국채 금리가 급등한 직접적인 원인</div>
+      <div class="ans-box">정답: ② 중국·유럽 등이 미국 국채를 대량 매각했기 때문</div>
+      <div class="ans-exp">트럼프의 계획은 관세 → 주식시장 하락 → 자금이 국채로 이동 → 국채 금리 하락 → 이자 부담 감소였다. 그러나 중국(대만 포함)과 유럽이 미국 국채를 덤핑 매각하면서 국채 인기가 떨어지고, 오히려 금리가 3.9%에서 4.5% 이상으로 60bp 급등했다. 이것이 "잔머리"가 실패한 결과로 결국 반도체 등 일부 국가만 선별 관세 부과로 선회하게 된 원인이다.</div>
+    </div>
+
+    <div class="ans-card">
+      <div class="q-num">Q10 <span style="font-size:12px;color:var(--text2)">객관식 · 어려움</span></div>
+      <div class="ans-q">종형 포트폴리오의 신생기업 투자 방식</div>
+      <div class="ans-box">정답: ③ 종목당 0.5~1% 소액 편입, 10종 중 2~3종이 1000% 이상 상승하는 것을 기대한다</div>
+      <div class="ans-exp">진행자는 신생기업에 대해 "10 중에 7~8개는 망한다"는 전제 하에, 0.5~1%씩 소액 분산 편입하는 전략을 제시했다. 망해도 손실이 적고, 2~3종이 1000% 이상 오르면 포트폴리오 전체에서 10~15%를 차지하는 성과로 이어진다. 대표 사례로 메타, 엔비디아, 슈퍼마이크로를 언급했다.</div>
+    </div>
+
+  </div><!-- /tab-answer -->
+</div>
+
+<footer>
+  투자는인생TV 오리엔테이션 확인 테스트 · 2026.04.12<br>
+  <span style="color:var(--accent)">본 문제는 학습 목적으로 제작되었습니다.</span>
+</footer>
+
+<script>
+let answered = {};
+
+function updateScore() {
+  const cnt = Object.values(answered).filter(v => v === true).length;
+  document.getElementById('correct-cnt').textContent = cnt;
+}
+
+function checkMC(qnum, el, isCorrect) {
+  if (answered.hasOwnProperty(qnum)) return;
+  answered[qnum] = isCorrect;
+  const opts = document.getElementById('opts' + qnum).querySelectorAll('li');
+  opts.forEach(li => {
+    li.style.pointerEvents = 'none';
+    if (li === el) {
+      li.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+  });
+  if (!isCorrect) {
+    opts.forEach(li => {
+      if (li.onclick && li.onclick.toString().includes('true')) {
+        li.classList.add('reveal-correct');
+      }
+    });
+  }
+  const fb = document.getElementById('fb' + qnum);
+  fb.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다. 정답은 초록색 항목입니다.';
+  fb.className = 'feedback show ' + (isCorrect ? 'ok' : 'no');
+  updateScore();
+}
+
+function checkOX(qnum, el, isCorrect) {
+  if (answered.hasOwnProperty(qnum)) return;
+  answered[qnum] = isCorrect;
+  const btns = document.getElementById('ox' + qnum).querySelectorAll('.ox-btn');
+  btns.forEach(b => { b.style.pointerEvents = 'none'; });
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  const fb = document.getElementById('fb' + qnum);
+  fb.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.';
+  fb.className = 'feedback show ' + (isCorrect ? 'ok' : 'no');
+  updateScore();
+}
+
+function checkShort(qnum, accepted) {
+  if (answered.hasOwnProperty(qnum)) return;
+  const raw = document.getElementById('short' + qnum).value.trim();
+  const isCorrect = accepted.some(a => raw.toLowerCase() === a.toLowerCase());
+  answered[qnum] = isCorrect;
+  const fb = document.getElementById('fb' + qnum);
+  if (isCorrect) {
+    fb.textContent = '✅ 정답입니다! (' + accepted[0] + ')';
+    fb.className = 'feedback show ok';
+  } else {
+    fb.textContent = '❌ 오답입니다. 정답: ' + accepted[0];
+    fb.className = 'feedback show no';
+  }
+  document.getElementById('short' + qnum).disabled = true;
+  updateScore();
+}
+
+function resetAll() {
+  answered = {};
+  // MC
+  [1,3,4,7,9,10].forEach(n => {
+    const opts = document.getElementById('opts' + n);
+    if (!opts) return;
+    opts.querySelectorAll('li').forEach(li => {
+      li.classList.remove('correct','wrong','reveal-correct');
+      li.style.pointerEvents = '';
+    });
+    const fb = document.getElementById('fb' + n);
+    fb.className = 'feedback';
+    fb.textContent = '';
+  });
+  // OX
+  [2,5].forEach(n => {
+    const btns = document.getElementById('ox' + n);
+    if (!btns) return;
+    btns.querySelectorAll('.ox-btn').forEach(b => {
+      b.classList.remove('correct','wrong');
+      b.style.pointerEvents = '';
+    });
+    const fb = document.getElementById('fb' + n);
+    fb.className = 'feedback';
+    fb.textContent = '';
+  });
+  // Short
+  [6,8].forEach(n => {
+    const inp = document.getElementById('short' + n);
+    if (!inp) return;
+    inp.value = '';
+    inp.disabled = false;
+    const fb = document.getElementById('fb' + n);
+    fb.className = 'feedback';
+    fb.textContent = '';
+  });
+  updateScore();
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
