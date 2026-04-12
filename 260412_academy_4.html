@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 41회 — 투자 리스크 완전 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --table-header: #e11d48;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 18px 60px;
+  }
+
+  /* ── 헤더 ── */
+  .mag-header {
+    border-top: 4px solid var(--accent);
+    padding: 36px 0 20px;
+    margin-bottom: 8px;
+  }
+  .mag-label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .mag-title {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: clamp(26px, 7vw, 40px);
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .mag-sub {
+    font-size: 13px;
+    color: var(--text2);
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+    line-height: 1.6;
+  }
+  .mag-meta {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+  hr.divider-thick {
+    border: none;
+    border-top: 2px solid var(--text);
+    margin: 32px 0;
+  }
+
+  /* ── 섹션 ── */
+  .section { margin-bottom: 44px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 18px 0 8px;
+  }
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* ── 핵심 인용구 ── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    background: var(--bg2);
+    padding: 16px 18px;
+    margin: 22px 0;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .pull-quote cite {
+    display: block;
+    font-size: 11px;
+    font-style: normal;
+    color: var(--text2);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* ── 리스크 카드 ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .risk-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    padding: 14px;
+    border-radius: 2px;
+  }
+  .risk-card.blue { border-top-color: var(--c4); }
+  .risk-card.gray { border-top-color: var(--c3); }
+  .risk-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .risk-card.blue h4 { color: var(--c4); }
+  .risk-card.gray h4 { color: var(--c3); }
+  .risk-card p { font-size: 13px; margin: 0; line-height: 1.6; }
+
+  /* ── 표 ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f3f3f3; }
+
+  /* ── 강조 박스 ── */
+  .highlight-box {
+    background: var(--accent);
+    color: #fff;
+    padding: 18px 20px;
+    margin: 20px 0;
+    border-radius: 2px;
+  }
+  .highlight-box h3 { color: #fff; margin-top: 0; }
+  .highlight-box p { color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; }
+
+  .info-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 2px;
+  }
+
+  /* ── 숫자 강조 ── */
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    flex: 1;
+    min-width: 100px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-desc { font-size: 11px; color: var(--text2); }
+
+  /* ── 차트 ── */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 16px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* ── 시뮬레이터 ── */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px 18px;
+    margin: 20px 0;
+    border-radius: 2px;
+  }
+  .simulator h3 {
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .slider-row {
+    margin-bottom: 14px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .slider-label span { color: var(--accent); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .sim-result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .sim-result-row:last-child { border-bottom: none; }
+  .sim-result-row .val { font-weight: 700; color: var(--accent); }
+  .sim-result-row .val.blue { color: var(--c4); }
+  .reset-btn {
+    background: var(--text);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 12px;
+    font-family: inherit;
+    letter-spacing: 1px;
+  }
+  .reset-btn:hover { background: var(--accent); }
+
+  /* ── 비즈니스 사이클 인터랙티브 ── */
+  .cycle-stages {
+    display: flex;
+    gap: 0;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .cycle-stage {
+    flex: 1;
+    min-width: 72px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-right: none;
+    background: var(--bg2);
+    transition: all 0.2s;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .cycle-stage:last-child { border-right: 1px solid var(--border); }
+  .cycle-stage:hover, .cycle-stage.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .cycle-stage .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .cycle-detail {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    font-size: 13px;
+    min-height: 80px;
+    transition: all 0.3s;
+  }
+
+  /* ── 333 법칙 시각화 ── */
+  .law333 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .law333-item {
+    text-align: center;
+    padding: 16px 8px;
+    border: 2px solid var(--border);
+  }
+  .law333-item.highlight { border-color: var(--accent); }
+  .law333-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .law333-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
+  .law333-cash {
+    grid-column: span 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--text);
+    color: #fff;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── fade-in ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── 퀴즈 섹션 ── */
+  .quiz-section { margin-bottom: 44px; }
+  .quiz-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border-radius: 2px;
+  }
+  .quiz-q {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .quiz-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .badge-easy { background: #d1fae5; color: #065f46; }
+  .badge-mid { background: #fef3c7; color: #92400e; }
+  .badge-hard { background: #fee2e2; color: #991b1b; }
+  .quiz-options { list-style: none; }
+  .quiz-options li {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    background: #fff;
+  }
+  .quiz-options li:hover { border-color: var(--accent); background: #fff0f3; }
+  .quiz-options li.correct { background: #d1fae5; border-color: #059669; color: #065f46; }
+  .quiz-options li.wrong { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+  .quiz-answer {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #fff;
+    border-left: 3px solid var(--accent);
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .quiz-answer.show { display: block; }
+  .quiz-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    margin-bottom: 8px;
+  }
+  .check-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .check-btn:hover { background: var(--accent2); }
+
+  /* ── 리스크 맵 ── */
+  .risk-map-wrap { overflow-x: auto; }
+  svg.risk-map { width: 100%; max-width: 620px; display: block; margin: 0 auto; }
+
+  @media (max-width: 420px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .law333 { grid-template-columns: 1fr 1fr; }
+    .law333-cash { grid-column: span 2; }
+    .stat-row { gap: 8px; }
+    .mag-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 헤더 ══ -->
+<header class="mag-header fade-in">
+  <div class="mag-label">투자아카데미 41회 · 2026.04.12</div>
+  <h1 class="mag-title">투자 리스크,<br>알아야 피한다</h1>
+  <p class="mag-sub">시스테믹 vs 언시스테믹 리스크의 본질과<br>개인 투자자가 스스로 줄일 수 있는 방법</p>
+  <div class="mag-meta">
+    <span>📺 유튜브 원본 강의</span>
+    <span>🎓 투자 기초 교육</span>
+    <span>⏱ 약 45분 분량</span>
+  </div>
+</header>
+
+<hr class="divider-thick">
+
+<!-- ══ 핵심 요약 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Summary</div>
+  <h2>오늘 강의의 핵심 3가지</h2>
+  <div class="stat-row">
+    <div class="stat-item">
+      <span class="stat-num">2</span>
+      <span class="stat-desc">투자 리스크의<br>큰 분류</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">11</span>
+      <span class="stat-desc">시장 섹터 수<br>(리딩 4개 주목)</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">333</span>
+      <span class="stat-desc">자산 배분<br>황금 법칙</span>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    "가격이 떨어지는 것이 가치가 떨어지는 것이 아니에요. 시스테믹 리스크라도 주가는 가격이 떨어지는 거지, 가치는 거기 안에 있어요."
+    <cite>— 강사 핵심 발언</cite>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 두 종류의 리스크 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Part 1</div>
+  <h2>투자 리스크 두 가지 분류</h2>
+  <p>모든 투자 리스크는 크게 두 가지로 나뉩니다. <strong>피할 수 없는 것</strong>과 <strong>피할 수 있는 것</strong>. 이 차이를 아는 것이 투자 성과를 가르는 출발점입니다.</p>
+
+  <div class="card-grid">
+    <div class="risk-card">
+      <h4>🔴 Systematic Risk</h4>
+      <p><strong>시스테믹 리스크</strong><br>피할 수 없는 리스크. 전체 시장이 동반 하락. 2008 금융위기·팬데믹이 대표적 사례.</p>
+    </div>
+    <div class="risk-card blue">
+      <h4>🔵 Unsystematic Risk</h4>
+      <p><strong>언시스테믹 리스크</strong><br>피할 수 있는 리스크. 특정 기업·산업·섹터에 국한. 분석과 분산으로 줄일 수 있음.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h3>🔑 핵심 메시지</h3>
+    <p>시스테믹 리스크는 역사적으로 3개월~3년 내 100% 회복됩니다. 멘붕 없이 버티는 것이 전략. 언시스테믹 리스크는 섹터 로테이션과 리밸런싱으로 줄일 수 있습니다.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 시스테믹 리스크 상세 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Part 2</div>
+  <h2>시스테믹 리스크 유형별 정리</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>리스크 유형</th>
+        <th>설명</th>
+        <th>사례</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>마켓 리스크</strong></td>
+        <td>거시경제 악화로 전체 시장 하락</td>
+        <td>GDP 성장률 급락</td>
+      </tr>
+      <tr>
+        <td><strong>인플레이션 리스크</strong></td>
+        <td>구매력 하락. 현금 보유자가 가장 큰 피해</td>
+        <td>미국 실질 인플레이션 8.5%</td>
+      </tr>
+      <tr>
+        <td><strong>금리 리스크</strong></td>
+        <td>금리 변화가 자산 가치에 영향</td>
+        <td>양적완화(QE) 시 화폐가치 하락</td>
+      </tr>
+      <tr>
+        <td><strong>환율 리스크</strong></td>
+        <td>통화 가치 변화로 실질 수익 변동</td>
+        <td>달러/원화 1,400원 돌파</td>
+      </tr>
+      <tr>
+        <td><strong>정치 리스크</strong></td>
+        <td>정치적 불안정이 국가 신용 위험 상승</td>
+        <td>계엄령 사태</td>
+      </tr>
+      <tr>
+        <td><strong>유동성 리스크</strong></td>
+        <td>원할 때 자산을 팔지 못하는 위험</td>
+        <td>뮤추얼 펀드 거래 지연, 부동산</td>
+      </tr>
+      <tr>
+        <td><strong>비즈니스 사이클 리스크</strong></td>
+        <td>경제 주기(8~12년)에 따른 순환 하락</td>
+        <td>2008 이후 2024까지 장기 상승 후 조정 가능</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 비즈니스 사이클 인터랙티브 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Interactive</div>
+  <h2>비즈니스 사이클 — 단계 탐색</h2>
+  <p>각 단계를 탭하면 그 국면에서 어떤 투자 전략이 유효한지 확인할 수 있습니다.</p>
+
+  <div class="cycle-stages">
+    <div class="cycle-stage active" data-stage="0">
+      <span class="icon">🌱</span>회복
+    </div>
+    <div class="cycle-stage" data-stage="1">
+      <span class="icon">📈</span>성장
+    </div>
+    <div class="cycle-stage" data-stage="2">
+      <span class="icon">🏔️</span>정점
+    </div>
+    <div class="cycle-stage" data-stage="3">
+      <span class="icon">📉</span>침체
+    </div>
+  </div>
+  <div class="cycle-detail" id="cycleDetail">
+    <strong>회복기</strong> — 주가가 바닥을 찍고 반등하는 시기. 이 시점에서 공격적으로 매수하면 수익이 극대화됩니다. 경기 민감주(Consumer Discretionary, 소재주)가 강세를 보이기 시작합니다.
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 인플레이션 구매력 시뮬레이터 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Simulator</div>
+  <h2>인플레이션 구매력 손실 계산기</h2>
+  <p>현금을 보유하면 인플레이션만큼 실질 가치가 감소합니다. 강사가 언급한 8.5% 인플레이션 사례를 직접 체험해보세요.</p>
+
+  <div class="simulator">
+    <h3>💸 구매력 손실 시뮬레이터</h3>
+
+    <div class="slider-row">
+      <div class="slider-label">현금 보유액 <span id="cashVal">1,000만원</span></div>
+      <input type="range" id="cashSlider" min="100" max="10000" step="100" value="1000">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">인플레이션율 <span id="inflVal">8.5%</span></div>
+      <input type="range" id="inflSlider" min="1" max="20" step="0.5" value="8.5">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">기간 <span id="yearVal">5년</span></div>
+      <input type="range" id="yearSlider" min="1" max="30" step="1" value="5">
+    </div>
+
+    <div class="sim-result" id="inflResult"></div>
+    <button class="reset-btn" onclick="resetInflSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 언시스테믹 리스크 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Part 3</div>
+  <h2>언시스테믹 리스크 — 피할 수 있는 위험들</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>유형</th>
+        <th>내용</th>
+        <th>대응책</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>이벤트 리스크</strong></td>
+        <td>CEO 사망·내부거래·제품 리콜 등 특정 기업 이슈</td>
+        <td>뉴스 모니터링 후 비중 축소</td>
+      </tr>
+      <tr>
+        <td><strong>비즈니스 사이클 리스크</strong></td>
+        <td>경기 국면에 따른 섹터별 성과 차이</td>
+        <td>섹터 로테이션</td>
+      </tr>
+      <tr>
+        <td><strong>크레딧 리스크</strong></td>
+        <td>특정 국가·기업의 신용 위험</td>
+        <td>미국 자산 집중, 고위험국 회피</td>
+      </tr>
+      <tr>
+        <td><strong>유동성 리스크</strong></td>
+        <td>2차 시장이 없어 팔기 어려운 자산</td>
+        <td>대체투자·소형 비상장주 주의</td>
+      </tr>
+      <tr>
+        <td><strong>환율 리스크</strong></td>
+        <td>원화 보유 시 달러 대비 구매력 손실</td>
+        <td>달러 자산으로 전환</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 섹터 로테이션 차트 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Visualization</div>
+  <h2>11개 섹터 중 리딩 4개를 찾아라</h2>
+  <p>강사의 <strong>'114 법칙'</strong>: 11개 섹터 중 항상 4개가 시장을 이끕니다. 그 4개를 찾는 것이 섹터 로테이션의 핵심입니다.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="sectorChart" height="240"></canvas>
+  </div>
+  <p style="font-size:12px; color:var(--text2); margin-top:8px;">※ 수치는 개념 설명용 예시이며 실제 수익률이 아닙니다.</p>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 333 법칙 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Part 4</div>
+  <h2>자산 배분의 황금 법칙 — 333</h2>
+  <p>강사가 제안하는 자산 배분 원칙입니다. 어느 한 자산에 쏠리면 경제 위기 때 연쇄 붕괴 위험이 있습니다.</p>
+
+  <div class="law333">
+    <div class="law333-item highlight">
+      <div class="law333-pct">30%</div>
+      <div class="law333-label">부동산</div>
+    </div>
+    <div class="law333-item highlight">
+      <div class="law333-pct">30%</div>
+      <div class="law333-label">주식시장</div>
+    </div>
+    <div class="law333-item highlight">
+      <div class="law333-pct">30%</div>
+      <div class="law333-label">대체자산<br><small style="color:var(--text2)">금·해외자산</small></div>
+    </div>
+    <div class="law333-cash">
+      <strong>10% 현금</strong> — 비상금, 즉시 유동성 확보
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>⚠️ 한국 투자자의 흔한 실수</strong><br>
+    90% 이상이 부동산에 집중 → 경제 위기 시 현금 흐름 문제 → 헐값 매각 → 연쇄 손실. 2008년 금융위기 때 집 3~4채를 모두 잃은 한인 사례가 대표적입니다.
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 포트폴리오 시뮬레이터 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Simulator</div>
+  <h2>시장 급락 시나리오 — 현금 비중의 힘</h2>
+  <p>강사가 설명한 '반토막 날 때 현금으로 추가 매수' 전략의 효과를 직접 시뮬레이션해보세요.</p>
+
+  <div class="simulator">
+    <h3>📊 하락장 회복 시뮬레이터</h3>
+
+    <div class="slider-row">
+      <div class="slider-label">총 자산 (만원) <span id="totalVal">1,000만원</span></div>
+      <input type="range" id="totalSlider" min="500" max="20000" step="500" value="1000">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">현금 비중 <span id="cashPctVal">20%</span></div>
+      <input type="range" id="cashPctSlider" min="0" max="50" step="5" value="20">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label">하락률 <span id="dropVal">-50%</span></div>
+      <input type="range" id="dropSlider" min="10" max="70" step="5" value="50">
+    </div>
+
+    <div class="sim-result" id="portResult"></div>
+    <button class="reset-btn" onclick="resetPortSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 펀더멘탈 분석 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Part 5</div>
+  <h2>펀더멘탈 분석 — 주가 아닌 기업을 보라</h2>
+
+  <div class="pull-quote">
+    "여러분은 계속 주식만 보는 거야. 기업은 안 보고. 그러니까 힘든 거예요."
+    <cite>— 강사</cite>
+  </div>
+
+  <p>언시스테믹 리스크를 줄이는 가장 근본적인 방법은 <strong>기업 분석(펀더멘탈)</strong>입니다. 강사가 강조하는 탑다운 접근법은 다음 순서로 진행됩니다:</p>
+
+  <div class="info-box">
+    <strong>탑다운(Top-Down) 접근 순서</strong><br><br>
+    거시경제(Macro) → 인더스트리(Industry) → 서브섹터(Sub-sector) → 개별기업(Company)<br><br>
+    기업 분석 시 확인 항목: 제품·서비스 경쟁력, 경영진 역량, ROI·ROE, 주식 발행 규모, 현금 흐름(10-K 보고서 기준)
+  </div>
+
+  <p>펀더멘탈이 탄탄하면 시스테믹 리스크로 주가가 떨어져도 <strong>내재가치(Intrinsic Value)</strong>는 그대로입니다. 가격이 떨어지는 것과 가치가 떨어지는 것은 다릅니다.</p>
+</section>
+
+<hr class="divider">
+
+<!-- ══ 투자 원칙 정리 ══ -->
+<section class="section fade-in">
+  <div class="section-label">Principles</div>
+  <h2>강사가 강조한 투자 핵심 원칙</h2>
+
+  <div class="card-grid">
+    <div class="risk-card">
+      <h4>✅ 해야 할 것</h4>
+      <p>• 여유자금으로만 투자<br>• 섹터 로테이션 실행<br>• 정기적 리밸런싱<br>• 333 자산 배분<br>• 기업 펀더멘탈 공부</p>
+    </div>
+    <div class="risk-card gray">
+      <h4>❌ 하지 말 것</h4>
+      <p>• 급전으로 주식 투자<br>• 주식값만 보기<br>• 한 자산에 90% 집중<br>• 단기 시세 쫓기<br>• 특정 전문가 맹신</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h3>💡 급전과 주식은 섞지 마라</h3>
+    <p>지금 당장 필요한 돈, 집 구매 자금은 절대 주식에 투자하면 안 됩니다. 3% 하락에도 불안한 이유는 급전으로 투자했기 때문입니다. 마음 편한 돈만 투자하세요.</p>
+  </div>
+</section>
+
+<hr class="divider-thick">
+
+<!-- ══ 시험문제 ══ -->
+<section class="quiz-section">
+  <div class="section-label">Quiz — 10문제</div>
+  <h2>📝 이해도 확인 문제</h2>
+  <p style="color:var(--text2); font-size:13px; margin-bottom:20px;">각 문제의 선택지를 클릭하면 정오 여부와 해설을 확인할 수 있습니다.</p>
+
+  <!-- Q1 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-easy">쉬움</span>
+      Q1. [OX] 시스테믹 리스크는 개인 투자자가 분산 투자로 완전히 피할 수 있다.
+    </div>
+    <ul class="quiz-options" data-answer="1">
+      <li data-idx="0">O — 피할 수 있다</li>
+      <li data-idx="1">X — 피할 수 없다</li>
+    </ul>
+    <div class="quiz-answer">❌ X가 정답. 시스테믹 리스크는 전체 시장에 영향을 미치므로 피할 수 없습니다. 다만 현금 비중을 유지하는 등 충격을 줄이는 방법은 있습니다.</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-easy">쉬움</span>
+      Q2. [객관식] 다음 중 시스테믹 리스크의 사례로 가장 적절한 것은?
+    </div>
+    <ul class="quiz-options" data-answer="2">
+      <li data-idx="0">특정 기업 CEO의 사망</li>
+      <li data-idx="1">제약회사의 신약 임상 실패</li>
+      <li data-idx="2">2008년 글로벌 금융위기</li>
+      <li data-idx="3">회사의 제품 리콜 사태</li>
+    </ul>
+    <div class="quiz-answer">✅ ③ 2008년 글로벌 금융위기가 정답. 전체 시장이 동반 하락한 시스테믹 리스크의 대표 사례입니다. 나머지는 특정 기업에 국한된 언시스테믹 리스크입니다.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-easy">쉬움</span>
+      Q3. [단답형] 강사가 제안한 자산 배분 법칙의 이름은?
+    </div>
+    <input type="text" class="quiz-input" placeholder="법칙 이름을 입력하세요..." id="q3input">
+    <button class="check-btn" onclick="checkQ3()">확인</button>
+    <div class="quiz-answer" id="q3answer">✅ 정답: <strong>333 법칙</strong> (부동산 30% · 주식 30% · 대체자산 30% · 현금 10%)</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-mid">보통</span>
+      Q4. [객관식] 인플레이션 리스크에서 가장 큰 피해를 입는 사람은?
+    </div>
+    <ul class="quiz-options" data-answer="0">
+      <li data-idx="0">현금만 보유한 사람</li>
+      <li data-idx="1">주식에 투자한 사람</li>
+      <li data-idx="2">부동산을 보유한 사람</li>
+      <li data-idx="3">달러 자산을 보유한 사람</li>
+    </ul>
+    <div class="quiz-answer">✅ ① 현금만 보유한 사람. 강사가 예시로 든 미국 실질 인플레이션 8.5% 상황에서 100만원을 보유하면 약 92만원의 구매력만 남습니다. 현금은 인플레이션만큼 가치가 녹아내립니다.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-mid">보통</span>
+      Q5. [OX] 강사의 '114 법칙'에 따르면, 11개 섹터 중 4개가 항상 시장을 이끌기 때문에 나머지 7개에 분산 투자해야 한다.
+    </div>
+    <ul class="quiz-options" data-answer="1">
+      <li data-idx="0">O — 7개에 분산해야 한다</li>
+      <li data-idx="1">X — 리딩하는 4개에 집중해야 한다</li>
+    </ul>
+    <div class="quiz-answer">❌ X가 정답. 강사는 상승하는 리딩 4개 섹터에 집중 투자해야 한다고 강조합니다. 7개에 분산하면 오르는 섹터의 수익을 희석시킵니다.</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-mid">보통</span>
+      Q6. [객관식] 뮤추얼 펀드의 유동성 리스크란 무엇인가?
+    </div>
+    <ul class="quiz-options" data-answer="1">
+      <li data-idx="0">펀드 수수료가 너무 높은 것</li>
+      <li data-idx="1">시장이 급락할 때 당일 환매가 안 되어 손실을 막지 못하는 것</li>
+      <li data-idx="2">펀드 운용사가 부도날 위험</li>
+      <li data-idx="3">외환 변동에 따른 손실 위험</li>
+    </ul>
+    <div class="quiz-answer">✅ ② 정답. 미국 장이 끝나야 ETF 거래가 되는 구조상, 급락이 진행되는 동안 환매할 수 없어 이미 손실이 확정된 상태에서 뒤늦게 팔게 됩니다.</div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-mid">보통</span>
+      Q7. [단답형] 강사가 언시스테믹 리스크를 줄이는 두 가지 핵심 방법으로 제시한 것은?
+    </div>
+    <input type="text" class="quiz-input" placeholder="두 가지를 쉼표로 구분하여 입력..." id="q7input">
+    <button class="check-btn" onclick="checkQ7()">확인</button>
+    <div class="quiz-answer" id="q7answer">✅ 정답: <strong>섹터 로테이션</strong>과 <strong>리밸런싱(포트폴리오 재조정)</strong>. 두 방법을 함께 활용해 위험을 분산하고 수익을 극대화합니다.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-mid">보통</span>
+      Q8. [객관식] 탑다운(Top-Down) 투자 접근법의 올바른 분석 순서는?
+    </div>
+    <ul class="quiz-options" data-answer="2">
+      <li data-idx="0">개별기업 → 섹터 → 인더스트리 → 거시경제</li>
+      <li data-idx="1">섹터 → 거시경제 → 인더스트리 → 개별기업</li>
+      <li data-idx="2">거시경제 → 인더스트리 → 서브섹터 → 개별기업</li>
+      <li data-idx="3">인더스트리 → 개별기업 → 거시경제 → 섹터</li>
+    </ul>
+    <div class="quiz-answer">✅ ③ 정답. 거시경제 → 인더스트리 → 서브섹터 → 개별기업 순으로 넓은 시각에서 좁혀가며 분석합니다.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-hard">어려움</span>
+      Q9. [객관식] 강사의 설명에 따르면, 한국의 일반 투자자들이 주식 투자에서 기관보다 성과가 낮은 가장 근본적인 이유로 가장 적절한 것은?
+    </div>
+    <ul class="quiz-options" data-answer="3">
+      <li data-idx="0">기관보다 자금이 적어서</li>
+      <li data-idx="1">해외 정보에 접근이 어려워서</li>
+      <li data-idx="2">공매도 세력에 대응이 힘들어서</li>
+      <li data-idx="3">주가(가격)에만 민감하고 기업 가치(가치)를 보지 않으며 단기적으로 투자하기 때문</li>
+    </ul>
+    <div class="quiz-answer">✅ ④ 정답. 강사는 개인 투자자들이 주가 등락에 즉각 반응하고 기업의 내재가치(Intrinsic Value)를 외면하며 단기 시세 차익만 추구하기 때문에 성과가 낮다고 분석합니다.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-item fade-in">
+    <div class="quiz-q">
+      <span class="quiz-badge badge-hard">어려움</span>
+      Q10. [서술형] 시스테믹 리스크 발생 시 '현금 보유 비중'이 왜 중요한지, 강사의 예시를 바탕으로 설명하시오.
+    </div>
+    <button class="check-btn" onclick="toggleQ10()">모범 답안 보기</button>
+    <div class="quiz-answer" id="q10answer">
+      <strong>모범 답안:</strong><br>
+      시스테믹 리스크로 전체 자산이 반토막(-50%) 나는 경우, 현금 비중을 20% 유지하고 있다면 급락 시 해당 현금으로 추가 매수(저가 매입)가 가능합니다.<br><br>
+      강사의 예시: 총 자산 10, 현금 2 보유 → 시장 급락으로 주식 8이 4로 하락 → 현금 2로 추가 매수 → 회복장 시 총 자산 10이 아닌 14가 됩니다.<br><br>
+      즉, 현금은 단순한 안전 자산이 아니라 위기 시 수익을 극대화하는 '기회의 총알'로 기능합니다. 단, 주식의 회복을 믿을 수 있는 펀더멘탈 분석이 전제여야 합니다.
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<footer style="text-align:center; padding: 20px 0; font-size: 11px; color: var(--text2);">
+  투자아카데미 41회 강의 분석 · 2026.04.12<br>
+  <span style="color:var(--accent)">본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.</span>
+</footer>
+
+<script>
+// ── 비즈니스 사이클 ──
+const cycleData = [
+  {
+    title: '회복기',
+    desc: '<strong>회복기</strong> — 주가가 바닥을 찍고 반등하는 시기. 이 시점에서 공격적으로 매수하면 수익이 극대화됩니다. 경기 민감주(Consumer Discretionary, 소재주)가 강세를 보이기 시작합니다.'
+  },
+  {
+    title: '성장기',
+    desc: '<strong>성장기</strong> — 경제가 본격 확장. 기업 실적이 개선되고 소비 심리가 상승합니다. IT·금융·산업재 섹터가 주도합니다. 강사가 경험한 2008~2024년 미국 증시 장기 상승이 대표적입니다.'
+  },
+  {
+    title: '정점(Peak)',
+    desc: '<strong>정점(Peak)</strong> — 성장이 최고조에 달한 시기. 과열 신호가 나타납니다. 리밸런싱을 시작하고 방어주(헬스케어, 유틸리티, 필수소비재) 비중을 늘릴 타이밍입니다.'
+  },
+  {
+    title: '침체기',
+    desc: '<strong>침체기</strong> — 경제 둔화 및 주가 하락. Consumer Defensive(필수소비재), 담배·생활용품 등 방어적 섹터가 상대적 강세. 섣불리 전 자산을 매도하면 회복 반등을 놓칩니다. 현금 유지가 핵심.'
+  }
+];
+
+document.querySelectorAll('.cycle-stage').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.cycle-stage').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    const idx = parseInt(el.dataset.stage);
+    document.getElementById('cycleDetail').innerHTML = cycleData[idx].desc;
+  });
+});
+
+// ── 인플레이션 시뮬레이터 ──
+function fmtKRW(n) {
+  if (n >= 10000) return (n/10000).toFixed(1) + '억원';
+  return n.toLocaleString() + '만원';
+}
+
+function updateInflSim() {
+  const cash = parseInt(document.getElementById('cashSlider').value);
+  const infl = parseFloat(document.getElementById('inflSlider').value);
+  const years = parseInt(document.getElementById('yearSlider').value);
+
+  document.getElementById('cashVal').textContent = fmtKRW(cash);
+  document.getElementById('inflVal').textContent = infl + '%';
+  document.getElementById('yearVal').textContent = years + '년';
+
+  const realValue = cash * Math.pow(1 - infl/100, years);
+  const loss = cash - realValue;
+  const lossPct = (loss/cash*100).toFixed(1);
+
+  document.getElementById('inflResult').innerHTML = `
+    <div class="sim-result-row"><span>보유 현금</span><span class="val">${fmtKRW(cash)}</span></div>
+    <div class="sim-result-row"><span>인플레이션율</span><span class="val">${infl}% / 년</span></div>
+    <div class="sim-result-row"><span>기간</span><span class="val">${years}년</span></div>
+    <div class="sim-result-row"><span>${years}년 후 실질 가치</span><span class="val">${fmtKRW(Math.round(realValue))}</span></div>
+    <div class="sim-result-row"><span>구매력 손실액</span><span class="val" style="color:#dc2626">▼ ${fmtKRW(Math.round(loss))} (${lossPct}%)</span></div>
+  `;
+}
+document.getElementById('cashSlider').addEventListener('input', updateInflSim);
+document.getElementById('inflSlider').addEventListener('input', updateInflSim);
+document.getElementById('yearSlider').addEventListener('input', updateInflSim);
+function resetInflSim() {
+  document.getElementById('cashSlider').value = 1000;
+  document.getElementById('inflSlider').value = 8.5;
+  document.getElementById('yearSlider').value = 5;
+  updateInflSim();
+}
+updateInflSim();
+
+// ── 포트폴리오 시뮬레이터 ──
+function updatePortSim() {
+  const total = parseInt(document.getElementById('totalSlider').value);
+  const cashPct = parseInt(document.getElementById('cashPctSlider').value);
+  const dropPct = parseInt(document.getElementById('dropSlider').value);
+
+  document.getElementById('totalVal').textContent = fmtKRW(total);
+  document.getElementById('cashPctVal').textContent = cashPct + '%';
+  document.getElementById('dropVal').textContent = '-' + dropPct + '%';
+
+  const cashAmt = total * cashPct / 100;
+  const stockAmt = total - cashAmt;
+  const stockAfterDrop = stockAmt * (1 - dropPct/100);
+  const totalAfterDrop = cashAmt + stockAfterDrop;
+
+  // 현금으로 추가 매수
+  const boughtExtra = cashAmt; // 현금 전액 추가 매수 가정
+  const stockBought = boughtExtra / (stockAmt > 0 ? stockAfterDrop/stockAmt : 1); // 비율
+  // 회복 시 (원래 가격으로)
+  const recoveryNoCash = stockAmt; // 현금 없었을 경우
+  const recoveryWithCash = stockAfterDrop + cashAmt; // 현금으로 매수 후 회복 시
+  // 실제 단순 계산: 현금 전액으로 하락한 주식 매수 → 회복 시 그 주식도 원가 회복
+  const additionalStockValue = cashAmt * (1 / (1 - dropPct/100)); // 회복 시 가치
+  const finalWithCash = stockAmt + additionalStockValue;
+  const finalNoCash = stockAmt;
+  const gain = finalWithCash - finalNoCash;
+
+  document.getElementById('portResult').innerHTML = `
+    <div class="sim-result-row"><span>총 자산</span><span class="val">${fmtKRW(total)}</span></div>
+    <div class="sim-result-row"><span>현금 보유액</span><span class="val blue">${fmtKRW(Math.round(cashAmt))}</span></div>
+    <div class="sim-result-row"><span>주식 투자액</span><span class="val">${fmtKRW(Math.round(stockAmt))}</span></div>
+    <div class="sim-result-row"><span>급락(${dropPct}%) 후 주식 가치</span><span class="val" style="color:#dc2626">${fmtKRW(Math.round(stockAfterDrop))}</span></div>
+    <div class="sim-result-row"><span>현금으로 저가 매수 후 회복 시 총자산</span><span class="val" style="color:#059669">${fmtKRW(Math.round(finalWithCash))}</span></div>
+    <div class="sim-result-row"><span>현금 없었을 경우 회복 총자산</span><span class="val">${fmtKRW(Math.round(finalNoCash))}</span></div>
+    <div class="sim-result-row"><span>현금 전략 추가 이익</span><span class="val" style="color:#059669">+${fmtKRW(Math.round(gain))}</span></div>
+  `;
+}
+document.getElementById('totalSlider').addEventListener('input', updatePortSim);
+document.getElementById('cashPctSlider').addEventListener('input', updatePortSim);
+document.getElementById('dropSlider').addEventListener('input', updatePortSim);
+function resetPortSim() {
+  document.getElementById('totalSlider').value = 1000;
+  document.getElementById('cashPctSlider').value = 20;
+  document.getElementById('dropSlider').value = 50;
+  updatePortSim();
+}
+updatePortSim();
+
+// ── 퀴즈 ──
+document.querySelectorAll('.quiz-options').forEach(ul => {
+  const answer = parseInt(ul.dataset.answer);
+  ul.querySelectorAll('li').forEach(li => {
+    li.addEventListener('click', () => {
+      if (ul.dataset.done) return;
+      ul.dataset.done = '1';
+      const idx = parseInt(li.dataset.idx);
+      li.classList.add(idx === answer ? 'correct' : 'wrong');
+      if (idx !== answer) ul.querySelectorAll('li')[answer].classList.add('correct');
+      ul.closest('.quiz-item').querySelector('.quiz-answer').classList.add('show');
+    });
+  });
+});
+
+function checkQ3() {
+  const val = document.getElementById('q3input').value;
+  document.getElementById('q3answer').classList.add('show');
+}
+function checkQ7() {
+  document.getElementById('q7answer').classList.add('show');
+}
+function toggleQ10() {
+  document.getElementById('q10answer').classList.toggle('show');
+}
+
+// ── 차트 ──
+const chartConfigs = {};
+chartConfigs['sectorChart'] = () => {
+  const ctx = document.getElementById('sectorChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['IT', '커뮤니케이션', '헬스케어', '금융', '에너지', '소재', '산업재', '소비재(필수)', '소비재(선택)', '유틸리티', '부동산'],
+      datasets: [{
+        label: '섹터 성과 (예시)',
+        data: [28, 22, 8, 15, 5, 6, 10, 4, 18, 3, 2],
+        backgroundColor: [
+          '#e11d48','#e11d48','#6b7280','#2563eb','#6b7280','#6b7280',
+          '#6b7280','#6b7280','#e11d48','#6b7280','#6b7280'
+        ],
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.y}% (예시)`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10 }, color: '#777' } },
+        y: { ticks: { font: { size: 11 }, callback: v => v + '%' }, beginAtZero: true }
+      }
+    }
+  });
+};
+
+// ── Intersection Observers ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
