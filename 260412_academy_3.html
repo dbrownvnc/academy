@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 40회 — 미국 일반주의 이해</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Serif+KR:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+    --table-bg: #fafafa;
+    --table-header: #e11d48;
+    --border: #e5e5e5;
+    --serif: 'Playfair Display', 'Noto Serif KR', serif;
+    --sans: 'DM Sans', 'Noto Serif KR', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .hero-tag {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 7vw, 40px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero h1 em { color: var(--accent2); font-style: italic; }
+  .hero-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  section { padding: 36px 0 12px; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(20px, 5vw, 26px);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+
+  .lead {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #333;
+    border-left: 3px solid var(--accent);
+    padding-left: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+
+  /* ── KEY CONCEPT BOX ── */
+  .concept-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 8px 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .concept-box .concept-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  /* ── HIGHLIGHT QUOTE ── */
+  .pullquote {
+    background: var(--text);
+    color: #fff;
+    padding: 24px 20px;
+    margin: 28px 0;
+    border-radius: 4px;
+    font-family: var(--serif);
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.6;
+    position: relative;
+  }
+  .pullquote::before {
+    content: '"';
+    font-size: 60px;
+    color: var(--accent);
+    position: absolute;
+    top: -4px; left: 16px;
+    font-family: var(--serif);
+    line-height: 1;
+  }
+  .pullquote p { padding-left: 32px; color: #fff; margin: 0; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    background: var(--table-bg);
+  }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+  /* ── TAG PILLS ── */
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag.gray { background: var(--chart3); }
+  .tag.blue { background: var(--chart4); }
+  .tag.dark { background: var(--text); }
+
+  /* ── CHART ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* ── SIMULATOR CARDS ── */
+  .sim-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    margin: 22px 0;
+  }
+  .sim-card h4 {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-card h4 span.icon {
+    font-size: 18px;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .slider-row label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    min-width: 120px;
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .slider-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 52px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .result-box {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .result-box .r-item { text-align: center; }
+  .result-box .r-label { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .result-box .r-val { font-size: 20px; font-weight: 700; color: var(--accent2); font-family: var(--serif); }
+  .result-box .r-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+  .btn-reset {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 7px 16px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text2);
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── STEP FLOW ── */
+  .flow-steps { margin: 20px 0; }
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .flow-num {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .flow-content { flex: 1; }
+  .flow-content strong { font-weight: 600; display: block; margin-bottom: 3px; }
+  .flow-content span { font-size: 13.5px; color: var(--text2); }
+
+  /* ── SHARE STRUCTURE VIZ ── */
+  .share-viz {
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .share-viz-bar {
+    height: 36px;
+    display: flex;
+    overflow: hidden;
+  }
+  .bar-seg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    transition: flex 0.5s ease;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .share-viz-legend {
+    padding: 14px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--bg2);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── X-DIV TIMELINE ── */
+  .xdiv-timeline {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .xdiv-step {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+    position: relative;
+    padding: 0 4px;
+  }
+  .xdiv-step::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 14px;
+    color: var(--border);
+    font-size: 16px;
+    z-index: 1;
+  }
+  .xdiv-step:last-child::after { display: none; }
+  .xdiv-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .xdiv-label { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+  .xdiv-sub { font-size: 10px; color: var(--text2); line-height: 1.4; }
+
+  /* ── BUYBACK vs DIVIDEND toggle ── */
+  .compare-toggle {
+    display: flex;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .compare-toggle button {
+    flex: 1;
+    padding: 9px 4px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    color: var(--text2);
+    font-family: var(--sans);
+  }
+  .compare-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .compare-panel { display: none; }
+  .compare-panel.active { display: block; }
+
+  /* ── PREFERRED vs COMMON table ── */
+  .pref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .pref-col {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 14px;
+  }
+  .pref-col.accent-col { border-top: 3px solid var(--accent); }
+  .pref-col.dark-col { border-top: 3px solid var(--text); }
+  .pref-col h5 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .pref-col.accent-col h5 { color: var(--accent); }
+  .pref-col.dark-col h5 { color: var(--text2); }
+  .pref-item {
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .pref-item:last-child { border-bottom: none; }
+  .pref-icon { flex-shrink: 0; font-size: 13px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    font-size: 11px;
+    padding: 28px 20px;
+    margin-top: 48px;
+    letter-spacing: 0.5px;
+  }
+  .footer strong { color: rgba(255,255,255,0.7); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">투자아카데미 40회 · 2026.04.12</div>
+    <h1>미국 <em>일반주(Common Stock)</em>의 이해</h1>
+    <div class="hero-meta">
+      <span>📈 주식 기초</span>
+      <span>·</span>
+      <span>배당금 · 자사주 매입 · 우선주</span>
+      <span>·</span>
+      <span>약 40분 강의 요약</span>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="container">
+  <section>
+    <div class="section-label">들어가며</div>
+    <h2>왜 일반주를 알아야 하는가?</h2>
+    <p class="lead">일반주의 특성을 모르면, 주가 변화의 원인을 이해할 수 없고 — 이해 못 하면 무섭고, 무서우면 장기투자가 불가능해진다.</p>
+    <p>미국 주식 투자자조차 모르는 경우가 많다. 이번 40회는 총 3편 시리즈의 첫 번째 편으로, <strong>미국 일반주의 구조, 배당, 자사주 매입, 우선주</strong>를 다룬다.</p>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">3편 시리즈 구성</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <strong>미국 일반주의 이해</strong>
+            <span>Common Stock 구조, 배당금, 자사주 매입, 우선주 (이번 편)</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <strong>투자 리스크란 무엇인가</strong>
+            <span>Systematic Risk vs Unsystematic Risk</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <strong>포트폴리오 자산 운용 방법</strong>
+            <span>심도 있는 자산 배분 전략</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 1: WHAT IS COMMON STOCK -->
+  <section>
+    <div class="section-label">Section 01</div>
+    <h2>일반주(Common Stock)란?</h2>
+
+    <p>영어로 <strong>Common Stock</strong>, 또는 <strong>Equity(지분)</strong>, <strong>Securities(증권)</strong>라고 한다. 증권은 주식을 포함하는 더 광범위한 개념이다.</p>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>용어</th><th>의미</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Common Stock</strong></td><td>일반주 / 보통주</td><td>가장 일반적인 주식 형태</td></tr>
+          <tr><td><strong>Equity</strong></td><td>지분, 자기자본</td><td>회사 소유권의 일부</td></tr>
+          <tr><td><strong>Securities</strong></td><td>증권 (광의)</td><td>주식·채권 등 포함</td></tr>
+          <tr><td><strong>Shareholder</strong></td><td>주주</td><td>1주 보유만으로도 주주</td></tr>
+          <tr><td><strong>Stakeholder</strong></td><td>이해관계자</td><td>직원·고객·투자자 모두 포함</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pullquote">
+      <p>1주라도 엔비디아·테슬라 주식을 가지고 있으면 그 회사의 주주다. 소액이지만 오너십이 생긴다.</p>
+    </div>
+
+    <h3>왜 회사는 주식을 발행하는가?</h3>
+    <p>단순히 "돈 벌려고"가 아니다. 핵심은 <strong>주주(투자자)의 이익을 위해서</strong>다.</p>
+
+    <div class="flow-steps fade-in">
+      <div class="flow-step">
+        <div class="flow-num">①</div>
+        <div class="flow-content">
+          <strong>자본 조달 (Capital Raise)</strong>
+          <span>주식 발행 → 사업 투자 자금 확보</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">②</div>
+        <div class="flow-content">
+          <strong>사업 성장 → 주가 상승</strong>
+          <span>조달된 자금으로 매출·이익 증대 → 주주 이익 실현</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">③</div>
+        <div class="flow-content">
+          <strong>배당금 지급</strong>
+          <span>이익의 일부를 주주에게 현금으로 환원</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">CEO의 핵심 임무</div>
+      <p style="font-size:14px; color: var(--text2);">미국 CEO는 <strong style="color:var(--text)">주가 상승 또는 배당 증대</strong>를 통해 주주 이익을 극대화하는 것이 최우선 과제다. 이를 달성하지 못하면 해고된다. 그래서 CEO 교체 시 주가가 크게 흔들리는 것이다.</p>
+    </div>
+
+    <h3>지분 구조 이해하기</h3>
+    <p>예시: XYZ사가 발행한 전체 주식(Outstanding Shares) 100만 주 중 10만 주 보유 → <strong>지분율 10%</strong></p>
+
+    <!-- INTERACTIVE SHARE STRUCTURE -->
+    <div class="sim-card fade-in">
+      <h4><span class="icon">🏗</span> 주식 구조 시각화</h4>
+      <div class="slider-row">
+        <label>총 승인 주식 수 (만주)</label>
+        <input type="range" id="authSlider" min="100" max="1000" value="1000" step="50">
+        <span class="slider-val" id="authVal">1,000만주</span>
+      </div>
+      <div class="slider-row">
+        <label>유통 주식 (Outstanding, %)</label>
+        <input type="range" id="outSlider" min="10" max="80" value="30" step="5">
+        <span class="slider-val" id="outVal">30%</span>
+      </div>
+      <div class="slider-row">
+        <label>내부자 보유 (Restricted, %)</label>
+        <input type="range" id="resSlider" min="5" max="30" value="10" step="5">
+        <span class="slider-val" id="resVal">10%</span>
+      </div>
+
+      <div class="share-viz">
+        <div class="share-viz-bar" id="shareBar">
+          <div class="bar-seg" id="barFloat" style="background:var(--chart1); flex:20">Float</div>
+          <div class="bar-seg" id="barRestricted" style="background:var(--chart3); flex:10">내부자</div>
+          <div class="bar-seg" id="barTreasury" style="background:var(--chart4); flex:0; min-width:0"></div>
+          <div class="bar-seg" id="barUnissued" style="background:#d1d5db; flex:70; color:#666">미발행</div>
+        </div>
+        <div class="share-viz-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--chart1)"></div> Float (자유거래)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--chart3)"></div> 내부자 보유</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--chart4)"></div> 자사주 (Treasury)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#d1d5db"></div> 미발행</div>
+        </div>
+      </div>
+
+      <div class="result-box" id="shareResult">
+        <div class="r-item"><div class="r-label">Float (자유거래)</div><div class="r-val" id="rFloat">200만</div><div class="r-sub">주</div></div>
+        <div class="r-item"><div class="r-label">내부자 보유</div><div class="r-val" id="rRestricted">100만</div><div class="r-sub">주</div></div>
+      </div>
+      <button class="btn-reset" onclick="resetShareViz()">↺ 초기화</button>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 2: PRICE MOVEMENT -->
+  <section>
+    <div class="section-label">Section 02</div>
+    <h2>주가는 왜 오르고 내리는가?</h2>
+
+    <div class="pref-grid fade-in">
+      <div class="pref-col accent-col">
+        <h5>📈 상승 요인</h5>
+        <div class="pref-item"><span class="pref-icon">①</span>수요 > 공급 (매수 증가)</div>
+        <div class="pref-item"><span class="pref-icon">②</span>기관투자자 매입 확대</div>
+        <div class="pref-item"><span class="pref-icon">③</span>거시경제 지표 호조</div>
+        <div class="pref-item"><span class="pref-icon">④</span>기업 실적 개선</div>
+      </div>
+      <div class="pref-col dark-col">
+        <h5>📉 하락 요인</h5>
+        <div class="pref-item"><span class="pref-icon">①</span>공급 > 수요 (매도 증가)</div>
+        <div class="pref-item"><span class="pref-icon">②</span>기관투자자 이탈</div>
+        <div class="pref-item"><span class="pref-icon">③</span>인플레이션 위험</div>
+        <div class="pref-item"><span class="pref-icon">④</span>거시경제 불확실성</div>
+      </div>
+    </div>
+
+    <p>기관투자자들은 <strong>현재</strong>뿐 아니라 <strong>미래의 수요 변화</strong>를 선반영해 포지션을 조정한다. 지금 수요가 문제없어도 거시경제 지표가 악화될 조짐이 보이면 선제적으로 매도하기 때문에 낙폭이 크게 나타날 수 있다.</p>
+
+    <div class="chart-container fade-in">
+      <canvas id="priceFactorChart" height="230"></canvas>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 3: DIVIDEND -->
+  <section>
+    <div class="section-label">Section 03</div>
+    <h2>배당금(Dividend) 완전 해부</h2>
+
+    <p class="lead">배당금은 "받으면 좋은 것"이 아니라 <strong>회사의 재무 건강성을 읽는 신호</strong>다.</p>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">배당금의 핵심 원칙</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">✔</div>
+          <div class="flow-content"><strong>지급 의무 없음</strong><span>법적 의무 아님. 하지만 지급 중단 시 주가 하락</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">✔</div>
+          <div class="flow-content"><strong>지속적 지급 = 건강한 기업 신호</strong><span>꾸준한 배당 = 비즈니스 안정적으로 이익 창출 중</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">✔</div>
+          <div class="flow-content"><strong>현금 배당 vs 주식 배당</strong><span>현금(Cash Dividend) 권장. 주식(Stock Dividend)은 주가 희석 → 부정적 신호</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>배당금 지급 방식 비교</h3>
+    <div class="compare-toggle">
+      <button class="active" onclick="toggleCompare('cash', this)">💵 현금 배당 (Cash Dividend)</button>
+      <button onclick="toggleCompare('stock', this)">📄 주식 배당 (Stock Dividend)</button>
+    </div>
+    <div id="panelCash" class="compare-panel active">
+      <div class="concept-box">
+        <div class="concept-title">현금 배당</div>
+        <p style="font-size:14px">• 주당 일정 금액을 현금으로 지급 (예: 1주당 $0.25)<br>• 연 4회 분기별 지급이 일반적<br>• 주주에게 직접 현금 유입 → 긍정적 신호<br>• 미국 대부분의 배당주가 이 방식 채택</p>
+      </div>
+    </div>
+    <div id="panelStock" class="compare-panel">
+      <div class="concept-box" style="border-top-color:var(--chart3)">
+        <div class="concept-title" style="color:var(--chart3)">주식 배당 (⚠ 주의 신호)</div>
+        <p style="font-size:14px">• 현금 대신 추가 주식으로 지급 (예: 6% → 60주 추가)<br>• 유통 주식 수 증가 → 주당 가치 <strong>희석(Dilution)</strong><br>• 주가 하락 가능성 높음<br>• 이런 기업은 보유를 재검토해야 할 신호</p>
+      </div>
+    </div>
+
+    <h3>🔴 X-Dividend Day (배당락일) 핵심</h3>
+    <p>배당금을 받으려면 <strong>X-Dividend Day 이전</strong>에 주식을 매수해야 한다. 당일 또는 이후 매수 시 배당금은 이전 보유자에게 귀속된다.</p>
+
+    <div class="xdiv-timeline fade-in">
+      <div class="xdiv-step">
+        <div class="xdiv-dot" style="background:var(--chart4)">📅</div>
+        <div class="xdiv-label">선언일</div>
+        <div class="xdiv-sub">Declaration Date 배당 결정 공시</div>
+      </div>
+      <div class="xdiv-step">
+        <div class="xdiv-dot" style="background:var(--accent)">🏃</div>
+        <div class="xdiv-label">매수 마감</div>
+        <div class="xdiv-sub">X-Day 2~3일 전 이 날까지 매수해야 배당 수령</div>
+      </div>
+      <div class="xdiv-step">
+        <div class="xdiv-dot" style="background:var(--chart2)">✂️</div>
+        <div class="xdiv-label">배당락일</div>
+        <div class="xdiv-sub">X-Dividend Day 이날부터 매수하면 배당 없음</div>
+      </div>
+      <div class="xdiv-step">
+        <div class="xdiv-dot" style="background:var(--chart3)">📝</div>
+        <div class="xdiv-label">기준일</div>
+        <div class="xdiv-sub">Record Date 보유자 명부 확정</div>
+      </div>
+      <div class="xdiv-step">
+        <div class="xdiv-dot" style="background:#10b981">💰</div>
+        <div class="xdiv-label">지급일</div>
+        <div class="xdiv-sub">Payment Date 배당금 입금</div>
+      </div>
+    </div>
+
+    <!-- DIVIDEND CALCULATOR -->
+    <div class="sim-card fade-in">
+      <h4><span class="icon">💹</span> 배당금 계산기</h4>
+
+      <div class="slider-row">
+        <label>보유 주식 수</label>
+        <input type="range" id="sharesSlider" min="100" max="10000" value="1000" step="100">
+        <span class="slider-val" id="sharesVal">1,000주</span>
+      </div>
+      <div class="slider-row">
+        <label>주당 배당금 (연간, $)</label>
+        <input type="range" id="divSlider" min="0.1" max="5" value="1" step="0.1">
+        <span class="slider-val" id="divVal">$1.00</span>
+      </div>
+      <div class="slider-row">
+        <label>주가 ($)</label>
+        <input type="range" id="priceSlider" min="10" max="500" value="100" step="5">
+        <span class="slider-val" id="priceVal">$100</span>
+      </div>
+
+      <div class="result-box">
+        <div class="r-item"><div class="r-label">연간 배당금</div><div class="r-val" id="rAnnual">$1,000</div><div class="r-sub">연간 합계</div></div>
+        <div class="r-item"><div class="r-label">분기 배당금</div><div class="r-val" id="rQuarterly">$250</div><div class="r-sub">분기 수령액</div></div>
+        <div class="r-item"><div class="r-label">배당 수익률</div><div class="r-val" id="rYield">1.0%</div><div class="r-sub">Dividend Yield</div></div>
+        <div class="r-item"><div class="r-label">투자 원금</div><div class="r-val" id="rPrincipal">$100K</div><div class="r-sub">총 보유 가치</div></div>
+      </div>
+
+      <div style="background:#fff3f3; border:1px solid #fca5a5; border-radius:6px; padding:12px 14px; margin-top:12px; font-size:13px; color:#b91c1c;">
+        ⚠ <strong>X-Dividend Day 주의:</strong> 배당 수익률 10% 주식을 $100,000 투자 시, X-Day 이후 매수하면 분기 배당 $2,500을 그냥 날린다!
+      </div>
+      <button class="btn-reset" onclick="resetDivCalc()">↺ 초기화</button>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 4: BUYBACK -->
+  <section>
+    <div class="section-label">Section 04</div>
+    <h2>자사주 매입 (Share Buyback)</h2>
+
+    <p class="lead">자사주 매입은 단순한 주가 부양이 아니다. <strong>경영진이 회사 미래를 자신한다는 강력한 신호</strong>다.</p>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>구분</th><th>현금 배당</th><th>자사주 매입 (Buyback)</th></tr></thead>
+        <tbody>
+          <tr><td>효과</td><td>직접 현금 지급</td><td>주당 가치 상승</td></tr>
+          <tr><td>세금</td><td>배당소득세 발생</td><td>매도 전까지 세금 없음</td></tr>
+          <tr><td>EPS 영향</td><td>변화 없음</td><td>EPS 상승 (주식 수 감소)</td></tr>
+          <tr><td>주가 신호</td><td>안정적 긍정</td><td>강한 자신감 표시</td></tr>
+          <tr><td>대표 사례</td><td>배당주 전반</td><td>애플(Apple)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>자사주 매입을 하는 이유</h3>
+    <div class="concept-box fade-in">
+      <div class="concept-title">3가지 핵심 이유</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content"><strong>경영진의 미래 자신감</strong><span>CEO·CFO가 앞으로 20~30% 실적 성장을 확신할 때 단행</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content"><strong>주가 저평가 해소</strong><span>"현재 우리 주가는 실적 대비 너무 낮다" 판단 시 매입</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content"><strong>EPS 상승 → 주가 상승</strong><span>발행 주식 수 감소 → 주당순이익(EPS) 자동 증가</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPS SIMULATOR -->
+    <div class="sim-card fade-in">
+      <h4><span class="icon">📊</span> 자사주 매입 EPS 시뮬레이터</h4>
+      <div class="slider-row">
+        <label>총 순이익 (백만 $)</label>
+        <input type="range" id="netIncomeSlider" min="100" max="5000" value="1000" step="100">
+        <span class="slider-val" id="netIncomeVal">$1,000M</span>
+      </div>
+      <div class="slider-row">
+        <label>현재 발행 주식 수 (백만주)</label>
+        <input type="range" id="sharesOutSlider" min="100" max="2000" value="500" step="50">
+        <span class="slider-val" id="sharesOutVal">500M주</span>
+      </div>
+      <div class="slider-row">
+        <label>자사주 매입 비율 (%)</label>
+        <input type="range" id="buybackSlider" min="0" max="30" value="10" step="1">
+        <span class="slider-val" id="buybackVal">10%</span>
+      </div>
+
+      <div class="result-box" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="r-item"><div class="r-label">매입 전 EPS</div><div class="r-val" id="epsBeforeVal">$2.00</div><div class="r-sub">주당순이익</div></div>
+        <div class="r-item"><div class="r-label">매입 후 EPS</div><div class="r-val" id="epsAfterVal" style="color:#4ade80">$2.22</div><div class="r-sub">주당순이익</div></div>
+        <div class="r-item"><div class="r-label">EPS 상승률</div><div class="r-val" id="epsGrowthVal" style="color:#4ade80">+11.1%</div><div class="r-sub">개선</div></div>
+      </div>
+
+      <div class="chart-container" style="margin-top:16px; max-height:200px;">
+        <canvas id="epsChart" height="180"></canvas>
+      </div>
+      <button class="btn-reset" onclick="resetEpsCalc()">↺ 초기화</button>
+    </div>
+
+    <h3>자사주 매입 후 처리 방법</h3>
+    <div class="pref-grid fade-in">
+      <div class="pref-col accent-col">
+        <h5>① 주식 소각</h5>
+        <div class="pref-item"><span class="pref-icon">🔥</span>매입한 주식을 완전히 없앰</div>
+        <div class="pref-item"><span class="pref-icon">📉</span>유통 주식 수 영구 감소</div>
+        <div class="pref-item"><span class="pref-icon">💪</span>주당 가치 극대화</div>
+      </div>
+      <div class="pref-col dark-col">
+        <h5>② 자사주 보유 (Treasury Stock)</h5>
+        <div class="pref-item"><span class="pref-icon">🏦</span>나중을 위해 보관</div>
+        <div class="pref-item"><span class="pref-icon">🚫</span>배당금 지급 없음</div>
+        <div class="pref-item"><span class="pref-icon">🚫</span>의결권 없음</div>
+        <div class="pref-item"><span class="pref-icon">📋</span>임직원 주식보상(ESPP) 등에 활용</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 5: SHAREHOLDER RIGHTS -->
+  <section>
+    <div class="section-label">Section 05</div>
+    <h2>주주의 4가지 권리</h2>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>#</th><th>권리</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>의결권 (Voting Right)</strong></td><td>주주총회에서 1주 = 1표. CEO 선임, 주요 의사결정 참여</td></tr>
+          <tr><td>2</td><td><strong>우선청약권 (Pre-emptive Rights)</strong></td><td>신주 발행 시 기존 주주가 지분율 유지를 위해 먼저 살 수 있는 권리</td></tr>
+          <tr><td>3</td><td><strong>자유 매매 (Right to Sell)</strong></td><td>2차 시장(Secondary Market)에서 언제든 자유롭게 매도 가능</td></tr>
+          <tr><td>4</td><td><strong>잔여재산청구권 (Residual Claim)</strong></td><td>파산 시 채권자·우선주 주주 다음 순위로 잔여 자산 청구 가능 (실질적으로 남는 것 거의 없음)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 6: PREFERRED vs COMMON -->
+  <section>
+    <div class="section-label">Section 06</div>
+    <h2>우선주(Preferred Stock) vs 일반주</h2>
+
+    <p>우선주는 채권(Bond)과 주식의 중간 성격이다. 배당금을 이자처럼 고정 지급받는 대신 의결권이 없다.</p>
+
+    <div class="chart-container fade-in">
+      <canvas id="priorityChart" height="230"></canvas>
+    </div>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">파산 시 자산 배분 우선순위</div>
+      <div class="flow-steps">
+        <div class="flow-step"><div class="flow-num" style="background:var(--chart4)">1</div><div class="flow-content"><strong>채권자 / 외상 거래처 (Creditors)</strong><span>가장 먼저 상환받음</span></div></div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--chart3)">2</div><div class="flow-content"><strong>채권(Bond) 보유자</strong><span>두 번째 우선권</span></div></div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent)">3</div><div class="flow-content"><strong>우선주(Preferred Stock) 주주</strong><span>세 번째 순위</span></div></div>
+        <div class="flow-step"><div class="flow-num" style="background:#6b7280">4</div><div class="flow-content"><strong>일반주(Common Stock) 주주</strong><span>마지막 순위 — 실질적으로 거의 남지 않음</span></div></div>
+      </div>
+    </div>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>구분</th><th>일반주 (Common)</th><th>우선주 (Preferred)</th></tr></thead>
+        <tbody>
+          <tr><td>의결권</td><td>✅ 있음</td><td>❌ 없음</td></tr>
+          <tr><td>배당 지급</td><td>이사회 재량</td><td>고정 배당 (이자 성격)</td></tr>
+          <tr><td>파산 시 순위</td><td>최하위 (4위)</td><td>일반주보다 우선 (3위)</td></tr>
+          <tr><td>주가 결정</td><td>수요·공급</td><td>현재 금리 수준 반영</td></tr>
+          <tr><td>전환 가능</td><td>-</td><td>전환우선주(Convertible) 가능</td></tr>
+          <tr><td>누적 배당</td><td>해당 없음</td><td>미지급 배당금 누적 후 일괄 지급</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">전환우선주 (Convertible Preferred Stock)</div>
+      <p style="font-size:14px; color: var(--text2);">일정 기간(예: 5년) 후 정해진 비율로 일반주로 전환 가능. 전환 전까지는 고정 배당 수령. 예: 우선주 10주 → 일반주 20주 전환</p>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 7: ADR -->
+  <section>
+    <div class="section-label">Section 07</div>
+    <h2>해외 기업의 미국 시장 접근: ADR</h2>
+
+    <div class="concept-box fade-in">
+      <div class="concept-title">ADR (American Depository Receipt)</div>
+      <p style="font-size:14px; color: var(--text2); margin-bottom:8px;"><strong style="color:var(--text)">미국예탁증서</strong>: 외국 기업이 미국 주식시장에서 거래될 수 있도록 하는 증서</p>
+      <div class="pref-grid" style="margin:0; gap:8px">
+        <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; font-size:13px;">
+          <strong>ADR</strong><br><span style="color:var(--text2)">미국 시장 (NYSE, NASDAQ) 거래</span>
+        </div>
+        <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; font-size:13px;">
+          <strong>GDR</strong><br><span style="color:var(--text2)">유럽 등 글로벌 시장 거래</span>
+        </div>
+      </div>
+      <p style="font-size:13px; color:var(--text2); margin-top:10px; margin-bottom:0;">삼성, 현대 같은 한국 기업도 ADR을 통해 미국 시장에서 미국 주식처럼 자유롭게 거래 가능. SEC 규정 준수 필요.</p>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- SECTION 8: KEY TAKEAWAYS -->
+  <section>
+    <div class="section-label">핵심 정리</div>
+    <h2>오늘의 핵심 요약</h2>
+
+    <div class="chart-container fade-in">
+      <canvas id="summaryChart" height="250"></canvas>
+    </div>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>개념</th><th>핵심 메시지</th></tr></thead>
+        <tbody>
+          <tr><td><strong>일반주 발행 목적</strong></td><td>주주 이익을 위해 — 대주주 사익이 아님</td></tr>
+          <tr><td><strong>주가 등락</strong></td><td>수요·공급 + 거시경제 지표 + 기관 투자자 움직임</td></tr>
+          <tr><td><strong>X-Dividend Day</strong></td><td>배당받으려면 이 날 이전에 매수해야 함 (이후 매수 시 손해)</td></tr>
+          <tr><td><strong>주식 배당</strong></td><td>주가 희석 신호 → 보유 재검토 필요</td></tr>
+          <tr><td><strong>자사주 매입</strong></td><td>경영진의 미래 자신감 + EPS 상승 효과</td></tr>
+          <tr><td><strong>Treasury Stock</strong></td><td>자사주 매입 후 보관 주식 — 배당·의결권 없음</td></tr>
+          <tr><td><strong>우선주</strong></td><td>의결권 없음. 파산 시 일반주보다 우선. 고정 배당</td></tr>
+          <tr><td><strong>ADR</strong></td><td>외국 기업이 미국 시장에서 거래되는 방식</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pullquote">
+      <p>아는 것이 힘이다 — 배당주를 샀는데 X-Dividend Day 이후에 샀다면, 수십만 원을 그냥 남한테 주고 시작하는 것이다.</p>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+  <!-- KEY TERMS GLOSSARY -->
+  <section>
+    <div class="section-label">용어 사전</div>
+    <h2>주요 영어 용어 정리</h2>
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>영어</th><th>한국어</th><th>한줄 설명</th></tr></thead>
+        <tbody>
+          <tr><td>Common Stock</td><td>일반주/보통주</td><td>가장 일반적인 주식. 의결권 보유</td></tr>
+          <tr><td>Outstanding Shares</td><td>유통 주식 수</td><td>시장에 실제 발행되어 거래 중인 주식</td></tr>
+          <tr><td>Float</td><td>유동주식</td><td>아무 제한 없이 자유 거래 가능한 주식</td></tr>
+          <tr><td>Treasury Stock</td><td>자사주</td><td>기업이 시장에서 매입해 보유 중인 주식</td></tr>
+          <tr><td>Share Buyback</td><td>자사주 매입</td><td>회사가 자기 주식을 시장에서 사들임</td></tr>
+          <tr><td>X-Dividend Day</td><td>배당락일</td><td>이날부터 매수하면 배당금 미수령</td></tr>
+          <tr><td>EPS</td><td>주당순이익</td><td>순이익 ÷ 발행주식 수</td></tr>
+          <tr><td>Preferred Stock</td><td>우선주</td><td>고정 배당, 의결권 없음, 청산 시 우선권</td></tr>
+          <tr><td>Convertible Preferred</td><td>전환우선주</td><td>일정 조건 시 일반주로 전환 가능</td></tr>
+          <tr><td>ADR</td><td>미국예탁증서</td><td>외국 기업이 미국 증시에서 거래되는 방식</td></tr>
+          <tr><td>Dilution</td><td>희석</td><td>주식 수 증가로 주당 가치 감소</td></tr>
+          <tr><td>Par Value</td><td>액면가</td><td>주식에 표시된 명목상 가격 (시가와 다름)</td></tr>
+          <tr><td>Tender Offer</td><td>공개매수</td><td>프리미엄 가격으로 불특정 주주에게 매수 제안</td></tr>
+          <tr><td>ESPP</td><td>직원주식구매제도</td><td>임직원이 자사 주식을 할인 매입하는 제도</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="footer">
+  <strong>투자아카데미 40회</strong> — 미국 일반주의 이해<br>
+  본 문서는 강의 내용을 요약한 것으로, 투자 권유가 아닙니다.
+</div>
+
+<script>
+// ── SHARE VIZ ──
+function updateShareViz() {
+  const auth = parseInt(document.getElementById('authSlider').value);
+  const outPct = parseInt(document.getElementById('outSlider').value);
+  const resPct = parseInt(document.getElementById('resSlider').value);
+
+  document.getElementById('authVal').textContent = auth.toLocaleString() + '만주';
+  document.getElementById('outVal').textContent = outPct + '%';
+  document.getElementById('resVal').textContent = resPct + '%';
+
+  const floatPct = Math.max(0, outPct - resPct);
+  const unissuedPct = 100 - outPct;
+
+  document.getElementById('barFloat').style.flex = floatPct;
+  document.getElementById('barFloat').textContent = floatPct > 5 ? `Float ${floatPct}%` : '';
+  document.getElementById('barRestricted').style.flex = resPct;
+  document.getElementById('barRestricted').textContent = resPct > 5 ? `내부자 ${resPct}%` : '';
+  document.getElementById('barUnissued').style.flex = unissuedPct;
+  document.getElementById('barUnissued').textContent = unissuedPct > 5 ? `미발행 ${unissuedPct}%` : '';
+
+  document.getElementById('rFloat').textContent = Math.round(auth * floatPct / 100).toLocaleString() + '만';
+  document.getElementById('rRestricted').textContent = Math.round(auth * resPct / 100).toLocaleString() + '만';
+}
+function resetShareViz() {
+  document.getElementById('authSlider').value = 1000;
+  document.getElementById('outSlider').value = 30;
+  document.getElementById('resSlider').value = 10;
+  updateShareViz();
+}
+['authSlider','outSlider','resSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateShareViz);
+});
+updateShareViz();
+
+// ── DIVIDEND CALC ──
+function updateDivCalc() {
+  const shares = parseInt(document.getElementById('sharesSlider').value);
+  const div = parseFloat(document.getElementById('divSlider').value);
+  const price = parseInt(document.getElementById('priceSlider').value);
+
+  document.getElementById('sharesVal').textContent = shares.toLocaleString() + '주';
+  document.getElementById('divVal').textContent = '$' + div.toFixed(2);
+  document.getElementById('priceVal').textContent = '$' + price;
+
+  const annual = shares * div;
+  const quarterly = annual / 4;
+  const yieldPct = (div / price * 100).toFixed(1);
+  const principal = shares * price;
+
+  document.getElementById('rAnnual').textContent = '$' + annual.toLocaleString();
+  document.getElementById('rQuarterly').textContent = '$' + quarterly.toLocaleString();
+  document.getElementById('rYield').textContent = yieldPct + '%';
+  document.getElementById('rPrincipal').textContent = '$' + (principal/1000).toFixed(0) + 'K';
+}
+function resetDivCalc() {
+  document.getElementById('sharesSlider').value = 1000;
+  document.getElementById('divSlider').value = 1;
+  document.getElementById('priceSlider').value = 100;
+  updateDivCalc();
+}
+['sharesSlider','divSlider','priceSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateDivCalc);
+});
+updateDivCalc();
+
+// ── EPS CALC ──
+let epsChart;
+function updateEpsCalc() {
+  const netIncome = parseInt(document.getElementById('netIncomeSlider').value);
+  const sharesOut = parseInt(document.getElementById('sharesOutSlider').value);
+  const buybackPct = parseInt(document.getElementById('buybackSlider').value);
+
+  document.getElementById('netIncomeVal').textContent = '$' + netIncome.toLocaleString() + 'M';
+  document.getElementById('sharesOutVal').textContent = sharesOut.toLocaleString() + 'M주';
+  document.getElementById('buybackVal').textContent = buybackPct + '%';
+
+  const epsBefore = netIncome / sharesOut;
+  const newShares = sharesOut * (1 - buybackPct / 100);
+  const epsAfter = netIncome / newShares;
+  const growth = ((epsAfter - epsBefore) / epsBefore * 100);
+
+  document.getElementById('epsBeforeVal').textContent = '$' + epsBefore.toFixed(2);
+  document.getElementById('epsAfterVal').textContent = '$' + epsAfter.toFixed(2);
+  document.getElementById('epsGrowthVal').textContent = '+' + growth.toFixed(1) + '%';
+
+  if (epsChart) {
+    epsChart.data.datasets[0].data = [epsBefore.toFixed(2), epsAfter.toFixed(2)];
+    epsChart.update();
+  }
+}
+function resetEpsCalc() {
+  document.getElementById('netIncomeSlider').value = 1000;
+  document.getElementById('sharesOutSlider').value = 500;
+  document.getElementById('buybackSlider').value = 10;
+  updateEpsCalc();
+}
+['netIncomeSlider','sharesOutSlider','buybackSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateEpsCalc);
+});
+
+// ── TOGGLE COMPARE ──
+function toggleCompare(type, btn) {
+  document.querySelectorAll('.compare-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panelCash').classList.toggle('active', type === 'cash');
+  document.getElementById('panelStock').classList.toggle('active', type === 'stock');
+}
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['priceFactorChart'] = () => {
+  new Chart(document.getElementById('priceFactorChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['수요·공급 (거래량)', '거시경제 지표', '기관투자자 동향', '기업 실적', '기타 이벤트'],
+      datasets: [{
+        data: [30, 25, 25, 15, 5],
+        backgroundColor: ['#e11d48','#1a1a1a','#6b7280','#2563eb','#d1d5db'],
+        borderWidth: 0,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12, boxWidth: 12 } },
+        title: { display: true, text: '주가 변동 요인 분포 (개념적)', font: { size: 13, family: "'DM Sans'" }, padding: { bottom: 12 } }
+      }
+    }
+  });
+};
+
+chartConfigs['epsChart'] = () => {
+  const netIncome = parseInt(document.getElementById('netIncomeSlider').value);
+  const sharesOut = parseInt(document.getElementById('sharesOutSlider').value);
+  const buybackPct = parseInt(document.getElementById('buybackSlider').value);
+  const epsBefore = netIncome / sharesOut;
+  const newShares = sharesOut * (1 - buybackPct / 100);
+  const epsAfter = netIncome / newShares;
+
+  epsChart = new Chart(document.getElementById('epsChart'), {
+    type: 'bar',
+    data: {
+      labels: ['매입 전 EPS', '매입 후 EPS'],
+      datasets: [{
+        data: [epsBefore.toFixed(2), epsAfter.toFixed(2)],
+        backgroundColor: ['#6b7280', '#e11d48'],
+        borderRadius: 6,
+        barThickness: 48
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, title: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+  updateEpsCalc();
+};
+
+chartConfigs['priorityChart'] = () => {
+  new Chart(document.getElementById('priorityChart'), {
+    type: 'bar',
+    data: {
+      labels: ['채권자\n(Creditor)', '채권\n(Bond)', '우선주\n(Preferred)', '일반주\n(Common)'],
+      datasets: [{
+        label: '파산 시 변제 우선순위 (높을수록 우선)',
+        data: [100, 75, 50, 20],
+        backgroundColor: ['#2563eb','#6b7280','#e11d48','#d1d5db'],
+        borderRadius: 6,
+        barThickness: 40
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: '파산 시 자산 배분 우선순위', font: { size: 13 }, padding: { bottom: 10 } }
+      },
+      scales: {
+        x: { max: 120, grid: { color: '#f0f0f0' }, ticks: { display: false } },
+        y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['summaryChart'] = () => {
+  new Chart(document.getElementById('summaryChart'), {
+    type: 'radar',
+    data: {
+      labels: ['장기투자 가능성','주가 예측력','배당 이해','자사주 이해','우선주 이해','리스크 인식'],
+      datasets: [
+        {
+          label: '교육 전',
+          data: [30, 20, 25, 20, 15, 35],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.1)',
+          pointBackgroundColor: '#6b7280',
+          borderWidth: 2,
+          pointRadius: 3
+        },
+        {
+          label: '이번 강의 후',
+          data: [75, 70, 80, 75, 65, 70],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.15)',
+          pointBackgroundColor: '#e11d48',
+          borderWidth: 2,
+          pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12, boxWidth: 12 } },
+        title: { display: true, text: '이번 강의로 달라지는 투자 이해도', font: { size: 13 }, padding: { bottom: 8 } }
+      },
+      scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: '#e5e5e5' }, pointLabels: { font: { size: 11 } } } }
+    }
+  });
+};
+
+// ── INTERSECTION OBSERVERS ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
