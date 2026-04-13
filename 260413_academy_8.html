@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국주식 투자 — 왜 해야 하나</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#ffffff;color:#1a1a1a;font-size:16px;line-height:1.7}
+  .hero{background:#1a1a1a;color:#fff;padding:48px 20px 40px;text-align:center}
+  .hero-tag{display:inline-block;background:#e11d48;color:#fff;font-size:11px;letter-spacing:.08em;padding:4px 12px;border-radius:2px;margin-bottom:16px;text-transform:uppercase}
+  .hero h1{font-size:26px;font-weight:700;line-height:1.3;margin-bottom:12px}
+  .hero p{font-size:14px;color:#aaa;margin-top:8px}
+  .container{max-width:680px;margin:0 auto;padding:0 20px}
+  section{padding:36px 0 12px}
+  .section-label{font-size:11px;color:#e11d48;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  h2{font-size:21px;font-weight:700;line-height:1.35;margin-bottom:14px;color:#1a1a1a}
+  h3{font-size:17px;font-weight:700;margin:20px 0 8px;color:#1a1a1a}
+  p{font-size:15px;color:#1a1a1a;margin-bottom:12px;line-height:1.75}
+  .divider{border:none;border-top:1px solid #e5e5e5;margin:28px 0}
+  .quote-block{border-left:3px solid #e11d48;padding:12px 16px;background:#fafafa;margin:20px 0;font-size:14px;color:#444;font-style:italic;line-height:1.7}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+  .stat-card{background:#fafafa;border:1px solid #e5e5e5;border-radius:8px;padding:16px 14px;text-align:center}
+  .stat-val{font-size:28px;font-weight:800;color:#e11d48;line-height:1}
+  .stat-label{font-size:12px;color:#777;margin-top:6px;line-height:1.4}
+  .fade-in{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .fade-in.visible{opacity:1;transform:translateY(0)}
+  .chart-container{position:relative;max-height:340px;margin:20px 0}
+  .chart-container canvas{opacity:0;transition:opacity .4s ease;max-height:300px}
+  .chart-container.chart-ready canvas{opacity:1}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+  .tag{background:#fafafa;border:1px solid #e5e5e5;border-radius:20px;padding:5px 14px;font-size:13px;color:#444}
+  .tag.red{background:#fff0f3;border-color:#fca5a5;color:#e11d48}
+  .key-msg{background:#1a1a1a;color:#fff;border-radius:10px;padding:20px 18px;margin:24px 0}
+  .key-msg .icon{font-size:22px;margin-bottom:8px}
+  .key-msg p{color:#eee;font-size:14px;margin-bottom:0}
+  .key-msg strong{color:#f43f5e}
+  .sim-box{background:#fafafa;border:1px solid #e5e5e5;border-radius:10px;padding:20px 16px;margin:20px 0}
+  .sim-box label{font-size:13px;color:#555;display:block;margin-bottom:6px}
+  .sim-box input[type=range]{width:100%;accent-color:#e11d48;margin-bottom:4px}
+  .sim-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .sim-val{font-size:13px;font-weight:700;color:#e11d48}
+  .sim-result{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .sim-result-card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:12px;text-align:center}
+  .sim-result-card .rv{font-size:20px;font-weight:800;color:#1a1a1a}
+  .sim-result-card .rl{font-size:11px;color:#777;margin-top:3px}
+  .sim-result-card.highlight .rv{color:#e11d48}
+  .reset-btn{display:block;width:100%;margin-top:14px;padding:10px;background:transparent;border:1px solid #e5e5e5;border-radius:6px;font-size:13px;color:#777;cursor:pointer}
+  .reset-btn:hover{background:#f5f5f5}
+  .insight-list{list-style:none;margin:12px 0}
+  .insight-list li{padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#333;padding-left:20px;position:relative}
+  .insight-list li:before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:8px;height:8px;background:#e11d48;border-radius:50%}
+  .insight-list li:last-child{border-bottom:none}
+  .compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  .compare-table th{background:#e11d48;color:#fff;padding:10px 12px;text-align:left;font-weight:700}
+  .compare-table td{padding:10px 12px;border-bottom:1px solid #e5e5e5;background:#fafafa}
+  .compare-table tr:nth-child(even) td{background:#fff}
+  .footer{background:#1a1a1a;color:#777;text-align:center;padding:28px 20px;font-size:12px;margin-top:40px}
+  @media(max-width:400px){.stat-grid{grid-template-columns:1fr}.sim-result{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">투자 아카데미 5회</div>
+  <h1>임금만으로는<br>부자가 될 수 없다</h1>
+  <p>미국주식 투자를 해야 하는 이유 — 핵심 분석</p>
+</div>
+
+<div class="container">
+
+  <!-- 핵심 지표 -->
+  <section class="fade-in">
+    <div class="section-label">핵심 수치</div>
+    <h2>1990년 이후, 임금과 주가의 격차</h2>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val">852%</div>
+        <div class="stat-label">미국 실질 임금<br>누적 인상률</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">4,116%</div>
+        <div class="stat-label">S&P 500<br>누적 상승률</div>
+      </div>
+    </div>
+    <p>임금이 852% 오르는 동안 주가는 4,116% 상승했습니다. 개별 종목 중에는 10,000% 이상 오른 것도 많습니다. <strong>노동 소득만으로는 자산 상승 속도를 따라잡을 수 없습니다.</strong></p>
+  </section>
+
+  <!-- 임금 vs 주가 차트 -->
+  <div class="chart-container fade-in">
+    <canvas id="chart1" height="230" role="img" aria-label="임금 상승률 852%와 S&P 500 상승률 4116% 비교 막대 차트">임금 852% vs S&P 500 4116%</canvas>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 기업 이익 vs 임금 -->
+  <section class="fade-in">
+    <div class="section-label">구조적 변화</div>
+    <h2>1990년대를 기점으로 뒤집힌 판도</h2>
+    <p>1990년대 이전까지는 GDP 성장률, 개인 임금, 기업 이익이 비슷한 속도로 성장했습니다. 그러나 이후부터 <strong>기업 이익(Corporate Profit)과 주가가 훨씬 빠르게 성장</strong>하며 격차가 벌어졌습니다.</p>
+    <ul class="insight-list">
+      <li>GDP 성장률: 임금보다 느리게 성장</li>
+      <li>개인 임금: GDP 성장률보다도 낮게 증가</li>
+      <li>기업 이익: 2008년 이후 폭발적 상승</li>
+      <li>주가: 기업 이익 이상으로 상승 (특히 빅테크)</li>
+    </ul>
+    <p style="font-size:13px;color:#777">특히 2008년 금융위기 이후 미국의 양적완화(QE)로 달러가 대규모 공급되면서 자산 가격이 급등했습니다.</p>
+  </section>
+
+  <!-- 성장률 비교 차트 -->
+  <div class="chart-container fade-in">
+    <canvas id="chart2" height="230" role="img" aria-label="GDP, 임금, 기업이익, 주가 성장률 비교">성장률 비교 차트</canvas>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 빅맥 가격 비교 -->
+  <section class="fade-in">
+    <div class="section-label">인플레이션 실감</div>
+    <h2>빅맥 가격이 말해주는 것</h2>
+    <p>맥도날드처럼 변동성이 낮고 안전한 기업도 1980년 이후 가격을 인플레이션 이상으로 올렸습니다. 이 차이가 바로 <strong>주주(투자자)와 소비자(비투자자)의 부의 격차</strong>입니다.</p>
+    <div class="quote-block">
+      "최소한 그 안전하고 변동성이 적고 진짜 천천히 움직이는 맥도날드 같은 데 투자하는 게 — 여러분들 월급만 받아가지고는 될 수가 없는 거예요."
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 복리 시뮬레이터 -->
+  <section class="fade-in">
+    <div class="section-label">인터랙티브 시뮬레이터</div>
+    <h2>S&P 500 투자 시뮬레이터</h2>
+    <p>초기 투자금과 월 적립액, 연 수익률, 기간을 조정해보세요. 은행 저축과 비교해드립니다.</p>
+    <div class="sim-box">
+      <div class="sim-row">
+        <label>초기 투자금</label>
+        <span class="sim-val" id="initVal">$10,000</span>
+      </div>
+      <input type="range" id="initInv" min="1000" max="100000" step="1000" value="10000">
+
+      <div class="sim-row" style="margin-top:14px">
+        <label>월 적립액</label>
+        <span class="sim-val" id="monthlyVal">$500</span>
+      </div>
+      <input type="range" id="monthlyInv" min="0" max="3000" step="100" value="500">
+
+      <div class="sim-row" style="margin-top:14px">
+        <label>연 수익률 (S&P 500 역사 평균 ~10%)</label>
+        <span class="sim-val" id="rateVal">10%</span>
+      </div>
+      <input type="range" id="rateInv" min="1" max="20" step="1" value="10">
+
+      <div class="sim-row" style="margin-top:14px">
+        <label>투자 기간 (년)</label>
+        <span class="sim-val" id="yearsVal">20년</span>
+      </div>
+      <input type="range" id="yearsInv" min="1" max="40" step="1" value="20">
+
+      <div class="sim-result">
+        <div class="sim-result-card highlight">
+          <div class="rv" id="stockResult">-</div>
+          <div class="rl">S&P 500 투자 결과</div>
+        </div>
+        <div class="sim-result-card">
+          <div class="rv" id="bankResult">-</div>
+          <div class="rl">은행 저축 결과 (연 2%)</div>
+        </div>
+        <div class="sim-result-card highlight">
+          <div class="rv" id="diffResult">-</div>
+          <div class="rl">투자 시 추가 수익</div>
+        </div>
+        <div class="sim-result-card">
+          <div class="rv" id="totalInput">-</div>
+          <div class="rl">총 납입금액</div>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="resetSim()">↺ 초기값으로 리셋</button>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 한인 커뮤니티 문제 -->
+  <section class="fade-in">
+    <div class="section-label">커뮤니티 현실</div>
+    <h2>미국 한인 사회의 투자 공백</h2>
+    <p>미국에 거주하는 한인 약 130만 명 중 전문 투자 교육을 받을 수 있는 채널이 극히 드뭅니다. 1세대의 투자 회피 습관이 2세, 3세에 그대로 이어지고 있습니다.</p>
+    <table class="compare-table">
+      <thead>
+        <tr><th>항목</th><th>한인 커뮤니티</th><th>미국 메인스트림</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>주요 자산 구성</td><td>현금·보험·부동산</td><td>주식·ETF·부동산</td></tr>
+        <tr><td>은퇴 계획</td><td>저축 중심</td><td>401(k)·IRA 적극 활용</td></tr>
+        <tr><td>투자 교육</td><td>교회·커뮤니티 부재</td><td>학교·직장 기본 교육</td></tr>
+        <tr><td>전문 자문</td><td>보험·부동산 업자 위주</td><td>FA·투자 플래너 접근 가능</td></tr>
+      </tbody>
+    </table>
+    <div class="quote-block">
+      "재산이 100이면 보험(Annuity)은 10을 넘으면 안 되는데, 보니까 50%가 넘어요."
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 한국 vs 미국 주가 비교 -->
+  <section class="fade-in">
+    <div class="section-label">시장 비교</div>
+    <h2>코스피 vs S&P 500, 10년 성적표</h2>
+    <p>원화 기반의 한국 주식시장은 달러 대비 원화 가치 하락, 낮은 성장 산업 비중 등으로 S&P 500 대비 현저히 낮은 성과를 보였습니다.</p>
+    <div class="chart-container fade-in">
+      <canvas id="chart3" height="230" role="img" aria-label="코스피와 S&P 500 10년 성과 비교">코스피 vs S&P 500 비교</canvas>
+    </div>
+    <p style="font-size:13px;color:#777;margin-top:8px">※ 위 수치는 강의 내용 기반 개략적 추이 비교입니다. 실제 수치와 다를 수 있습니다.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 핵심 메시지 -->
+  <section class="fade-in">
+    <div class="section-label">결론</div>
+    <h2>강사가 전하는 3가지 메시지</h2>
+    <div class="key-msg">
+      <div class="icon">01</div>
+      <p><strong>임금만으로 부자가 되는 시대는 끝났다.</strong> 특히 20~40대 한국인이라면, 임금 저축만으로는 실질 구매력을 지킬 수 없습니다.</p>
+    </div>
+    <div class="key-msg">
+      <div class="icon">02</div>
+      <p><strong>미국 주식 투자는 선택이 아니다.</strong> 전기차, AI, 소셜 네트워크 등 글로벌 핵심 기술과 자본이 미국에 집중되어 있습니다.</p>
+    </div>
+    <div class="key-msg">
+      <div class="icon">03</div>
+      <p><strong>계몽이 필요하다.</strong> 투자 자체가 목적이 아니라, 올바른 재무 계획(Financial Planning)을 세우는 것이 먼저입니다.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 태그 -->
+  <section class="fade-in" style="padding-bottom:28px">
+    <div class="tag-row">
+      <span class="tag red">#미국주식</span>
+      <span class="tag red">#S&P500</span>
+      <span class="tag">#임금격차</span>
+      <span class="tag">#복리투자</span>
+      <span class="tag">#재무계획</span>
+      <span class="tag">#양적완화QE</span>
+      <span class="tag">#한인투자</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  투자 아카데미 5회 강의 내용 요약 분석 | 이 자료는 투자 권유가 아닌 교육 목적입니다.
+</div>
+
+<script>
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['chart1'] = () => {
+  new Chart(document.getElementById('chart1'), {
+    type: 'bar',
+    data: {
+      labels: ['미국 실질 임금', 'S&P 500'],
+      datasets: [{
+        label: '누적 상승률 (%)',
+        data: [852, 4116],
+        backgroundColor: ['#6b7280', '#e11d48'],
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString() + '%' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => v.toLocaleString() + '%' }, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart2'] = () => {
+  new Chart(document.getElementById('chart2'), {
+    type: 'bar',
+    data: {
+      labels: ['GDP 성장률', '개인 임금', '기업 이익', '주가(S&P)'],
+      datasets: [{
+        label: '상대 성장 배수 (1990=1 기준)',
+        data: [2.8, 2.1, 6.5, 9.2],
+        backgroundColor: ['#6b7280', '#2563eb', '#1a1a1a', '#e11d48'],
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + '배' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '배' }, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart3'] = () => {
+  const labels = ['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+  new Chart(document.getElementById('chart3'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'S&P 500',
+          data: [100, 100, 112, 137, 130, 172, 204, 263, 215, 272, 320],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.07)',
+          fill: true, tension: 0.3, pointRadius: 3,
+        },
+        {
+          label: '코스피',
+          data: [100, 93, 99, 122, 101, 108, 121, 145, 104, 112, 109],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.05)',
+          fill: true, tension: 0.3, pointRadius: 3,
+          borderDash: [5, 4],
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'top', labels: { font: { size: 12 }, boxWidth: 14 } },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y } }
+      },
+      scales: {
+        y: { ticks: { callback: v => v }, grid: { color: '#f0f0f0' }, min: 80 },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+function calcSim() {
+  const init = parseInt(document.getElementById('initInv').value);
+  const monthly = parseInt(document.getElementById('monthlyInv').value);
+  const rate = parseInt(document.getElementById('rateInv').value) / 100;
+  const years = parseInt(document.getElementById('yearsInv').value);
+
+  document.getElementById('initVal').textContent = '$' + init.toLocaleString();
+  document.getElementById('monthlyVal').textContent = '$' + monthly.toLocaleString();
+  document.getElementById('rateVal').textContent = parseInt(document.getElementById('rateInv').value) + '%';
+  document.getElementById('yearsVal').textContent = years + '년';
+
+  const months = years * 12;
+  const mr = rate / 12;
+  const bankRate = 0.02 / 12;
+
+  let stockTotal = init;
+  let bankTotal = init;
+  for (let i = 0; i < months; i++) {
+    stockTotal = stockTotal * (1 + mr) + monthly;
+    bankTotal = bankTotal * (1 + bankRate) + monthly;
+  }
+  const totalInput = init + monthly * months;
+
+  document.getElementById('stockResult').textContent = '$' + Math.round(stockTotal).toLocaleString();
+  document.getElementById('bankResult').textContent = '$' + Math.round(bankTotal).toLocaleString();
+  document.getElementById('diffResult').textContent = '+$' + Math.round(stockTotal - bankTotal).toLocaleString();
+  document.getElementById('totalInput').textContent = '$' + Math.round(totalInput).toLocaleString();
+}
+
+function resetSim() {
+  document.getElementById('initInv').value = 10000;
+  document.getElementById('monthlyInv').value = 500;
+  document.getElementById('rateInv').value = 10;
+  document.getElementById('yearsInv').value = 20;
+  calcSim();
+}
+
+['initInv','monthlyInv','rateInv','yearsInv'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calcSim);
+});
+calcSim();
+</script>
+</body>
+</html>

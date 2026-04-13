@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 미국주식 투자 아카데미 5회</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#ffffff;color:#1a1a1a;font-size:15px;line-height:1.75}
+  .hero{background:#1a1a1a;color:#fff;padding:40px 20px;text-align:center}
+  .hero-tag{display:inline-block;background:#e11d48;color:#fff;font-size:11px;letter-spacing:.08em;padding:4px 12px;border-radius:2px;margin-bottom:14px;text-transform:uppercase}
+  .hero h1{font-size:22px;font-weight:700}
+  .hero p{font-size:13px;color:#aaa;margin-top:8px}
+  .container{max-width:680px;margin:0 auto;padding:0 20px}
+  .section-header{background:#fafafa;border-left:4px solid #e11d48;padding:14px 16px;margin:32px 0 20px;border-radius:0 6px 6px 0}
+  .section-header h2{font-size:16px;font-weight:700;color:#1a1a1a}
+  .section-header p{font-size:12px;color:#777;margin-top:2px}
+  .q-card{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:20px 18px;margin:14px 0}
+  .q-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:#e11d48;color:#fff;font-size:12px;font-weight:700;border-radius:50%;margin-bottom:10px}
+  .q-type{font-size:11px;color:#777;margin-left:8px;vertical-align:middle}
+  .q-diff{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+  .diff-easy{background:#e8f5e9;color:#2e7d32}
+  .diff-mid{background:#fff3e0;color:#e65100}
+  .diff-hard{background:#fce4ec;color:#c62828}
+  .q-text{font-size:15px;font-weight:600;margin-bottom:12px;line-height:1.5}
+  .q-options{list-style:none}
+  .q-options li{padding:8px 12px;border:1px solid #f0f0f0;border-radius:6px;margin-bottom:6px;font-size:14px;cursor:pointer;transition:background .15s}
+  .q-options li:hover{background:#fafafa}
+  .q-options li.selected{background:#fff0f3;border-color:#f43f5e;color:#e11d48;font-weight:600}
+  .q-options li.correct{background:#e8f5e9;border-color:#4caf50;color:#2e7d32;font-weight:600}
+  .q-options li.wrong{background:#fce4ec;border-color:#ef9a9a;color:#c62828}
+  .q-input{width:100%;border:1px solid #e5e5e5;border-radius:6px;padding:10px 12px;font-size:14px;font-family:inherit;margin-top:4px}
+  .q-input:focus{outline:none;border-color:#e11d48}
+  .check-btn{display:inline-block;padding:9px 20px;background:#e11d48;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;margin-top:10px}
+  .check-btn:hover{background:#c81040}
+  .feedback{margin-top:12px;padding:12px 14px;border-radius:6px;font-size:13px;display:none}
+  .feedback.correct{background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7}
+  .feedback.wrong{background:#fce4ec;color:#b71c1c;border:1px solid #f48fb1}
+  .divider{border:none;border-top:1px solid #f0f0f0;margin:32px 0}
+  .answer-section{background:#1a1a1a;color:#eee;border-radius:10px;padding:20px 18px;margin:14px 0}
+  .answer-section .a-num{color:#e11d48;font-weight:700}
+  .answer-section .a-answer{color:#f43f5e;font-size:16px;font-weight:700;margin:4px 0}
+  .answer-section .a-explain{font-size:13px;color:#ccc;line-height:1.65}
+  .score-box{background:#fafafa;border:2px solid #e11d48;border-radius:10px;padding:20px;text-align:center;margin:28px 0}
+  .score-box .score-val{font-size:36px;font-weight:800;color:#e11d48}
+  .score-box p{font-size:14px;color:#777;margin-top:4px}
+  .submit-all-btn{display:block;width:100%;padding:14px;background:#e11d48;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin:20px 0}
+  .submit-all-btn:hover{background:#c81040}
+  .footer{background:#1a1a1a;color:#777;text-align:center;padding:24px 20px;font-size:12px;margin-top:40px}
+  .ox-row{display:flex;gap:10px;margin-top:8px}
+  .ox-btn{flex:1;padding:12px;border:2px solid #e5e5e5;border-radius:8px;background:#fff;font-size:18px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+  .ox-btn:hover{border-color:#e11d48}
+  .ox-btn.selected-O{background:#e8f5e9;border-color:#4caf50;color:#2e7d32}
+  .ox-btn.selected-X{background:#fce4ec;border-color:#ef9a9a;color:#c62828}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">시험문제 + 정답·해설</div>
+  <h1>미국주식 투자 아카데미 5회<br>이해도 확인 문제</h1>
+  <p>총 10문항 · 객관식 / 단답형 / OX 혼합</p>
+</div>
+
+<div class="container">
+
+  <div class="section-header">
+    <h2>📝 문제 풀기</h2>
+    <p>각 문제를 풀고 확인 버튼을 누르면 즉시 피드백이 제공됩니다.</p>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card">
+    <div><span class="q-num">1</span><span class="q-type">객관식</span><span class="q-diff diff-easy">쉬움</span></div>
+    <div class="q-text">강의에서 언급된 미국 실질 임금의 누적 인상률은 얼마입니까?</div>
+    <ul class="q-options" id="opts1">
+      <li onclick="selectOpt(1, this, 0)">① 452%</li>
+      <li onclick="selectOpt(1, this, 1)">② 652%</li>
+      <li onclick="selectOpt(1, this, 2)">③ 852%</li>
+      <li onclick="selectOpt(1, this, 3)">④ 1,052%</li>
+    </ul>
+    <button class="check-btn" onclick="checkMC(1, 2)">확인</button>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div><span class="q-num">2</span><span class="q-type">객관식</span><span class="q-diff diff-easy">쉬움</span></div>
+    <div class="q-text">강의에서 제시된 S&P 500의 누적 상승률은 약 얼마입니까?</div>
+    <ul class="q-options" id="opts2">
+      <li onclick="selectOpt(2, this, 0)">① 1,200%</li>
+      <li onclick="selectOpt(2, this, 1)">② 2,500%</li>
+      <li onclick="selectOpt(2, this, 2)">③ 4,116%</li>
+      <li onclick="selectOpt(2, this, 3)">④ 6,000%</li>
+    </ul>
+    <button class="check-btn" onclick="checkMC(2, 2)">확인</button>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div><span class="q-num">3</span><span class="q-type">OX</span><span class="q-diff diff-easy">쉬움</span></div>
+    <div class="q-text">강의에서는 "임금만으로 부자가 되는 시대는 끝났다"고 명확히 주장한다.</div>
+    <div class="ox-row">
+      <button class="ox-btn" id="ox3O" onclick="selectOX(3,'O')">O</button>
+      <button class="ox-btn" id="ox3X" onclick="selectOX(3,'X')">X</button>
+    </div>
+    <button class="check-btn" onclick="checkOX(3,'O')">확인</button>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div><span class="q-num">4</span><span class="q-type">객관식</span><span class="q-diff diff-mid">보통</span></div>
+    <div class="q-text">강의에서 1990년대를 기점으로 역전이 발생한 주된 원인과 가장 거리가 먼 것은?</div>
+    <ul class="q-options" id="opts4">
+      <li onclick="selectOpt(4, this, 0)">① 4차 산업혁명과 빅테크 기업의 급성장</li>
+      <li onclick="selectOpt(4, this, 1)">② 기업의 사회적·경제적 영향력 확대</li>
+      <li onclick="selectOpt(4, this, 2)">③ 한국 정부의 부동산 규제 정책 강화</li>
+      <li onclick="selectOpt(4, this, 3)">④ 양적완화(QE)로 인한 자산 가격 상승</li>
+    </ul>
+    <button class="check-btn" onclick="checkMC(4, 2)">확인</button>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div><span class="q-num">5</span><span class="q-type">단답형</span><span class="q-diff diff-mid">보통</span></div>
+    <div class="q-text">강의에서 집값 상승의 주된 원인으로 언급된 미국 경제 정책의 영어 약어를 쓰시오.</div>
+    <input class="q-input" id="inp5" type="text" placeholder="예: ABC">
+    <button class="check-btn" onclick="checkShort(5, ['QE','qe','양적완화'])">확인</button>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card">
+    <div><span class="q-num">6</span><span class="q-type">객관식</span><span class="q-diff diff-mid">보통</span></div>
+    <div class="q-text">강의에서 한인 커뮤니티의 가장 큰 문제점으로 지적한 것은?</div>
+    <ul class="q-options" id="opts6">
+      <li onclick="selectOpt(6, this, 0)">① 수입이 너무 적어 투자 여력이 없다</li>
+      <li onclick="selectOpt(6, this, 1)">② 투자 전문가와 교육 채널의 부재로 투자 습관이 형성되지 않았다</li>
+      <li onclick="selectOpt(6, this, 2)">③ 이민 비자 문제로 금융 계좌 개설이 어렵다</li>
+      <li onclick="selectOpt(6, this, 3)">④ 한국 주식에만 투자해서 손실이 크다</li>
+    </ul>
+    <button class="check-btn" onclick="checkMC(6, 1)">확인</button>
+    <div class="feedback" id="fb6"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card">
+    <div><span class="q-num">7</span><span class="q-type">OX</span><span class="q-diff diff-mid">보통</span></div>
+    <div class="q-text">강의에 따르면, 미국의 S&P 500 지수는 지난 10년간 한국 코스피 지수보다 성과가 낮았다.</div>
+    <div class="ox-row">
+      <button class="ox-btn" id="ox7O" onclick="selectOX(7,'O')">O</button>
+      <button class="ox-btn" id="ox7X" onclick="selectOX(7,'X')">X</button>
+    </div>
+    <button class="check-btn" onclick="checkOX(7,'X')">확인</button>
+    <div class="feedback" id="fb7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card">
+    <div><span class="q-num">8</span><span class="q-type">단답형</span><span class="q-diff diff-mid">보통</span></div>
+    <div class="q-text">강의에서 언급한 재산 중 보험(Annuity)이 차지해야 할 적정 비율의 상한선은 전체 재산의 몇 %라고 했습니까?</div>
+    <input class="q-input" id="inp8" type="text" placeholder="숫자만 입력">
+    <button class="check-btn" onclick="checkShort(8, ['10','10%'])">확인</button>
+    <div class="feedback" id="fb8"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card">
+    <div><span class="q-num">9</span><span class="q-type">객관식</span><span class="q-diff diff-hard">어려움</span></div>
+    <div class="q-text">강의에서 "달러가 많이 풀렸는데도 달러 가치가 상승했다"는 상황이 한국 개인에게 미치는 실질적 영향으로 가장 적절한 것은?</div>
+    <ul class="q-options" id="opts9">
+      <li onclick="selectOpt(9, this, 0)">① 원화 가치가 상대적으로 상승해 수입품 가격이 내려간다</li>
+      <li onclick="selectOpt(9, this, 1)">② 원화로 받는 월급의 달러 기준 실질 구매력이 낮아진다</li>
+      <li onclick="selectOpt(9, this, 2)">③ 한국 주식시장이 달러 강세 덕분에 함께 상승한다</li>
+      <li onclick="selectOpt(9, this, 3)">④ QE는 한국 경제와 무관하게 미국 내부 효과만 있다</li>
+    </ul>
+    <button class="check-btn" onclick="checkMC(9, 1)">확인</button>
+    <div class="feedback" id="fb9"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card">
+    <div><span class="q-num">10</span><span class="q-type">단답형</span><span class="q-diff diff-hard">어려움</span></div>
+    <div class="q-text">강의에서 한국 대졸 사회초년생이 최소한 받아야 한다고 제시한 연봉 수준은 얼마입니까? (단위: 만원)</div>
+    <input class="q-input" id="inp10" type="text" placeholder="예: 0000만원">
+    <button class="check-btn" onclick="checkShort(10, ['6000','6000만원','6000만','6천만원','6천만','6,000'])">확인</button>
+    <div class="feedback" id="fb10"></div>
+  </div>
+
+  <button class="submit-all-btn" onclick="submitAll()">📊 전체 채점하기</button>
+  <div class="score-box" id="scoreBox" style="display:none">
+    <div class="score-val" id="scoreVal">0 / 10</div>
+    <p id="scoreMsg">결과를 확인하세요</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header">
+    <h2>📋 정답 및 해설</h2>
+    <p>문제를 먼저 풀어보신 후 확인하세요.</p>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q1. 객관식 [쉬움]</div>
+    <div class="a-answer">정답: ③ 852%</div>
+    <div class="a-explain">강의에서 미국 실질 임금은 852% 인상된 반면, S&P 500은 4,116% 상승했다고 명시적으로 비교 제시했습니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q2. 객관식 [쉬움]</div>
+    <div class="a-answer">정답: ③ 4,116%</div>
+    <div class="a-explain">강의 첫 부분에서 "S&P 500으로 보면 스탁이 4,116%나 올라간 것"이라고 직접 언급했습니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q3. OX [쉬움]</div>
+    <div class="a-answer">정답: O</div>
+    <div class="a-explain">"임금만 가지고 여러분들이 잘 사는 시대는 끝났다"는 표현이 강의 전반에 걸쳐 반복되며, 결론으로 명시됩니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q4. 객관식 [보통]</div>
+    <div class="a-answer">정답: ③ 한국 정부의 부동산 규제 정책 강화</div>
+    <div class="a-explain">강의는 1990년대 역전의 원인으로 4차 산업혁명, 빅테크 성장, QE, 기업의 글로벌 영향력 확대를 꼽습니다. 한국의 부동산 규제는 별도로 언급되지 않았습니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q5. 단답형 [보통]</div>
+    <div class="a-answer">정답: QE (Quantitative Easing, 양적완화)</div>
+    <div class="a-explain">강의는 "QE로 돈을 시중에 막 푼 것"이 집값과 자산 가격 폭등의 핵심 원인이라고 설명합니다. QE는 중앙은행이 국채 등을 매입해 시중 유동성을 공급하는 정책입니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q6. 객관식 [보통]</div>
+    <div class="a-answer">정답: ② 투자 전문가와 교육 채널의 부재</div>
+    <div class="a-explain">강의는 130만 한인 중 투자 전문 조언자가 극히 드물고, 1세대의 저축·보험 중심 습관이 2·3세에 그대로 전달되는 구조적 문제를 강조합니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q7. OX [보통]</div>
+    <div class="a-answer">정답: X</div>
+    <div class="a-explain">강의는 반대로, 코스피가 S&P 500에 비해 "안 올라왔다"고 명시합니다. S&P 500이 훨씬 뛰어난 성과를 보였다는 것이 핵심 메시지입니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q8. 단답형 [보통]</div>
+    <div class="a-answer">정답: 10% (10)</div>
+    <div class="a-explain">"재산이 100이면 Annuity는 10만 넘으면 안 된다"고 직접 언급했습니다. 그러나 현실에서 일부 한인들은 재산의 50% 이상을 보험에 넣고 있다는 문제를 지적했습니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q9. 객관식 [어려움]</div>
+    <div class="a-answer">정답: ② 원화로 받는 월급의 달러 기준 실질 구매력이 낮아진다</div>
+    <div class="a-explain">강의는 "달러 가치가 상승하다 보니 원화는 현금 실질 가치가 떨어질 수밖에 없다"고 설명합니다. 원화 월급을 달러로 환산하면 구매력이 줄어드는 구조입니다.</div>
+  </div>
+
+  <div class="answer-section">
+    <div class="a-num">Q10. 단답형 [어려움]</div>
+    <div class="a-answer">정답: 6,000만원 (6천만 원)</div>
+    <div class="a-explain">강의에서 "대학을 나와서 첫 번째 직장이 6천만 원, 8천만 원, 1억은 돼야 한다"고 언급했습니다. 이는 한국의 현재 1인당 GDP(3만 달러 이상) 수준에 맞춰 실질 구매력을 유지하려면 필요한 수준으로 제시됐습니다.</div>
+  </div>
+
+  <div style="height:32px"></div>
+</div>
+
+<div class="footer">
+  투자 아카데미 5회 강의 내용 기반 시험문제 | 교육 목적용
+</div>
+
+<script>
+const userAnswers = {};
+const oxAnswers = {};
+
+function selectOpt(qn, el, idx) {
+  document.querySelectorAll('#opts' + qn + ' li').forEach(li => li.classList.remove('selected'));
+  el.classList.add('selected');
+  userAnswers[qn] = idx;
+}
+
+function selectOX(qn, val) {
+  document.getElementById('ox' + qn + 'O').classList.remove('selected-O');
+  document.getElementById('ox' + qn + 'X').classList.remove('selected-X');
+  document.getElementById('ox' + qn + val).classList.add('selected-' + val);
+  oxAnswers[qn] = val;
+}
+
+function showFeedback(id, correct, msg) {
+  const el = document.getElementById('fb' + id);
+  el.style.display = 'block';
+  el.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+  el.textContent = (correct ? '✅ 정답입니다! ' : '❌ 오답입니다. ') + msg;
+}
+
+function checkMC(qn, correctIdx) {
+  if (userAnswers[qn] === undefined) { alert('선택지를 골라주세요.'); return; }
+  const opts = document.querySelectorAll('#opts' + qn + ' li');
+  opts.forEach((li, i) => {
+    li.classList.remove('selected','correct','wrong');
+    if (i === correctIdx) li.classList.add('correct');
+    else if (i === userAnswers[qn]) li.classList.add('wrong');
+  });
+  const correct = userAnswers[qn] === correctIdx;
+  showFeedback(qn, correct, '정답을 확인하세요.');
+  userAnswers[qn + '_checked'] = correct;
+}
+
+function checkOX(qn, correctVal) {
+  if (!oxAnswers[qn]) { alert('O 또는 X를 선택해주세요.'); return; }
+  const correct = oxAnswers[qn] === correctVal;
+  showFeedback(qn, correct, '정답: ' + correctVal);
+  userAnswers[qn + '_checked'] = correct;
+}
+
+function checkShort(qn, acceptables) {
+  const val = (document.getElementById('inp' + qn).value || '').trim();
+  if (!val) { alert('답을 입력해주세요.'); return; }
+  const correct = acceptables.some(a => val.toLowerCase().replace(/\s/g,'') === a.toLowerCase().replace(/\s/g,''));
+  showFeedback(qn, correct, '정답: ' + acceptables[0]);
+  userAnswers[qn + '_checked'] = correct;
+}
+
+function submitAll() {
+  let score = 0;
+  [1,2,3,4,5,6,7,8,9,10].forEach(q => {
+    if (userAnswers[q + '_checked']) score++;
+  });
+  const box = document.getElementById('scoreBox');
+  box.style.display = 'block';
+  document.getElementById('scoreVal').textContent = score + ' / 10';
+  const msgs = ['계속 도전하세요! 🔥','절반 왔어요! 더 파이팅 💪','좋은 성적이에요! 👏','거의 만점! 대단해요 🌟','완벽합니다! 100점! 🏆'];
+  document.getElementById('scoreMsg').textContent = msgs[Math.floor(score / 2.5)];
+  box.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
