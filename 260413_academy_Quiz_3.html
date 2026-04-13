@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 아카데미 5회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --c4: #2563eb;
+    --green: #16a34a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.7; }
+
+  .mag-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 32px 20px 24px;
+  }
+  .issue-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; opacity:0.8; margin-bottom:8px; }
+  .mag-header h1 { font-family:'Noto Serif KR',serif; font-size:22px; font-weight:900; line-height:1.35; }
+
+  .container { max-width:680px; margin:0 auto; padding:0 16px; }
+  section { padding:28px 0 0; }
+
+  .tab-bar {
+    display:flex;
+    gap:0;
+    border-bottom:2px solid var(--accent);
+    margin-bottom:24px;
+    position:sticky;
+    top:0;
+    background:#fff;
+    z-index:100;
+    padding-top:10px;
+  }
+  .tab-btn {
+    flex:1;
+    padding:10px 4px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    background:transparent;
+    color:var(--text2);
+    font-family:'Noto Sans KR',sans-serif;
+    border-bottom:3px solid transparent;
+    margin-bottom:-2px;
+    transition:color 0.2s, border-color 0.2s;
+  }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* QUESTION CARDS */
+  .q-card {
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .q-header {
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg2);
+    border-bottom:1px solid var(--border);
+  }
+  .q-num {
+    background:var(--accent);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:2px 10px;
+    border-radius:20px;
+    flex-shrink:0;
+  }
+  .q-type { font-size:11px; color:var(--text2); }
+  .q-diff { font-size:11px; font-weight:700; margin-left:auto; }
+  .q-diff.easy { color:var(--green); }
+  .q-diff.mid { color:var(--c4); }
+  .q-diff.hard { color:var(--accent); }
+  .q-body { padding:14px 16px; }
+  .q-text { font-weight:500; font-size:14px; margin-bottom:10px; }
+  .q-options { list-style:none; }
+  .q-options li {
+    padding:7px 12px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    margin-bottom:6px;
+    font-size:13px;
+    cursor:pointer;
+    transition:background 0.15s, border-color 0.15s;
+  }
+  .q-options li:hover { background:#fff0f3; border-color:var(--accent2); }
+  .q-options li.selected { background:#fff0f3; border-color:var(--accent); font-weight:700; }
+  .q-options li.correct { background:#f0fdf4; border-color:var(--green); color:var(--green); font-weight:700; }
+  .q-options li.wrong { background:#fff1f2; border-color:var(--accent); color:var(--accent); }
+
+  .ox-row { display:flex; gap:12px; margin-top:6px; }
+  .ox-btn {
+    flex:1;
+    padding:12px;
+    font-size:22px;
+    font-weight:900;
+    border:2px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    background:#fff;
+    transition:all 0.15s;
+    font-family:'Noto Serif KR',serif;
+  }
+  .ox-btn:hover { border-color:var(--accent); background:#fff0f3; }
+  .ox-btn.selected { border-color:var(--accent); background:var(--accent); color:#fff; }
+  .ox-btn.correct { border-color:var(--green); background:#f0fdf4; color:var(--green); }
+  .ox-btn.wrong { border-color:var(--accent); background:#fff1f2; color:var(--accent); }
+
+  .short-input-row { display:flex; gap:8px; margin-top:8px; }
+  .short-input {
+    flex:1;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    font-size:13px;
+    font-family:'Noto Sans KR',sans-serif;
+    outline:none;
+  }
+  .short-input:focus { border-color:var(--accent); }
+  .check-btn {
+    padding:10px 16px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif;
+    white-space:nowrap;
+  }
+  .check-btn:hover { background:var(--accent2); }
+
+  .q-feedback {
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:6px;
+    font-size:13px;
+    display:none;
+  }
+  .q-feedback.show { display:block; }
+  .q-feedback.ok { background:#f0fdf4; color:var(--green); border:1px solid #bbf7d0; }
+  .q-feedback.no { background:#fff1f2; color:var(--accent); border:1px solid #fecdd3; }
+
+  /* ANSWER SECTION */
+  .ans-card {
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .ans-header {
+    background:var(--accent);
+    color:#fff;
+    padding:10px 16px;
+    font-size:13px;
+    font-weight:700;
+    display:flex;
+    justify-content:space-between;
+  }
+  .ans-body { padding:14px 16px; font-size:13px; line-height:1.75; }
+  .ans-body .correct-mark { color:var(--accent); font-weight:700; font-size:14px; }
+  .ans-body .explain { color:var(--text2); margin-top:6px; }
+
+  /* SCORE */
+  .score-bar {
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .score-num { font-size:40px; font-weight:900; font-family:'Noto Serif KR',serif; color:var(--accent); }
+  .score-label { font-size:13px; color:var(--text2); margin-top:4px; }
+  .reset-all-btn {
+    width:100%;
+    padding:12px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif;
+    margin-top:14px;
+  }
+  .reset-all-btn:hover { background:var(--accent2); }
+
+  footer { text-align:center; padding:28px 20px; font-size:12px; color:var(--text2); border-top:1px solid var(--border); margin-top:36px; }
+  footer strong { color:var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="mag-header">
+  <div class="container">
+    <div class="issue-label">투자는인생tv · 아카데미 5회 · 시험문제</div>
+    <h1>📝 핵심 개념 확인 10문제</h1>
+  </div>
+</div>
+
+<div class="container">
+<section>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('q')">🖊 문제 풀기</button>
+    <button class="tab-btn" onclick="switchTab('a')">✅ 정답 & 해설</button>
+  </div>
+
+  <!-- ── 문제 탭 ── -->
+  <div class="tab-panel active" id="tab-q">
+
+    <div class="score-bar">
+      <div class="score-num" id="scoreNum">0 / 10</div>
+      <div class="score-label">맞힌 문제 수 (즉시 채점)</div>
+      <button class="reset-all-btn" onclick="resetAll()">↺ 전체 초기화</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card" id="qc1">
+      <div class="q-header">
+        <span class="q-num">Q1</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff easy">쉬움</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">주식(Common Stock)을 보유하면 얻는 권리 중 <strong>의결권(Voting Right)</strong>에 대한 설명으로 옳은 것은?</div>
+        <ul class="q-options" id="opts1">
+          <li onclick="selectMC(1,this,1)">① 주식 1주를 가지면 기업의 모든 경영결정을 단독으로 할 수 있다.</li>
+          <li onclick="selectMC(1,this,2)">② 주식을 보유하면 기업의 주요 안건에 대한 투표권이 주어진다.</li>
+          <li onclick="selectMC(1,this,3)">③ 의결권은 우선주(Preferred Stock)에만 부여된다.</li>
+          <li onclick="selectMC(1,this,4)">④ 미국 주식은 투표권이 없고 배당만 받을 수 있다.</li>
+        </ul>
+        <div class="q-feedback" id="fb1"></div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="qc2">
+      <div class="q-header">
+        <span class="q-num">Q2</span>
+        <span class="q-type">OX</span>
+        <span class="q-diff easy">쉬움</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">ADR(American Depository Receipt)은 외국 기업이 미국 시장에 상장할 때 발행하는 증서이며, 환율(환전) 리스크가 존재한다.</div>
+        <div class="ox-row">
+          <button class="ox-btn" onclick="selectOX(2,this,'O')">O</button>
+          <button class="ox-btn" onclick="selectOX(2,this,'X')">X</button>
+        </div>
+        <div class="q-feedback" id="fb2"></div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="qc3">
+      <div class="q-header">
+        <span class="q-num">Q3</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff easy">쉬움</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">1964년부터 현재까지 미국 S&P 500 상승률(약 4,116%)과 실질 임금 인상률(약 852%)의 관계를 바르게 설명한 것은?</div>
+        <ul class="q-options" id="opts3">
+          <li onclick="selectMC(3,this,1)">① 임금 인상률이 주가 상승률보다 약 5배 높다.</li>
+          <li onclick="selectMC(3,this,2)">② 둘의 상승률은 거의 비슷하다.</li>
+          <li onclick="selectMC(3,this,3)">③ 주가 상승률이 임금 인상률보다 약 5배 높다.</li>
+          <li onclick="selectMC(3,this,4)">④ 1990년대 이후로는 임금이 주가를 앞서기 시작했다.</li>
+        </ul>
+        <div class="q-feedback" id="fb3"></div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="qc4">
+      <div class="q-header">
+        <span class="q-num">Q4</span>
+        <span class="q-type">단답형</span>
+        <span class="q-diff mid">보통</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">미국 <strong>재무성(Department of Treasury)</strong>이 달러를 시중에 공급하는 방법 중 하나로, 정부가 돈을 빌리기 위해 발행하는 증서를 무엇이라 하는가?</div>
+        <div class="short-input-row">
+          <input class="short-input" id="si4" type="text" placeholder="답을 입력하세요">
+          <button class="check-btn" onclick="checkShort(4, ['국채','트레저리본드','treasury bond','국가채권'])">확인</button>
+        </div>
+        <div class="q-feedback" id="fb4"></div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" id="qc5">
+      <div class="q-header">
+        <span class="q-num">Q5</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff mid">보통</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">연준(Fed)이 <strong>밸런스시트를 줄인다(QT, 양적긴축)</strong>는 것의 의미로 가장 적절한 것은?</div>
+        <ul class="q-options" id="opts5">
+          <li onclick="selectMC(5,this,1)">① 연준이 보유한 국채와 MBS를 매입해 시중에 달러를 공급한다.</li>
+          <li onclick="selectMC(5,this,2)">② 연준이 보유한 국채와 MBS를 팔아 시중의 달러를 회수한다.</li>
+          <li onclick="selectMC(5,this,3)">③ 재무성이 더 많은 국채를 발행해 달러를 찍어낸다.</li>
+          <li onclick="selectMC(5,this,4)">④ 금리를 0%로 낮춰 시중에 돈이 넘치게 한다.</li>
+        </ul>
+        <div class="q-feedback" id="fb5"></div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card" id="qc6">
+      <div class="q-header">
+        <span class="q-num">Q6</span>
+        <span class="q-type">OX</span>
+        <span class="q-diff mid">보통</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">강사에 따르면, 한국 국민연금이 부진한 주요 이유 중 하나는 미국 주식 강세장(2009~2021)에서 투자 비중을 충분히 늘리지 못했기 때문이다.</div>
+        <div class="ox-row">
+          <button class="ox-btn" onclick="selectOX(6,this,'O')">O</button>
+          <button class="ox-btn" onclick="selectOX(6,this,'X')">X</button>
+        </div>
+        <div class="q-feedback" id="fb6"></div>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card" id="qc7">
+      <div class="q-header">
+        <span class="q-num">Q7</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff mid">보통</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">포트폴리오 구성에 대한 강사의 핵심 주장으로 <strong>옳지 않은</strong> 것은?</div>
+        <ul class="q-options" id="opts7">
+          <li onclick="selectMC(7,this,1)">① 전체 포트폴리오의 방향을 먼저 보고, 개별 종목 하락에 너무 집착하지 않는다.</li>
+          <li onclick="selectMC(7,this,2)">② 섹터별 사이클이 다르기 때문에 섹터 분산이 중요하다.</li>
+          <li onclick="selectMC(7,this,3)">③ 한 종목이 크게 오를 때는 전 자산을 그 종목에 집중해야 한다.</li>
+          <li onclick="selectMC(7,this,4)">④ 디펜시브 주식과 성장주를 함께 가져가는 것이 바람직하다.</li>
+        </ul>
+        <div class="q-feedback" id="fb7"></div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card" id="qc8">
+      <div class="q-header">
+        <span class="q-num">Q8</span>
+        <span class="q-type">단답형</span>
+        <span class="q-diff mid">보통</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">강사가 "부동산 집값이 많이 오른 이유"로 언급한 미국 연준의 통화정책 약자(영어 약어 2자)를 쓰시오.</div>
+        <div class="short-input-row">
+          <input class="short-input" id="si8" type="text" placeholder="영어 약자 2글자">
+          <button class="check-btn" onclick="checkShort(8, ['qe','양적완화'])">확인</button>
+        </div>
+        <div class="q-feedback" id="fb8"></div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card" id="qc9">
+      <div class="q-header">
+        <span class="q-num">Q9</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff hard">어려움</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">강사가 설명한 미국 연준(Fed)과 재무성(Treasury)의 국채 관련 메커니즘에 대한 설명으로 <strong>가장 올바른</strong> 것은?</div>
+        <ul class="q-options" id="opts9">
+          <li onclick="selectMC(9,this,1)">① 재무성이 국채를 발행하면 연준이 반드시 전량 매입해야 한다.</li>
+          <li onclick="selectMC(9,this,2)">② QT 국면에서 연준이 국채 매입을 줄이면, 재무성은 민간 시장에서 국채를 소화해야 한다.</li>
+          <li onclick="selectMC(9,this,3)">③ 연준이 달러를 직접 인쇄하여 시중에 공급한다.</li>
+          <li onclick="selectMC(9,this,4)">④ 재무성이 국채를 발행하면 자동으로 달러 가치가 상승한다.</li>
+        </ul>
+        <div class="q-feedback" id="fb9"></div>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card" id="qc10">
+      <div class="q-header">
+        <span class="q-num">Q10</span>
+        <span class="q-type">객관식</span>
+        <span class="q-diff hard">어려움</span>
+      </div>
+      <div class="q-body">
+        <div class="q-text">강사가 "기업이익 성장률 > GDP 성장률 > 노동임금 인상률" 역전이 본격화된 시점으로 언급한 시기는?</div>
+        <ul class="q-options" id="opts10">
+          <li onclick="selectMC(10,this,1)">① 1970년대 오일쇼크 이후</li>
+          <li onclick="selectMC(10,this,2)">② 1980년대 레이건 감세 직후</li>
+          <li onclick="selectMC(10,this,3)">③ 1990년대 이후, 특히 2008년 이후 폭발적으로 확대</li>
+          <li onclick="selectMC(10,this,4)">④ 2020년 코로나19 팬데믹 이후</li>
+        </ul>
+        <div class="q-feedback" id="fb10"></div>
+      </div>
+    </div>
+
+  </div><!-- end tab-q -->
+
+  <!-- ── 정답 & 해설 탭 ── -->
+  <div class="tab-panel" id="tab-a">
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q1 · 객관식 · 쉬움</span><span>정답 ②</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ② 주식을 보유하면 기업의 주요 안건에 대한 투표권이 주어진다.</div>
+        <div class="explain">주식 보유 시 보팅 라이트(Voting Right, 의결권)가 주어지며, 기업의 주요 안건(임원 선출, 합병 등)에 대해 이메일로 투표 참여 가능. 1주 보유로도 해당 기업의 주주(주인)가 됩니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q2 · OX · 쉬움</span><span>정답 O</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: O (맞음)</div>
+        <div class="explain">ADR은 외국 기업이 미국 상장 기준을 충족할 경우 미국 시장에서 거래할 수 있게 해주는 증서입니다. 현지 통화(원화, 위안화 등)와 달러 간 환율 변동 리스크가 항상 존재합니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q3 · 객관식 · 쉬움</span><span>정답 ③</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ③ 주가 상승률이 임금 인상률보다 약 5배 높다.</div>
+        <div class="explain">S&P 500 상승률 4,116% ÷ 임금 인상률 852% ≈ 4.8배. 임금만으로는 주식 시장의 성장을 절대 따라잡을 수 없다는 핵심 논거입니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q4 · 단답형 · 보통</span><span>정답 국채</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: 국채 (Treasury Bond)</div>
+        <div class="explain">미국 재무성은 국채를 발행해 돈을 빌리고, 연준은 그 국채를 달러로 매입합니다. QE(양적완화) 시에는 연준이 대규모로 국채를 사서 시중에 달러를 공급했습니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q5 · 객관식 · 보통</span><span>정답 ②</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ② 연준이 보유한 국채와 MBS를 팔아 시중의 달러를 회수한다.</div>
+        <div class="explain">QT(Quantitative Tightening, 양적긴축)는 연준이 보유 자산(국채·MBS)을 시장에 팔거나 만기 후 재투자하지 않아 시중의 달러를 줄이는 정책입니다. 반대 개념인 QE(양적완화)는 자산 매입으로 달러를 공급합니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q6 · OX · 보통</span><span>정답 O</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: O (맞음)</div>
+        <div class="explain">강사는 일본 GPIF, 스웨덴·이스라엘 국부펀드, 싱가포르 테마섹 등이 미국 주식 비중을 꾸준히 늘려 성과를 냈다고 지적했습니다. 반면 한국 국민연금은 국내 채권 비중이 과다하고 정치적 의사결정 구조로 인해 기회를 놓쳤다고 설명합니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q7 · 객관식 · 보통</span><span>정답 ③</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ③ 한 종목이 크게 오를 때는 전 자산을 그 종목에 집중해야 한다.</div>
+        <div class="explain">강사는 "한 기업에 몰빵해서는 안 된다"고 명확히 강조했습니다. 섹터별 분산과 포트폴리오 전체 방향을 중심으로 봐야 하며, 특정 종목의 단기 등락에 일희일비하지 말라고 합니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q8 · 단답형 · 보통</span><span>정답 QE</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: QE (Quantitative Easing, 양적완화)</div>
+        <div class="explain">강사는 미국 집값 상승 원인으로 QE(양적완화)를 명시적으로 언급했습니다. 연준이 대규모로 자산을 매입해 시중에 달러를 풀면서 부동산 등 자산 가격이 급등했습니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q9 · 객관식 · 어려움</span><span>정답 ②</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ② QT 국면에서 연준이 국채 매입을 줄이면, 재무성은 민간 시장에서 국채를 소화해야 한다.</div>
+        <div class="explain">연준이 QT로 국채 매입을 중단하면, 재무성이 발행하는 국채는 민간(프라이빗 마켓)에서 소화해야 합니다. 이는 시중 금리 상승 압력으로 이어집니다. 달러 인쇄는 재무성이 결정하고 별도 인쇄 회사가 집행하며, 연준이 직접 찍지는 않습니다.</div>
+      </div>
+    </div>
+
+    <div class="ans-card">
+      <div class="ans-header"><span>Q10 · 객관식 · 어려움</span><span>정답 ③</span></div>
+      <div class="ans-body">
+        <div class="correct-mark">✅ 정답: ③ 1990년대 이후, 특히 2008년 이후 폭발적으로 확대</div>
+        <div class="explain">강사는 "1990년대부터 기업이익이 GDP와 노동임금을 추월하기 시작했고, 2008년 이후 그 격차가 폭발적으로 확대됐다"고 반복 강조했습니다. 4차 산업혁명과 빅테크 기업의 성장이 이 추세를 더욱 가속시키고 있습니다.</div>
+      </div>
+    </div>
+
+  </div><!-- end tab-a -->
+
+</section>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>투자는인생tv 아카데미 5회</strong> · 시험문제 & 해설<br>
+    본 문서는 교육 목적의 자료이며 투자 권유가 아닙니다.
+  </div>
+</footer>
+
+<script>
+// ── TAB ──
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn')[id === 'q' ? 0 : 1].classList.add('active');
+}
+
+// ── SCORE ──
+const answers = {}; // qNum -> bool
+function updateScore() {
+  const total = Object.keys(answers).length;
+  const correct = Object.values(answers).filter(Boolean).length;
+  document.getElementById('scoreNum').textContent = correct + ' / 10';
+}
+
+// ── MC ──
+const correctMC = { 1:2, 3:3, 5:2, 7:3, 9:2, 10:3 };
+function selectMC(qn, el, chosen) {
+  const opts = document.getElementById('opts' + qn);
+  if (opts.querySelector('.correct')) return; // already answered
+  [...opts.children].forEach(li => li.classList.remove('selected'));
+  el.classList.add('selected');
+  const isOk = chosen === correctMC[qn];
+  setTimeout(() => {
+    [...opts.children].forEach((li, i) => {
+      if (i + 1 === correctMC[qn]) li.classList.add('correct');
+      else if (li === el && !isOk) li.classList.add('wrong');
+    });
+    const fb = document.getElementById('fb' + qn);
+    fb.textContent = isOk ? '🎉 정답입니다!' : '❌ 오답입니다. 정답을 확인하세요.';
+    fb.className = 'q-feedback show ' + (isOk ? 'ok' : 'no');
+    answers[qn] = isOk;
+    updateScore();
+  }, 200);
+}
+
+// ── OX ──
+const correctOX = { 2:'O', 6:'O' };
+function selectOX(qn, el, chosen) {
+  const row = el.parentElement;
+  if (row.querySelector('.correct')) return;
+  [...row.children].forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const isOk = chosen === correctOX[qn];
+  setTimeout(() => {
+    [...row.children].forEach(b => {
+      if (b.textContent === correctOX[qn]) b.classList.add('correct');
+      else if (b === el && !isOk) b.classList.add('wrong');
+    });
+    const fb = document.getElementById('fb' + qn);
+    fb.textContent = isOk ? '🎉 정답입니다!' : '❌ 오답입니다. 정답을 확인하세요.';
+    fb.className = 'q-feedback show ' + (isOk ? 'ok' : 'no');
+    answers[qn] = isOk;
+    updateScore();
+  }, 200);
+}
+
+// ── SHORT ──
+const correctShort = {
+  4: ['국채','트레저리본드','treasury bond','국가채권','treasury'],
+  8: ['qe','양적완화','quantitative easing']
+};
+function checkShort(qn, keywords) {
+  const inp = document.getElementById('si' + qn);
+  if (inp.disabled) return;
+  const val = inp.value.trim().toLowerCase();
+  const kws = correctShort[qn];
+  const isOk = kws.some(k => val.includes(k));
+  inp.disabled = true;
+  inp.style.borderColor = isOk ? 'var(--green)' : 'var(--accent)';
+  const fb = document.getElementById('fb' + qn);
+  fb.textContent = isOk ? '🎉 정답입니다!' : ('❌ 오답. 정답: ' + kws[0]);
+  fb.className = 'q-feedback show ' + (isOk ? 'ok' : 'no');
+  answers[qn] = isOk;
+  updateScore();
+}
+
+// ── RESET ──
+function resetAll() {
+  // Clear MC
+  [1,3,5,7,9,10].forEach(qn => {
+    const opts = document.getElementById('opts' + qn);
+    if (opts) [...opts.children].forEach(li => li.className = '');
+    const fb = document.getElementById('fb' + qn);
+    if (fb) { fb.textContent = ''; fb.className = 'q-feedback'; }
+  });
+  // Clear OX
+  [2,6].forEach(qn => {
+    const row = document.getElementById('fb' + qn)?.previousElementSibling;
+    if (row) [...row.children].forEach(b => b.className = 'ox-btn');
+    const fb = document.getElementById('fb' + qn);
+    if (fb) { fb.textContent = ''; fb.className = 'q-feedback'; }
+  });
+  // Clear Short
+  [4,8].forEach(qn => {
+    const inp = document.getElementById('si' + qn);
+    if (inp) { inp.value = ''; inp.disabled = false; inp.style.borderColor = ''; }
+    const fb = document.getElementById('fb' + qn);
+    if (fb) { fb.textContent = ''; fb.className = 'q-feedback'; }
+  });
+  Object.keys(answers).forEach(k => delete answers[k]);
+  updateScore();
+}
+</script>
+</body>
+</html>
