@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>완성도 높은 포트폴리오 구성하는 법 | 투자는인생TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --tbl-header: #e11d48;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  .magazine-header {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .magazine-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--c4));
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .header-title {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: clamp(24px, 7vw, 36px);
+    font-weight: 900;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .header-title span { color: var(--accent2); }
+  .header-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .header-meta span::before { content: '· '; }
+  .header-meta span:first-child::before { content: ''; }
+
+  /* SECTION */
+  .section {
+    padding: 40px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+  .section-body { color: var(--text2); font-size: 14px; }
+  .section-body p { margin-bottom: 12px; }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    padding: 12px 18px;
+    margin: 24px 0;
+    background: var(--bg2);
+    border-radius: 0 8px 8px 0;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* KEY POINT CARD */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card-num {
+    font-size: 28px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .card-title { font-weight: 700; font-size: 14px; margin: 4px 0; }
+  .card-desc { font-size: 13px; color: var(--text2); }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--tbl-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--bg2); }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 24px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .chart-sub {
+    font-size: 11px;
+    color: var(--text2);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-title::before {
+    content: '⚙️';
+    font-size: 16px;
+  }
+  .sim-row {
+    margin-bottom: 14px;
+  }
+  .sim-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .sim-label span { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sim-result-item { text-align: center; }
+  .sim-result-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
+  }
+  .sim-result-key { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .btn-reset {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-reset:hover { background: var(--accent); color: #fff; }
+
+  /* PORTFOLIO BUILDER */
+  .port-builder {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .port-sliders .port-row {
+    margin-bottom: 10px;
+  }
+  .port-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .port-name em { font-style: normal; color: var(--accent); font-size: 13px; }
+  .port-warn {
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .port-warn.ok { background: #d1fae5; color: #065f46; }
+  .port-warn.bad { background: #fee2e2; color: #991b1b; }
+
+  /* PURPOSE TABS */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tab-btn {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .purpose-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .purpose-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .purpose-card ul {
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .purpose-card ul li { margin-bottom: 4px; }
+
+  /* QUIZ */
+  .quiz-section {
+    padding: 40px 20px;
+    background: var(--text);
+    color: #fff;
+  }
+  .quiz-section .section-label { color: var(--accent2); }
+  .quiz-section .section-title { color: #fff; }
+  .quiz-card {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .quiz-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .quiz-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .badge-easy { background: #d1fae5; color: #065f46; }
+  .badge-mid { background: #fef3c7; color: #92400e; }
+  .badge-hard { background: #fee2e2; color: #991b1b; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #ccc;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .quiz-opt:hover { border-color: var(--accent); color: #fff; }
+  .quiz-opt.correct { background: #065f46; border-color: #10b981; color: #fff; }
+  .quiz-opt.wrong { background: #7f1d1d; border-color: #ef4444; color: #fff; }
+  .quiz-opt:disabled { cursor: not-allowed; }
+  .quiz-feedback {
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+    line-height: 1.5;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #064e3b; color: #a7f3d0; }
+  .quiz-feedback.ng { background: #7f1d1d; color: #fca5a5; }
+  .quiz-short-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    margin-bottom: 8px;
+  }
+  .quiz-submit {
+    padding: 8px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .quiz-score {
+    text-align: center;
+    margin-top: 24px;
+    padding: 20px;
+    background: #2a2a2a;
+    border-radius: 12px;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--accent2);
+  }
+  .progress-bar {
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+  }
+  .tag {
+    display: inline-block;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 2px 8px;
+    color: var(--text2);
+    margin: 2px;
+  }
+
+  /* HIGHLIGHT ROW */
+  .highlight-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: var(--bg2);
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  .highlight-icon { font-size: 20px; flex-shrink: 0; }
+  .highlight-text { font-size: 13px; color: var(--text2); }
+  .highlight-text strong { color: var(--text); }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 8px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="magazine-header">
+  <div class="header-label">투자는인생TV 아카데미 제3회</div>
+  <h1 class="header-title">완성도 높은<br><span>포트폴리오</span> 구성하는 법</h1>
+  <div style="font-size:13px;color:#ccc;margin-top:12px;line-height:1.6;">미국 주식 투자를 위한 포트폴리오 철학 · 리스크 관리 · 목적별 전략 완전 정리</div>
+  <div class="header-meta">
+    <span>2026년 4월 13일</span>
+    <span>경제·투자 분석</span>
+    <span>투자는인생TV</span>
+  </div>
+</div>
+
+<!-- ===== 핵심 요약 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Executive Summary</div>
+  <div class="section-title">이 강의의 핵심 메시지</div>
+  <div class="section-body">
+    <p>완성도 높은 포트폴리오란 <strong>시장이 좋을 때 크게 오르고 나쁠 때 70~80% 폭락하는 구조가 아니라</strong>, 꾸준하고 안정적으로 자산을 불려가는 구조를 말합니다. 이를 위해 필요한 것은 "무엇을 사느냐"가 아니라 <strong>자기 자신에 대한 이해(리스크 프로파일링), 계좌 성격 구분, 목적 설정, 비중 관리</strong>입니다.</p>
+  </div>
+  <div class="card-grid">
+    <div class="card fade-in">
+      <div class="card-num">01</div>
+      <div class="card-title">계좌 구분</div>
+      <div class="card-desc">투자 계좌 vs 은퇴 계좌는 전략이 다르다. 은퇴 계좌는 항상 더 보수적으로.</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">02</div>
+      <div class="card-title">리스크 프로파일링</div>
+      <div class="card-desc">내 성향·자산규모·투자기간에 맞는 일관된 리스크를 설정하고 유지한다.</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">03</div>
+      <div class="card-title">70% 중심축 원칙</div>
+      <div class="card-desc">대형주(라지캡)로 70~80% 중심을 먼저 완성한 뒤, 나머지 30%를 확장한다.</div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-num">04</div>
+      <div class="card-title">목적 기반 구성</div>
+      <div class="card-desc">안정성·소득·성장·절세 — 4가지 목적 중 나의 목적을 먼저 정해야 한다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 계좌 구분 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 1</div>
+  <div class="section-title">투자 계좌 vs 은퇴 계좌</div>
+  <div class="section-body">
+    <p>미국에서는 일반 투자 계좌(Brokerage Account)와 은퇴 계좌(IRA, 401k 등)가 법적으로 구분됩니다. 한국처럼 하나의 계좌에 모든 자산을 모아두는 방식이 아닙니다.</p>
+  </div>
+  <div class="tbl-wrap fade-in">
+    <table>
+      <tr><th>구분</th><th>투자 계좌</th><th>은퇴 계좌</th></tr>
+      <tr><td><strong>성격</strong></td><td>일반 주식 계좌</td><td>IRA, 401k 등</td></tr>
+      <tr><td><strong>리스크 수준</strong></td><td>자기 성향 100% 반영</td><td>성향 대비 30~50%로 낮춤</td></tr>
+      <tr><td><strong>세금</strong></td><td>매도 시 자본이득세 발생</td><td>세금 유예 또는 면제</td></tr>
+      <tr><td><strong>운용 전략</strong></td><td>중·장기 자유롭게</td><td>대형·가치주 70% 이상 권장</td></tr>
+      <tr><td><strong>매매 빈도</strong></td><td>장기 보유 중심</td><td>액티브 매니지먼트 가능 (세금 없으므로)</td></tr>
+    </table>
+  </div>
+  <div class="pull-quote fade-in">
+    "은퇴 계좌는 나이에 상관없이 자기가 가지고 있는 투자 성향에 비해서 좀 더 보수적으로 투자하는 게 좋다."
+  </div>
+</div>
+
+<!-- ===== 리스크 프로파일링 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 2</div>
+  <div class="section-title">리스크 프로파일링: 나는 누구인가</div>
+  <div class="section-body">
+    <p>포트폴리오 완성도를 높이는 가장 중요한 첫 단계는 <strong>나 자신을 아는 것</strong>입니다. 아래 요소들을 반드시 점검해야 합니다.</p>
+  </div>
+  <div class="fade-in">
+    <div class="highlight-row">
+      <div class="highlight-icon">🧠</div>
+      <div class="highlight-text"><strong>투자 성향:</strong> 소심한가, 공격적인가? 자기 성향을 과소·과대 평가하지 말고 있는 그대로 파악한다.</div>
+    </div>
+    <div class="highlight-row">
+      <div class="highlight-icon">💰</div>
+      <div class="highlight-text"><strong>자산 규모:</strong> 규모가 작을수록 리스크를 낮게 → 규모가 커질수록 리스크를 점진적으로 높인다.</div>
+    </div>
+    <div class="highlight-row">
+      <div class="highlight-icon">🔁</div>
+      <div class="highlight-text"><strong>매매 빈도:</strong> 매일 할지, 월 1회 할지를 미리 정해 놓는다.</div>
+    </div>
+    <div class="highlight-row">
+      <div class="highlight-icon">⚖️</div>
+      <div class="highlight-text"><strong>리밸런싱 기준:</strong> 실적 발표 등 이벤트 기반으로 비중 조정 원칙을 사전에 설정한다.</div>
+    </div>
+  </div>
+
+  <!-- 리스크 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">리스크 수준 시뮬레이터</div>
+    <div class="sim-row">
+      <div class="sim-label">자산 규모 <span id="assetVal">5,000만원</span></div>
+      <input type="range" id="assetSlider" min="1" max="10" value="5" oninput="updateRisk()">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">투자 기간 <span id="horizonVal">10년</span></div>
+      <input type="range" id="horizonSlider" min="1" max="30" value="10" oninput="updateRisk()">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">계좌 유형</div>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <label style="font-size:13px;cursor:pointer;"><input type="radio" name="acctType" value="invest" checked onchange="updateRisk()"> 투자 계좌</label>
+        <label style="font-size:13px;cursor:pointer;"><input type="radio" name="acctType" value="retire" onchange="updateRisk()"> 은퇴 계좌</label>
+      </div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-result-item">
+        <span class="sim-result-val" id="riskScore">45</span>
+        <div class="sim-result-key">권장 리스크 수준 (%)</div>
+      </div>
+      <div class="sim-result-item">
+        <span class="sim-result-val" id="largecapPct">70</span>
+        <div class="sim-result-key">대형주 비중 (%)</div>
+      </div>
+      <div class="sim-result-item" style="grid-column:1/-1;">
+        <span class="sim-result-val" style="font-size:14px;color:#ddd;" id="riskComment">-</span>
+        <div class="sim-result-key">추천 전략</div>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetRisk()">초기화</button>
+  </div>
+</div>
+
+<!-- ===== 포트폴리오 4대 목적 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 3</div>
+  <div class="section-title">투자자의 4가지 목적</div>
+  <div class="section-body">
+    <p>포트폴리오는 반드시 <strong>투자 목적</strong>에 따라 다르게 구성해야 합니다. 목적 없이 구성하면 일관성을 잃습니다.</p>
+  </div>
+
+  <div class="chart-container fade-in" style="max-height:280px;">
+    <div class="chart-title">투자 목적별 특성 비교</div>
+    <canvas id="purposeChart" height="230"></canvas>
+  </div>
+
+  <div class="tabs fade-in">
+    <button class="tab-btn active" onclick="switchTab(this,'t1')">🛡 안정성</button>
+    <button class="tab-btn" onclick="switchTab(this,'t2')">💵 소득</button>
+    <button class="tab-btn" onclick="switchTab(this,'t3')">📈 자산성장</button>
+    <button class="tab-btn" onclick="switchTab(this,'t4')">🏛 절세</button>
+  </div>
+  <div id="t1" class="tab-content active fade-in">
+    <div class="purpose-card">
+      <h4>Safety — 안정성 (자산 보존)</h4>
+      <ul>
+        <li>목표: 보유 자산 가치를 지키는 것</li>
+        <li>100% 안전한 투자는 없으나 근접할 수 있음</li>
+        <li>T-Bill, CD, AAA 채권, 커머셜페이퍼 등</li>
+        <li>현금 보유 = 인플레이션으로 매년 ~10% 손실</li>
+        <li>6개월치 생활비 이상은 세이빙에 묶어두지 않는다</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t2" class="tab-content fade-in">
+    <div class="purpose-card">
+      <h4>Income — 정기적 수입 창출</h4>
+      <ul>
+        <li>목표: 매월/분기 현금 흐름 확보</li>
+        <li>채권(Bond), 배당주(Dividend Stock) 중심</li>
+        <li>은퇴 후 생활비를 충당하는 핵심 축</li>
+        <li>단, 인플레이션을 감안하면 Income만으론 부족 → 일부 성장주 병행 필요</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t3" class="tab-content fade-in">
+    <div class="purpose-card">
+      <h4>Capital Growth — 자산 증식</h4>
+      <ul>
+        <li>목표: 자산 규모 자체를 키우는 것 (대부분의 투자자)</li>
+        <li>블루칩 · 성장주 · 배당성장주 혼합</li>
+        <li>하위 목적: 은퇴 자금, 주택 구매, 자녀 학자금</li>
+        <li>특정 이벤트(집 구매 등)가 가까울수록 보수적으로 전환</li>
+        <li>미국 529 플랜: 학자금 목적 전용, 투자 수익 비과세</li>
+      </ul>
+    </div>
+  </div>
+  <div id="t4" class="tab-content fade-in">
+    <div class="purpose-card">
+      <h4>Tax Reduction — 절세</h4>
+      <ul>
+        <li>목표: 고소득자의 세금 부담을 합법적으로 줄이기</li>
+        <li>Nonprofit(비영리재단) 설립 → 기부 시 소득세 면제</li>
+        <li>Trust Account(신탁) → 자녀 자산 이전 시 양도세 절감</li>
+        <li>Tax-Loss Harvesting: 손실 종목 매도로 이익 상쇄 후 세금 0</li>
+        <li>자산 규모가 커질수록 반드시 필요한 전략</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 70% 중심축 원칙 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 4</div>
+  <div class="section-title">포트폴리오 확장 경로: 중심에서 외곽으로</div>
+  <div class="section-body">
+    <p>가장 핵심적인 원칙입니다. <strong>"항상 시장의 중심축부터 채우고, 외곽으로 확장한다."</strong></p>
+  </div>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">자산 규모별 권장 포트폴리오 구성</div>
+    <div class="chart-sub">초기(소규모) → 중간 → 대규모 순서로 확장</div>
+    <canvas id="expandChart" height="240"></canvas>
+  </div>
+
+  <div class="pull-quote fade-in">
+    "항상 중간에서 시작해서 양옆으로 퍼져 나간다. 만 불로 투자할 때는 메타·구글 2~3개만 사놓는 것이 성장성이 훨씬 빠르다."
+  </div>
+
+  <!-- 포트폴리오 비중 점검기 -->
+  <div class="port-builder fade-in">
+    <div class="sim-title">내 포트폴리오 비중 점검기</div>
+    <div class="port-sliders">
+      <div class="port-row">
+        <div class="port-name">대형 가치주 (중심축) <em id="v1">50%</em></div>
+        <input type="range" min="0" max="100" value="50" oninput="checkPort()" id="p1">
+      </div>
+      <div class="port-row">
+        <div class="port-name">대형 성장주 (어깨) <em id="v2">20%</em></div>
+        <input type="range" min="0" max="100" value="20" oninput="checkPort()" id="p2">
+      </div>
+      <div class="port-row">
+        <div class="port-name">중소형 · 섹터주 <em id="v3">20%</em></div>
+        <input type="range" min="0" max="100" value="20" oninput="checkPort()" id="p3">
+      </div>
+      <div class="port-row">
+        <div class="port-name">고위험 (소형·코인 등) <em id="v4">10%</em></div>
+        <input type="range" min="0" max="100" value="10" oninput="checkPort()" id="p4">
+      </div>
+    </div>
+    <div id="portWarn" class="port-warn ok">✅ 합계: 100% — 중심축 비중 양호</div>
+    <button class="btn-reset" onclick="resetPort()">초기화</button>
+  </div>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <tr><th>단계</th><th>자산 규모</th><th>구성 예시</th><th>핵심 원칙</th></tr>
+      <tr><td>초기</td><td>소규모</td><td>구글, 메타 2~3개</td><td>라지캡 집중 매입</td></tr>
+      <tr><td>중간</td><td>성장</td><td>+ 엔비디아, 비자, 월마트 등</td><td>중심축 70% 유지 후 확장</td></tr>
+      <tr><td>고급</td><td>대규모</td><td>+ 섹터ETF, 중소형, 해외</td><td>리스크 분산 + 절세 전략</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== 가치주 vs 성장주 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 5</div>
+  <div class="section-title">가치주 vs 성장주: 균형의 기술</div>
+  <div class="section-body">
+    <p>완성도 높은 포트폴리오는 두 가지 축이 균형을 이룹니다.</p>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">🏛</div>
+    <div class="highlight-text"><strong>가치주 (Value Stock):</strong> 주가 변동성은 낮지만 성장성도 낮음. 포트폴리오의 <strong>허리·중심축</strong>. 안정적인 기반 역할.</div>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">🚀</div>
+    <div class="highlight-text"><strong>성장주 (Growth Stock):</strong> 주가 변동성은 크지만 성장성이 매우 높음. 올라갈 때 확확 오름. <strong>수익의 엔진</strong>.</div>
+  </div>
+  <div class="pull-quote fade-in">
+    "가치주만 가지면 크게 오르는 경험이 없다. 성장주만 가지면 폭락 시 버티기 힘들다. 비중 조절이 완성도의 핵심이다."
+  </div>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">가치주 vs 성장주 특성 비교</div>
+    <canvas id="typeChart" height="230"></canvas>
+  </div>
+</div>
+
+<!-- ===== 세금 전략 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 6</div>
+  <div class="section-title">Tax-Loss Harvesting: 세금을 줄이는 매도 전략</div>
+  <div class="section-body">
+    <p>미국에서만 가능한 강력한 절세 전략입니다. <strong>손실 난 종목과 이익 난 종목을 동시에 매도</strong>하면 서로 상쇄되어 세금이 줄거나 없어집니다.</p>
+  </div>
+
+  <!-- Tax Simulator -->
+  <div class="sim-box fade-in">
+    <div class="sim-title">Tax-Loss Harvesting 시뮬레이터</div>
+    <div class="sim-row">
+      <div class="sim-label">이익 실현 금액 (달러) <span id="gainVal">$50,000</span></div>
+      <input type="range" id="gainSlider" min="0" max="200000" step="5000" value="50000" oninput="updateTax()">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">손실 실현 금액 (달러) <span id="lossVal">$30,000</span></div>
+      <input type="range" id="lossSlider" min="0" max="200000" step="5000" value="30000" oninput="updateTax()">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">세율 (%): <span id="taxRateVal">20%</span></div>
+      <input type="range" id="taxRateSlider" min="10" max="37" value="20" oninput="updateTax()">
+    </div>
+    <div class="sim-result">
+      <div class="sim-result-item">
+        <span class="sim-result-val" id="beforeTax">$10,000</span>
+        <div class="sim-result-key">하베스팅 전 세금</div>
+      </div>
+      <div class="sim-result-item">
+        <span class="sim-result-val" id="afterTax">$4,000</span>
+        <div class="sim-result-key">하베스팅 후 세금</div>
+      </div>
+      <div class="sim-result-item" style="grid-column:1/-1;">
+        <span class="sim-result-val" id="savedTax" style="color:#34d399;">$6,000</span>
+        <div class="sim-result-key">절세 금액</div>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetTax()">초기화</button>
+  </div>
+</div>
+
+<!-- ===== 은퇴 준비 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Chapter 7</div>
+  <div class="section-title">은퇴 설계: 취미 소득화 & 인생 재타이어</div>
+  <div class="section-body">
+    <p>강사가 강조하는 두 가지 핵심 은퇴 원칙입니다.</p>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">❤️</div>
+    <div class="highlight-text"><strong>건강이 최우선:</strong> 미국에서 건강이 무너지면 100만~200만 달러가 그냥 소진된다. 건강 투자 = 금전적 투자.</div>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">🎯</div>
+    <div class="highlight-text"><strong>취미의 전문화:</strong> 은퇴 전부터 취미를 전문가 수준으로 키워야 한다. 이것이 은퇴 후 정신적·물질적 소득원이 된다.</div>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">🔄</div>
+    <div class="highlight-text"><strong>Retirement = Re-tire:</strong> 타이어를 갈아끼우는 것. 멈추는 것이 아니라 <strong>내가 좋아하는 일을 위해 달리기 시작하는 것</strong>.</div>
+  </div>
+  <div class="highlight-row fade-in">
+    <div class="highlight-icon">💡</div>
+    <div class="highlight-text"><strong>은퇴 후에도 성장주:</strong> 평균 수명이 길어졌기 때문에(85세 이상), 은퇴 후에도 일부 성장주를 유지해야 인플레이션을 이긴다.</div>
+  </div>
+  <div class="pull-quote fade-in">
+    "자식보다 본인을 가장 우선시하라. 내 자산은 내 자산이다. 자녀 학자금까지는 지원할 수 있지만, 대학원·박사·의대까지 다 대줘서는 안 된다."
+  </div>
+</div>
+
+<!-- ===== 국민연금 경고 ===== -->
+<div class="section fade-in">
+  <div class="section-label">Special Note</div>
+  <div class="section-title">한국 국민연금에 대한 경고</div>
+  <div class="section-body">
+    <p>강사는 30~40대의 경우 특히, <strong>한국 국민연금 수령액이 납부액보다 적어질 가능성이 높다</strong>고 경고합니다. "내가 10을 냈으면 15를 받아야 하는데, 지금은 6밖에 못 받을 수 있다"는 것입니다.</p>
+    <p>따라서 국민연금에만 의존하지 말고, <strong>미국 시장을 포함한 개인 투자 계획</strong>을 병행해야 한다고 강조합니다.</p>
+  </div>
+</div>
+
+<!-- ===== 시험문제 ===== -->
+<div class="quiz-section">
+  <div class="section-label">시험 문제</div>
+  <div class="section-title" style="margin-bottom:8px;">핵심 개념 확인 10문제</div>
+  <div style="font-size:13px;color:#aaa;margin-bottom:20px;">문제를 클릭해 정답을 확인하세요.</div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div style="font-size:12px;color:#aaa;text-align:right;margin-bottom:16px;" id="progressText">0 / 10 완료</div>
+
+  <!-- Q1 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-easy">쉬움</span>Q1. 은퇴 계좌(IRA, 401k)에서 투자할 때 올바른 원칙은?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q1')">① 자기 투자 성향 그대로 100% 반영한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q1')">② 일반 투자 계좌보다 더 보수적으로 운용한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q1')">③ 세금 혜택이 있으므로 리스크를 크게 가져간다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q1')">④ 오직 현금과 채권만 보유한다</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-easy">쉬움</span>Q2. 현금(Cash)을 보유할 때 발생하는 리스크는?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q2')">① 유동성 리스크</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q2')">② 신용 리스크</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q2')">③ 인플레이션 리스크</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q2')">④ 금리 리스크</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-easy">쉬움</span>Q3. (OX) 포트폴리오를 구성하는 이유는 미래를 정확히 예측할 수 있기 때문이다.</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q3')">O — 맞다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q3')">X — 틀리다</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-mid">보통</span>Q4. 투자자의 4대 목적이 아닌 것은?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q4')">① Safety (안정성)</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q4')">② Income (소득)</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q4')">③ Leverage (레버리지)</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q4')">④ Capital Growth (자산성장)</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-mid">보통</span>Q5. 포트폴리오 확장 경로에서 가장 먼저 채워야 할 부분은?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q5')">① 고위험 소형주와 코인</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q5')">② 대형주(라지캡) 중심축 70~80%</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q5')">③ 섹터 ETF와 해외 주식</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q5')">④ 무조건 분산하여 100개 이상 보유</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-mid">보통</span>Q6. (단답형) 미국에서 손실 종목과 이익 종목을 동시에 매도하여 세금을 절감하는 전략의 영문명은?</div>
+    <input class="quiz-short-input" id="ans-Q6" placeholder="영문으로 입력하세요 (예: Tax-...)">
+    <br><button class="quiz-submit" onclick="answerShort('Q6','tax-loss harvesting')">제출</button>
+    <div class="quiz-feedback" id="fb-Q6"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-mid">보통</span>Q7. 자산 규모가 작을 때 올바른 투자 방향은?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q7')">① 소형 성장주에 집중하여 빠른 수익을 노린다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q7')">② 코인과 해외 소형주로 다각화한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q7')">③ 대형 가치주(라지캡)를 더 크게 가져간다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q7')">④ 현금을 많이 보유하여 기회를 기다린다</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-mid">보통</span>Q8. (OX) 은퇴 계좌는 매매 시 세금이 유예되므로 리스크를 크게 가져가는 것이 바람직하다.</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q8')">O — 맞다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q8')">X — 틀리다</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q8"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-hard">어려움</span>Q9. 특정 이벤트(주택 구매 등) 목적의 투자에서, 이벤트가 가까워질수록 해야 할 전략 변경은?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q9')">① 리스크를 높여 빠른 수익을 극대화한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'correct','Q9')">② 점진적으로 더 보수적인 포트폴리오로 전환한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q9')">③ 이벤트 직전에 한 번에 모두 매도한다</button>
+      <button class="quiz-opt" onclick="answerMC(this,'wrong','Q9')">④ 구성을 변경하지 않는다</button>
+    </div>
+    <div class="quiz-feedback" id="fb-Q9"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card">
+    <div class="quiz-q"><span class="quiz-badge badge-hard">어려움</span>Q10. (단답형) 강사가 "Retirement(은퇴)"의 어원적 의미로 설명한 것은 무엇인가?</div>
+    <input class="quiz-short-input" id="ans-Q10" placeholder="타이어와 관련된 의미를 쓰세요">
+    <br><button class="quiz-submit" onclick="answerShort10()">제출</button>
+    <div class="quiz-feedback" id="fb-Q10"></div>
+  </div>
+
+  <div class="quiz-score" id="quizScore">
+    <div style="font-size:14px;color:#aaa;margin-bottom:8px;">최종 점수</div>
+    <div class="quiz-score-val" id="finalScore">0</div>
+    <div style="font-size:13px;color:#aaa;margin-top:4px;">/ 10점</div>
+    <div style="font-size:13px;color:#ccc;margin-top:12px;" id="scoreComment"></div>
+    <button class="btn-reset" style="margin-top:16px;" onclick="resetQuiz()">다시 풀기</button>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <div style="margin-bottom:8px;">
+    <span class="tag">포트폴리오</span>
+    <span class="tag">리스크관리</span>
+    <span class="tag">미국주식</span>
+    <span class="tag">은퇴설계</span>
+    <span class="tag">절세전략</span>
+  </div>
+  <div>투자는인생TV 아카데미 제3회 · 2026년 4월 13일 · 분석 정리본</div>
+  <div style="margin-top:6px;color:#bbb;">⚠️ 이 자료는 교육 목적의 요약본이며, 투자 권유가 아닙니다.</div>
+</div>
+
+<script>
+// ======== FADE & CHART OBSERVERS ========
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['purposeChart'] = () => {
+  new Chart(document.getElementById('purposeChart'), {
+    type: 'radar',
+    data: {
+      labels: ['수익성', '안정성', '유동성', '절세효과', '장기성'],
+      datasets: [
+        { label: '안정성', data: [2,9,8,3,5], borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.1)', pointBackgroundColor:'#2563eb' },
+        { label: '소득(인컴)', data: [5,7,6,5,6], borderColor:'#6b7280', backgroundColor:'rgba(107,114,128,0.1)', pointBackgroundColor:'#6b7280' },
+        { label: '자산성장', data: [9,4,5,4,9], borderColor:'#e11d48', backgroundColor:'rgba(225,29,72,0.1)', pointBackgroundColor:'#e11d48' },
+        { label: '절세', data: [6,6,3,10,7], borderColor:'#1a1a1a', backgroundColor:'rgba(26,26,26,0.05)', pointBackgroundColor:'#1a1a1a' },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, font: { size: 10 } } } }
+    }
+  });
+};
+
+chartConfigs['expandChart'] = () => {
+  new Chart(document.getElementById('expandChart'), {
+    type: 'bar',
+    data: {
+      labels: ['초기 (소규모)', '중간 단계', '대규모'],
+      datasets: [
+        { label: '대형가치주', data: [80, 70, 60], backgroundColor: '#e11d48' },
+        { label: '대형성장주', data: [20, 20, 20], backgroundColor: '#1a1a1a' },
+        { label: '중소형·섹터', data: [0, 10, 12], backgroundColor: '#6b7280' },
+        { label: '고위험·기타', data: [0, 0, 8], backgroundColor: '#2563eb' },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+};
+
+chartConfigs['typeChart'] = () => {
+  new Chart(document.getElementById('typeChart'), {
+    type: 'bar',
+    data: {
+      labels: ['주가 변동성', '성장 잠재력', '배당 수익률', '안정성', '장기 보유 적합성'],
+      datasets: [
+        { label: '가치주', data: [3, 4, 7, 8, 8], backgroundColor: '#2563eb' },
+        { label: '성장주', data: [8, 9, 2, 4, 7], backgroundColor: '#e11d48' },
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: { x: { max: 10, ticks: { stepSize: 2 } } }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ======== TABS ========
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// ======== RISK SIMULATOR ========
+const assetLabels = ['100만원','500만원','1,000만원','3,000만원','5,000만원','1억','3억','5억','10억','30억'];
+function updateRisk() {
+  const asset = parseInt(document.getElementById('assetSlider').value);
+  const horizon = parseInt(document.getElementById('horizonSlider').value);
+  const isRetire = document.querySelector('input[name=acctType]:checked').value === 'retire';
+  document.getElementById('assetVal').textContent = assetLabels[asset-1];
+  document.getElementById('horizonVal').textContent = horizon + '년';
+  let base = Math.min(Math.round((asset * 5 + horizon * 1.5)), 85);
+  if (isRetire) base = Math.round(base * 0.6);
+  const large = Math.max(100 - base, 40);
+  document.getElementById('riskScore').textContent = base;
+  document.getElementById('largecapPct').textContent = large;
+  let comment = '';
+  if (base < 30) comment = '매우 보수적 — 채권·대형 가치주 중심';
+  else if (base < 50) comment = '보수적 — 대형주 70%+ 유지';
+  else if (base < 70) comment = '균형형 — 가치주+성장주 혼합';
+  else comment = '공격적 — 성장주 비중 확대 가능';
+  document.getElementById('riskComment').textContent = comment;
+}
+function resetRisk() {
+  document.getElementById('assetSlider').value = 5;
+  document.getElementById('horizonSlider').value = 10;
+  document.querySelector('input[name=acctType][value=invest]').checked = true;
+  updateRisk();
+}
+updateRisk();
+
+// ======== PORTFOLIO CHECKER ========
+function checkPort() {
+  const vals = ['p1','p2','p3','p4'].map(id => parseInt(document.getElementById(id).value));
+  ['v1','v2','v3','v4'].forEach((id, i) => document.getElementById(id).textContent = vals[i] + '%');
+  const total = vals.reduce((a,b) => a+b, 0);
+  const core = vals[0] + vals[1];
+  const warn = document.getElementById('portWarn');
+  if (total !== 100) {
+    warn.className = 'port-warn bad';
+    warn.textContent = `⚠️ 합계: ${total}% — 100%가 되도록 조정하세요`;
+  } else if (core < 70) {
+    warn.className = 'port-warn bad';
+    warn.textContent = `⚠️ 중심축 비중 ${core}% — 최소 70% 이상 권장`;
+  } else {
+    warn.className = 'port-warn ok';
+    warn.textContent = `✅ 합계: 100% — 중심축 ${core}%로 양호`;
+  }
+}
+function resetPort() {
+  document.getElementById('p1').value = 50;
+  document.getElementById('p2').value = 20;
+  document.getElementById('p3').value = 20;
+  document.getElementById('p4').value = 10;
+  checkPort();
+}
+checkPort();
+
+// ======== TAX SIMULATOR ========
+function updateTax() {
+  const gain = parseInt(document.getElementById('gainSlider').value);
+  const loss = parseInt(document.getElementById('lossSlider').value);
+  const rate = parseInt(document.getElementById('taxRateSlider').value) / 100;
+  document.getElementById('gainVal').textContent = '$' + gain.toLocaleString();
+  document.getElementById('lossVal').textContent = '$' + loss.toLocaleString();
+  document.getElementById('taxRateVal').textContent = Math.round(rate*100) + '%';
+  const before = Math.round(gain * rate);
+  const net = Math.max(gain - loss, 0);
+  const after = Math.round(net * rate);
+  const saved = before - after;
+  document.getElementById('beforeTax').textContent = '$' + before.toLocaleString();
+  document.getElementById('afterTax').textContent = '$' + after.toLocaleString();
+  document.getElementById('savedTax').textContent = '$' + saved.toLocaleString();
+}
+function resetTax() {
+  document.getElementById('gainSlider').value = 50000;
+  document.getElementById('lossSlider').value = 30000;
+  document.getElementById('taxRateSlider').value = 20;
+  updateTax();
+}
+updateTax();
+
+// ======== QUIZ ========
+let quizAnswered = new Set();
+let quizScore = 0;
+const answers = {
+  Q1: { correct: 1, explanation: "은퇴 계좌는 일반 계좌보다 보수적으로 운용해야 합니다. 세금 유예 혜택이 있다고 해서 리스크를 키우는 것은 바람직하지 않습니다." },
+  Q2: { correct: 2, explanation: "현금은 인플레이션으로 인해 매년 가치가 떨어집니다. 강사는 연간 평균 약 10% 감가상각을 언급했습니다." },
+  Q3: { correct: 1, explanation: "틀립니다. 포트폴리오를 구성하는 이유는 미래를 예측할 수 없기 때문에 리스크를 분산하기 위해서입니다." },
+  Q4: { correct: 2, explanation: "4대 목적은 Safety(안정성), Income(소득), Capital Growth(자산성장), Tax Reduction(절세)입니다. Leverage는 포함되지 않습니다." },
+  Q5: { correct: 1, explanation: "항상 중심에서 시작하여 외곽으로 확장합니다. 대형주 70~80%를 먼저 채운 후 소형·고위험으로 확장합니다." },
+  Q7: { correct: 2, explanation: "자산 규모가 적을수록 라지캡(대형 가치주)을 더 크게 가져가야 합니다. 소형주나 코인 등은 자산이 커진 후에 일부 편입합니다." },
+  Q8: { correct: 1, explanation: "틀립니다. 세금 유예는 액티브 매니지먼트를 가능하게 하지만, 그렇다고 리스크를 늘리는 것이 아니라 오히려 보수적으로 운용해야 합니다." },
+  Q9: { correct: 1, explanation: "이벤트가 가까워질수록 점진적으로 보수적인 포트폴리오로 전환해야 합니다. 직전에 한꺼번에 매도하거나 오히려 리스크를 높이면 큰 손실을 볼 수 있습니다." },
+};
+
+function answerMC(btn, result, qid) {
+  if (quizAnswered.has(qid)) return;
+  quizAnswered.add(qid);
+  const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  btn.classList.add(result);
+  const fb = document.getElementById('fb-' + qid);
+  if (result === 'correct') {
+    quizScore++;
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✅ 정답! ' + answers[qid].explanation;
+  } else {
+    fb.className = 'quiz-feedback show ng';
+    fb.textContent = '❌ 오답. ' + answers[qid].explanation;
+  }
+  updateProgress();
+  checkAllDone();
+}
+
+function answerShort(qid, correctAns) {
+  if (quizAnswered.has(qid)) return;
+  const input = document.getElementById('ans-' + qid);
+  const val = input.value.trim().toLowerCase();
+  const fb = document.getElementById('fb-' + qid);
+  quizAnswered.add(qid);
+  input.disabled = true;
+  if (val.includes('tax') && val.includes('loss') || val.includes('harvesting') || val.includes('하베스팅')) {
+    quizScore++;
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✅ 정답! Tax-Loss Harvesting — 손실 종목과 이익 종목을 동시에 매도하여 과세 소득을 줄이는 전략입니다.';
+  } else {
+    fb.className = 'quiz-feedback show ng';
+    fb.textContent = '❌ 오답. 정답은 Tax-Loss Harvesting입니다.';
+  }
+  updateProgress();
+  checkAllDone();
+}
+
+function answerShort10() {
+  const qid = 'Q10';
+  if (quizAnswered.has(qid)) return;
+  const input = document.getElementById('ans-' + qid);
+  const val = input.value.trim();
+  const fb = document.getElementById('fb-' + qid);
+  quizAnswered.add(qid);
+  input.disabled = true;
+  const keywords = ['타이어', 'tire', '갈아끼우다', '갈아 끼우다', '바꾸다'];
+  const matched = keywords.some(k => val.toLowerCase().includes(k.toLowerCase()));
+  if (matched) {
+    quizScore++;
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✅ 정답! Retire = Re-tire, 즉 타이어를 갈아끼우는 것. 멈추는 것이 아니라 새로운 방식으로 다시 달리는 것을 의미합니다.';
+  } else {
+    fb.className = 'quiz-feedback show ng';
+    fb.textContent = '❌ 오답. Retire는 타이어(tire)를 갈아끼운다는 뜻으로, 인생의 방향을 바꿔 다시 달리는 것을 의미합니다.';
+  }
+  updateProgress();
+  checkAllDone();
+}
+
+function updateProgress() {
+  const done = quizAnswered.size;
+  document.getElementById('progressFill').style.width = (done / 10 * 100) + '%';
+  document.getElementById('progressText').textContent = done + ' / 10 완료';
+}
+
+function checkAllDone() {
+  if (quizAnswered.size >= 10) {
+    const score = document.getElementById('quizScore');
+    score.classList.add('show');
+    document.getElementById('finalScore').textContent = quizScore;
+    let comment = '';
+    if (quizScore >= 9) comment = '🎉 우수! 포트폴리오 원칙을 완벽히 이해하셨습니다.';
+    else if (quizScore >= 7) comment = '👍 양호! 핵심 개념을 잘 이해하셨습니다.';
+    else if (quizScore >= 5) comment = '📚 보통. 강의 내용을 다시 한번 복습해보세요.';
+    else comment = '🔄 다시 한번 강의를 천천히 들어보세요.';
+    document.getElementById('scoreComment').textContent = comment;
+  }
+}
+
+function resetQuiz() {
+  quizAnswered.clear();
+  quizScore = 0;
+  document.querySelectorAll('.quiz-opt').forEach(o => {
+    o.disabled = false;
+    o.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.quiz-feedback').forEach(f => f.className = 'quiz-feedback');
+  document.querySelectorAll('.quiz-short-input').forEach(i => { i.disabled = false; i.value = ''; });
+  document.getElementById('quizScore').classList.remove('show');
+  updateProgress();
+}
+</script>
+</body>
+</html>
