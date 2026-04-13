@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아카데미 3회 | 정답 및 해설</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --text2: #777;
+    --accent: #e11d48; --accent2: #f43f5e; --border: #e5e5e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 15px; }
+
+  .cover {
+    background: var(--text); color: #fff;
+    padding: 44px 24px 36px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; top: -50px; right: -50px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: var(--accent); opacity: 0.15;
+  }
+  .cover-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); font-weight: 700; margin-bottom: 12px; }
+  .cover-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+  .cover-sub { font-size: 13px; color: #aaa; }
+  .cover-notice {
+    margin-top: 18px; background: #2a2a2a; border-left: 3px solid var(--accent);
+    padding: 12px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #ccc; line-height: 1.6;
+  }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .answer-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 18px; margin-bottom: 16px;
+  }
+  .answer-card .head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .q-badge {
+    background: var(--accent); color: #fff; font-size: 11px;
+    font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .diff-badge {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; white-space: nowrap;
+  }
+  .easy { background: #dcfce7; color: #166534; }
+  .medium { background: #fef9c3; color: #854d0e; }
+  .hard { background: #fee2e2; color: #991b1b; }
+
+  .q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.55; }
+
+  .answer-box {
+    background: #fff; border: 1.5px solid var(--accent);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .answer-label { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+  .answer-text { font-size: 15px; font-weight: 700; color: var(--text); }
+  .explain-box {
+    margin-top: 10px; background: #f8f8f8; border-radius: 6px;
+    padding: 10px 12px; font-size: 13px; color: #555; line-height: 1.65;
+  }
+  .explain-box strong { color: var(--text); }
+
+  .table-wrap { overflow-x: auto; margin-top: 28px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--accent); color: #fff; padding: 10px 12px;
+    text-align: left; font-weight: 600;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--bg2); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; margin: 32px 0 16px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+  }
+
+  .footer { text-align: center; padding: 24px 20px; font-size: 11px; color: var(--text2); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-tag">Academy 3rd Session · Answer Sheet</div>
+  <div class="cover-title">정답 및 해설</div>
+  <div class="cover-sub">아카데미 3회 — 은퇴 후의 삶</div>
+  <div class="cover-notice">
+    ⚠️ <strong style="color:#fff;">이 파일은 정답·해설 전용입니다.</strong><br>
+    퀴즈를 먼저 풀고 싶다면 <strong style="color:#f43f5e;">academy3_analysis.html</strong> 파일을 먼저 열어주세요.
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">📋 정답 일람표</div>
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>번호</th><th>유형</th><th>난이도</th><th>정답</th>
+      </tr>
+      <tr><td>Q1</td><td>객관식</td><td>쉬움</td><td>② 꾸준히 운동하는 것</td></tr>
+      <tr><td>Q2</td><td>OX</td><td>쉬움</td><td>X (거짓)</td></tr>
+      <tr><td>Q3</td><td>객관식</td><td>보통</td><td>③ 은퇴 후 물질적·정신적 소득과 쓰임을 만들기 위해</td></tr>
+      <tr><td>Q4</td><td>단답형</td><td>보통</td><td>공통 관심사 / 케미스트리</td></tr>
+      <tr><td>Q5</td><td>OX</td><td>쉬움</td><td>X (거짓)</td></tr>
+      <tr><td>Q6</td><td>객관식</td><td>보통</td><td>② 부모 세대 경험의 직접 적용이 제한된다</td></tr>
+      <tr><td>Q7</td><td>단답형</td><td>보통</td><td>Do not force love</td></tr>
+      <tr><td>Q8</td><td>객관식</td><td>보통</td><td>③ 부모가 어떻게 살고 있는지를 보여주는 것</td></tr>
+      <tr><td>Q9</td><td>OX</td><td>어려움</td><td>X (거짓)</td></tr>
+      <tr><td>Q10</td><td>객관식</td><td>어려움</td><td>④ 은퇴 후 자녀 곁에서 함께 사는 것이 이상적이다</td></tr>
+    </table>
+  </div>
+
+  <div class="section-title" style="margin-top:40px;">📝 문제별 해설</div>
+
+  <!-- Q1 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q1 · 객관식</span>
+      <span class="diff-badge easy">쉬움</span>
+    </div>
+    <div class="q-text">강연자가 "100만 달러를 보는 행동"이라고 비유한 것은 무엇인가?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">② 꾸준히 운동하는 것</div>
+    </div>
+    <div class="explain-box">
+      강연자는 "얼굴이 까매지더라도 운동하는 것이 100만 달러를 보는 것"이라는 비유를 사용했습니다. <strong>건강 유지가 곧 재정적 보호</strong>라는 논리입니다. 미국에서는 건강이 무너지면 의료비로 수십억 원(100만~200만 달러)이 소진될 수 있다는 맥락에서 나온 표현입니다.
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q2 · OX</span>
+      <span class="diff-badge easy">쉬움</span>
+    </div>
+    <div class="q-text">Retirement는 영어 어원상 '달리기를 완전히 멈춘다'는 의미이다.</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">X (거짓)</div>
+    </div>
+    <div class="explain-box">
+      강연자는 Retirement = <strong>Re(다시) + tire(타이어를 끼우다)</strong>로 해석합니다. 즉, "타이어를 교체해 다시 달리는 것"이지 멈추는 삶이 아닙니다. 속도는 느려지지만 방향은 유지됩니다.
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q3 · 객관식</span>
+      <span class="diff-badge medium">보통</span>
+    </div>
+    <div class="q-text">강연자가 취미를 발전시켜야 하는 궁극적인 목적으로 설명한 것은?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">③ 은퇴 후 물질적·정신적 소득과 쓰임을 만들기 위해</div>
+    </div>
+    <div class="explain-box">
+      취미를 <strong>"전문가에 가까운 수준"</strong>으로 발전시키면, 후배를 가르치거나 강의를 하는 등 은퇴 후에도 "쓰임을 받는 자리"가 생긴다고 설명했습니다. 단순한 여가가 아닌, 소득원이자 사회적 역할이 된다는 점이 핵심입니다.
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q4 · 단답형</span>
+      <span class="diff-badge medium">보통</span>
+    </div>
+    <div class="q-text">강연자가 친구를 사귀는 기준으로 나이 대신 중요시한 두 가지 요소는?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">공통 관심사 + 케미스트리(화학적 궁합)</div>
+    </div>
+    <div class="explain-box">
+      강연자는 "같은 길을 좋아하거나, 와인이나 여행, 모터사이클 등 <strong>공통 관심사</strong>를 가진 사람"과 "서로 <strong>핏이 맞고 화학적 케미스트리가 잘 맞는 사람</strong>"이 진정한 친구라고 했습니다. 동년배에서만 이러한 사람을 찾기는 불가능합니다.
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q5 · OX</span>
+      <span class="diff-badge easy">쉬움</span>
+    </div>
+    <div class="q-text">강연자는 자녀에게 묻지 않아도 먼저 조언을 해주는 것이 부모의 역할이라고 했다.</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">X (거짓)</div>
+    </div>
+    <div class="explain-box">
+      강연자는 명확하게 말합니다: <strong>"조언은 물어봤을 때 하는 것"</strong>이고, 묻지 않았는데 하는 조언은 "독이 될 수 있다"고 경고했습니다. 부모의 일방적 조언 강요를 경계한 것입니다.
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q6 · 객관식</span>
+      <span class="diff-badge medium">보통</span>
+    </div>
+    <div class="q-text">4차 산업혁명과 관련하여 강연자가 설명한 부모-자녀 관계의 특징은?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">② 부모 세대 경험의 직접 적용이 제한된다</div>
+    </div>
+    <div class="explain-box">
+      강연자는 4차 산업혁명으로 세대 간 <strong>아젠다(agenda)가 너무 달라졌기 때문에</strong>, 부모가 살아온 방식을 자녀에게 그대로 적용하는 것이 어렵다고 했습니다. 그래서 삶으로 보여주는 태도 교육이 더 유효합니다.
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q7 · 단답형</span>
+      <span class="diff-badge medium">보통</span>
+    </div>
+    <div class="q-text">강연자가 자녀를 향한 과도한 사랑을 경계하며 인용한 영어 표현은?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">Do not force love</div>
+    </div>
+    <div class="explain-box">
+      강연자는 특히 어머니들이 자녀에게 사랑을 강요하는 경향이 있다고 지적하며, <strong>"Do not force love"</strong>라는 표현을 사용했습니다. 이어 "Let them go. Let them live their lives."라며 자녀의 삶에 대한 존중을 강조했습니다.
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q8 · 객관식</span>
+      <span class="diff-badge medium">보통</span>
+    </div>
+    <div class="q-text">강연자가 설명한 "자녀에게 가장 큰 교육"이란?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">③ 부모가 어떻게 살고 있는지를 보여주는 것</div>
+    </div>
+    <div class="explain-box">
+      강연자는 <strong>"아이들한테 가장 큰 교육은 내가 어떻게 살고 있는가를 걔네들이 보게 하는 것"</strong>이라고 단언했습니다. 말이나 간섭이 아닌, 부모의 삶 자체가 가장 강력한 교육 도구라는 철학입니다.
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q9 · OX</span>
+      <span class="diff-badge hard">어려움</span>
+    </div>
+    <div class="q-text">강연자는 은퇴 후 삶에서 자녀 중심의 삶을 유지하는 것이 바람직하다고 주장했다.</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">X (거짓)</div>
+    </div>
+    <div class="explain-box">
+      강연자는 <strong>"온전히 나를 위한 삶"</strong>을 강조합니다. "20~30년 자식을 위해 고생했으면 충분하다"며, 은퇴 후에는 자녀가 아닌 자기 자신을 위한 삶으로 전환해야 한다고 했습니다. 이 문제가 어려운 이유는 한국 문화적 통념과 상반되기 때문입니다.
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="answer-card">
+    <div class="head">
+      <span class="q-badge">Q10 · 객관식</span>
+      <span class="diff-badge hard">어려움</span>
+    </div>
+    <div class="q-text">아래 중 강연자의 은퇴 철학과 가장 거리가 먼 것은?</div>
+    <div class="answer-box">
+      <div class="answer-label">정답</div>
+      <div class="answer-text">④ 은퇴 후에는 자녀 곁에서 함께 살아가는 것이 이상적이다</div>
+    </div>
+    <div class="explain-box">
+      강연자의 은퇴 철학 전체를 종합적으로 이해해야 하는 문제입니다. ①②③은 모두 강연 내용과 일치합니다. 그러나 ④는 강연자가 강하게 부정하는 관점입니다. 그는 <strong>"며느리가 어떻든 그건 걔네 삶이고 나의 삶과는 관계없다"</strong>고 하며 자녀 삶에 얽매이지 않는 독립적 은퇴를 강조했습니다.
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:40px;">📊 난이도별 분포</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:#dcfce7;border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#166534;">3문제</div>
+      <div style="font-size:12px;color:#166534;margin-top:4px;">쉬움 (30%)</div>
+      <div style="font-size:11px;color:#666;margin-top:6px;">Q1, Q2, Q5</div>
+    </div>
+    <div style="background:#fef9c3;border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#854d0e;">5문제</div>
+      <div style="font-size:12px;color:#854d0e;margin-top:4px;">보통 (50%)</div>
+      <div style="font-size:11px;color:#666;margin-top:6px;">Q3, Q4, Q6, Q7, Q8</div>
+    </div>
+    <div style="background:#fee2e2;border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#991b1b;">2문제</div>
+      <div style="font-size:12px;color:#991b1b;margin-top:4px;">어려움 (20%)</div>
+      <div style="font-size:11px;color:#666;margin-top:6px;">Q9, Q10</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">아카데미 3회 정답·해설 · 2026년 04월 13일 · Educational Use Only</div>
+
+</body>
+</html>
