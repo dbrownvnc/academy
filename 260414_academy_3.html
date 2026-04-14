@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포트폴리오 리밸런싱 전략 원론</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --blue: #2563eb;
+    --gray: #6b7280;
+    --table-header: #e11d48;
+    --font-serif: 'Playfair Display', 'Noto Serif KR', serif;
+    --font-sans: 'Noto Sans KR', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 16px;
+    border-top: 1px solid #333;
+    padding-top: 14px;
+  }
+  .hero-meta span {
+    display: inline-block;
+    font-size: 11px;
+    color: #888;
+    margin-right: 16px;
+    margin-top: 8px;
+  }
+  .hero-meta span strong { color: var(--accent2); }
+
+  /* SECTION */
+  .section {
+    padding: 32px 20px 0;
+  }
+  .section + .section { border-top: 1px solid var(--border); margin-top: 28px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .highlight-box p { margin: 0; font-size: 14px; }
+  .highlight-box strong { color: var(--accent); }
+
+  .quote-block {
+    border-left: none;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    margin: 24px 0;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .quote-block small {
+    display: block;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* CARD LIST */
+  .card-list { list-style: none; margin: 0 0 20px; }
+  .card-list li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .card-list li:last-child { border-bottom: none; }
+  .card-num {
+    min-width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .card-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card-content span { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* CHART CONTAINERS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+  .chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .data-table tr:nth-child(even) td { background: #f4f4f4; }
+  .up { color: var(--accent); font-weight: 700; }
+  .down { color: var(--blue); font-weight: 700; }
+
+  /* RULE BOX */
+  .rule-box {
+    background: var(--text);
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  .rule-box h3 {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+  .rule-box p { color: #ccc; font-size: 13px; margin-bottom: 8px; }
+  .rule-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+  }
+  .rule-item:last-child { border-bottom: none; }
+  .rule-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .rule-item span { font-size: 13px; color: #ddd; }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .sim-box h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .sim-box p { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+
+  .slider-group { margin-bottom: 16px; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .slider-label span { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+
+  .sim-result {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 14px;
+  }
+  .sim-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .sim-result-row:last-child { border-bottom: none; }
+  .sim-result-row .label { color: var(--text2); }
+  .sim-result-row .val { font-weight: 700; color: var(--text); }
+  .sim-result-row .val.warn { color: var(--accent); }
+  .sim-result-row .val.ok { color: #16a34a; }
+
+  .btn-reset {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 18px;
+    background: none;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .btn-reset:hover { background: var(--accent); color: #fff; }
+
+  /* DIVIDER */
+  .divider {
+    width: 48px; height: 3px;
+    background: var(--accent);
+    margin: 24px 0;
+  }
+
+  /* TAG PILLS */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .tag-red { background: #fff0f3; color: var(--accent); border: 1px solid #fecdd3; }
+  .tag-dark { background: #f0f0f0; color: var(--text); border: 1px solid var(--border); }
+  .tag-blue { background: #eff6ff; color: var(--blue); border: 1px solid #bfdbfe; }
+
+  /* FOOTER */
+  .footer {
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .footer strong { color: var(--accent); }
+
+  /* SECTOR ROTATION VIZ */
+  .sector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .sector-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .sector-card.active {
+    border-color: var(--accent);
+    background: #fff0f3;
+  }
+  .sector-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    width: var(--pct, 0%);
+    transition: width 0.5s ease;
+  }
+  .sector-card.active::after { width: var(--pct, 0%); }
+  .sector-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .sector-pct { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .sector-label { font-size: 11px; color: var(--text2); }
+
+  .warning-banner {
+    background: #fff0f3;
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .warning-icon { font-size: 18px; flex-shrink: 0; }
+  .warning-text { font-size: 13px; color: var(--accent); font-weight: 600; line-height: 1.5; }
+
+  /* PROCESS FLOW */
+  .flow-steps { margin: 16px 0; }
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 0;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px; top: 34px;
+    width: 2px; height: calc(100% - 10px);
+    background: var(--border);
+  }
+  .flow-dot {
+    min-width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .flow-body { padding-bottom: 20px; }
+  .flow-body strong { font-size: 14px; display: block; margin-bottom: 4px; }
+  .flow-body span { font-size: 13px; color: var(--text2); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero fade-in">
+  <div class="hero-tag">투자 아카데미 6회 · 2023년 9월</div>
+  <h1>포트폴리오 리밸런싱<br><em style="color:#f87171">전략 원론</em>과 투자 목적</h1>
+  <p style="color:#ccc;font-size:13px;margin-top:12px;">
+    리밸런싱을 시작하기 전 반드시 알아야 할 4가지 질문, 5·25 룰, 섹터 로테이션까지 핵심 개념을 정리합니다.
+  </p>
+  <div class="hero-meta">
+    <span>📅 <strong>2023.09.02</strong></span>
+    <span>⏱ <strong>약 20분</strong> 강의</span>
+    <span>💡 <strong>투자 전략</strong></span>
+  </div>
+</div>
+
+<!-- SECTION 1: 리밸런싱 전 4가지 질문 -->
+<div class="section fade-in">
+  <div class="section-label">Step 01</div>
+  <div class="section-title">리밸런싱 전<br><em>반드시 답해야 할 4가지</em></div>
+  <p>리밸런싱은 전략이다. 전략을 세우려면 먼저 <strong>목표와 방향</strong>이 정해져야 한다. 아래 4가지 질문에 대한 답 없이 리밸런싱을 시도하는 것은 의미가 없다.</p>
+
+  <ul class="card-list">
+    <li>
+      <div class="card-num">1</div>
+      <div class="card-content">
+        <strong>나의 투자 목적은 무엇인가?</strong>
+        <span>돈을 버는 것이 목적이 아니라, <b>그 돈으로 무엇을 할 것인가</b>가 목적이다. 돈 자체가 목적이 되면 가족도, 삶도 놓친다.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">2</div>
+      <div class="card-content">
+        <strong>나의 투자 목표는 무엇인가?</strong>
+        <span>예: 1억을 7~8% 성장시켜 몇 년 안에 얼마를 만들겠다. 목표는 구체적인 수치·기간이 있는 것. 목적과 구별하자.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">3</div>
+      <div class="card-content">
+        <strong>나의 리스크 성향(프로파일)은?</strong>
+        <span>투자금이 60%로 줄어도 기다릴 수 있는지? <b>이 돈이 없으면 안 되는 상황</b>이라면 고리스크 투자는 금물.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">4</div>
+      <div class="card-content">
+        <strong>나의 투자 경험·빈도수는?</strong>
+        <span>2~3년 차 투자자는 모르는 것이 아는 것보다 훨씬 많다. 경험이 부족할수록 공격적 배팅은 위험하다.</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="quote-block">
+    "길을 잃으면 돈을 잃는다.<br>Way lost means money lost."
+    <small>— 강의 핵심 메시지</small>
+  </div>
+</div>
+
+<!-- SECTION 2: 리밸런싱이란 -->
+<div class="section fade-in">
+  <div class="section-label">Step 02</div>
+  <div class="section-title"><em>리밸런싱</em>이란 무엇인가</div>
+
+  <div class="highlight-box">
+    <p><strong>리밸런싱(Rebalancing)</strong>이란 투자 포트폴리오의 목적·계획·리스크 노출에 맞게 <b>포트폴리오 내 자산 비중을 조정하는 행위</b>다.</p>
+  </div>
+
+  <p>주가와 기업 상태는 살아있는 생물처럼 계속 변한다. 처음 설계한 비중은 시간이 지나면서 틀어지고, 의도하지 않은 리스크에 노출된다. 이를 바로잡는 것이 리밸런싱이다.</p>
+
+  <div class="flow-steps">
+    <div class="flow-step fade-in">
+      <div class="flow-dot">①</div>
+      <div class="flow-body">
+        <strong>포트폴리오 설계</strong>
+        <span>투자 목적·목표·리스크 성향에 맞는 자산 비중 결정</span>
+      </div>
+    </div>
+    <div class="flow-step fade-in">
+      <div class="flow-dot">②</div>
+      <div class="flow-body">
+        <strong>시간 경과 → 비중 변화</strong>
+        <span>일부 종목 상승/하락으로 원래 설계한 비중이 달라짐</span>
+      </div>
+    </div>
+    <div class="flow-step fade-in">
+      <div class="flow-dot">③</div>
+      <div class="flow-body">
+        <strong>리스크 증가 감지</strong>
+        <span>성장주 비중↑ → 포트폴리오 전체 변동성(베타)↑</span>
+      </div>
+    </div>
+    <div class="flow-step fade-in">
+      <div class="flow-dot">④</div>
+      <div class="flow-body">
+        <strong>리밸런싱 실행</strong>
+        <span>과비중 종목 매도 + 저비중 종목 매수 → 원래 설계로 복귀</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: 홍길동 포트폴리오 사례 -->
+<div class="section fade-in">
+  <div class="section-label">실제 사례</div>
+  <div class="section-title">홍길동 님의<br><em>포트폴리오 변화</em></div>
+  <p>45세, 보수적 성향, 은퇴 자산 목적. 2023년 1월 총 5만 달러로 4종목 투자 시작.</p>
+
+  <div class="chart-title">초기 vs 7개월 후 비중 변화</div>
+  <div class="chart-container fade-in">
+    <canvas id="portfolioChart" height="240"></canvas>
+  </div>
+
+  <table class="data-table fade-in">
+    <thead>
+      <tr>
+        <th>종목</th>
+        <th>초기 비중</th>
+        <th>7개월 후</th>
+        <th>변화</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>테슬라</strong></td>
+        <td>20%</td>
+        <td>27%</td>
+        <td class="up">+7%↑</td>
+      </tr>
+      <tr>
+        <td><strong>메타</strong></td>
+        <td>20%</td>
+        <td>37%</td>
+        <td class="up">+17%↑</td>
+      </tr>
+      <tr>
+        <td><strong>존슨앤존슨</strong></td>
+        <td>40%</td>
+        <td>22%</td>
+        <td class="down">-18%↓</td>
+      </tr>
+      <tr>
+        <td><strong>오렐리</strong></td>
+        <td>20%</td>
+        <td>13.5%</td>
+        <td class="down">-6.5%↓</td>
+      </tr>
+      <tr style="background:#fff0f3">
+        <td><strong>총 자산</strong></td>
+        <td>$50,000</td>
+        <td>$81,000</td>
+        <td class="up">+62%↑</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warning-banner fade-in">
+    <div class="warning-icon">⚠️</div>
+    <div class="warning-text">
+      포트폴리오 베타(변동성)가 1.0 → 1.5로 <b>50% 증가</b>했다.<br>
+      보수적 성향으로 시작했지만 이제 하이리스크 포트폴리오가 된 상태.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: 5·25 룰 -->
+<div class="section fade-in">
+  <div class="section-label">핵심 규칙</div>
+  <div class="section-title">5·25 <em>룰</em></div>
+  <p>포트폴리오의 어느 한 종목 비중이 지나치게 커지는 것을 방지하는 기본 원칙이다.</p>
+
+  <div class="rule-box fade-in">
+    <h3>5·25 Rule</h3>
+    <div class="rule-item">
+      <div class="rule-badge">대형주</div>
+      <span>한 종목이 전체의 <b>25% 초과</b> 시 리밸런싱 필요</span>
+    </div>
+    <div class="rule-item">
+      <div class="rule-badge">소형주</div>
+      <span>한 종목이 전체의 <b>5% 초과</b> 시 리밸런싱 필요</span>
+    </div>
+    <p style="margin-top:12px;font-size:12px;">소형주는 상승 폭도 크지만 하락 폭도 극단적이라 5% 이상 보유는 위험하다. 특히 9월 이전에는 소형주 비중을 줄이는 것이 권장된다.</p>
+  </div>
+
+  <!-- 5·25 룰 인터랙티브 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <h3>🎮 5·25 룰 비중 점검기</h3>
+    <p>종목 유형과 현재 비중을 입력해 리밸런싱 필요 여부를 확인하세요.</p>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <label>종목 비중</label>
+        <span id="pctVal">20%</span>
+      </div>
+      <input type="range" id="pctSlider" min="1" max="60" value="20">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <label>종목 유형</label>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button id="btnLarge" onclick="setType('large')" style="flex:1;padding:8px;border-radius:6px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">대형주 (Large Cap)</button>
+        <button id="btnSmall" onclick="setType('small')" style="flex:1;padding:8px;border-radius:6px;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;">소형주 (Small Cap)</button>
+      </div>
+    </div>
+
+    <div class="sim-result">
+      <div class="sim-result-row">
+        <span class="label">현재 비중</span>
+        <span class="val" id="rPct">20%</span>
+      </div>
+      <div class="sim-result-row">
+        <span class="label">허용 한도</span>
+        <span class="val" id="rLimit">25% (대형주)</span>
+      </div>
+      <div class="sim-result-row">
+        <span class="label">초과 여부</span>
+        <span class="val" id="rStatus">✅ 정상 범위</span>
+      </div>
+      <div class="sim-result-row">
+        <span class="label">권장 조치</span>
+        <span class="val" id="rAction" style="font-size:12px;">현재 비중 유지 가능</span>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetSim()">↺ 초기화</button>
+  </div>
+</div>
+
+<!-- SECTION 5: 리밸런싱 안 하면 생기는 문제 -->
+<div class="section fade-in">
+  <div class="section-label">Why Rebalance</div>
+  <div class="section-title">방치했을 때<br><em>생기는 문제들</em></div>
+
+  <div class="tag-row">
+    <span class="tag tag-red">변동성 폭증</span>
+    <span class="tag tag-red">목표 상실</span>
+    <span class="tag tag-red">시장 리스크 노출</span>
+    <span class="tag tag-dark">방화력 상실</span>
+    <span class="tag tag-dark">전략 부재</span>
+    <span class="tag tag-red">통제 불가</span>
+  </div>
+
+  <p>주가가 올랐을 때 방치하면 처음의 보수적 포트폴리오가 어느새 하이리스크 포트폴리오로 변한다. 나스닥 변동성이 커지거나 금리 인상 시 폭락에 그대로 노출된다.</p>
+  <p>목표를 잃은 포트폴리오는 주식의 집합체에 불과하다. 방향을 잃으면 돈도 잃는다.</p>
+
+  <!-- 테슬라 주가 변동 시각화 -->
+  <div class="chart-title">테슬라 주가 변동 패턴 (예시)</div>
+  <div class="chart-container fade-in">
+    <canvas id="volatilityChart" height="220"></canvas>
+  </div>
+  <p style="font-size:12px;color:var(--text2);">※ 실제 데이터 기반 예시. 대부분의 투자자는 상승 구간에서 진입하고 폭락 시 손절하는 경향이 있다.</p>
+</div>
+
+<!-- SECTION 6: 리밸런싱 방법 -->
+<div class="section fade-in">
+  <div class="section-label">How To</div>
+  <div class="section-title">리밸런싱<br><em>실행 방법</em></div>
+
+  <ul class="card-list">
+    <li>
+      <div class="card-num">A</div>
+      <div class="card-content">
+        <strong>현금으로 매입</strong>
+        <span>폭락장 또는 3일 이상 하락 시장에서, 투자 목적·포트폴리오 평균 리스크에 부합하는 기업 주식을 매입한다.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">B</div>
+      <div class="card-content">
+        <strong>비중 초과 종목 매도 → 교체</strong>
+        <span>예) 메타가 25% 초과 시, 비슷한 리스크의 구글·애플로 교체하거나, 보수적 포트폴리오 복원이 목적이라면 UNH·오렐리 등으로 교체.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">C</div>
+      <div class="card-content">
+        <strong>섹터 로테이션</strong>
+        <span>비중 조절 후 남은 10~15%로 그 분기 성장성이 큰 섹터(예: AI·IT)에 자유롭게 추가 투자 가능. 11개 섹터 중 유망 섹터를 순환 투자한다.</span>
+      </div>
+    </li>
+  </ul>
+
+  <!-- 섹터 로테이션 시각화 -->
+  <div class="sim-box fade-in">
+    <h3>🔄 섹터 로테이션 개념</h3>
+    <p>각 섹터 카드를 탭하면 주요 특징을 확인할 수 있습니다.</p>
+    <div class="sector-grid" id="sectorGrid"></div>
+    <div id="sectorDetail" style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;font-size:13px;color:var(--text2);min-height:48px;margin-top:4px;">
+      섹터를 탭하여 설명을 확인하세요.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7: 리밸런싱 주기 -->
+<div class="section fade-in">
+  <div class="section-label">Timing</div>
+  <div class="section-title">언제<br><em>리밸런싱할까</em></div>
+
+  <ul class="card-list">
+    <li>
+      <div class="card-num">📅</div>
+      <div class="card-content">
+        <strong>캘린더 리밸런싱 (Calendar)</strong>
+        <span>분기별(1·2·3·4분기) 1회 정기 점검. 기관 투자자들이 가장 비용 효율적으로 사용하는 방식.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">📊</div>
+      <div class="card-content">
+        <strong>혼합 방식 (Corridor Mix)</strong>
+        <span>정기 점검 + 실적 발표나 특정 이벤트(어닝 시즌 등) 때 추가 조정.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">💰</div>
+      <div class="card-content">
+        <strong>코스트 하베스팅 (Cost Harvesting)</strong>
+        <span>이익 종목과 손실 종목을 동시에 매도해 세금을 상쇄(Tax Loss Harvesting). 양도소득세 절약 전략.</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="highlight-box fade-in">
+    <p>💡 <strong>Tax Loss Harvesting 예시:</strong> 테슬라로 +$100,000 이익, 스몰캡 종목으로 -$50,000 손실일 때, 두 종목을 동시 매도하면 과세 대상이 $100,000 → $50,000으로 줄어든다.</p>
+  </div>
+</div>
+
+<!-- SECTION 8: 포트폴리오 리밸런싱 시뮬레이터 -->
+<div class="section fade-in">
+  <div class="section-label">Simulator</div>
+  <div class="section-title">리밸런싱<br><em>수익률 시뮬레이터</em></div>
+
+  <div class="sim-box fade-in">
+    <h3>📐 포트폴리오 성장 시뮬레이터</h3>
+    <p>초기 투자금과 연평균 수익률을 조정해 목표 자산 달성 기간을 확인하세요.</p>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <label>초기 투자금</label>
+        <span id="initVal">$50,000</span>
+      </div>
+      <input type="range" id="initSlider" min="10000" max="500000" step="5000" value="50000">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <label>연평균 수익률</label>
+        <span id="rateVal">8%</span>
+      </div>
+      <input type="range" id="rateSlider" min="1" max="30" step="1" value="8">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <label>목표 금액</label>
+        <span id="targetVal">$100,000</span>
+      </div>
+      <input type="range" id="targetSlider" min="20000" max="2000000" step="10000" value="100000">
+    </div>
+
+    <div class="chart-container fade-in" style="margin-top:16px;">
+      <canvas id="growthChart" height="220"></canvas>
+    </div>
+
+    <div class="sim-result" id="growthResult">
+      <div class="sim-result-row">
+        <span class="label">목표 달성 예상 기간</span>
+        <span class="val" id="gYears">약 9년</span>
+      </div>
+      <div class="sim-result-row">
+        <span class="label">10년 후 예상 자산</span>
+        <span class="val" id="g10y">$107,946</span>
+      </div>
+      <div class="sim-result-row">
+        <span class="label">20년 후 예상 자산</span>
+        <span class="val" id="g20y">$233,048</span>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetGrowth()">↺ 초기화</button>
+  </div>
+</div>
+
+<!-- SECTION 9: 핵심 요약 -->
+<div class="section fade-in">
+  <div class="section-label">Summary</div>
+  <div class="section-title">강의<em> 핵심 요약</em></div>
+
+  <div class="tag-row">
+    <span class="tag tag-red">투자 목적 우선</span>
+    <span class="tag tag-blue">5·25 룰</span>
+    <span class="tag tag-blue">섹터 로테이션</span>
+    <span class="tag tag-dark">분기별 리밸런싱</span>
+    <span class="tag tag-red">리스크 통제</span>
+  </div>
+
+  <ul class="card-list fade-in">
+    <li>
+      <div class="card-num">✓</div>
+      <div class="card-content">
+        <strong>투자 목적·목표·리스크 성향을 먼저 정하라</strong>
+        <span>이 세 가지 없이 리밸런싱은 의미 없다.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">✓</div>
+      <div class="card-content">
+        <strong>5·25 룰을 지켜라</strong>
+        <span>대형주 25%, 소형주 5% 초과 금지.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">✓</div>
+      <div class="card-content">
+        <strong>분기별 정기 리밸런싱</strong>
+        <span>가장 비용 효율적이며 감정적 판단을 줄인다.</span>
+      </div>
+    </li>
+    <li>
+      <div class="card-num">✓</div>
+      <div class="card-content">
+        <strong>길을 잃으면 돈을 잃는다</strong>
+        <span>포트폴리오의 방향을 잃지 않는 것이 수익보다 중요하다.</span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="footer">
+  <strong>한인생TV 투자아카데미 6회</strong> · 2023.09.02<br>
+  본 문서는 강의 내용을 요약·정리한 것으로 투자 권유가 아닙니다.
+</div>
+
+<script>
+// === 5·25 룰 시뮬레이터 ===
+let simType = 'large';
+
+function setType(t) {
+  simType = t;
+  document.getElementById('btnLarge').style.background = t === 'large' ? 'var(--accent)' : '#fff';
+  document.getElementById('btnLarge').style.color = t === 'large' ? '#fff' : 'var(--text2)';
+  document.getElementById('btnLarge').style.borderColor = t === 'large' ? 'var(--accent)' : 'var(--border)';
+  document.getElementById('btnSmall').style.background = t === 'small' ? 'var(--accent)' : '#fff';
+  document.getElementById('btnSmall').style.color = t === 'small' ? '#fff' : 'var(--text2)';
+  document.getElementById('btnSmall').style.borderColor = t === 'small' ? 'var(--accent)' : 'var(--border)';
+  updateSim();
+}
+
+function updateSim() {
+  const pct = parseInt(document.getElementById('pctSlider').value);
+  const limit = simType === 'large' ? 25 : 5;
+  const over = pct > limit;
+  document.getElementById('pctVal').textContent = pct + '%';
+  document.getElementById('rPct').textContent = pct + '%';
+  document.getElementById('rLimit').textContent = limit + '% (' + (simType === 'large' ? '대형주' : '소형주') + ')';
+  const status = document.getElementById('rStatus');
+  const action = document.getElementById('rAction');
+  if (over) {
+    status.textContent = '🔴 5·25 룰 위반';
+    status.className = 'val warn';
+    action.textContent = `${pct - limit}% 초과분 매도 후 리밸런싱 필요`;
+    action.className = 'val warn';
+  } else {
+    status.textContent = '✅ 정상 범위';
+    status.className = 'val ok';
+    action.textContent = '현재 비중 유지 가능';
+    action.className = 'val ok';
+  }
+}
+
+function resetSim() {
+  document.getElementById('pctSlider').value = 20;
+  simType = 'large';
+  setType('large');
+}
+
+document.getElementById('pctSlider').addEventListener('input', updateSim);
+
+// === 섹터 로테이션 ===
+const sectors = [
+  { name: 'IT / AI', pct: '25%', detail: 'AI 붐으로 최근 가장 높은 성장. 섹터 로테이션에서 추가 비중 배정 대상. 단, 변동성도 크다.' },
+  { name: '헬스케어', pct: '15%', detail: '경기 방어주. 존슨앤존슨 등 보수적 포트폴리오의 핵심 구성요소.' },
+  { name: '금융', pct: '13%', detail: '금리 인상 시 수혜. 경기 사이클에 민감하게 반응한다.' },
+  { name: '필수소비재', pct: '10%', detail: '경기 침체에도 수요 유지. 방어적 성격 강하며 변동성이 낮다.' },
+  { name: '에너지', pct: '9%', detail: '원유·가스 가격 연동. 인플레이션 헤지 수단으로 활용된다.' },
+  { name: '임의소비재', pct: '10%', detail: '경기 상승 시 수혜. 테슬라가 이 섹터에 포함된다.' },
+];
+
+const grid = document.getElementById('sectorGrid');
+sectors.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'sector-card';
+  card.style.setProperty('--pct', s.pct);
+  card.innerHTML = `<div class="sector-name">${s.name}</div><div class="sector-pct">${s.pct}</div><div class="sector-label">S&P500 비중 예시</div>`;
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.sector-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    document.getElementById('sectorDetail').textContent = s.detail;
+  });
+  grid.appendChild(card);
+});
+
+// === 성장 시뮬레이터 ===
+let growthChart = null;
+
+function updateGrowth() {
+  const init = parseInt(document.getElementById('initSlider').value);
+  const rate = parseInt(document.getElementById('rateSlider').value) / 100;
+  const target = parseInt(document.getElementById('targetSlider').value);
+
+  document.getElementById('initVal').textContent = '$' + init.toLocaleString();
+  document.getElementById('rateVal').textContent = (rate * 100) + '%';
+  document.getElementById('targetVal').textContent = '$' + target.toLocaleString();
+
+  const years = Array.from({length: 31}, (_, i) => i);
+  const values = years.map(y => Math.round(init * Math.pow(1 + rate, y)));
+
+  let targetYear = years.find(y => values[y] >= target) ?? '>30';
+  document.getElementById('gYears').textContent = targetYear !== '>30' ? `약 ${targetYear}년` : '30년 초과';
+  document.getElementById('g10y').textContent = '$' + values[10].toLocaleString();
+  document.getElementById('g20y').textContent = '$' + values[20].toLocaleString();
+
+  if (growthChart) growthChart.destroy();
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  growthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: years.map(y => y + '년'),
+      datasets: [{
+        label: '자산 성장',
+        data: values,
+        borderColor: '#e11d48',
+        backgroundColor: 'rgba(225,29,72,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 2,
+        borderWidth: 2,
+      }, {
+        label: '목표 금액',
+        data: years.map(() => target),
+        borderColor: '#2563eb',
+        borderDash: [6, 3],
+        borderWidth: 1.5,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => '$' + ctx.parsed.y.toLocaleString() } }
+      },
+      scales: {
+        y: { ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', font: {size:10} }, grid: { color: '#f0f0f0' } },
+        x: { ticks: { font: {size:10}, maxTicksLimit: 8 }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function resetGrowth() {
+  document.getElementById('initSlider').value = 50000;
+  document.getElementById('rateSlider').value = 8;
+  document.getElementById('targetSlider').value = 100000;
+  updateGrowth();
+}
+
+document.getElementById('initSlider').addEventListener('input', updateGrowth);
+document.getElementById('rateSlider').addEventListener('input', updateGrowth);
+document.getElementById('targetSlider').addEventListener('input', updateGrowth);
+
+// === chartConfigs ===
+const chartConfigs = {};
+
+chartConfigs['portfolioChart'] = () => {
+  const ctx = document.getElementById('portfolioChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['테슬라', '메타', '존슨앤존슨', '오렐리'],
+      datasets: [
+        {
+          label: '초기 비중 (%)',
+          data: [20, 20, 40, 20],
+          backgroundColor: '#6b7280',
+          borderRadius: 4,
+        },
+        {
+          label: '7개월 후 (%)',
+          data: [27, 37, 22, 13.5],
+          backgroundColor: '#e11d48',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: {size:11}, boxWidth:12 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '%', font:{size:10} }, grid: { color: '#f0f0f0' }, max: 50 },
+        x: { ticks: { font:{size:11} }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['volatilityChart'] = () => {
+  const labels = ['0','3mo','6mo','9mo','12mo','15mo','18mo','21mo','24mo','27mo','30mo'];
+  const data = [100, 180, 140, 110, 200, 80, 60, 150, 130, 210, 180];
+  const ctx = document.getElementById('volatilityChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: '주가 지수 (100 기준)',
+        data,
+        borderColor: '#e11d48',
+        backgroundColor: 'rgba(225,29,72,0.07)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        borderWidth: 2,
+        pointBackgroundColor: data.map(v => v >= 180 ? '#e11d48' : '#6b7280'),
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => '지수: ' + ctx.parsed.y } }
+      },
+      scales: {
+        y: { ticks: { font:{size:10} }, grid: { color:'#f0f0f0' } },
+        x: { ticks: { font:{size:10} }, grid: { display:false } }
+      }
+    }
+  });
+};
+
+// === Intersection Observers ===
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// Growth chart init (not in chartConfigs since it's dynamic)
+setTimeout(() => { updateGrowth(); }, 300);
+</script>
+</body>
+</html>
