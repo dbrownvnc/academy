@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>섹터 로테이션의 의미와 방법 | 투자아카데미 7회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 20px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 12px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* SECTION DIVIDER */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 32px 0 14px;
+  }
+  .section-label span {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: var(--text);
+  }
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: #fff5f7;
+    padding: 14px 16px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* CARD */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin: 14px 0;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* BADGE ROW */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+  }
+  .badge.up { background: #fff5f7; border-color: var(--accent); color: var(--accent); }
+  .badge.down { background: #f3f4f6; border-color: #9ca3af; color: #6b7280; }
+  .badge.cash { background: #eff6ff; border-color: var(--chart4); color: var(--chart4); }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  thead tr { background: var(--accent); color: #fff; }
+  thead th { padding: 10px 12px; text-align: left; font-weight: 600; }
+  tbody tr { border-bottom: 1px solid var(--border); background: var(--bg2); }
+  tbody tr:nth-child(even) { background: #f9f9f9; }
+  tbody td { padding: 9px 12px; }
+
+  /* CHART */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container { position: relative; max-height: 340px; }
+  .chart-container canvas { opacity: 0; transition: opacity 0.4s ease; max-height: 300px; }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 18px 0;
+  }
+  .sim-box h3 { margin-top: 0; color: var(--accent); }
+  .slider-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; flex-wrap: wrap; }
+  .slider-row label { font-size: 13px; min-width: 120px; font-weight: 500; }
+  .slider-row input[type=range] { flex: 1; min-width: 120px; accent-color: var(--accent); cursor: pointer; }
+  .slider-val { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 52px; text-align: right; }
+  .sim-result {
+    margin-top: 14px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .sim-result .result-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
+  .sim-result .result-row:last-child { border-bottom: none; }
+  .sim-result .highlight { color: var(--accent); font-weight: 700; }
+  .sim-result .blue { color: var(--chart4); font-weight: 700; }
+  button.reset-btn {
+    margin-top: 12px;
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button.reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* CYCLE DIAGRAM */
+  .cycle-diagram { margin: 18px 0; }
+  .cycle-stages { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stage-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    position: relative;
+    cursor: default;
+    transition: border-color 0.2s;
+  }
+  .stage-card:hover { border-color: var(--accent); }
+  .stage-card.active { border-color: var(--accent); background: #fff5f7; }
+  .stage-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .stage-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .stage-sectors { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* SWINDLE ALERT */
+  .alert-box {
+    background: #fff5f7;
+    border: 1.5px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 16px 0;
+  }
+  .alert-box .alert-head {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .alert-box ul { padding-left: 16px; font-size: 13px; }
+  .alert-box li { margin-bottom: 4px; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 60px;
+    padding: 28px 20px;
+    background: var(--text);
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+  }
+  .footer strong { color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .prog-bar-wrap { margin: 6px 0 10px; }
+  .prog-bar-label { font-size: 12px; margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .prog-bar { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .prog-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 1.2s ease; }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* Sector ticker */
+  .sector-ticker { overflow: hidden; position: relative; margin: 14px 0; }
+  .sector-track { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .ticker-item .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .ticker-item.pos .dot { background: var(--accent); }
+  .ticker-item.neg .dot { background: #9ca3af; }
+  .ticker-item.neutral .dot { background: var(--chart4); }
+
+  @media (max-width: 400px) {
+    .hero h1 { font-size: 22px; }
+    .cycle-stages { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">투자아카데미 7회 · 2023년 9월 9일</div>
+    <h1>섹터 로테이션의<br>의미와 방법</h1>
+    <p style="color:#ccc; font-size:13px; margin-top:10px;">경제 사이클을 앞서 읽어 포트폴리오를 재편하는 예측의 기술</p>
+    <div class="hero-meta">
+      <span>📺 투자는인생TV</span>
+      <span>⏱ 핵심 요약</span>
+      <span>📊 섹터 로테이션 전략</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 1. 개요 -->
+  <div class="section-label"><span>개요</span></div>
+  <h2>섹터 로테이션은 "예측의 예술"</h2>
+  <p>섹터 로테이션은 수학 공식처럼 정해진 답이 없습니다. 시장에는 항상 불확실성과 심리적 요인이 작용하기 때문에, 강사는 이를 <strong>예측의 예술(Art of Prediction)</strong>이라 정의합니다.</p>
+
+  <div class="callout">
+    <strong>핵심 메시지:</strong> "예측이 틀리더라도, 미리 예측해서 포트폴리오를 선점하는 것이 리스크를 줄이면서 수익을 지키는 길이다."
+  </div>
+
+  <p>경제는 사이클을 가집니다. 11개(+현금 1개 = 12개) 섹터가 모두 동시에 오르거나 내리지 않으므로, <strong>몇 달 전에 미리 사이클을 예측하고 비중을 조절</strong>하는 것이 섹터 로테이션의 목적입니다.</p>
+
+  <!-- 2. 섹터 현황 -->
+  <div class="section-label"><span>섹터 현황 (2023년 9월 기준)</span></div>
+  <h2>어느 섹터에 돈이 들어가고 있나?</h2>
+
+  <div class="sector-ticker fade-in">
+    <div class="sector-track">
+      <div class="ticker-item pos">🟢 <span>IT / AI</span></div>
+      <div class="ticker-item pos">🟢 <span>에너지</span></div>
+      <div class="ticker-item pos">🟢 <span>헬스케어</span></div>
+      <div class="ticker-item pos">🟢 <span>커뮤니케이션 서비스</span></div>
+      <div class="ticker-item pos">🟢 <span>컨슈머 디스크레셔널</span></div>
+      <div class="ticker-item neg">⚫ <span>유틸리티</span></div>
+      <div class="ticker-item neg">⚫ <span>부동산(REITs)</span></div>
+      <div class="ticker-item neg">⚫ <span>컨슈머 스테이플</span></div>
+      <div class="ticker-item neg">⚫ <span>파이낸셜</span></div>
+      <div class="ticker-item neutral">🔵 <span>캐시(현금)</span></div>
+    </div>
+  </div>
+
+  <div class="chart-container fade-in" style="margin-top:16px;">
+    <canvas id="sectorChart" height="240"></canvas>
+  </div>
+
+  <table class="fade-in" style="margin-top:20px;">
+    <thead><tr><th>편입 ▲</th><th>주요 종목 예시</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>IT / AI</td><td>엔비디아, 슈퍼마이크로, 어도비</td><td>AI 팽창 사이클 진행 중</td></tr>
+      <tr><td>에너지</td><td>XOM, Watsco(왓폴드)</td><td>유가 $80 이상 상승 예측</td></tr>
+      <tr><td>헬스케어</td><td>UNH, CI, TMO, CBS</td><td>방어적 성격 + 꾸준한 성장</td></tr>
+      <tr><td>커뮤니케이션</td><td>메타, 구글, 마이크로소프트</td><td>AI·광고 수요 회복</td></tr>
+      <tr><td>컨슈머 디스크레셔널</td><td>아마존, 테슬라, 나이키</td><td>소비 회복 기대</td></tr>
+    </tbody>
+  </table>
+
+  <table class="fade-in">
+    <thead><tr><th>축소/제외 ▼</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>유틸리티</td><td>배당(4~5%)이 인플레이션(8%)에 못 미침</td></tr>
+      <tr><td>부동산(REITs)</td><td>금리 8% 이상 → 신규 주택 거래 급감</td></tr>
+      <tr><td>컨슈머 스테이플</td><td>경기침체 우려 완화 → 방어주 매력 감소</td></tr>
+      <tr><td>파이낸셜(현재)</td><td>고금리로 은행 수익성 악화 (내년 초 변화 예상)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 3. 경제 사이클 -->
+  <div class="section-label"><span>경제 사이클</span></div>
+  <h2>사이클별 강세 섹터</h2>
+  <p>경제는 아래 4단계를 순환하며, 각 단계마다 강세를 보이는 섹터가 다릅니다. 카드를 탭해 상세 내용을 확인하세요.</p>
+
+  <div class="cycle-stages fade-in" id="cycleStages">
+    <div class="stage-card" data-idx="0" onclick="selectStage(0)">
+      <div class="stage-num">STAGE 01</div>
+      <div class="stage-title">Early Expansion (초기 회복)</div>
+      <div class="stage-sectors">테크놀로지, 컨슈머 디스크레셔널, 인더스트리얼</div>
+    </div>
+    <div class="stage-card" data-idx="1" onclick="selectStage(1)">
+      <div class="stage-num">STAGE 02</div>
+      <div class="stage-title">Late Expansion (후기 성장)</div>
+      <div class="stage-sectors">에너지, 소재(Materials), 인더스트리얼</div>
+    </div>
+    <div class="stage-card" data-idx="2" onclick="selectStage(2)">
+      <div class="stage-num">STAGE 03</div>
+      <div class="stage-title">Contraction (수축·하락)</div>
+      <div class="stage-sectors">컨슈머 스테이플, 유틸리티, 헬스케어 (방어주)</div>
+    </div>
+    <div class="stage-card active" data-idx="3" onclick="selectStage(3)">
+      <div class="stage-num">STAGE 04 ← 현재</div>
+      <div class="stage-title">Late Recession → 회복 전환</div>
+      <div class="stage-sectors">파이낸셜 (금리 인하 시 강세), IT·AI 사이클 지속</div>
+    </div>
+  </div>
+
+  <div class="card fade-in" id="stageDetail" style="margin-top:10px; border-color: var(--accent);">
+    <div class="card-title">현재 단계 해석</div>
+    <p style="font-size:13px; margin:0;">현재는 Late Recession에서 Early Recovery로 전환하는 구간으로 분석됩니다. 강사는 내년 초(2024년 초) 금리가 인하되면 <strong>파이낸셜 섹터</strong>가 주목받을 것으로 예측했습니다. AI 사이클은 계속 유지해야 하는 핵심 포지션입니다.</p>
+  </div>
+
+  <!-- 4. 거시경제 지표 -->
+  <div class="section-label"><span>거시경제 이해</span></div>
+  <h2>섹터 로테이션 성공을 위한 필수 지표</h2>
+  <p>섹터 로테이션이 성공하려면 거시경제 흐름을 이해해야 합니다. 아래는 미국 주식시장과 상관관계가 높은 핵심 지표들입니다.</p>
+
+  <div class="badge-row fade-in">
+    <span class="badge up">💹 이자율(금리)</span>
+    <span class="badge up">📦 소비자 심리·지출</span>
+    <span class="badge up">🛢 유가(Crude Oil)</span>
+    <span class="badge up">📅 FOMC 결정</span>
+    <span class="badge up">📖 베이지북</span>
+    <span class="badge up">📈 GDP 성장률</span>
+    <span class="badge up">🏠 부동산 경기</span>
+    <span class="badge up">📉 선물 시장</span>
+    <span class="badge up">🌐 지정학적 리스크</span>
+  </div>
+
+  <div class="chart-container fade-in" style="margin-top:16px;">
+    <canvas id="macroChart" height="240"></canvas>
+  </div>
+
+  <!-- 5. 리스크와 리워드 -->
+  <div class="section-label"><span>리스크 & 리워드</span></div>
+  <h2>리스크 없는 투자는 존재하지 않는다</h2>
+
+  <div class="callout">
+    <strong>리스크-리워드의 역관계(Inverse Relationship):</strong><br>
+    리스크가 크면 리워드도 크고, 리스크가 작으면 리워드도 작습니다.<br>
+    리스크를 낮추면서 리워드를 높이겠다는 것은 비현실적인 사고방식입니다.
+  </div>
+
+  <div class="alert-box fade-in">
+    <div class="alert-head">⚠️ 사기 투자 3대 특징 (주의!)</div>
+    <ul>
+      <li><strong>원금 보장</strong> — 투자에서 원금 보장은 없습니다</li>
+      <li><strong>언제든지 출금 가능 (유동성 보장)</strong> — 실제 위급 시 불가한 경우 多</li>
+      <li><strong>수익 개런티</strong> — 무조건 몇 % 이상 수익 등 허위 약속</li>
+    </ul>
+  </div>
+
+  <p>현금도 리스크가 있습니다. <strong>인플레이션 리스크</strong>입니다. 실질 인플레이션이 연 8% 수준이라면, 현금 $100,000을 1년간 보유할 경우 실질 구매력은 약 $92,000으로 감소합니다.</p>
+
+  <!-- 인플레이션 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <h3>💰 인플레이션 구매력 시뮬레이터</h3>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:12px;">현금 보유 시 실질 구매력이 어떻게 줄어드는지 확인하세요.</p>
+
+    <div class="slider-row">
+      <label>초기 자산 ($)</label>
+      <input type="range" id="initAmount" min="10000" max="1000000" step="10000" value="100000">
+      <span class="slider-val" id="initAmountVal">$100,000</span>
+    </div>
+    <div class="slider-row">
+      <label>연 인플레이션율 (%)</label>
+      <input type="range" id="inflRate" min="1" max="15" step="0.5" value="8">
+      <span class="slider-val" id="inflRateVal">8.0%</span>
+    </div>
+    <div class="slider-row">
+      <label>보유 기간 (년)</label>
+      <input type="range" id="holdYears" min="1" max="10" step="1" value="3">
+      <span class="slider-val" id="holdYearsVal">3년</span>
+    </div>
+
+    <div class="sim-result" id="inflResult"></div>
+    <button class="reset-btn" onclick="resetInflSim()">↺ 초기화</button>
+  </div>
+
+  <!-- 6. 섹터 로테이션 방법 -->
+  <div class="section-label"><span>실행 방법</span></div>
+  <h2>섹터 로테이션 언제, 어떻게?</h2>
+
+  <h3>📅 타이밍</h3>
+  <div class="card fade-in">
+    <div class="card-title">연간 리밸런싱 사이클</div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-label"><span>6~7월: 거시경제·소비심리 점검</span><span>분석 시작</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="pb1" style="width:0%"></div></div>
+    </div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-label"><span>11~12월: 기관 전망 발표</span><span>전략 수립</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="pb2" style="width:0%"></div></div>
+    </div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-label"><span>연초: 포트폴리오 조정 실행</span><span>실행</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="pb3" style="width:0%"></div></div>
+    </div>
+    <p style="font-size:12px; color:var(--text2); margin-top:8px;">참고 기관: Bank of America, Wells Fargo, Morgan Stanley, JP Morgan, Goldman Sachs, BlackRock 등 S&P 500 연간 전망치 평균 활용</p>
+  </div>
+
+  <h3>📌 빈도</h3>
+  <p>섹터 로테이션은 <strong>1년에 1~2회</strong>가 적당합니다. 너무 자주 하면 오히려 포트폴리오를 훼손하고 수익률을 낮출 수 있습니다.</p>
+
+  <h3>✅ 성공 조건</h3>
+
+  <div class="chart-container fade-in">
+    <canvas id="conditionsChart" height="220"></canvas>
+  </div>
+
+  <!-- 7. 캐시(현금) 섹터 -->
+  <div class="section-label"><span>12번째 섹터</span></div>
+  <h2>현금도 하나의 섹터다</h2>
+  <p>일반적으로 말하는 "11개 섹터"에 <strong>현금(Cash)</strong>을 더해 <strong>12개 섹터</strong>로 운용해야 합니다. 모든 섹터가 하락할 것 같을 때, 현금 비중을 늘리는 전략적 판단이 필요합니다.</p>
+
+  <div class="callout">
+    단, 현금에는 <strong>인플레이션 리스크</strong>가 있습니다. 6개월 생활비를 초과하는 현금을 장기 보유하는 것은 비효율적입니다.
+  </div>
+
+  <!-- 8. 투자 심리 -->
+  <div class="section-label"><span>투자 심리</span></div>
+  <h2>일반 투자자의 전형적인 실수</h2>
+
+  <div class="chart-container fade-in">
+    <canvas id="mistakeChart" height="220"></canvas>
+  </div>
+
+  <div class="card fade-in">
+    <div class="card-title">핵심 교훈</div>
+    <p style="font-size:13px; margin:0;">주가가 한참 오른 뒤에 추격 매수하고, 폭락 후 공포에 매도하는 패턴을 벗어나려면 <strong>몇 달 전 예측과 선제적 포지션 조정</strong>이 필수입니다. 예측이 틀려도, 아예 예측을 안 하는 것보다는 낫습니다.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="callout" style="background:#eff6ff; border-color:var(--chart4);">
+    <strong style="color:var(--chart4);">요약 정리:</strong><br>
+    섹터 로테이션 = 거시경제 이해 × 12개 섹터 지식 × 경제 사이클 예측 → 리스크 축소 + 리워드 유지
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>투자아카데미 7회</strong> · 2023년 9월 9일 · 섹터 로테이션의 의미와 방법<br>
+  본 문서는 교육 목적으로 작성된 요약본입니다. 투자 결정은 본인 책임 하에 이루어져야 합니다.
+</div>
+
+<script>
+// ── FADE OBSERVER ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['sectorChart'] = () => {
+  new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['IT/AI','에너지','헬스케어','커뮤니케이션','컨슈머D','유틸리티','파이낸셜','부동산','스테이플','현금'],
+      datasets: [{
+        label: '포트폴리오 추천 비중 (상대적)',
+        data: [28, 18, 16, 14, 12, 0, 0, 0, 0, 12],
+        backgroundColor: ['#e11d48','#e11d48','#e11d48','#e11d48','#e11d48','#d1d5db','#d1d5db','#d1d5db','#d1d5db','#2563eb'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { callback: v => v + '%' }, grid: { color: '#f0f0f0' }, max: 35 }
+      }
+    }
+  });
+};
+
+chartConfigs['macroChart'] = () => {
+  new Chart(document.getElementById('macroChart'), {
+    type: 'radar',
+    data: {
+      labels: ['금리','소비심리','유가','FOMC','GDP','부동산','지정학적리스크','선물시장'],
+      datasets: [{
+        label: '주식시장 영향도',
+        data: [9, 8, 7, 9, 8, 6, 7, 6],
+        backgroundColor: 'rgba(225,29,72,0.1)',
+        borderColor: '#e11d48',
+        borderWidth: 2,
+        pointBackgroundColor: '#e11d48',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { stepSize: 2, font: { size: 10 } },
+          pointLabels: { font: { size: 11 } },
+          grid: { color: '#e5e5e5' }
+        }
+      }
+    }
+  });
+};
+
+chartConfigs['conditionsChart'] = () => {
+  new Chart(document.getElementById('conditionsChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['거시경제 이해','11+1개 섹터 지식','사이클 예측력','심리적 규율'],
+      datasets: [{
+        data: [30, 25, 30, 15],
+        backgroundColor: ['#e11d48','#1a1a1a','#2563eb','#6b7280'],
+        borderWidth: 0,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '55%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } }
+      }
+    }
+  });
+};
+
+chartConfigs['mistakeChart'] = () => {
+  new Chart(document.getElementById('mistakeChart'), {
+    type: 'line',
+    data: {
+      labels: ['1월','3월','5월','7월','9월','11월','1월','3월'],
+      datasets: [
+        {
+          label: '주가 지수',
+          data: [100, 115, 135, 160, 150, 120, 90, 105],
+          borderColor: '#1a1a1a',
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: '일반 투자자 행동',
+          data: [null, null, null, 158, null, null, 92, null],
+          borderColor: '#e11d48',
+          pointStyle: 'triangle',
+          pointRadius: 8,
+          pointBackgroundColor: ['#e11d48','#e11d48'],
+          showLine: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 1) {
+                return ctx.dataIndex === 3 ? '🔴 고점 추격 매수' : '🔴 저점 공포 매도';
+              }
+              return `주가: ${ctx.raw}`;
+            }
+          }
+        },
+        legend: { labels: { font: { size: 11 } } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// ── CHART OBSERVER ──
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── PROGRESS BARS ──
+const pbObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(() => { document.getElementById('pb1').style.width = '75%'; }, 200);
+      setTimeout(() => { document.getElementById('pb2').style.width = '100%'; }, 400);
+      setTimeout(() => { document.getElementById('pb3').style.width = '60%'; }, 600);
+      pbObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const pbEl = document.getElementById('pb1');
+if (pbEl) pbObs.observe(pbEl.closest('.card'));
+
+// ── INFLATION SIMULATOR ──
+function calcInflSim() {
+  const init = parseInt(document.getElementById('initAmount').value);
+  const rate = parseFloat(document.getElementById('inflRate').value) / 100;
+  const years = parseInt(document.getElementById('holdYears').value);
+
+  document.getElementById('initAmountVal').textContent = '$' + init.toLocaleString();
+  document.getElementById('inflRateVal').textContent = (rate * 100).toFixed(1) + '%';
+  document.getElementById('holdYearsVal').textContent = years + '년';
+
+  const final = init * Math.pow(1 - rate, years);
+  const loss = init - final;
+  const lossPct = (loss / init * 100).toFixed(1);
+
+  document.getElementById('inflResult').innerHTML = `
+    <div class="result-row"><span>초기 자산</span><span>$${init.toLocaleString()}</span></div>
+    <div class="result-row"><span>${years}년 후 실질 구매력</span><span class="highlight">$${Math.round(final).toLocaleString()}</span></div>
+    <div class="result-row"><span>구매력 손실</span><span class="highlight">-$${Math.round(loss).toLocaleString()} (-${lossPct}%)</span></div>
+    <div class="result-row"><span>연평균 인플레이션 손실</span><span class="blue">-$${Math.round(loss/years).toLocaleString()} / 년</span></div>
+  `;
+}
+
+function resetInflSim() {
+  document.getElementById('initAmount').value = 100000;
+  document.getElementById('inflRate').value = 8;
+  document.getElementById('holdYears').value = 3;
+  calcInflSim();
+}
+
+['initAmount','inflRate','holdYears'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calcInflSim);
+});
+calcInflSim();
+
+// ── CYCLE STAGES ──
+const stageDetails = [
+  '초기 회복 단계: 경기가 저점을 찍고 반등하는 시기입니다. 소비 심리가 살아나며 테크, 소비재 섹터가 먼저 반응합니다.',
+  '후기 성장 단계: 경제 확장이 가속화되고 원자재·에너지 수요가 증가합니다. 에너지, 소재 섹터가 강세를 보입니다.',
+  '수축·침체 단계: 경기 둔화 우려로 방어주가 선호됩니다. 컨슈머 스테이플, 유틸리티, 헬스케어 섹터가 비교적 잘 버팁니다.',
+  '현재 구간: Late Recession → 회복 전환기입니다. 강사는 금리 인하 시 파이낸셜 섹터가 주목받을 것으로 예측하며, AI 사이클은 계속 유지할 것을 권장합니다.'
+];
+
+function selectStage(idx) {
+  document.querySelectorAll('.stage-card').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+  });
+  document.getElementById('stageDetail').querySelector('p').textContent = stageDetails[idx];
+}
+</script>
+</body>
+</html>
