@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퀴즈 — 투자아카데미 10회: 포트폴리오 구성법</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --sub: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --blue: #2563eb;
+    --green: #059669;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 18px 60px;
+  }
+
+  /* HEADER */
+  .hero {
+    border-bottom: 3px solid var(--accent);
+    padding: 44px 0 28px;
+    margin-bottom: 36px;
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 14px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 7vw, 34px);
+    font-weight: 900; line-height: 1.2; margin-bottom: 14px;
+  }
+  .hero-meta { font-size: 12px; color: var(--sub); display: flex; gap: 16px; flex-wrap: wrap; }
+
+  /* SCORE BOARD */
+  .score-board {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .score-label { font-size: 12px; color: var(--sub); }
+  .score-bar-bg { background: #e5e5e5; border-radius: 4px; height: 8px; width: 200px; max-width: 100%; }
+  .score-bar-fill { height: 8px; border-radius: 4px; background: var(--accent); transition: width 0.6s ease; width: 0%; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: 0 4px 18px rgba(225,29,72,0.08); }
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    min-width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .q-type {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 700; color: var(--sub);
+  }
+  .q-diff {
+    margin-left: auto;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px;
+  }
+  .diff-easy { background: #d1fae5; color: #065f46; }
+  .diff-mid { background: #fef3c7; color: #92400e; }
+  .diff-hard { background: #fee2e2; color: #991b1b; }
+
+  .q-text { font-size: 15px; font-weight: 500; margin-bottom: 16px; line-height: 1.6; }
+
+  /* OPTIONS */
+  .options { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    width: 100%;
+    text-align: left;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all 0.18s;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .option-btn.correct { background: #d1fae5; border-color: var(--green); color: #065f46; font-weight: 600; }
+  .option-btn.wrong { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+  .option-btn:disabled { cursor: default; }
+
+  /* SHORT ANSWER */
+  .short-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+  .submit-btn {
+    margin-top: 10px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--accent2); }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* OX BUTTONS */
+  .ox-wrap { display: flex; gap: 12px; }
+  .ox-btn {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 22px;
+    font-weight: 900;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    background: var(--bg2);
+    transition: all 0.18s;
+    color: var(--text);
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .ox-btn.correct { background: #d1fae5; border-color: var(--green); }
+  .ox-btn.wrong { background: #fee2e2; border-color: #dc2626; }
+  .ox-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    margin-top: 14px;
+    background: #f0fdf4;
+    border-left: 4px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #1a1a1a;
+  }
+  .explanation.wrong-exp {
+    background: #fff5f7;
+    border-left-color: var(--accent);
+  }
+  .explanation.show { display: block; }
+  .exp-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .exp-correct { color: var(--green); }
+  .exp-wrong { color: var(--accent); }
+
+  /* RESULT */
+  .result-section {
+    display: none;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 30px;
+    text-align: center;
+  }
+  .result-section.show { display: block; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin: 10px 0;
+  }
+  .result-msg { font-size: 16px; font-weight: 500; margin: 10px 0 20px; }
+  .retry-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+  }
+  .retry-btn:hover { background: var(--accent2); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-label { font-size: 12px; color: var(--sub); margin-bottom: 6px; }
+  .progress-bg { background: #e5e5e5; border-radius: 4px; height: 6px; }
+  .progress-fill { height: 6px; border-radius: 4px; background: var(--accent); transition: width 0.4s ease; width: 0%; }
+
+  footer {
+    margin-top: 60px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    font-size: 11px;
+    color: var(--sub);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-eyebrow">📝 시험 문제 — 투자아카데미 10회</div>
+  <h1 class="hero-title">포트폴리오 구성법<br>이해도 테스트</h1>
+  <div class="hero-meta">
+    <span>📊 10문제</span>
+    <span>🟢 쉬움 3 / 🟡 보통 5 / 🔴 어려움 2</span>
+  </div>
+</header>
+
+<!-- SCORE BOARD -->
+<div class="score-board">
+  <div>
+    <div class="score-label">현재 점수</div>
+    <div><span class="score-num" id="scoreNum">0</span><span style="font-size:18px;color:var(--sub)"> / 10</span></div>
+  </div>
+  <div style="flex:1; min-width:160px;">
+    <div class="score-label" style="margin-bottom:6px;">진행률 <span id="progressLabel">0/10</span></div>
+    <div class="score-bar-bg"><div class="score-bar-fill" id="scoreBar"></div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-label">답변 완료 <span id="doneCount">0</span>/10문제</div>
+  <div class="progress-bg"><div class="progress-fill" id="progressBar"></div></div>
+</div>
+
+<!-- QUESTIONS -->
+<div id="quizArea"></div>
+
+<!-- RESULT -->
+<div class="result-section" id="resultSection">
+  <div style="font-size:14px; color:var(--sub);">최종 점수</div>
+  <div class="result-score" id="resultScore">0점</div>
+  <div class="result-msg" id="resultMsg"></div>
+  <button class="retry-btn" onclick="retryAll()">↺ 다시 풀기</button>
+</div>
+
+<footer>
+  <strong>투자아카데미 10회</strong> 퀴즈 — 포트폴리오 구성법<br>
+  ※ 이 문서는 학습 목적으로 작성된 요약입니다.
+</footer>
+
+<script>
+const questions = [
+  // ── 쉬움 (3문제) ──
+  {
+    id: 1, type: 'ox', diff: 'easy',
+    text: '강의에 따르면, 스몰캡(소형주)은 포트폴리오에서 5% 이상 보유해서는 안 된다. (O / X)',
+    answer: 'O',
+    explanation: '강의에서는 시총이 적은 스몰캡은 포트폴리오에서 5% 이상 보유하면 폭망할 가능성이 크다고 명확히 언급했습니다.'
+  },
+  {
+    id: 2, type: 'mcq', diff: 'easy',
+    text: '강의자가 제안하는 전체 자산 배분 전략 "30/30/30/10"에서 마지막 10%는 무엇인가?',
+    options: ['채권', '현금', '부동산', '주식'],
+    answer: 1,
+    explanation: '30/30/30/10에서 부동산 30%, 현금·국채 30%, 주식 30%, 나머지 10%는 현금입니다.'
+  },
+  {
+    id: 3, type: 'mcq', diff: 'easy',
+    text: '다음 중 강의에서 언급한 "매매 시기를 결정하는 3가지 요소"가 아닌 것은?',
+    options: ['거시경제 변화', '분기 실적 발표', '이벤트 드리븐', '개인 심리 분석'],
+    answer: 3,
+    explanation: '강의에서는 ① 거시경제 변화(섹터 로테이션), ② 분기 실적 발표, ③ 이벤트 드리븐(인수합병, 경영진 교체 등) 세 가지를 매매 시기 결정 요소로 꼽았습니다.'
+  },
+
+  // ── 보통 (5문제) ──
+  {
+    id: 4, type: 'mcq', diff: 'mid',
+    text: '강의에서 언급한 "5/25 전략"의 올바른 설명은?',
+    options: [
+      '포트폴리오에서 소형주 5%, 대형주 25%를 무조건 유지하는 전략',
+      '라지캡이 포트폴리오 전체의 25%를 초과하면 초과분을 매도해 다른 종목에 편입하는 리밸런싱 전략',
+      '수익률이 25% 이상이면 절반을 매도하고, 5% 이하면 추가 매수하는 전략',
+      '연간 5회 리밸런싱, 25% 수익 목표를 설정하는 전략'
+    ],
+    answer: 1,
+    explanation: '5/25 전략은 라지캡 이상 종목이 포트폴리오의 25%를 초과할 경우 초과분을 매도해 리밸런싱하는 전략입니다. 손로켓(소형주)은 별도로 5% 초과 금지 규칙이 적용됩니다.'
+  },
+  {
+    id: 5, type: 'mcq', diff: 'mid',
+    text: '강의에서 비교한 주식 중 "5년 변동성이 가장 낮으면서 어느 시점에 매수해도 최대 -5% 내외"인 종목은?',
+    options: ['테슬라', '아마존', '애플', '월마트'],
+    answer: 3,
+    explanation: '강의에서 월마트는 어느 시점에 매수해도 최대 -5% 수준으로 변동성이 가장 낮은 방어주로 소개했습니다. 5년 수익률은 약 100%(2배)입니다.'
+  },
+  {
+    id: 6, type: 'short', diff: 'mid',
+    text: '강의에서 "리스크를 줄이기 시작하는" 나이의 기준은 몇 세라고 언급했나요? (숫자만 입력)',
+    answer: '50',
+    keywords: ['50'],
+    explanation: '강의에서 30대부터 리스크를 올리다가 50대부터 점진적으로 줄이는 것이 기본 원칙이라고 설명했습니다.'
+  },
+  {
+    id: 7, type: 'ox', diff: 'mid',
+    text: '2년 안에 주택 구매 계획이 있는 경우, 투자 포트폴리오의 리스크를 적극적으로 높여 시드를 불려야 한다. (O / X)',
+    answer: 'X',
+    explanation: '강의에서는 2년 내 주택 구매 계획이 있다면 최소 50%, 많게는 70%를 현금·적금으로 운용하고 나머지 30%도 대형주 중심의 낮은 리스크로 가져가야 한다고 강조했습니다.'
+  },
+  {
+    id: 8, type: 'mcq', diff: 'mid',
+    text: '포트폴리오 구성 시 고려해야 할 7가지 개인 요소 중 강의자가 특히 강조한 요소로 맞지 않는 것은?',
+    options: ['나이', '자산 규모', '배우자의 리스크 성향', '투자하는 국가'],
+    answer: 3,
+    explanation: '강의에서는 나이, 자산 규모, 투자 목적(언제 돈이 필요한가), 세금, 현금 흐름, 투자 성향, 배우자 동의를 7가지 요소로 언급했습니다. "투자 국가"는 언급되지 않았습니다.'
+  },
+
+  // ── 어려움 (2문제) ──
+  {
+    id: 9, type: 'mcq', diff: 'hard',
+    text: '강의에서 언급한 "투자 발전 5단계" 중 미국이 현재 4~5단계로 넘어가고 있다고 했을 때, 5단계의 핵심 개념은?',
+    options: [
+      'Goal-Based Portfolio Management — 개인 목표 기반 포트폴리오',
+      'Stock Picking — 우량주 중심의 선별 투자',
+      'Financial Planning — 요람에서 무덤까지 전 생애 재정 계획',
+      'Sector Rotation — 섹터 간 자산 이동을 통한 수익 극대화'
+    ],
+    answer: 2,
+    explanation: '강의에서 5단계는 Financial Planning으로, "요람에서 무덤까지" 전 생애에 걸친 재정 계획을 의미합니다. 4단계가 Goal-Based Portfolio Management입니다.'
+  },
+  {
+    id: 10, type: 'short', diff: 'hard',
+    text: '강의에서 에셋 클래스에 대한 이해 없이 "올해 실적이 어떻게 됩니까?"라고 단순 질문하는 것이 왜 부적절한지, 두 가지 핵심 이유를 간략히 서술하세요.',
+    answer: '에셋클래스|리스크|채권|주식|비교',
+    keywords: ['에셋', '리스크', '채권', '주식', '비교'],
+    isLong: true,
+    modelAnswer: '① 에셋 클래스(채권 80% vs 주식 100% 등)에 따라 기대 수익률이 근본적으로 다르기 때문에, 단순 실적 수치만으로는 비교가 불가능합니다. ② 리스크(변동성) 수준을 함께 고려하지 않으면 실적의 의미를 제대로 해석할 수 없습니다. 같은 10% 수익이라도 채권 포트폴리오와 주식 포트폴리오의 리스크 대비 성과는 전혀 다릅니다.',
+    explanation: '에셋 클래스와 리스크 수준을 고려하지 않으면 실적 수치만으로 포트폴리오 성과를 제대로 평가할 수 없습니다. 채권 100% 포트폴리오는 연 6~7%가 최대이고, 주식 100%는 훨씬 높은 수익과 함께 더 큰 리스크가 동반됩니다.'
+  }
+];
+
+let scores = {};
+let answered = {};
+
+function buildQuiz() {
+  const area = document.getElementById('quizArea');
+  area.innerHTML = '';
+  questions.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'qcard-' + q.id;
+
+    const diffClass = q.diff === 'easy' ? 'diff-easy' : q.diff === 'mid' ? 'diff-mid' : 'diff-hard';
+    const diffLabel = q.diff === 'easy' ? '🟢 쉬움' : q.diff === 'mid' ? '🟡 보통' : '🔴 어려움';
+    const typeLabel = q.type === 'ox' ? 'OX 문제' : q.type === 'mcq' ? '객관식' : '단답형';
+
+    let inputHTML = '';
+    if (q.type === 'ox') {
+      inputHTML = `<div class="ox-wrap">
+        <button class="ox-btn" id="ox-O-${q.id}" onclick="answerOX(${q.id},'O')">⭕ O</button>
+        <button class="ox-btn" id="ox-X-${q.id}" onclick="answerOX(${q.id},'X')">❌ X</button>
+      </div>`;
+    } else if (q.type === 'mcq') {
+      inputHTML = `<ul class="options">` +
+        q.options.map((opt, i) =>
+          `<li><button class="option-btn" id="opt-${q.id}-${i}" onclick="answerMCQ(${q.id},${i})">
+            <span style="font-weight:700;margin-right:8px;">${String.fromCharCode(65+i)}.</span>${opt}
+          </button></li>`
+        ).join('') + `</ul>`;
+    } else {
+      if (q.isLong) {
+        inputHTML = `<textarea class="short-input" id="short-${q.id}" rows="4" placeholder="답을 입력하세요..." style="resize:vertical;"></textarea>
+          <br><button class="submit-btn" id="submitBtn-${q.id}" onclick="answerShort(${q.id})">제출</button>`;
+      } else {
+        inputHTML = `<input type="text" class="short-input" id="short-${q.id}" placeholder="답을 입력하세요..." onkeydown="if(event.key==='Enter')answerShort(${q.id})">
+          <br><button class="submit-btn" id="submitBtn-${q.id}" onclick="answerShort(${q.id})">제출</button>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-type">${typeLabel}</div>
+        <div class="q-diff ${diffClass}">${diffLabel}</div>
+      </div>
+      <div class="q-text">${q.text}</div>
+      ${inputHTML}
+      <div class="explanation" id="exp-${q.id}"></div>
+    `;
+    area.appendChild(card);
+  });
+}
+
+function showExplanation(q, isCorrect) {
+  const exp = document.getElementById('exp-' + q.id);
+  const label = isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다';
+  const cls = isCorrect ? 'exp-correct' : 'exp-wrong';
+  let extra = '';
+  if (q.isLong && q.modelAnswer) {
+    extra = `<div style="margin-top:8px;"><strong>모범 답안:</strong><br>${q.modelAnswer}</div>`;
+  }
+  exp.innerHTML = `<div class="exp-label ${cls}">${label}</div>${q.explanation}${extra}`;
+  exp.className = 'explanation show' + (isCorrect ? '' : ' wrong-exp');
+}
+
+function updateUI() {
+  const done = Object.keys(answered).length;
+  const score = Object.values(scores).filter(Boolean).length;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreBar').style.width = (score / 10 * 100) + '%';
+  document.getElementById('progressBar').style.width = (done / 10 * 100) + '%';
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('progressLabel').textContent = done + '/10';
+
+  if (done === 10) {
+    const rs = document.getElementById('resultSection');
+    rs.classList.add('show');
+    document.getElementById('resultScore').textContent = score + '점';
+    let msg = '';
+    if (score >= 9) msg = '🏆 완벽합니다! 포트폴리오 구성의 달인이시네요.';
+    else if (score >= 7) msg = '👏 훌륭합니다! 핵심 개념을 잘 이해하셨습니다.';
+    else if (score >= 5) msg = '📚 양호합니다. 틀린 문제를 다시 복습해보세요.';
+    else msg = '🔄 아직 부족합니다. 강의를 다시 보고 도전해보세요!';
+    document.getElementById('resultMsg').textContent = msg;
+    rs.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function answerOX(id, val) {
+  if (answered[id]) return;
+  const q = questions.find(x => x.id === id);
+  const isCorrect = val === q.answer;
+  answered[id] = true;
+  scores[id] = isCorrect;
+  ['O','X'].forEach(v => {
+    const btn = document.getElementById('ox-'+v+'-'+id);
+    btn.disabled = true;
+    if (v === q.answer) btn.classList.add('correct');
+    else if (v === val && !isCorrect) btn.classList.add('wrong');
+  });
+  showExplanation(q, isCorrect);
+  updateUI();
+}
+
+function answerMCQ(id, idx) {
+  if (answered[id]) return;
+  const q = questions.find(x => x.id === id);
+  const isCorrect = idx === q.answer;
+  answered[id] = true;
+  scores[id] = isCorrect;
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById('opt-'+id+'-'+i);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+  showExplanation(q, isCorrect);
+  updateUI();
+}
+
+function answerShort(id) {
+  if (answered[id]) return;
+  const q = questions.find(x => x.id === id);
+  const inp = document.getElementById('short-'+id);
+  const val = inp.value.trim();
+  if (!val) return;
+
+  let isCorrect = false;
+  if (q.isLong) {
+    // Check if at least 2 keywords present
+    const kwMatched = q.keywords.filter(kw => val.includes(kw)).length;
+    isCorrect = kwMatched >= 2;
+  } else {
+    isCorrect = q.keywords.some(kw => val.includes(kw));
+  }
+
+  answered[id] = true;
+  scores[id] = isCorrect;
+  inp.disabled = true;
+  inp.style.borderColor = isCorrect ? 'var(--green)' : 'var(--accent)';
+  inp.style.background = isCorrect ? '#f0fdf4' : '#fff5f7';
+  document.getElementById('submitBtn-'+id).disabled = true;
+  showExplanation(q, isCorrect);
+  updateUI();
+}
+
+function retryAll() {
+  scores = {}; answered = {};
+  document.getElementById('resultSection').classList.remove('show');
+  buildQuiz();
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+updateUI();
+</script>
+</body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 10회 — 본인에게 맞는 포트폴리오 구성법</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --sub: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --blue: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 18px 60px;
+  }
+
+  /* ─── FADE-IN ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* ─── HEADER ─── */
+  .hero {
+    border-bottom: 3px solid var(--accent);
+    padding: 44px 0 28px;
+    margin-bottom: 36px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 38px);
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .hero-meta {
+    font-size: 12px;
+    color: var(--sub);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* ─── SECTION LABELS ─── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10px;
+    margin-top: 44px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    margin-top: 22px;
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-accent {
+    border-left: 4px solid var(--accent);
+    background: #fff5f7;
+  }
+
+  /* ─── STEP LIST ─── */
+  .step-list { list-style: none; margin-bottom: 20px; }
+  .step-list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  .step-num {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  /* ─── TAG ─── */
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .tag-gray {
+    background: #6b7280;
+  }
+  .tag-blue {
+    background: var(--blue);
+  }
+
+  /* ─── TABLE ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  td {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fff; }
+
+  /* ─── HIGHLIGHT BOX ─── */
+  .highlight {
+    background: #fff5f7;
+    border: 1.5px solid var(--accent2);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  .highlight strong { color: var(--accent); }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    width: 48px;
+    height: 3px;
+    background: var(--accent);
+    margin: 30px 0 24px;
+  }
+
+  /* ─── SIMULATOR ─── */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .sim-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sim-label { font-size: 13px; font-weight: 500; min-width: 130px; }
+  .sim-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 52px;
+    text-align: right;
+  }
+  input[type=range] {
+    flex: 1;
+    min-width: 100px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: #fff;
+    border: 1.5px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .sim-result .r-label { color: var(--sub); font-size: 12px; margin-bottom: 2px; }
+  .sim-result .r-value { font-size: 19px; font-weight: 700; color: var(--accent); }
+  .sim-result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .reset-btn {
+    display: inline-block;
+    margin-top: 14px;
+    background: none;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* ─── RISK BADGE ─── */
+  .risk-bar-wrap { margin: 8px 0 4px; }
+  .risk-bar-bg {
+    background: #e5e5e5;
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .risk-bar-fill {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    transition: width 0.5s ease;
+  }
+
+  /* ─── PORTFOLIO TOGGLE ─── */
+  .pt-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .pt-tab {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .pt-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .pt-content { display: none; }
+  .pt-content.active { display: block; }
+
+  /* ─── QUOTE ─── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    padding: 10px 18px;
+    margin: 22px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    margin-top: 60px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero fade-in">
+  <div class="hero-eyebrow">📚 투자아카데미 10회</div>
+  <h1 class="hero-title">본인에게 맞는<br>포트폴리오 구성법</h1>
+  <div class="hero-meta">
+    <span>📅 2026년 04월 15일</span>
+    <span>🎥 투자아카데미</span>
+    <span>⏱ 핵심 요약</span>
+  </div>
+</header>
+
+<!-- ── SECTION 1 ── -->
+<div class="section-label fade-in">01 / 왜 포트폴리오를 짜는가</div>
+<h2 class="fade-in">투자 발전의 5단계</h2>
+
+<p class="fade-in">강의자는 한국 투자 문화가 미국보다 약 30~70년 뒤처진 <strong>1단계</strong>에 머물러 있다고 지적합니다. "무슨 주식이 좋아?"라고 종목 하나를 묻는 방식이 대표적인 1단계 사고방식입니다.</p>
+
+<div class="fade-in">
+<table>
+  <thead>
+    <tr><th>단계</th><th>특징</th><th>미국 기준 시기</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tag">1단계</span> 종목 선택</td><td>좋은 주식 하나만 집중 투자</td><td>1929년 대공황 이전 종료</td></tr>
+    <tr><td><span class="tag tag-gray">2단계</span> 단순 분산</td><td>여러 주식 보유로 리스크 분산. 목적·방향성 없음</td><td>1960~70년대</td></tr>
+    <tr><td><span class="tag" style="background:#059669">3단계</span> 목적형 포트폴리오</td><td>목적·리스크 매치 기반 구성</td><td>1990년대~</td></tr>
+    <tr><td><span class="tag tag-blue">4단계</span> Goal-Based</td><td>개인 목표 기반 포트폴리오 관리</td><td>2000년대~</td></tr>
+    <tr><td><span class="tag" style="background:#7c3aed">5단계</span> Financial Planning</td><td>요람에서 무덤까지 전 생애 재정 계획</td><td>현재 AI 시대</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="highlight fade-in">
+  <strong>핵심 메시지:</strong> 멤버들은 최소 3~4단계를 실천해야 합니다. "주식 투자한다"가 아니라 "포트폴리오를 직접 구성해서 관리한다"고 말할 수 있어야 합니다.
+</div>
+
+<!-- ── SECTION 2: 포트폴리오를 짜는 3가지 이유 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">02 / 포트폴리오를 짜는 3가지 이유</div>
+<h2 class="fade-in">변동성을 줄이고, 지속적으로 성장</h2>
+
+<ul class="step-list fade-in">
+  <li>
+    <span class="step-num">1</span>
+    <div><strong>변동성 최소화 + 지속 성장</strong><br>잘 짜여진 포트폴리오는 장기 투자 시 변동성이 적고 꾸준히 성장합니다. "어떨 때 많이 벌고 어떨 때 적게 버는" 구조를 탈피하는 것이 핵심입니다.</div>
+  </li>
+  <li>
+    <span class="step-num">2</span>
+    <div><strong>에셋 클래스 이해</strong><br>투자자 개인의 리스크 수용도에 따라 에셋 클래스를 달리 설정해야 합니다. 채권 80% 포트폴리오는 연 최대 6~7%, 주식 100% 포트폴리오는 그 이상의 리스크와 수익이 동반됩니다. 단순히 "실적이 얼마냐"고 묻는 것은 에셋 클래스 이해가 없는 질문입니다.</div>
+  </li>
+  <li>
+    <span class="step-num">3</span>
+    <div><strong>리밸런싱을 통한 가치주·성장주 관리</strong><br>언더웨이트(과소 비중)·오버웨이트(과다 비중)를 파악해 비중을 조정합니다. 5/25 전략(대형주 25% 초과 시 매도 리밸런싱)과 손로켓 규칙(개별 소형주 5% 초과 금지)이 핵심 원칙입니다.</div>
+  </li>
+</ul>
+
+<!-- ── SECTION 3: 에셋 클래스 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">03 / 에셋 클래스 7가지</div>
+<h2 class="fade-in">자산규모가 커질수록 7가지를 모두</h2>
+
+<p class="fade-in">주식 포트폴리오만이 아니라, 전체 자산을 7가지 에셋 클래스로 배분하는 사고가 필요합니다. 추천 전략은 <strong>30/30/30/10</strong>입니다.</p>
+
+<!-- Donut chart for asset class -->
+<div class="chart-container fade-in" style="max-height:280px; margin-bottom:10px;">
+  <canvas id="assetDonut" height="220"></canvas>
+</div>
+
+<div class="fade-in">
+<table>
+  <thead><tr><th>에셋 클래스</th><th>설명</th><th>특징</th></tr></thead>
+  <tbody>
+    <tr><td><strong>부동산</strong></td><td>아파트 등 실물 부동산</td><td>추천 비중 약 30%</td></tr>
+    <tr><td><strong>현금·국채</strong></td><td>현금 및 국채·채권 등 현금성 자산</td><td>추천 비중 약 30%</td></tr>
+    <tr><td><strong>주식 (Equity)</strong></td><td>개별 주식·ETF 포트폴리오</td><td>추천 비중 약 30%</td></tr>
+    <tr><td><strong>현금</strong></td><td>유동성 확보용</td><td>약 10%</td></tr>
+    <tr><td><strong>채권 (Bond)</strong></td><td>국채·회사채</td><td>보수적 운용</td></tr>
+    <tr><td><strong>Fixed Income</strong></td><td>배당주, 리츠 등 고정 수입 자산</td><td>은퇴 이후 비중 확대</td></tr>
+    <tr><td><strong>대안 투자</strong></td><td>헤지펀드, 사모펀드 등</td><td>고액 자산가 중심</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="card card-accent fade-in">
+  <strong>한국 상황 주의:</strong> 부동산에 자산 100%를 집중하는 것은 21세기 기준으로 바람직하지 않습니다. 30/30/30/10 전략으로 자산 다각화를 권고합니다.
+</div>
+
+<!-- ── SECTION 4: 나이별 리스크 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">04 / 포트폴리오 구성 시 고려 요소</div>
+<h2 class="fade-in">7가지 개인 요소</h2>
+
+<!-- 나이별 리스크 인터랙티브 -->
+<div class="sim-box fade-in">
+  <div class="sim-title">🔢 나이별 리스크 레벨 가이드</div>
+  <div class="sim-row">
+    <span class="sim-label">현재 나이</span>
+    <input type="range" id="ageSlider" min="20" max="80" value="40">
+    <span class="sim-val" id="ageVal">40세</span>
+  </div>
+  <div class="sim-result">
+    <div class="sim-result-grid">
+      <div>
+        <div class="r-label">리스크 레벨</div>
+        <div class="r-value" id="riskLevel">높음</div>
+      </div>
+      <div>
+        <div class="r-label">주식 비중 가이드</div>
+        <div class="r-value" id="equityPct">60~70%</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="r-label">추천 자산 배분 전략</div>
+      <div id="riskDesc" style="font-size:13px; margin-top:4px; line-height:1.6;"></div>
+    </div>
+    <div class="risk-bar-wrap">
+      <div style="font-size:11px; color:var(--sub); margin-bottom:4px;">리스크 강도</div>
+      <div class="risk-bar-bg"><div class="risk-bar-fill" id="riskBarFill" style="width:60%"></div></div>
+    </div>
+  </div>
+  <button class="reset-btn" onclick="document.getElementById('ageSlider').value=40; updateAge()">↺ 초기화</button>
+</div>
+
+<div class="fade-in">
+<table>
+  <thead><tr><th>고려 요소</th><th>핵심 원칙</th></tr></thead>
+  <tbody>
+    <tr><td><strong>나이</strong></td><td>30대 리스크 상향 → 50대부터 점진적 축소, 80대는 고정 수입 중심</td></tr>
+    <tr><td><strong>자산 규모</strong></td><td>자산이 클수록 더 많은 리스크를 감당 가능</td></tr>
+    <tr><td><strong>투자 목적</strong></td><td>5년 내 주택 구매 예정 시 리스크를 대폭 축소, 50~70%를 적금·현금으로</td></tr>
+    <tr><td><strong>세금</strong></td><td>고소득자는 세금 부담을 포트폴리오 설계에 반드시 반영</td></tr>
+    <tr><td><strong>현금 흐름</strong></td><td>단기 큰 지출 계획 시 유동성 확보 우선</td></tr>
+    <tr><td><strong>투자 성향</strong></td><td>공격적 vs 보수적 성향 → 개인차 있으며 나이와 독립적으로 작용</td></tr>
+    <tr><td><strong>배우자 동의</strong></td><td>배우자의 리스크 성향에 맞추는 것이 가정 행복의 기본</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ── SECTION 5: 비중조절 & 매매시기 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">05 / 비중 조절 & 매매 시기</div>
+<h2 class="fade-in">언제, 얼마나 살 것인가</h2>
+
+<div class="fade-in">
+<div class="pt-tabs">
+  <button class="pt-tab active" onclick="switchTab(this,'tab-weight')">비중 조절 원칙</button>
+  <button class="pt-tab" onclick="switchTab(this,'tab-timing')">매매 시기 결정</button>
+  <button class="pt-tab" onclick="switchTab(this,'tab-rebal')">리밸런싱 전략</button>
+</div>
+
+<div class="pt-content active" id="tab-weight">
+  <ul class="step-list">
+    <li><span class="step-num">①</span><div><strong>시총이 클수록 비중 크게</strong>: 대형주(라지캡)는 최대 25%까지 비중 허용. 스몰캡은 5% 이하 유지.</div></li>
+    <li><span class="step-num">②</span><div><strong>25% 상한선</strong>: 어떤 단일 종목도 전체 포트폴리오의 25%를 초과해선 안 됩니다.</div></li>
+    <li><span class="step-num">③</span><div><strong>원칙 없으면 과욕</strong>: 특정 종목이 2~4배 상승했다고 추가 매수해 비중을 높이는 것은 전형적인 실패 패턴입니다.</div></li>
+  </ul>
+</div>
+
+<div class="pt-content" id="tab-timing">
+  <ul class="step-list">
+    <li><span class="step-num">1</span><div><strong>거시경제 변화</strong>: 11개 섹터의 거시경제 흐름을 분석해 섹터 로테이션으로 선제 대응. 예: AI 섹터(통신서비스)는 롱텀 유지, 에너지 섹터는 6~8월 고점 후 축소.</div></li>
+    <li><span class="step-num">2</span><div><strong>분기 실적 발표</strong>: 발표 전 예상 실적을 분석하고 기관 움직임을 판단. 예상 → 선제 방어/공격 매매.</div></li>
+    <li><span class="step-num">3</span><div><strong>이벤트 드리븐</strong>: 인수합병, 파트너십, CEO·CFO·COO 교체 등 주가에 선행하는 이벤트를 매매 판단 기준으로 활용.</div></li>
+  </ul>
+</div>
+
+<div class="pt-content" id="tab-rebal">
+  <ul class="step-list">
+    <li><span class="step-num">A</span><div><strong>5/25 전략</strong>: 라지캡이 포트폴리오의 25%를 초과하면 초과분 매도 후 다른 종목 편입.</div></li>
+    <li><span class="step-num">B</span><div><strong>손로켓 5% 룰</strong>: 처음 2%로 편입한 소형주가 급등해 5%를 넘으면 초과분 매도. 초과 보유 금지.</div></li>
+    <li><span class="step-num">C</span><div><strong>셀 시그널</strong>: 오랫동안 계속 하락하는 종목, 또는 고점 대비 과도한 하락 종목은 손절하고 리밸런싱.</div></li>
+  </ul>
+</div>
+</div>
+
+<!-- ── SECTION 6: 주식 유형 비교 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">06 / 주식 유형별 특성 비교</div>
+<h2 class="fade-in">어떤 종목을 어디에 배치할 것인가</h2>
+
+<p class="fade-in">강의자는 테슬라·아마존(성장주), 애플·월마트(우량주)를 비교하며 포트폴리오에서 각 유형의 역할을 설명합니다.</p>
+
+<div class="chart-container fade-in" style="margin-bottom:8px;">
+  <canvas id="volatilityChart" height="240"></canvas>
+</div>
+<div style="font-size:11px; color:var(--sub); margin-bottom:20px; text-align:center;" class="fade-in">* 5년 수익률 및 변동성은 강의 내 언급 기준 (개념적 비교)</div>
+
+<div class="fade-in">
+<table>
+  <thead><tr><th>종목 유형</th><th>예시</th><th>5년 수익률(언급)</th><th>변동성</th><th>포트폴리오 역할</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag">고성장주</span></td><td>테슬라</td><td>약 800%</td><td>매우 높음</td><td>소비중(5~20%) 위성 배치</td></tr>
+    <tr><td><span class="tag tag-gray">성장주</span></td><td>아마존</td><td>약 170%</td><td>높음 (중간 -35% 폭락 구간)</td><td>10~20% 위성 배치</td></tr>
+    <tr><td><span class="tag" style="background:#059669">우량주</span></td><td>애플</td><td>약 100%</td><td>낮음 (꾸준한 상승)</td><td>코어(40~60%) 중심 배치</td></tr>
+    <tr><td><span class="tag tag-blue">방어주</span></td><td>월마트</td><td>약 100%</td><td>매우 낮음 (최대 -5%)</td><td>코어(30~40%) 안정 축</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="pull-quote fade-in">
+  "애플과 월마트를 코어에 두고, 아마존·테슬라를 위성으로 배치하면 S&P보다 높은 수익을 내면서 변동성은 낮아진다."
+</div>
+
+<!-- ── SECTION 7: 포트폴리오 시뮬레이터 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">07 / 포트폴리오 시뮬레이터</div>
+<h2 class="fade-in">나만의 비중을 직접 설계</h2>
+
+<div class="sim-box fade-in">
+  <div class="sim-title">🎛 포트폴리오 비중 설계기</div>
+
+  <div class="sim-row">
+    <span class="sim-label">🟢 우량주 (애플형)</span>
+    <input type="range" id="s1" min="0" max="80" value="50" oninput="updateSim()">
+    <span class="sim-val" id="v1">50%</span>
+  </div>
+  <div class="sim-row">
+    <span class="sim-label">🔵 방어주 (월마트형)</span>
+    <input type="range" id="s2" min="0" max="80" value="20" oninput="updateSim()">
+    <span class="sim-val" id="v2">20%</span>
+  </div>
+  <div class="sim-row">
+    <span class="sim-label">🟠 성장주 (아마존형)</span>
+    <input type="range" id="s3" min="0" max="50" value="15" oninput="updateSim()">
+    <span class="sim-val" id="v3">15%</span>
+  </div>
+  <div class="sim-row">
+    <span class="sim-label">🔴 고성장주 (테슬라형)</span>
+    <input type="range" id="s4" min="0" max="30" value="10" oninput="updateSim()">
+    <span class="sim-val" id="v4">10%</span>
+  </div>
+  <div class="sim-row">
+    <span class="sim-label">⚪ 현금·채권</span>
+    <input type="range" id="s5" min="0" max="50" value="5" oninput="updateSim()">
+    <span class="sim-val" id="v5">5%</span>
+  </div>
+
+  <div class="sim-result" id="simResult">
+    <div class="sim-result-grid">
+      <div>
+        <div class="r-label">합계</div>
+        <div class="r-value" id="totalPct">100%</div>
+      </div>
+      <div>
+        <div class="r-label">예상 변동성</div>
+        <div class="r-value" id="simVolatility">낮음</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="r-label">포트폴리오 진단</div>
+      <div id="simDiag" style="font-size:13px; margin-top:4px; line-height:1.6;"></div>
+    </div>
+    <div id="simWarning" style="margin-top:10px; font-size:12px; color:var(--accent); font-weight:700;"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetSim()">↺ 초기화</button>
+</div>
+
+<!-- ── SECTION 8: 핵심 원칙 ── -->
+<div class="divider fade-in"></div>
+<div class="section-label fade-in">08 / 성공 투자의 핵심 원칙</div>
+<h2 class="fade-in">원칙 없이는 과욕만 남는다</h2>
+
+<ul class="step-list fade-in">
+  <li><span class="step-num">①</span><div><strong>원칙을 반드시 지켜라</strong>: 수익이 날수록 원칙을 어기고 싶은 유혹이 커집니다. 과욕은 함정입니다.</div></li>
+  <li><span class="step-num">②</span><div><strong>폭락장은 기회다</strong>: 공포에 팔지 말고, 인생에 몇 번 오지 않는 저가 매수 기회로 활용해야 합니다.</div></li>
+  <li><span class="step-num">③</span><div><strong>고점 매수를 두려워 말라</strong>: 우량주·성장주는 시간이 지나면 고점은 더 올라옵니다. 단, 비중 원칙을 준수해야 합니다.</div></li>
+  <li><span class="step-num">④</span><div><strong>기관보다 정보·자금이 없다</strong>: 기관도 폭망하는 이유가 과욕입니다. 개인 투자자라면 더욱 원칙을 철저히.</div></li>
+  <li><span class="step-num">⑤</span><div><strong>배우자와 방향을 맞춰라</strong>: 투자의 궁극적 목적은 가정의 행복입니다. 배우자가 보수적이라면 리스크를 낮추는 쪽으로 설득·조율.</div></li>
+</ul>
+
+<div class="highlight fade-in">
+  <strong>비유:</strong> 남편(공무원, 꾸준한 월급)과 아내(프리랜서, 불규칙한 큰 수입)가 합산하면 매월 안정적인 중간 수입이 됩니다. 포트폴리오도 마찬가지입니다. 우량주+성장주를 섞으면 S&P보다 높으면서도 꾸준한 성과를 낼 수 있습니다.
+</div>
+
+<footer class="fade-in">
+  <strong>투자아카데미 10회</strong> — 본인에게 맞는 포트폴리오 구성법<br>
+  원본: <a href="https://www.youtube.com/watch?v=Ksga7rJh3kY&t=1876s" style="color:var(--accent);">YouTube 원본 강의</a><br>
+  ※ 이 문서는 학습 목적으로 작성된 요약입니다. 투자 결정은 본인 책임 하에 이루어져야 합니다.
+</footer>
+
+<script>
+// ─── FADE-IN OBSERVER ───
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ─── CHART CONFIGS ───
+const chartConfigs = {};
+
+chartConfigs['assetDonut'] = () => {
+  new Chart(document.getElementById('assetDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['부동산 30%', '현금·국채 30%', '주식 30%', '현금 10%'],
+      datasets: [{
+        data: [30, 30, 30, 10],
+        backgroundColor: ['#e11d48', '#1a1a1a', '#2563eb', '#6b7280'],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR', size: 12 }, padding: 14 } },
+        title: { display: true, text: '30/30/30/10 에셋 클래스 배분 전략', font: { family: 'Noto Sans KR', size: 13, weight: 'bold' }, color: '#1a1a1a', padding: { bottom: 14 } }
+      }
+    }
+  });
+};
+
+chartConfigs['volatilityChart'] = () => {
+  new Chart(document.getElementById('volatilityChart'), {
+    type: 'bar',
+    data: {
+      labels: ['테슬라 (고성장)', '아마존 (성장)', '애플 (우량)', '월마트 (방어)'],
+      datasets: [
+        {
+          label: '5년 수익률 (%)',
+          data: [800, 170, 100, 100],
+          backgroundColor: ['#e11d48', '#f43f5e', '#2563eb', '#6b7280'],
+          borderRadius: 5,
+          yAxisID: 'y'
+        },
+        {
+          label: '최대 하락폭 (%)',
+          data: [-45, -35, -15, -5],
+          backgroundColor: ['rgba(225,29,72,0.25)', 'rgba(244,63,94,0.25)', 'rgba(37,99,235,0.25)', 'rgba(107,114,128,0.25)'],
+          borderRadius: 5,
+          yAxisID: 'y'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR', size: 11 } } },
+        title: { display: true, text: '종목 유형별 수익률 vs 변동성 비교', font: { family: 'Noto Sans KR', size: 13, weight: 'bold' }, color: '#1a1a1a' },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%`
+          }
+        }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '%', font: { family: 'Noto Sans KR', size: 11 } }, grid: { color: '#e5e5e5' } },
+        x: { ticks: { font: { family: 'Noto Sans KR', size: 11 } } }
+      }
+    }
+  });
+};
+
+// ─── CHART OBSERVER ───
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ─── AGE SLIDER ───
+function updateAge() {
+  const age = parseInt(document.getElementById('ageSlider').value);
+  document.getElementById('ageVal').textContent = age + '세';
+  let level, equity, desc, barW;
+  if (age < 35) {
+    level = '매우 높음'; equity = '70~80%'; barW = 80;
+    desc = '적극적 성장 구간. 성장주·고성장주 비중을 높이고 우량주로 코어를 유지하세요. 손실 회복 시간이 충분합니다.';
+  } else if (age < 50) {
+    level = '높음'; equity = '60~70%'; barW = 60;
+    desc = '성장과 안정의 균형 구간. 우량주 코어(40~60%)에 성장주 20~30%를 배치하는 전략이 적합합니다.';
+  } else if (age < 65) {
+    level = '중간'; equity = '40~60%'; barW = 40;
+    desc = '리스크를 점진적으로 줄이는 구간. 배당주·채권 비중을 높이고, 성장주는 위성에만 소량 배치하세요.';
+  } else {
+    level = '낮음'; equity = '20~40%'; barW = 20;
+    desc = '자본 보전 우선. Fixed Income(배당·채권)을 주축으로 하고, 주식은 우량 대형주에만 소량 배치하세요.';
+  }
+  document.getElementById('riskLevel').textContent = level;
+  document.getElementById('equityPct').textContent = equity;
+  document.getElementById('riskDesc').textContent = desc;
+  document.getElementById('riskBarFill').style.width = barW + '%';
+}
+document.getElementById('ageSlider').addEventListener('input', updateAge);
+updateAge();
+
+// ─── PORTFOLIO SIMULATOR ───
+function updateSim() {
+  const ids = ['s1','s2','s3','s4','s5'];
+  const vals = ids.map(id => parseInt(document.getElementById(id).value));
+  ids.forEach((id, i) => {
+    document.getElementById('v' + (i+1)).textContent = vals[i] + '%';
+  });
+  const total = vals.reduce((a,b) => a+b, 0);
+  document.getElementById('totalPct').textContent = total + '%';
+
+  const [core, def_, grow, highGrow, cash] = vals;
+  // volatility estimate
+  const volScore = (highGrow * 4 + grow * 2 + core * 1 + def_ * 0.5 + cash * 0) / 100;
+  let volLabel;
+  if (volScore > 2.5) volLabel = '매우 높음';
+  else if (volScore > 1.8) volLabel = '높음';
+  else if (volScore > 1.2) volLabel = '중간';
+  else if (volScore > 0.7) volLabel = '낮음';
+  else volLabel = '매우 낮음';
+  document.getElementById('simVolatility').textContent = volLabel;
+
+  // warning
+  let warn = '';
+  if (total !== 100) warn = `⚠️ 비중 합계가 ${total}%입니다. 100%로 맞춰주세요.`;
+  if (highGrow > 20) warn += ' ⚠️ 고성장주 비중이 너무 높습니다(원칙: 5~10% 권고).';
+  if (core < 20) warn += ' ⚠️ 우량주 비중이 낮습니다. 코어에 최소 30~40% 배치를 권장합니다.';
+  document.getElementById('simWarning').textContent = warn;
+
+  // diagnosis
+  let diag = '';
+  if (core >= 40 && def_ >= 20) diag = '안정성과 성장성을 균형있게 갖춘 포트폴리오입니다. S&P 대비 변동성이 낮을 것으로 예상됩니다.';
+  else if (highGrow + grow > 40) diag = '성장 집중형 포트폴리오입니다. 단기 변동성이 크지만 장기 수익 잠재력이 높습니다. 원칙을 철저히 지키세요.';
+  else if (cash > 30) diag = '방어적 포트폴리오입니다. 안정적이지만 장기 성장에는 한계가 있을 수 있습니다.';
+  else diag = '비중을 조절해 원하는 리스크-수익 균형을 찾아보세요.';
+  document.getElementById('simDiag').textContent = diag;
+}
+
+function resetSim() {
+  document.getElementById('s1').value = 50;
+  document.getElementById('s2').value = 20;
+  document.getElementById('s3').value = 15;
+  document.getElementById('s4').value = 10;
+  document.getElementById('s5').value = 5;
+  updateSim();
+}
+updateSim();
+
+// ─── TAB TOGGLE ───
+function switchTab(btn, targetId) {
+  document.querySelectorAll('.pt-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pt-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(targetId).classList.add('active');
+}
+</script>
+</body>
+</html>
