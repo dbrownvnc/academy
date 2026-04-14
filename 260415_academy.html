@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 8회 — 중앙금리와 주식시장</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+    --table-header: #e11d48;
+    --table-bg: #fafafa;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  .cover {
+    background: var(--text);
+    color: #fff;
+    padding: 52px 28px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.18;
+  }
+  .issue-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .cover h1 span { color: var(--accent2); }
+  .cover-meta {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 1px;
+    margin-top: 22px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cover-sub {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .content { padding: 0 20px 60px; }
+
+  .section {
+    margin-top: 44px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 18px 0 8px;
+  }
+  p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+  .lead {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.7;
+    color: var(--text);
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+    margin-bottom: 20px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    background: var(--text);
+    color: #fff;
+    padding: 24px 22px;
+    margin: 28px -20px;
+    position: relative;
+  }
+  .pull-quote::before {
+    content: '"';
+    font-family: 'Noto Serif KR', serif;
+    font-size: 72px;
+    color: var(--accent);
+    position: absolute;
+    top: -8px; left: 16px;
+    line-height: 1;
+    opacity: 0.6;
+  }
+  .pull-quote p {
+    color: #fff;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    padding-top: 20px;
+  }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: var(--bg2);
+    border-left: 4px solid var(--accent);
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .info-box .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .info-box p { font-size: 13px; margin: 0; color: var(--text2); }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    background: var(--table-bg);
+  }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f5f5f5; }
+  .tag-up { color: #16a34a; font-weight: 700; }
+  .tag-dn { color: var(--accent); font-weight: 700; }
+  .tag-neu { color: var(--chart3); font-weight: 600; }
+
+  /* ── CHART ── */
+  .chart-section { margin: 24px 0; }
+  .chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* ── FADE-IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+
+  /* ── SIMULATOR ── */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 18px;
+    margin: 20px 0;
+  }
+  .sim-box h3 {
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sim-box h3::before {
+    content: '⚙';
+    font-size: 16px;
+  }
+  .slider-row {
+    margin-bottom: 14px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+  .slider-label strong {
+    color: var(--text);
+    font-size: 13px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .sim-result .big-num {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
+  }
+  .sim-result .sub-num {
+    font-size: 11px;
+    color: #aaa;
+  }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* ── SECTOR CARDS ── */
+  .sector-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 14px 0;
+  }
+  .sector-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .sector-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .sector-card.active { border-color: var(--accent); background: #fff5f7; }
+  .sector-card .s-name {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .sector-card .s-rate { font-size: 20px; }
+  .sector-card .s-desc {
+    font-size: 10px;
+    color: var(--text2);
+    margin-top: 4px;
+    line-height: 1.4;
+    display: none;
+  }
+  .sector-card.active .s-desc { display: block; }
+  .sector-detail {
+    background: #fff5f7;
+    border: 1px solid var(--accent2);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: none;
+  }
+  .sector-detail.show { display: block; }
+
+  /* ── TOGGLE RATE ── */
+  .rate-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .rate-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    text-align: center;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .rate-btn.active-up { border-color: #16a34a; background: #f0fdf4; color: #16a34a; }
+  .rate-btn.active-dn { border-color: var(--accent); background: #fff5f7; color: var(--accent); }
+  .rate-btn.active-hold { border-color: var(--chart3); background: #f9fafb; color: var(--chart3); }
+
+  /* ── STEP FLOW ── */
+  .flow-steps {
+    counter-reset: step;
+    margin: 16px 0;
+  }
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .flow-step-num {
+    counter-increment: step;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .flow-step-body { font-size: 13px; line-height: 1.7; }
+  .flow-step-body strong { color: var(--accent); }
+
+  /* ── QUIZ ── */
+  .quiz-section {
+    background: var(--text);
+    margin: 40px -20px 0;
+    padding: 40px 20px 60px;
+  }
+  .quiz-section .section-label { color: var(--accent2); }
+  .quiz-section h2 { color: #fff; }
+  .quiz-meta { color: #888; font-size: 12px; margin-bottom: 24px; }
+  .q-card {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-left-color: #16a34a; }
+  .q-card.wrong { border-left-color: var(--accent); }
+  .q-header {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-diff {
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .q-diff.easy { background: #dcfce7; color: #16a34a; }
+  .q-diff.mid { background: #fef9c3; color: #854d0e; }
+  .q-diff.hard { background: #ffe4e6; color: var(--accent); }
+  .q-type {
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: #3a3a3a;
+    color: #aaa;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-text { color: #f0f0f0; font-size: 13px; line-height: 1.6; font-weight: 500; flex: 1; }
+  .q-options { margin: 10px 0 0; }
+  .q-opt {
+    display: block;
+    background: #333;
+    color: #ddd;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 9px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-family: 'Noto Sans KR', sans-serif;
+    text-align: left;
+    width: 100%;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .q-opt:hover:not(:disabled) { background: #3d3d3d; border-color: #666; }
+  .q-opt.correct-ans { background: #14532d; border-color: #16a34a; color: #86efac; }
+  .q-opt.wrong-ans { background: #450a0a; border-color: var(--accent); color: #fca5a5; }
+  .q-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .q-input {
+    flex: 1;
+    background: #333;
+    border: 1px solid #444;
+    color: #ddd;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+  }
+  .q-input:focus { border-color: var(--accent); }
+  .q-submit {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: opacity 0.2s;
+  }
+  .q-submit:hover { opacity: 0.85; }
+  .q-feedback {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.ok { background: #14532d; color: #86efac; }
+  .q-feedback.ng { background: #450a0a; color: #fca5a5; }
+  .q-score-bar {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+    display: none;
+  }
+  .q-score-bar.show { display: block; }
+  .q-score-bar .big { font-size: 42px; font-weight: 900; color: var(--accent2); }
+  .q-score-bar p { color: #aaa; font-size: 13px; margin-top: 6px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text2);
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<header class="cover">
+  <div class="issue-tag">투자아카데미 — EP.08</div>
+  <h1>중앙금리와<br><span>주식시장</span></h1>
+  <p class="cover-sub">미국 거시경제의 핵심 메커니즘과<br>11개 섹터 움직임의 이해</p>
+  <div class="cover-meta">
+    <span>2026.04.15</span>
+    <span>거시경제 / 금리 / 섹터분석</span>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <!-- 1. 핵심 요약 -->
+  <section class="section fade-in">
+    <div class="section-label">OVERVIEW</div>
+    <h2>이번 강의의 핵심</h2>
+    <p class="lead">투자 행위는 단순히 주식을 사고 파는 것이 아니다. <strong>목적성</strong>을 갖고 거시경제 흐름을 읽어야 비로소 진정한 투자가 된다.</p>
+    <p>이번 강의는 투자 의사결정에서 가장 중요한 변수 중 하나인 <strong>미국 중앙은행(Fed)의 기준금리</strong>가 주식시장, 특히 S&P500의 11개 섹터에 어떤 영향을 미치는지를 다룬다.</p>
+    <div class="info-box">
+      <div class="label">KEY CONCEPT — 기준금리(Federal Funds Rate)</div>
+      <p>중앙은행이 시중 은행에 돈을 빌려줄 때 적용하는 금리. 모든 금융 자산 가격에 영향을 주는 '가장 강력한 정책 도구'다.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 2. 금리와 증시 메커니즘 -->
+  <section class="section fade-in">
+    <div class="section-label">MECHANISM</div>
+    <h2>금리가 주가를 움직이는 원리</h2>
+    <p>금리와 주가는 <strong>역의 상관관계</strong>를 갖는 것이 일반적이다. 다만 섹터별로 민감도가 크게 다르기 때문에, 금리 방향에 따른 섹터 로테이션 전략이 필요하다.</p>
+
+    <!-- 금리 인상 흐름 -->
+    <h3>📈 금리 인상 시 파급 경로</h3>
+    <div class="flow-steps fade-in">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-body"><strong>Fed 금리 인상</strong> → 시중 이자율 전반 상승</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-body"><strong>채권 수익률 상승</strong> → 주식 매력도 상대적 하락</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-body"><strong>기업 대출 비용 증가</strong> → 이익 감소, 투자 위축</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">4</div>
+        <div class="flow-step-body"><strong>소비자 소비 감소</strong> → 경기 둔화 우려 → 주가 하락 압력</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">5</div>
+        <div class="flow-step-body"><strong>단, 은행·에너지·소재 섹터</strong>는 수혜 가능</div>
+      </div>
+    </div>
+
+    <!-- 차트 1: 금리 vs S&P500 방향성 -->
+    <div class="chart-section">
+      <div class="chart-title">Fed 기준금리 사이클 (가상 예시)</div>
+      <div class="chart-container fade-in">
+        <canvas id="rateChart" height="230"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <div class="pull-quote">
+    <p>투자 행위에는 항상 목적성이 있어야 한다. 거시경제의 방향을 읽지 못하는 투자는 방향 없이 항해하는 배와 같다.</p>
+  </div>
+
+  <!-- 3. 섹터 시뮬레이터 -->
+  <section class="section fade-in">
+    <div class="section-label">INTERACTIVE</div>
+    <h2>금리 방향별 섹터 반응 시뮬레이터</h2>
+    <p>금리 방향 버튼을 눌러 11개 섹터의 일반적인 반응을 확인해보세요.</p>
+
+    <div class="rate-toggle">
+      <button class="rate-btn active-up" onclick="setSectorMode('up')">📈 금리 인상</button>
+      <button class="rate-btn" onclick="setSectorMode('hold')" id="hold-btn">⏸ 동결</button>
+      <button class="rate-btn" onclick="setSectorMode('down')" id="down-btn">📉 금리 인하</button>
+    </div>
+
+    <div class="sector-grid" id="sectorGrid"></div>
+    <div class="sector-detail" id="sectorDetail"></div>
+
+    <!-- 차트 2: 섹터 반응 바 차트 -->
+    <div class="chart-section" style="margin-top:20px;">
+      <div class="chart-title">섹터별 상대 수익률 (금리 방향 따라 변동)</div>
+      <div class="chart-container fade-in">
+        <canvas id="sectorChart" height="250"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 4. 금리 결정 주체 -->
+  <section class="section fade-in">
+    <div class="section-label">STRUCTURE</div>
+    <h2>미국 중앙은행, Fed의 구조</h2>
+    <div class="info-box">
+      <div class="label">FOMC — 연방공개시장위원회</div>
+      <p>연 8회 회의를 열어 기준금리를 결정한다. 의장 포함 12명의 투표권자로 구성되며, 회의 결과는 전 세계 금융시장에 즉각 영향을 준다.</p>
+    </div>
+    <div class="table-wrap fade-in">
+      <table>
+        <thead>
+          <tr><th>기관</th><th>역할</th><th>시장 영향</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Fed (연준)</td><td>기준금리 결정, 통화공급 조절</td><td>★★★★★</td></tr>
+          <tr><td>FOMC</td><td>연 8회 금리 결정 회의</td><td>★★★★★</td></tr>
+          <tr><td>재무부(Treasury)</td><td>국채 발행, 재정정책</td><td>★★★★</td></tr>
+          <tr><td>SEC</td><td>증권 규제, 공시 감독</td><td>★★★</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 5. 복리/수익률 계산기 -->
+  <section class="section fade-in">
+    <div class="section-label">SIMULATOR</div>
+    <h2>금리·수익률 복리 계산기</h2>
+    <p>초기 투자금, 연 수익률, 투자 기간을 조절해 복리 효과를 실시간으로 확인하세요.</p>
+
+    <div class="sim-box">
+      <h3>복리 시뮬레이터</h3>
+
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>초기 투자금</span>
+          <strong id="lbl-principal">1,000만 원</strong>
+        </div>
+        <input type="range" id="sl-principal" min="100" max="10000" step="100" value="1000"
+               oninput="updateSim()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>연 수익률</span>
+          <strong id="lbl-rate">7%</strong>
+        </div>
+        <input type="range" id="sl-rate" min="1" max="30" step="0.5" value="7"
+               oninput="updateSim()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>투자 기간</span>
+          <strong id="lbl-years">20년</strong>
+        </div>
+        <input type="range" id="sl-years" min="1" max="40" step="1" value="20"
+               oninput="updateSim()">
+      </div>
+
+      <div class="sim-result">
+        <span class="sub-num">최종 평가금액</span>
+        <span class="big-num" id="sim-final">—</span>
+        <span class="sub-num">수익금 <span id="sim-profit">—</span> · 수익률 <span id="sim-pct">—</span></span>
+      </div>
+      <button class="reset-btn" onclick="resetSim()">↺ 초기화</button>
+    </div>
+
+    <!-- 차트 3: 복리 곡선 -->
+    <div class="chart-section">
+      <div class="chart-title">투자금 성장 곡선 (연도별)</div>
+      <div class="chart-container fade-in">
+        <canvas id="compoundChart" height="230"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 6. 투자 철학 -->
+  <section class="section fade-in">
+    <div class="section-label">PHILOSOPHY</div>
+    <h2>목적성 있는 투자란 무엇인가</h2>
+    <p>강의에서 강조하는 핵심 원칙은 다음과 같다.</p>
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>항목</th><th>잘못된 투자</th><th>올바른 투자</th></tr></thead>
+        <tbody>
+          <tr><td>접근법</td><td>감에 의존, 남의 말 따라 매매</td><td>거시경제·섹터 분석 기반 결정</td></tr>
+          <tr><td>목표</td><td>단기 시세차익</td><td>장기 자산 증식, 재정 독립</td></tr>
+          <tr><td>리스크</td><td>인지 없이 진입</td><td>리스크 인지 후 관리</td></tr>
+          <tr><td>경제 이해</td><td>금리·거시경제 무관심</td><td>FOMC, 금리 사이클 파악</td></tr>
+          <tr><td>매매 기준</td><td>주가 등락에 즉흥 반응</td><td>섹터 로테이션 전략 적용</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ──────────── QUIZ ──────────── -->
+<section class="quiz-section" id="quiz">
+  <div class="section-label">EXAM</div>
+  <h2>📝 시험문제 10선</h2>
+  <p class="quiz-meta">객관식 · 단답형 · OX 혼합 | 쉬움 30% · 보통 50% · 어려움 20%</p>
+  <div id="quizContainer"></div>
+  <div class="q-score-bar" id="scoreBar">
+    <div class="big" id="scoreTxt">—</div>
+    <p id="scoreMsg"></p>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>투자아카데미 EP.08 — 중앙금리와 주식시장</p>
+  <p style="margin-top:4px;">※ 본 내용은 교육 목적이며 특정 종목 추천이 아닙니다.</p>
+</footer>
+
+<script>
+// ════════════════════════════════════
+//   FADE + CHART OBSERVERS
+// ════════════════════════════════════
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+chartConfigs['rateChart'] = () => {
+  const labels = ['2018','2019','2020','2021','2022','2023','2024','2025'];
+  new Chart(document.getElementById('rateChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Fed 기준금리(%)',
+          data: [2.25, 1.75, 0.25, 0.25, 4.50, 5.33, 4.50, 4.25],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: '#e11d48',
+        },
+        {
+          label: 'S&P500 지수(÷100)',
+          data: [25.1, 32.3, 37.6, 47.0, 38.3, 47.5, 59.0, 55.0],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.04)',
+          tension: 0.4,
+          fill: false,
+          pointRadius: 4,
+          pointBackgroundColor: '#2563eb',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#555' } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        y: { grid: { color: '#eee' }, ticks: { color: '#777', font: { size: 10 } } },
+        x: { grid: { display: false }, ticks: { color: '#777', font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+// Sector chart (initialized after mode set)
+let sectorChartInstance = null;
+function drawSectorChart(mode) {
+  const sectors = getSectors(mode);
+  const labels = sectors.map(s => s.name);
+  const data   = sectors.map(s => s.score);
+  const colors = data.map(v => v > 0 ? 'rgba(37,99,235,0.75)' : 'rgba(225,29,72,0.75)');
+
+  const ctx = document.getElementById('sectorChart');
+  if (!ctx) return;
+  if (sectorChartInstance) sectorChartInstance.destroy();
+  sectorChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: '상대 수익률 점수',
+        data,
+        backgroundColor: colors,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.raw > 0 ? '+' : ''}${ctx.raw}점` } }
+      },
+      scales: {
+        x: { grid: { color: '#eee' }, ticks: { color: '#777', font: { size: 10 } } },
+        y: { grid: { display: false }, ticks: { color: '#333', font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+chartConfigs['sectorChart'] = () => { drawSectorChart('up'); };
+
+// Compound chart instance
+let compoundChartInstance = null;
+chartConfigs['compoundChart'] = () => { updateSim(); };
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+
+// ════════════════════════════════════
+//   SECTOR DATA
+// ════════════════════════════════════
+const sectorData = [
+  { name:'금융', icon:'🏦', upScore:3, holdScore:2, downScore:-1,
+    upDesc:'금리↑ → 예대마진 확대, 은행 수익성 개선',
+    holdDesc:'안정적 수익 구조 유지',
+    downDesc:'예대마진 축소, 수익성 압박' },
+  { name:'에너지', icon:'⚡', upScore:2, holdScore:1, downScore:0,
+    upDesc:'금리 인상기에 경기 과열 동반 → 에너지 수요 증가',
+    holdDesc:'유가·공급 변수가 더 중요',
+    downDesc:'경기 둔화 우려 시 수요 감소 우려' },
+  { name:'소재', icon:'🏗', upScore:2, holdScore:1, downScore:0,
+    upDesc:'경기 확장기에 수요 증가',
+    holdDesc:'글로벌 수요에 따라 차별화',
+    downDesc:'경기 둔화 시 약세' },
+  { name:'헬스케어', icon:'🏥', upScore:0, holdScore:2, downScore:3,
+    upDesc:'방어주로 상대적 안정, 단 금리 부담은 있음',
+    holdDesc:'꾸준한 수익 창출, 방어주 매력',
+    downDesc:'금리↓ → 성장·방어 모두 부각, 강세' },
+  { name:'필수소비재', icon:'🛒', upScore:-1, holdScore:1, downScore:2,
+    upDesc:'가격 전가 어려워지고 채권 대비 매력 하락',
+    holdDesc:'안정적 배당 매력 유지',
+    downDesc:'금리↓ → 배당 매력 부각, 자금 유입' },
+  { name:'유틸리티', icon:'💡', upScore:-2, holdScore:1, downScore:3,
+    upDesc:'고부채 특성상 이자비용 급증, 채권 경쟁 심화',
+    holdDesc:'배당 안정성 부각',
+    downDesc:'금리↓ → 배당 메리트 최대, 강세 구간' },
+  { name:'부동산(REIT)', icon:'🏠', upScore:-3, holdScore:0, downScore:3,
+    upDesc:'금리↑ → 차입비용 폭등, 배당 매력 급락',
+    holdDesc:'개별 자산 가치에 따라 다름',
+    downDesc:'금리↓ → 최대 수혜, 부채비용 하락' },
+  { name:'IT/기술', icon:'💻', upScore:-2, holdScore:1, downScore:3,
+    upDesc:'미래 현금흐름 할인율 상승 → 밸류에이션 압박',
+    holdDesc:'실적 성장이 핵심 변수',
+    downDesc:'할인율↓ → 고성장주 밸류에이션 팽창' },
+  { name:'통신서비스', icon:'📡', upScore:-1, holdScore:1, downScore:2,
+    upDesc:'부채 多, 금리 인상에 취약',
+    holdDesc:'안정적 배당 유지',
+    downDesc:'배당 매력 증가, 성장주 특성도 부각' },
+  { name:'경기소비재', icon:'🛍', upScore:-1, holdScore:1, downScore:2,
+    upDesc:'소비 위축 우려',
+    holdDesc:'소비 안정 국면에 선방',
+    downDesc:'소비 회복 기대감에 강세' },
+  { name:'산업재', icon:'🏭', upScore:1, holdScore:2, downScore:1,
+    upDesc:'경기 확장과 맞물려 보통 수준 수혜',
+    holdDesc:'수주·물동량 지표가 관건',
+    downDesc:'인프라 투자 확대 시 수혜' },
+];
+
+let currentMode = 'up';
+
+function getSectors(mode) {
+  return sectorData.map(s => ({
+    name: s.icon + ' ' + s.name,
+    score: mode === 'up' ? s.upScore : mode === 'hold' ? s.holdScore : s.downScore,
+    desc: mode === 'up' ? s.upDesc : mode === 'hold' ? s.holdDesc : s.downDesc,
+    rawName: s.name
+  }));
+}
+
+function setSectorMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.rate-btn').forEach(b => {
+    b.classList.remove('active-up', 'active-dn', 'active-hold');
+  });
+  const btns = document.querySelectorAll('.rate-btn');
+  if (mode === 'up') btns[0].classList.add('active-up');
+  if (mode === 'hold') btns[1].classList.add('active-hold');
+  if (mode === 'down') btns[2].classList.add('active-dn');
+
+  renderSectorGrid(mode);
+  drawSectorChart(mode);
+  document.getElementById('sectorDetail').classList.remove('show');
+  // make chart visible
+  const cc = document.getElementById('sectorChart');
+  if (cc) cc.closest('.chart-container').classList.add('chart-ready');
+}
+
+function renderSectorGrid(mode) {
+  const grid = document.getElementById('sectorGrid');
+  const sectors = getSectors(mode);
+  grid.innerHTML = sectors.map((s, i) => {
+    const emoji = s.score >= 2 ? '🟢' : s.score === 1 ? '🔵' : s.score === 0 ? '⚪' : s.score === -1 ? '🟡' : '🔴';
+    const cls = s.score >= 1 ? 'tag-up' : s.score < 0 ? 'tag-dn' : 'tag-neu';
+    return `<div class="sector-card" onclick="showSectorDetail(${i},'${mode}')" data-idx="${i}">
+      <div class="s-name">${s.name}</div>
+      <div class="s-rate">${emoji}</div>
+      <div class="s-desc">${s.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function showSectorDetail(idx, mode) {
+  const sectors = getSectors(mode);
+  const s = sectors[idx];
+  const scoreLabel = s.score >= 2 ? '강세 ▲' : s.score === 1 ? '약한 강세 △' : s.score === 0 ? '중립 ─' : s.score === -1 ? '약한 약세 ▽' : '약세 ▼';
+  const det = document.getElementById('sectorDetail');
+  det.innerHTML = `<strong>${s.name}</strong> — <span class="${s.score>0?'tag-up':s.score<0?'tag-dn':'tag-neu'}">${scoreLabel}</span><br><br>${s.desc}`;
+  det.classList.add('show');
+
+  document.querySelectorAll('.sector-card').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+  });
+}
+
+// init sectors
+renderSectorGrid('up');
+
+
+// ════════════════════════════════════
+//   COMPOUND SIMULATOR
+// ════════════════════════════════════
+function fmt(n) {
+  if (n >= 100000000) return (n / 100000000).toFixed(1) + '억 원';
+  if (n >= 10000) return Math.round(n / 10000) + '만 원';
+  return n.toLocaleString() + '원';
+}
+
+function updateSim() {
+  const p = parseFloat(document.getElementById('sl-principal').value) * 10000;
+  const r = parseFloat(document.getElementById('sl-rate').value) / 100;
+  const y = parseInt(document.getElementById('sl-years').value);
+
+  document.getElementById('lbl-principal').textContent = fmt(p);
+  document.getElementById('lbl-rate').textContent = (r * 100).toFixed(1) + '%';
+  document.getElementById('lbl-years').textContent = y + '년';
+
+  const final = p * Math.pow(1 + r, y);
+  const profit = final - p;
+  const pct = ((final / p - 1) * 100).toFixed(1);
+
+  document.getElementById('sim-final').textContent = fmt(Math.round(final));
+  document.getElementById('sim-profit').textContent = '+' + fmt(Math.round(profit));
+  document.getElementById('sim-pct').textContent = '+' + pct + '%';
+
+  // Update compound chart
+  const labels = [], data1 = [], data2 = [];
+  for (let i = 0; i <= y; i++) {
+    labels.push(i + '년');
+    data1.push(Math.round(p * Math.pow(1 + r, i)));
+    data2.push(Math.round(p));
+  }
+
+  const ctx = document.getElementById('compoundChart');
+  if (!ctx) return;
+  if (compoundChartInstance) compoundChartInstance.destroy();
+  compoundChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '복리 성장',
+          data: data1,
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 2,
+        },
+        {
+          label: '원금',
+          data: data2,
+          borderColor: '#6b7280',
+          borderDash: [5, 5],
+          backgroundColor: 'transparent',
+          fill: false,
+          tension: 0,
+          pointRadius: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#555' } },
+        tooltip: {
+          callbacks: {
+            label: c => ` ${fmt(c.raw)}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          grid: { color: '#eee' },
+          ticks: { color: '#777', font: { size: 10 }, callback: v => fmt(v) }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#777', font: { size: 10 }, maxTicksLimit: 6 }
+        }
+      }
+    }
+  });
+  ctx.closest('.chart-container').classList.add('chart-ready');
+}
+
+function resetSim() {
+  document.getElementById('sl-principal').value = 1000;
+  document.getElementById('sl-rate').value = 7;
+  document.getElementById('sl-years').value = 20;
+  updateSim();
+}
+
+// Initial call
+updateSim();
+
+
+// ════════════════════════════════════
+//   QUIZ DATA
+// ════════════════════════════════════
+const quizData = [
+  {
+    id: 1, diff: 'easy', type: 'ox',
+    q: '기준금리(Federal Funds Rate)는 미국 중앙은행(Fed)이 시중 은행에 돈을 빌려줄 때 적용하는 금리이다.',
+    options: ['O (맞다)', 'X (틀리다)'],
+    ans: 0,
+    exp: '정답은 O입니다. 기준금리는 Fed가 시중은행에 단기 자금을 공급할 때 적용하는 금리로, 모든 금융 자산 가격에 영향을 미치는 핵심 정책 도구입니다.'
+  },
+  {
+    id: 2, diff: 'easy', type: 'mc',
+    q: 'FOMC는 연간 몇 회 회의를 열어 기준금리를 결정하는가?',
+    options: ['① 4회', '② 6회', '③ 8회', '④ 12회'],
+    ans: 2,
+    exp: '정답은 ③ 8회입니다. FOMC(연방공개시장위원회)는 연간 8회 정례 회의를 통해 기준금리를 결정합니다.'
+  },
+  {
+    id: 3, diff: 'easy', type: 'mc',
+    q: '일반적으로 금리와 주가의 관계는?',
+    options: ['① 정의 상관관계', '② 역의 상관관계', '③ 무관하다', '④ 경기에 따라 동일한 방향'],
+    ans: 1,
+    exp: '정답은 ② 역의 상관관계입니다. 금리가 오르면 채권 매력이 높아지고 기업 비용이 증가해 주가는 일반적으로 하락 압력을 받습니다.'
+  },
+  {
+    id: 4, diff: 'mid', type: 'mc',
+    q: '금리 인상 국면에서 일반적으로 수혜를 받는 섹터는?',
+    options: ['① 부동산(REIT)', '② 유틸리티', '③ 금융(은행)', '④ IT/기술주'],
+    ans: 2,
+    exp: '정답은 ③ 금융(은행)입니다. 금리 인상 시 예대마진이 확대되어 은행의 수익성이 개선됩니다. 나머지는 금리 인상 시 부정적 영향을 받습니다.'
+  },
+  {
+    id: 5, diff: 'mid', type: 'mc',
+    q: '금리 인상 시 IT/기술주가 약세를 보이는 핵심 이유는?',
+    options: [
+      '① 제품 판매량이 감소해서',
+      '② 미래 현금흐름의 할인율이 높아져 현재 가치가 하락해서',
+      '③ 반도체 공급이 줄어서',
+      '④ 규제가 강화돼서'
+    ],
+    ans: 1,
+    exp: '정답은 ② 입니다. 성장주(IT)는 먼 미래의 현금흐름을 현재 가치로 환산해 평가하는데, 금리(할인율)가 오르면 현재 가치가 낮아져 밸류에이션 압박을 받습니다.'
+  },
+  {
+    id: 6, diff: 'mid', type: 'mc',
+    q: '금리 인하 국면에서 가장 큰 수혜를 받을 가능성이 높은 섹터는?',
+    options: ['① 에너지', '② 금융', '③ 부동산(REIT)', '④ 소재'],
+    ans: 2,
+    exp: '정답은 ③ 부동산(REIT)입니다. REIT는 고부채 구조이므로 금리 인하 시 차입비용이 급감하고, 배당 매력이 부각되어 최대 수혜 섹터 중 하나입니다.'
+  },
+  {
+    id: 7, diff: 'mid', type: 'ox',
+    q: '유틸리티 섹터는 금리 인상 구간에서도 고배당 매력 덕분에 강세를 보이는 경우가 많다.',
+    options: ['O (맞다)', 'X (틀리다)'],
+    ans: 1,
+    exp: '정답은 X입니다. 유틸리티는 고부채 특성상 금리 인상 시 이자비용이 급증하고, 채권 수익률 상승으로 배당 경쟁력이 약화됩니다. 금리 인상 시 가장 취약한 섹터 중 하나입니다.'
+  },
+  {
+    id: 8, diff: 'mid', type: 'short',
+    q: '금리 인상이 주가에 미치는 영향 경로를 간략히 서술하시오. (핵심 키워드 2개 이상 포함)',
+    ans: '채권 수익률 상승, 기업 대출비용 증가, 소비 감소, 주가 하락 압력 등',
+    keywords: ['채권', '대출', '소비', '할인', '비용'],
+    exp: '핵심 경로: ① 채권 수익률 상승 → 주식 매력 하락, ② 기업 대출비용 증가 → 이익 감소, ③ 소비자 부담 증가 → 경기 둔화 → 주가 하락 압력.'
+  },
+  {
+    id: 9, diff: 'hard', type: 'mc',
+    q: '섹터 로테이션 전략에서 "경기 방어주(Defensive)"에 해당하지 않는 섹터는?',
+    options: ['① 필수소비재', '② 헬스케어', '③ 유틸리티', '④ 경기소비재'],
+    ans: 3,
+    exp: '정답은 ④ 경기소비재입니다. 경기소비재(Consumer Discretionary)는 경기에 민감한 섹터로, 경기 방어주가 아닙니다. 방어주는 경기 사이클과 무관하게 소비가 일어나는 필수소비재·헬스케어·유틸리티 등이 해당됩니다.'
+  },
+  {
+    id: 10, diff: 'hard', type: 'mc',
+    q: '투자 아카데미 강의에서 강조하는 "목적성 있는 투자"의 핵심 요소로 가장 적절한 것은?',
+    options: [
+      '① 단기 시세차익을 위해 매일 매매 빈도를 높이는 것',
+      '② 거시경제·금리 사이클을 이해하고 섹터 흐름을 파악하여 목표 지향적으로 투자하는 것',
+      '③ 유명 투자자의 포트폴리오를 그대로 따라 하는 것',
+      '④ 리스크를 완전히 제거하는 무손실 전략을 추구하는 것'
+    ],
+    ans: 1,
+    exp: '정답은 ②입니다. 강의에서는 목적 없는 매매가 아닌, 거시경제와 금리 사이클을 이해하고 섹터의 움직임을 파악하는 목적 지향적 투자 행위를 강조합니다.'
+  },
+];
+
+// ════════════════════════════════════
+//   QUIZ RENDER
+// ════════════════════════════════════
+let answered = new Array(quizData.length).fill(false);
+let scores = new Array(quizData.length).fill(false);
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = quizData.map((q, qi) => {
+    const diffLabel = q.diff === 'easy' ? '쉬움' : q.diff === 'mid' ? '보통' : '어려움';
+    const typeLabel = q.type === 'mc' ? '객관식' : q.type === 'ox' ? 'O/X' : '단답형';
+
+    let optHtml = '';
+    if (q.type === 'mc' || q.type === 'ox') {
+      optHtml = `<div class="q-options">` +
+        q.options.map((o, oi) =>
+          `<button class="q-opt" data-q="${qi}" data-o="${oi}" onclick="answerQ(${qi},${oi})">${o}</button>`
+        ).join('') +
+        `</div>`;
+    } else {
+      optHtml = `<div class="q-input-row">
+        <input class="q-input" id="qinput${qi}" type="text" placeholder="답을 입력하세요...">
+        <button class="q-submit" onclick="answerShort(${qi})">확인</button>
+      </div>`;
+    }
+
+    return `<div class="q-card fade-in" id="qcard${qi}">
+      <div class="q-header">
+        <span class="q-num">Q${q.id}</span>
+        <span class="q-diff ${q.diff}">${diffLabel}</span>
+        <span class="q-type">${typeLabel}</span>
+        <span class="q-text">${q.q}</span>
+      </div>
+      ${optHtml}
+      <div class="q-feedback" id="qfb${qi}"></div>
+    </div>`;
+  }).join('');
+
+  // re-observe new fade-ins
+  container.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+}
+
+function answerQ(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  const q = quizData[qi];
+  const correct = oi === q.ans;
+  scores[qi] = correct;
+
+  // disable buttons
+  document.querySelectorAll(`[data-q="${qi}"]`).forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct-ans');
+    if (i === oi && !correct) btn.classList.add('wrong-ans');
+  });
+
+  showFeedback(qi, correct, q.exp);
+  checkAllAnswered();
+}
+
+function answerShort(qi) {
+  if (answered[qi]) return;
+  const inp = document.getElementById('qinput' + qi);
+  const val = inp.value.trim();
+  if (!val) return;
+  answered[qi] = true;
+  inp.disabled = true;
+  document.querySelector(`[onclick="answerShort(${qi})"]`).disabled = true;
+
+  const q = quizData[qi];
+  const found = q.keywords.some(k => val.includes(k));
+  scores[qi] = found;
+  showFeedback(qi, found, q.exp);
+  checkAllAnswered();
+}
+
+function showFeedback(qi, correct, exp) {
+  const fb = document.getElementById('qfb' + qi);
+  fb.className = 'q-feedback show ' + (correct ? 'ok' : 'ng');
+  fb.innerHTML = (correct ? '✅ 정답입니다! ' : '❌ 오답입니다. ') + exp;
+  const card = document.getElementById('qcard' + qi);
+  card.classList.add(correct ? 'correct' : 'wrong');
+}
+
+function checkAllAnswered() {
+  if (answered.every(Boolean)) {
+    const total = scores.filter(Boolean).length;
+    const bar = document.getElementById('scoreBar');
+    bar.classList.add('show');
+    document.getElementById('scoreTxt').textContent = `${total} / ${quizData.length}`;
+    const msg = total >= 9 ? '🏆 우수! 거시경제 이해도가 매우 높습니다.' :
+                total >= 7 ? '👍 양호! 핵심 개념을 잘 파악하고 있습니다.' :
+                total >= 5 ? '📖 보통. 금리·섹터 관계를 복습해보세요.' :
+                             '💡 아직 기초 개념 정리가 필요합니다.';
+    document.getElementById('scoreMsg').textContent = msg;
+    bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
