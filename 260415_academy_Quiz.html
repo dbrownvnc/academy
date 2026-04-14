@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정답 & 해설 — 투자 아카데미 9회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --border: #e5e5e5;
+    --green: #16a34a; --green-bg: #dcfce7;
+    --blue: #2563eb; --blue-bg: #eff6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+
+  .hero {
+    background: #1a1a1a; color: #fff;
+    padding: 40px 20px 30px; text-align: center;
+  }
+  .hero-label { font-size: 10px; letter-spacing: 3px; color: #e11d48; font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; }
+  .hero-sub { color: #aaa; font-size: 13px; margin-top: 8px; }
+  .warning-banner {
+    background: #fff3cd; border-left: 4px solid #f59e0b;
+    padding: 14px 18px; margin: 0;
+    font-size: 13px; color: #92400e;
+    text-align: center;
+  }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 18px 40px; }
+
+  .answer-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .answer-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  .q-num {
+    background: var(--accent);
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .q-meta { font-size: 11px; color: var(--text2); }
+  .q-title { font-size: 14px; font-weight: 600; line-height: 1.45; }
+  .answer-body { padding: 16px 18px; }
+  .correct-answer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-bg);
+    color: var(--green);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .explanation { font-size: 14px; color: var(--text); line-height: 1.65; }
+  .key-point {
+    background: var(--blue-bg);
+    border-left: 3px solid var(--blue);
+    padding: 10px 14px;
+    margin-top: 10px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: #1e40af;
+  }
+  .difficulty {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+  .easy { background: #dcfce7; color: #166534; }
+  .medium { background: #fef9c3; color: #854d0e; }
+  .hard { background: #fee2e2; color: #991b1b; }
+
+  .summary-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+  .summary-table th { background: var(--accent); color: #fff; padding: 10px 12px; text-align: left; }
+  .summary-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .summary-table tr:last-child td { border-bottom: none; }
+
+  footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">정답 & 해설 · 투자 아카데미 9회</div>
+  <h1>RSI & 모멘텀</h1>
+  <div class="hero-sub">문제 파일을 먼저 풀고 이 파일을 확인하세요</div>
+</div>
+
+<div class="warning-banner">
+  ⚠️ 이 파일은 <strong>정답 및 해설</strong>이 포함되어 있습니다. 문제를 먼저 풀어보세요.
+</div>
+
+<div class="container">
+
+  <h2 style="margin:28px 0 4px;font-size:16px;">📋 정답 요약표</h2>
+  <table class="summary-table">
+    <thead><tr><th>번호</th><th>유형</th><th>난이도</th><th>정답</th></tr></thead>
+    <tbody>
+      <tr><td>Q1</td><td>객관식</td><td><span class="difficulty easy">쉬움</span></td><td>C. 30 이하</td></tr>
+      <tr><td>Q2</td><td>객관식</td><td><span class="difficulty easy">쉬움</span></td><td>B. 소금·후추의 양</td></tr>
+      <tr><td>Q3</td><td>객관식</td><td><span class="difficulty medium">보통</span></td><td>B. 오늘 종가 − 10일 전 종가</td></tr>
+      <tr><td>Q4</td><td>OX</td><td><span class="difficulty easy">쉬움</span></td><td>X (틀리다)</td></tr>
+      <tr><td>Q5</td><td>단답형</td><td><span class="difficulty medium">보통</span></td><td>연 3~4회 (분기 1회)</td></tr>
+      <tr><td>Q6</td><td>객관식</td><td><span class="difficulty medium">보통</span></td><td>D. 주변 지인의 투자 성과</td></tr>
+      <tr><td>Q7</td><td>OX</td><td><span class="difficulty medium">보통</span></td><td>X (틀리다)</td></tr>
+      <tr><td>Q8</td><td>객관식</td><td><span class="difficulty medium">보통</span></td><td>B. 약 235불</td></tr>
+      <tr><td>Q9</td><td>단답형</td><td><span class="difficulty hard">어려움</span></td><td>돈과 시간</td></tr>
+      <tr><td>Q10</td><td>객관식</td><td><span class="difficulty hard">어려움</span></td><td>C. 약 60~70%</td></tr>
+    </tbody>
+  </table>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:28px 0;">
+  <h2 style="font-size:16px;margin-bottom:4px;">📝 문제별 상세 해설</h2>
+
+  <!-- Q1 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">1</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty easy">쉬움</span></div>
+        <div class="q-title">RSI에서 매수 시그널로 해석하는 기준값은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: C. RSI 30 이하</div>
+      <div class="explanation">
+        RSI(Relative Strength Index)는 0~100 사이의 값을 가집니다. <strong>30 이하</strong>는 주가가 과도하게 하락한 상태(과매도, Oversold)를 의미하며, 반등 가능성이 높아 <strong>매수 시그널</strong>로 해석합니다. 반대로 70 이상은 과매수(Overbought) 상태로 매도 시그널입니다.
+      </div>
+      <div class="key-point">📌 핵심: 30↓=매수 / 70↑=매도 / 30~70=중립·관망</div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">2</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty easy">쉬움</span></div>
+        <div class="q-title">스테이크 비유에서 기술적 분석에 해당하는 것은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: B. 소금·후추의 양</div>
+      <div class="explanation">
+        강사는 투자 분석을 스테이크에 비유했습니다. 펀더멘털 분석 = 고기 자체의 질·양·부위(본질 가치), 기술적 분석 = 소금·후추의 양(타이밍 조정 도구)입니다. 고기 퀄리티가 좋으면 소금이 좀 많거나 적어도 괜찮듯, 펀더멘털이 탄탄하면 기술적 분석의 오차가 크지 않습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">3</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty medium">보통</span></div>
+        <div class="q-title">모멘텀(Momentum) 지표의 기본 공식은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: B. 오늘 종가 − 10일 전 종가</div>
+      <div class="explanation">
+        모멘텀 = <strong>현재 주가 − 10일 전 주가</strong>입니다. 기준값은 <strong>0</strong>이며, 0 위에 있으면 상승 탄력(엔트리 참고), 0 아래로 내려가면 하락 탄력(엑시트 참고)입니다. C번(14일 평균 상승폭/하락폭)은 RSI의 계산 방식입니다.
+      </div>
+      <div class="key-point">📌 모멘텀 ≠ RSI. 두 지표는 계산 방식이 전혀 다릅니다.</div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">4</div>
+      <div>
+        <div class="q-meta">OX <span class="difficulty easy">쉬움</span></div>
+        <div class="q-title">모멘텀 값이 0보다 크면 엑시트 시점이다. (O/X)</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: X (틀리다)</div>
+      <div class="explanation">
+        모멘텀이 0보다 클 때는 <strong>엔트리(매수 진입) 참고 구간</strong>입니다. 주가에 상승 탄력이 붙어 있다는 의미입니다. 반대로 0 아래로 떨어질 때가 <strong>엑시트(매도 청산) 참고 구간</strong>입니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">5</div>
+      <div>
+        <div class="q-meta">단답형 <span class="difficulty medium">보통</span></div>
+        <div class="q-title">강의에서 권장하는 섹터 로테이션·리밸런싱 빈도는?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: 연 3~4회 (분기당 1회)</div>
+      <div class="explanation">
+        강사는 "1년에 한 3번 정도, 4번, 분기당 한 번씩 섹터 로테이션을 한다"고 명확히 언급했습니다. 매일 또는 매주 RSI·모멘텀을 보고 매매하는 것은 거래비용(세금 + 시간)을 급격히 높여 오히려 수익률을 해칩니다.
+      </div>
+      <div class="key-point">📌 잦은 매매의 함정: 거래 비용 증가 → 실질 수익률 하락</div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">6</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty medium">보통</span></div>
+        <div class="q-title">투자 전 6가지 고려 요소 중 해당하지 않는 것은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: D. 주변 지인의 투자 성과</div>
+      <div class="explanation">
+        강의에서 6가지는 ①투자 프로세스 ②개인 목표 ③리스크 허용도 ④투자 기간(Time Horizon) ⑤유동성 필요 ⑥세금 효율입니다. 강사는 "아 저 사람은 두 배 벌었대. 나는 왜 반밖에 못 벌었지?" 같은 비교가 <strong>무의미한 질문</strong>이라고 명시했습니다. 투자 목표와 리스크 프로필이 사람마다 다르기 때문입니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">7</div>
+      <div>
+        <div class="q-meta">OX <span class="difficulty medium">보통</span></div>
+        <div class="q-title">RSI가 70 이상이면 펀더멘털에 관계없이 반드시 매도해야 한다. (O/X)</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: X (틀리다)</div>
+      <div class="explanation">
+        RSI는 <strong>참고용 보조 지표</strong>일 뿐입니다. 강사는 "이거를 종교화할 필요가 없다", "이거 대비 종료비가 너무 좋은걸 가르쳐줬다"며 과도한 신뢰를 경고했습니다. 펀더멘털이 탄탄한 기업은 RSI가 70 이상이어도 장기 보유가 더 나은 선택일 수 있습니다. (예: SMCI 사례)
+      </div>
+      <div class="key-point">📌 RSI는 참고, 펀더멘털은 핵심. 주객이 전도되면 안 됩니다.</div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">8</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty medium">보통</span></div>
+        <div class="q-title">SMCI를 90불에 매수 후 장기 보유한 결과 현재 가격은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: B. 약 235불</div>
+      <div class="explanation">
+        강사는 SMCI를 90불 매수 → 235불 현재가 사례로, 장기 보유 시 약 2.6배(160% 수익) 상승 효과를 보여줬습니다. 반면 RSI만 보며 여러 번 사고팔면 세금·비용 손실로 최종 수익이 크게 줄 수 있다고 경고했습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">9</div>
+      <div>
+        <div class="q-meta">단답형 <span class="difficulty hard">어려움</span></div>
+        <div class="q-title">모멘텀 지표의 주요 단점으로 언급된 두 가지 비용은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: 돈(금전적 비용)과 시간</div>
+      <div class="explanation">
+        강사는 모멘텀이 "오버서드(Oversold·Overbought) 경향"이 있어 잦은 매매를 유발하고, 이로 인한 <strong>Transaction Cost(거래 비용)</strong>이 증가한다고 설명했습니다. 이 거래 비용은 구체적으로 <strong>돈(세금, 수수료)</strong>과 <strong>시간(모니터링, 판단 비용)</strong>으로 구성됩니다. "아무도 안 하는 게 훨씬 나을 가능성이 60% 이상"이라는 발언과 연결됩니다.
+      </div>
+      <div class="key-point">📌 Transaction Cost = 돈 + 시간. 둘 다 소중한 자원입니다.</div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="answer-card">
+    <div class="answer-header">
+      <div class="q-num">10</div>
+      <div>
+        <div class="q-meta">객관식 <span class="difficulty hard">어려움</span></div>
+        <div class="q-title">우량주 장기 보유가 기술적 분석 단기 매매보다 유리한 확률은?</div>
+      </div>
+    </div>
+    <div class="answer-body">
+      <div class="correct-answer">✅ 정답: C. 약 60~70%</div>
+      <div class="explanation">
+        강사는 "아무도 안 하는 게 훨씬 날 가능성도 60% 이상이 됩니다. 60~70%가"라고 구체적 수치를 제시했습니다. 즉 기술적 지표로 단기 매매를 하는 것보다, 펀더멘털이 좋은 우량주를 그냥 <strong>보유(Hold)</strong>하는 것이 약 60~70% 확률로 더 나은 결과를 냈습니다. 이것이 강사가 기술적 분석을 "참고용"으로만 쓰라고 강조하는 핵심 근거입니다.
+      </div>
+      <div class="key-point">📌 장기 우량주 보유 > 단기 기술적 분석 매매 (확률 60~70%)</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>투자 아카데미 9회 — 정답 & 해설</strong><br>
+  <span style="display:block;margin-top:4px;">⚠️ 이 자료는 교육 목적으로 작성되었습니다. 실제 투자 손익의 책임은 본인에게 있습니다.</span>
+</footer>
+</body>
+</html>

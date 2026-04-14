@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 9회 — RSI & 모멘텀</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --blue: #2563eb;
+    --gray: #6b7280;
+    --border: #e5e5e5;
+    --table-bg: #fafafa;
+    --table-header: #e11d48;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 20px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', 'Noto Serif KR', serif;
+    font-size: 28px;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .hero-sub {
+    color: #aaa;
+    font-size: 13px;
+  }
+  .hero-badge {
+    display: inline-block;
+    margin-top: 18px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+  section { padding: 36px 0 28px; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 22px 0 8px;
+    color: var(--text);
+  }
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: #fff5f7;
+    padding: 14px 16px;
+    margin: 18px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+  }
+  .callout strong { color: var(--accent); }
+  .callout-blue {
+    border-left-color: var(--blue);
+    background: #eff6ff;
+  }
+  .callout-blue strong { color: var(--blue); }
+  .callout-gray {
+    border-left-color: var(--gray);
+    background: #f9fafb;
+  }
+
+  /* STEAK METAPHOR */
+  .metaphor-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 18px 0;
+  }
+  .metaphor-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .metaphor-row:last-child { margin-bottom: 0; }
+  .m-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+  }
+  .m-text strong { color: var(--accent); display: block; font-size: 13px; margin-bottom: 2px; }
+  .m-text span { font-size: 13px; color: var(--text2); }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th {
+    background: var(--table-header);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--table-bg); }
+  tr:last-child td { border-bottom: none; }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 18px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* SIGNAL BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .badge-buy { background: #dcfce7; color: #166534; }
+  .badge-sell { background: #fee2e2; color: #991b1b; }
+  .badge-neutral { background: #f3f4f6; color: #374151; }
+
+  /* RSI SIMULATOR */
+  .sim-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sim-title span { font-size: 16px; }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .slider-label {
+    font-size: 12px;
+    color: var(--text2);
+    min-width: 70px;
+  }
+  input[type=range] {
+    flex: 1;
+    accent-color: var(--accent);
+    height: 4px;
+    cursor: pointer;
+  }
+  .slider-val {
+    min-width: 38px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .signal-result {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    margin-top: 10px;
+    transition: border-color 0.3s;
+  }
+  .signal-result .signal-icon { font-size: 32px; margin-bottom: 6px; }
+  .signal-result .signal-text { font-size: 15px; font-weight: 700; }
+  .signal-result .signal-desc { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* MOMENTUM CALC */
+  .momentum-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .input-group label {
+    display: block;
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .input-group input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  .input-group input:focus { outline: none; border-color: var(--accent); }
+  .momentum-result {
+    text-align: center;
+    padding: 16px;
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    margin-top: 10px;
+    transition: border-color 0.3s;
+  }
+  .momentum-value { font-size: 28px; font-weight: 700; }
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: #f0f0f0; }
+
+  /* 6 FACTORS */
+  .factor-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .factor-card {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--bg2);
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid var(--border);
+  }
+  .factor-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'DM Serif Display', serif;
+    min-width: 28px;
+  }
+  .factor-info strong { display: block; font-size: 14px; margin-bottom: 3px; }
+  .factor-info p { font-size: 13px; color: var(--text2); margin: 0; }
+
+  /* QUIZ (questions only) */
+  .quiz-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+  .quiz-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .quiz-q { font-size: 14px; font-weight: 600; margin-bottom: 10px; line-height: 1.5; }
+  .quiz-options { list-style: none; }
+  .quiz-options li {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .quiz-options li:hover { border-color: var(--accent); background: #fff5f7; }
+  .quiz-options li.correct { border-color: #16a34a; background: #dcfce7; color: #166534; }
+  .quiz-options li.wrong { border-color: #dc2626; background: #fee2e2; color: #991b1b; }
+  .quiz-feedback {
+    margin-top: 8px;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: #dcfce7; color: #166534; }
+  .quiz-feedback.wrong-fb { background: #fee2e2; color: #991b1b; }
+  .quiz-input-row { display: flex; gap: 8px; margin-top: 8px; }
+  .quiz-input-row input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .quiz-input-row button {
+    padding: 9px 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 30px 0 10px;
+    color: var(--text2);
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .divider-label::before, .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 12px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+  }
+  footer strong { color: var(--accent); }
+
+  /* COMPARISON TABLE interactive */
+  .compare-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .ctog-btn {
+    flex: 1;
+    padding: 9px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .ctog-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .compare-panel { display: none; }
+  .compare-panel.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">투자 아카데미 · 9회</div>
+  <h1>매입·매각 시점 찾기<br>RSI & 모멘텀</h1>
+  <div class="hero-sub">Relative Strength Index · Momentum Analysis</div>
+  <div class="hero-badge">2026.04.15</div>
+</div>
+
+<div class="container">
+
+<!-- 1. 강의 핵심 요약 -->
+<section>
+  <div class="section-label">Overview</div>
+  <h2>강의 핵심 메시지</h2>
+  <p>이번 강의는 <strong>기술적 분석(Technical Analysis)</strong>의 두 가지 도구 — RSI와 모멘텀 — 을 소개합니다. 강사는 처음부터 명확히 경고합니다.</p>
+
+  <div class="callout">
+    <strong>⚠️ 핵심 경고</strong><br>
+    테크니컬 분석은 <strong>참고용</strong>일 뿐, 의사결정의 주된 기준이 되어선 안 됩니다. 펀더멘털 분석이 항상 우선입니다.
+  </div>
+
+  <div class="metaphor-box">
+    <p style="font-size:13px; color:var(--text2); margin-bottom:14px;">📖 스테이크 비유로 이해하기</p>
+    <div class="metaphor-row">
+      <div class="m-icon">🥩</div>
+      <div class="m-text">
+        <strong>펀더멘털 분석</strong>
+        <span>고기의 질·양·부위 → 기업의 실적, 부채, R&D, 매출이익률 등 본질 가치</span>
+      </div>
+    </div>
+    <div class="metaphor-row">
+      <div class="m-icon">🧂</div>
+      <div class="m-text">
+        <strong>기술적 분석</strong>
+        <span>소금·후추 양 → 매입·매각 타이밍을 조금 더 정교하게 맞추는 도구</span>
+      </div>
+    </div>
+    <div class="callout-gray callout" style="margin:10px 0 0;">
+      고기 퀄리티(펀더멘털)가 좋으면 소금(기술적 분석)이 좀 맞지 않아도 괜찮습니다.
+    </div>
+  </div>
+</section>
+
+<!-- 2. 6가지 투자 원칙 -->
+<section>
+  <div class="section-label">Investment Framework</div>
+  <h2>투자 전 반드시 고려할 6가지</h2>
+  <p>매매 전에 이 6가지 개인 요소를 먼저 정의해야 합니다.</p>
+  <div class="factor-grid fade-in">
+    <div class="factor-card">
+      <div class="factor-num">1</div>
+      <div class="factor-info">
+        <strong>투자 프로세스 (Investment Process)</strong>
+        <p>나만의 종목 연구 → 판단 기준 → 시점·수량 결정 흐름을 체계화하기</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num">2</div>
+      <div class="factor-info">
+        <strong>개인 목표 (Individual Goal)</strong>
+        <p>투자 목적이 사람마다 다릅니다. 옆 사람이 산 주식을 따라 살 이유는 없습니다.</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num">3</div>
+      <div class="factor-info">
+        <strong>리스크 허용도 (Risk Tolerance)</strong>
+        <p>원금 손실이 절대 안 되는 자금이라면 고위험 투자 금지. 리스크 ↑ = 수익 가능성 ↑</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num">4</div>
+      <div class="factor-info">
+        <strong>투자 기간 (Time Horizon)</strong>
+        <p>은퇴까지 기간이 길수록 리스크를 조금 더 감수할 수 있습니다. 단기 현금 필요자는 보수적으로.</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num">5</div>
+      <div class="factor-info">
+        <strong>유동성 필요 (Liquidity Needs)</strong>
+        <p>당장 현금화가 필요한 돈은 절대 고위험 투자에 넣지 마세요.</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num">6</div>
+      <div class="factor-info">
+        <strong>세금 비용 (Tax Efficiency)</strong>
+        <p>잦은 매매 = 높은 세금. 자산이 클수록 거래비용이 수익을 잠식합니다.</p>
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-blue">
+    <strong>📌 결론:</strong> 6가지를 확인한 뒤 → 펀더멘털 분석 → 섹터 로테이션/리밸런싱 → 기술적 분석(RSI, 모멘텀)으로 타이밍 보조
+  </div>
+</section>
+
+<!-- 3. RSI -->
+<section>
+  <div class="section-label">Technical Analysis · 1</div>
+  <h2>RSI (Relative Strength Index)</h2>
+  <p><strong>상대강도지수</strong>로, 0~100 사이 값으로 주가의 과매수·과매도 상태를 나타냅니다. 매입·매각 진입 시점을 찾는 보조 지표입니다.</p>
+
+  <table>
+    <thead>
+      <tr><th>RSI 구간</th><th>의미</th><th>시그널</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>30 이하</strong></td><td>과매도 (Oversold)</td><td><span class="badge badge-buy">매수 시그널</span></td></tr>
+      <tr><td><strong>30~60</strong></td><td>중립</td><td><span class="badge badge-neutral">관망</span></td></tr>
+      <tr><td><strong>60~70</strong></td><td>고평가 시작</td><td><span class="badge badge-sell">주의</span></td></tr>
+      <tr><td><strong>70 이상</strong></td><td>과매수 (Overbought)</td><td><span class="badge badge-sell">매도 시그널 강함</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- RSI 시뮬레이터 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title"><span>🎛️</span> RSI 시그널 시뮬레이터</div>
+    <div class="slider-row">
+      <span class="slider-label">RSI 값</span>
+      <input type="range" id="rsiSlider" min="0" max="100" value="50" step="1">
+      <span class="slider-val" id="rsiVal">50</span>
+    </div>
+    <div class="signal-result" id="rsiResult">
+      <div class="signal-icon" id="rsiIcon">⚪</div>
+      <div class="signal-text" id="rsiText">중립 구간</div>
+      <div class="signal-desc" id="rsiDesc">관망 — 뚜렷한 시그널 없음</div>
+    </div>
+    <button class="reset-btn" onclick="document.getElementById('rsiSlider').value=50;updateRSI()">↩ 초기화</button>
+  </div>
+
+  <!-- RSI 차트 (개념 시각화) -->
+  <p class="chart-title">RSI 개념 시각화 — S&P500 가상 예시</p>
+  <div class="chart-container fade-in">
+    <canvas id="rsiChart" height="240"></canvas>
+  </div>
+
+  <div class="callout">
+    <strong>⚠️ RSI 한계:</strong> 추세가 강한 장에서는 RSI가 오랫동안 70 이상 유지되거나 30 이하에서 계속 하락할 수 있습니다. 이것만 믿고 매매하면 기회 손실 또는 손실 확대로 이어질 수 있습니다.
+  </div>
+
+  <h3>실제 사례 정리</h3>
+  <p>강의에서 언급된 종목별 RSI 활용 사례를 정리하면:</p>
+  <table>
+    <thead>
+      <tr><th>종목</th><th>RSI 포인트 특징</th><th>결론</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ASML</td><td>고RSI 후 하락, 반복 패턴</td><td>참고되나 잦은 매매 시 비효율</td></tr>
+      <tr><td>SMCI</td><td>90불→235불 상승 중 RSI 반복</td><td>장기 보유가 단기 RSI 매매보다 우수</td></tr>
+      <tr><td>Apple</td><td>RSI 30 근처에서 매수 시그널</td><td>방향성 대체로 맞음</td></tr>
+      <tr><td>UNH</td><td>RSI 25~30에서 반복 매수 시그널</td><td>바이 시그널 패턴 확인됨</td></tr>
+      <tr><td>Costco</td><td>연 4회 RSI 저점 형성</td><td>섹터 로테이션 판단 보조</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 4. 모멘텀 -->
+<section>
+  <div class="section-label">Technical Analysis · 2</div>
+  <h2>모멘텀 (Momentum)</h2>
+  <p>현재 주가에서 <strong>10일 전 주가를 뺀 값</strong>입니다. 기준선은 0이며, 주가의 상승·하락 탄력을 나타냅니다.</p>
+
+  <div class="callout callout-blue">
+    <strong>📐 공식:</strong> 모멘텀 = 현재 주가 − 10일 전 주가<br>
+    ▲ 0 이상 → 상승 탄력 (엔트리 기회) &nbsp;|&nbsp; ▼ 0 미만 → 하락 탄력 (엑시트 고려)
+  </div>
+
+  <!-- 모멘텀 계산기 -->
+  <div class="sim-box fade-in">
+    <div class="sim-title"><span>🧮</span> 모멘텀 계산기</div>
+    <div class="momentum-inputs">
+      <div class="input-group">
+        <label>현재 주가 (오늘)</label>
+        <input type="number" id="priceNow" value="587" min="0" step="0.01" oninput="calcMomentum()">
+      </div>
+      <div class="input-group">
+        <label>10일 전 주가</label>
+        <input type="number" id="price10d" value="530" min="0" step="0.01" oninput="calcMomentum()">
+      </div>
+    </div>
+    <div class="momentum-result" id="momentumResult">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">모멘텀 값</div>
+      <div class="momentum-value" id="momentumVal">+57.00</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;" id="momentumSignal">📈 상승 탄력 — 엔트리 고려 구간</div>
+    </div>
+    <button class="reset-btn" onclick="document.getElementById('priceNow').value=587;document.getElementById('price10d').value=530;calcMomentum()">↩ 초기화</button>
+  </div>
+
+  <!-- 모멘텀 차트 -->
+  <p class="chart-title">모멘텀 개념 시각화 — 가상 예시</p>
+  <div class="chart-container fade-in">
+    <canvas id="momentumChart" height="240"></canvas>
+  </div>
+
+  <div class="callout">
+    <strong>⚠️ 모멘텀 한계:</strong> 과매수(Overbought)·과매도(Oversold) 경향이 있어 잦은 매매(Transaction Cost 증가)로 이어질 수 있습니다. 장기 우량주를 홀딩하는 것이 모멘텀 매매보다 60~70% 확률로 유리합니다.
+  </div>
+</section>
+
+<!-- 5. RSI vs 모멘텀 비교 -->
+<section>
+  <div class="section-label">Comparison</div>
+  <h2>RSI vs 모멘텀 비교</h2>
+  <div class="compare-toggle">
+    <button class="ctog-btn active" onclick="showPanel('overview')">개요 비교</button>
+    <button class="ctog-btn" onclick="showPanel('usage')">활용 방법</button>
+    <button class="ctog-btn" onclick="showPanel('limit')">한계점</button>
+  </div>
+
+  <div class="compare-panel active" id="panel-overview">
+    <table>
+      <thead><tr><th>항목</th><th>RSI</th><th>모멘텀</th></tr></thead>
+      <tbody>
+        <tr><td>범위</td><td>0 ~ 100</td><td>−∞ ~ +∞ (기준 0)</td></tr>
+        <tr><td>계산</td><td>14일 평균 상승/하락 비율</td><td>현재가 − 10일 전 가격</td></tr>
+        <tr><td>매수 신호</td><td>30 이하</td><td>0선 상향 돌파</td></tr>
+        <tr><td>매도 신호</td><td>70 이상</td><td>0선 하향 이탈</td></tr>
+        <tr><td>복잡도</td><td>중간</td><td>낮음 (단순)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="compare-panel" id="panel-usage">
+    <div class="callout callout-blue">
+      <strong>권장 활용 시나리오:</strong><br>
+      RSI + 모멘텀을 <strong>같이</strong> 보고, 두 지표가 동일한 방향을 가리킬 때 신뢰도 ↑<br>
+      ➤ 둘 다 매수 시그널 → 진입 검토<br>
+      ➤ 엇갈릴 경우 → 신중 관망<br><br>
+      강사 권장: <strong>분기 1회 (연 3~4회)</strong> 섹터 로테이션·리밸런싱 시 참고용으로 사용
+    </div>
+  </div>
+  <div class="compare-panel" id="panel-limit">
+    <table>
+      <thead><tr><th>한계</th><th>RSI</th><th>모멘텀</th></tr></thead>
+      <tbody>
+        <tr><td>강한 추세장</td><td>오랫동안 극단값 유지</td><td>과매수 지속 가능</td></tr>
+        <tr><td>잦은 매매 위험</td><td>세금·비용 누적</td><td>Transaction Cost 급증</td></tr>
+        <tr><td>지연 특성</td><td>후행 지표</td><td>후행 지표</td></tr>
+        <tr><td>신뢰도</td><td>100% 맞지 않음</td><td>100% 맞지 않음</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>결론:</strong> 두 지표 모두 "주식시장에 개런티는 없다"는 원칙에서 자유롭지 않습니다. 다각적 판단(Weighted Decision)이 필수입니다.
+    </div>
+  </div>
+
+  <!-- 통합 차트 -->
+  <p class="chart-title" style="margin-top:20px;">RSI + 모멘텀 통합 시각화 — Costco 가상 예시</p>
+  <div class="chart-container fade-in">
+    <canvas id="combinedChart" height="240"></canvas>
+  </div>
+</section>
+
+<!-- 6. 핵심 요약 -->
+<section>
+  <div class="section-label">Key Takeaways</div>
+  <h2>오늘 강의 핵심 정리</h2>
+  <div class="factor-grid">
+    <div class="factor-card">
+      <div class="factor-num" style="color:var(--blue);">①</div>
+      <div class="factor-info">
+        <strong>펀더멘털 우선</strong>
+        <p>기업 실적·부채·성장성이 모든 투자 판단의 1순위</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num" style="color:var(--blue);">②</div>
+      <div class="factor-info">
+        <strong>RSI 30/70 기준</strong>
+        <p>30 이하 = 매수 시그널, 70 이상 = 매도 시그널. 단, 맹신 금지.</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num" style="color:var(--blue);">③</div>
+      <div class="factor-info">
+        <strong>모멘텀 0선 기준</strong>
+        <p>0 상향 = 엔트리 참고, 0 하향 = 엑시트 참고</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num" style="color:var(--blue);">④</div>
+      <div class="factor-info">
+        <strong>매매 빈도 최소화</strong>
+        <p>분기당 1회 리밸런싱 원칙. 잦은 매매 = 세금·비용 손실</p>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="factor-num" style="color:var(--blue);">⑤</div>
+      <div class="factor-info">
+        <strong>다각적 판단 (Weighted Decision)</strong>
+        <p>RSI + 모멘텀 + 펀더멘털 + 섹터 흐름을 종합하여 결정</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 시험 문제 -->
+<section>
+  <div class="section-label">Quiz</div>
+  <h2>📝 이해도 확인 문제 (10문제)</h2>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:20px;">문제를 클릭하거나 입력하면 즉시 채점됩니다.</p>
+
+  <!-- Q1 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q1 · 객관식 · 쉬움</div>
+    <div class="quiz-q">RSI(Relative Strength Index)에서 <strong>매수 시그널</strong>로 해석하는 기준값은?</div>
+    <ul class="quiz-options" id="q1">
+      <li onclick="checkMC(this,'q1','A')">A. 70 이상</li>
+      <li onclick="checkMC(this,'q1','B')">B. 50 이상</li>
+      <li onclick="checkMC(this,'q1','C')">C. 30 이하 ✓</li>
+      <li onclick="checkMC(this,'q1','D')">D. 10 이하</li>
+    </ul>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q2 · 객관식 · 쉬움</div>
+    <div class="quiz-q">강의에서 펀더멘털 분석을 스테이크 비유로 설명할 때, 기술적 분석에 해당하는 것은?</div>
+    <ul class="quiz-options" id="q2">
+      <li onclick="checkMC(this,'q2','A')">A. 고기의 퀄리티·부위</li>
+      <li onclick="checkMC(this,'q2','B')">B. 소금·후추의 양 ✓</li>
+      <li onclick="checkMC(this,'q2','C')">C. 식당 위치</li>
+      <li onclick="checkMC(this,'q2','D')">D. 고기의 무게</li>
+    </ul>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q3 · 객관식 · 보통</div>
+    <div class="quiz-q">모멘텀(Momentum) 지표의 기본 공식으로 옳은 것은?</div>
+    <ul class="quiz-options" id="q3">
+      <li onclick="checkMC(this,'q3','A')">A. 오늘 종가 ÷ 10일 전 종가</li>
+      <li onclick="checkMC(this,'q3','B')">B. 오늘 종가 − 10일 전 종가 ✓</li>
+      <li onclick="checkMC(this,'q3','C')">C. 14일 평균 상승폭 ÷ 평균 하락폭</li>
+      <li onclick="checkMC(this,'q3','D')">D. 오늘 거래량 − 10일 전 거래량</li>
+    </ul>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 OX -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q4 · OX · 쉬움</div>
+    <div class="quiz-q">모멘텀 값이 0보다 크면 엑시트(Exit) 시점으로 해석한다. (O/X)</div>
+    <ul class="quiz-options" id="q4">
+      <li onclick="checkOX(this,'q4','O')">O — 맞다</li>
+      <li onclick="checkOX(this,'q4','X')">X — 틀리다 ✓</li>
+    </ul>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <!-- Q5 단답 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q5 · 단답형 · 보통</div>
+    <div class="quiz-q">강의에서 권장하는 섹터 로테이션·리밸런싱 빈도는 연 몇 회입니까? (숫자로 입력)</div>
+    <div class="quiz-input-row">
+      <input type="text" id="q5-input" placeholder="숫자 입력">
+      <button onclick="checkShort('q5','3-4')">확인</button>
+    </div>
+    <div class="quiz-feedback" id="q5-fb"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q6 · 객관식 · 보통</div>
+    <div class="quiz-q">강의에서 투자 전 고려할 6가지 중 해당하지 않는 것은?</div>
+    <ul class="quiz-options" id="q6">
+      <li onclick="checkMC(this,'q6','A')">A. 개인 투자 목표</li>
+      <li onclick="checkMC(this,'q6','B')">B. 리스크 허용도</li>
+      <li onclick="checkMC(this,'q6','C')">C. 투자 기간 (Time Horizon)</li>
+      <li onclick="checkMC(this,'q6','D')">D. 주변 지인의 투자 성과 ✓</li>
+    </ul>
+    <div class="quiz-feedback" id="q6-fb"></div>
+  </div>
+
+  <!-- Q7 OX -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q7 · OX · 보통</div>
+    <div class="quiz-q">RSI가 70 이상이어도 펀더멘털이 탁월한 기업이라면 반드시 매도해야 한다. (O/X)</div>
+    <ul class="quiz-options" id="q7">
+      <li onclick="checkOX(this,'q7','O')">O — 맞다</li>
+      <li onclick="checkOX(this,'q7','X')">X — 틀리다 ✓</li>
+    </ul>
+    <div class="quiz-feedback" id="q7-fb"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q8 · 객관식 · 보통</div>
+    <div class="quiz-q">강의에서 SMCI를 90불에 매수 후 장기 보유한 결과 현재 가격으로 제시된 것은?</div>
+    <ul class="quiz-options" id="q8">
+      <li onclick="checkMC(this,'q8','A')">A. 약 150불</li>
+      <li onclick="checkMC(this,'q8','B')">B. 약 235불 ✓</li>
+      <li onclick="checkMC(this,'q8','C')">C. 약 320불</li>
+      <li onclick="checkMC(this,'q8','D')">D. 약 400불</li>
+    </ul>
+    <div class="quiz-feedback" id="q8-fb"></div>
+  </div>
+
+  <!-- Q9 단답 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q9 · 단답형 · 어려움</div>
+    <div class="quiz-q">강의에서 모멘텀 지표의 주요 단점으로 언급된 두 가지 비용은? (힌트: 돈과 ___)</div>
+    <div class="quiz-input-row">
+      <input type="text" id="q9-input" placeholder="예: 돈과 시간">
+      <button onclick="checkShort('q9','시간')">확인</button>
+    </div>
+    <div class="quiz-feedback" id="q9-fb"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-box fade-in">
+    <div class="quiz-num">Q10 · 객관식 · 어려움</div>
+    <div class="quiz-q">강의에서 펀더멘털이 좋은 우량주를 장기 보유하는 것이 기술적 분석 기반 매매보다 유리한 확률로 언급된 것은?</div>
+    <ul class="quiz-options" id="q10">
+      <li onclick="checkMC(this,'q10','A')">A. 약 30~40%</li>
+      <li onclick="checkMC(this,'q10','B')">B. 약 50%</li>
+      <li onclick="checkMC(this,'q10','C')">C. 약 60~70% ✓</li>
+      <li onclick="checkMC(this,'q10','D')">D. 약 90% 이상</li>
+    </ul>
+    <div class="quiz-feedback" id="q10-fb"></div>
+  </div>
+
+  <div class="callout callout-gray" style="margin-top:20px;font-size:13px;">
+    📌 정답과 해설은 함께 제공된 <strong>정답_해설.html</strong> 파일을 참고하세요.
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>투자 아카데미 9회</strong> · RSI & 모멘텀 분석 요약<br>
+  <span style="margin-top:4px;display:block;">⚠️ 이 자료는 교육 목적으로 작성되었습니다. 투자 손익에 대한 책임은 본인에게 있습니다.</span>
+</footer>
+
+<script>
+// ─── RSI 시뮬레이터 ───────────────────────
+function updateRSI() {
+  const val = parseInt(document.getElementById('rsiSlider').value);
+  document.getElementById('rsiVal').textContent = val;
+  const result = document.getElementById('rsiResult');
+  const icon = document.getElementById('rsiIcon');
+  const text = document.getElementById('rsiText');
+  const desc = document.getElementById('rsiDesc');
+
+  if (val <= 30) {
+    result.style.borderColor = '#16a34a';
+    icon.textContent = '📈';
+    text.textContent = '매수 시그널 (Oversold)';
+    text.style.color = '#16a34a';
+    desc.textContent = `RSI ${val} — 과매도 구간. 저평가 가능성. 매수 검토.`;
+  } else if (val <= 60) {
+    result.style.borderColor = '#e5e5e5';
+    icon.textContent = '⚪';
+    text.textContent = '중립 구간';
+    text.style.color = '#374151';
+    desc.textContent = `RSI ${val} — 뚜렷한 시그널 없음. 펀더멘털 우선 판단.`;
+  } else if (val <= 70) {
+    result.style.borderColor = '#f59e0b';
+    icon.textContent = '⚠️';
+    text.textContent = '주의 (고평가 시작)';
+    text.style.color = '#d97706';
+    desc.textContent = `RSI ${val} — 과매수 주의 구간. 신규 진입 비추천.`;
+  } else {
+    result.style.borderColor = '#dc2626';
+    icon.textContent = '📉';
+    text.textContent = '매도 시그널 강함 (Overbought)';
+    text.style.color = '#dc2626';
+    desc.textContent = `RSI ${val} — 강한 과매수. 매도 또는 비중 축소 검토.`;
+  }
+}
+document.getElementById('rsiSlider').addEventListener('input', updateRSI);
+updateRSI();
+
+// ─── 모멘텀 계산기 ───────────────────────
+function calcMomentum() {
+  const now = parseFloat(document.getElementById('priceNow').value) || 0;
+  const d10 = parseFloat(document.getElementById('price10d').value) || 0;
+  const mom = now - d10;
+  const el = document.getElementById('momentumVal');
+  const sig = document.getElementById('momentumSignal');
+  const result = document.getElementById('momentumResult');
+
+  el.textContent = (mom >= 0 ? '+' : '') + mom.toFixed(2);
+  if (mom > 0) {
+    el.style.color = '#16a34a';
+    result.style.borderColor = '#16a34a';
+    sig.textContent = '📈 상승 탄력 — 엔트리 고려 구간';
+  } else if (mom === 0) {
+    el.style.color = '#6b7280';
+    result.style.borderColor = '#e5e5e5';
+    sig.textContent = '⚪ 중립 — 추세 전환 가능성';
+  } else {
+    el.style.color = '#dc2626';
+    result.style.borderColor = '#dc2626';
+    sig.textContent = '📉 하락 탄력 — 엑시트 고려 구간';
+  }
+}
+calcMomentum();
+
+// ─── 비교 탭 ───────────────────────
+function showPanel(id) {
+  document.querySelectorAll('.compare-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ctog-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── 퀴즈 ───────────────────────
+const answers = {
+  q1: 'C', q2: 'B', q3: 'B', q4: 'X', q6: 'D', q7: 'X', q8: 'B', q10: 'C'
+};
+const feedbacks = {
+  q1: { C: '✅ 정답! RSI 30 이하는 과매도(Oversold) 구간으로 매수 시그널입니다.' },
+  q2: { B: '✅ 정답! 기술적 분석 = 소금·후추의 양. 고기 퀄리티(펀더멘털)가 더 중요합니다.' },
+  q3: { B: '✅ 정답! 모멘텀 = 현재 주가 − 10일 전 주가. 기준은 0입니다.' },
+  q4: { X: '✅ 정답! 0보다 크면 엔트리(매수) 참고 구간입니다. 0 아래로 떨어질 때가 엑시트입니다.' },
+  q6: { D: '✅ 정답! 지인의 투자 성과는 개인 목표와 리스크가 다르므로 투자 기준이 되어선 안 됩니다.' },
+  q7: { X: '✅ 정답! RSI는 참고 지표일 뿐입니다. 펀더멘털이 좋다면 RSI 70 이상이어도 바로 매도할 필요는 없습니다.' },
+  q8: { B: '✅ 정답! 90불 매수 후 235불로 약 2.6배 상승한 사례로, 장기 보유의 효과를 보여줬습니다.' },
+  q10: { C: '✅ 정답! 강사는 우량주 장기 보유가 단기 매매보다 60~70% 확률로 유리하다고 말했습니다.' }
+};
+const wrongMsg = '❌ 오답입니다. 다시 생각해보세요.';
+
+function checkMC(el, qid, choice) {
+  const lis = document.querySelectorAll('#'+qid+' li');
+  lis.forEach(li => { li.style.pointerEvents='none'; });
+  const fb = document.getElementById(qid+'-fb');
+  if (choice === answers[qid]) {
+    el.classList.add('correct');
+    fb.textContent = feedbacks[qid][choice];
+    fb.className = 'quiz-feedback show correct-fb';
+  } else {
+    el.classList.add('wrong');
+    fb.textContent = wrongMsg + ' (정답: ' + answers[qid] + ')';
+    fb.className = 'quiz-feedback show wrong-fb';
+    lis.forEach(li => {
+      if (li.textContent.startsWith(answers[qid]+'.')) li.classList.add('correct');
+    });
+  }
+}
+
+function checkOX(el, qid, choice) {
+  const lis = document.querySelectorAll('#'+qid+' li');
+  lis.forEach(li => { li.style.pointerEvents='none'; });
+  const fb = document.getElementById(qid+'-fb');
+  if (choice === answers[qid]) {
+    el.classList.add('correct');
+    fb.textContent = feedbacks[qid][choice];
+    fb.className = 'quiz-feedback show correct-fb';
+  } else {
+    el.classList.add('wrong');
+    fb.textContent = wrongMsg;
+    fb.className = 'quiz-feedback show wrong-fb';
+    lis.forEach(li => {
+      if (li.textContent.startsWith(answers[qid])) li.classList.add('correct');
+    });
+  }
+}
+
+function checkShort(qid, keyword) {
+  const input = document.getElementById(qid+'-input').value.trim();
+  const fb = document.getElementById(qid+'-fb');
+  if (input.includes(keyword) || (qid==='q5' && (input==='3'||input==='4'||input.includes('3')))) {
+    fb.textContent = '✅ 정답! ' + (qid==='q5' ? '연 3~4회(분기 1회) 리밸런싱을 권장합니다.' : '모멘텀의 Transaction Cost는 돈과 시간입니다. 잦은 매매는 비용을 크게 높입니다.');
+    fb.className = 'quiz-feedback show correct-fb';
+  } else {
+    fb.textContent = '❌ 오답입니다. 힌트를 다시 읽어보세요.';
+    fb.className = 'quiz-feedback show wrong-fb';
+  }
+}
+
+// ─── Intersection Observer (fade + chart) ───────────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+// RSI Chart
+chartConfigs['rsiChart'] = () => {
+  const labels = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const stockPrice = [420,445,430,410,395,418,438,462,480,455,470,490];
+  const rsiData = [52,65,58,35,28,42,55,68,72,45,61,66];
+
+  new Chart(document.getElementById('rsiChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '주가 (가상)',
+          data: stockPrice,
+          borderColor: '#1a1a1a',
+          backgroundColor: 'rgba(26,26,26,0.05)',
+          yAxisID: 'y',
+          tension: 0.4,
+          pointRadius: 3,
+        },
+        {
+          label: 'RSI',
+          data: rsiData,
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          yAxisID: 'y1',
+          tension: 0.4,
+          pointRadius: 3,
+          borderDash: [],
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            afterLabel: (ctx) => {
+              if (ctx.datasetIndex === 1) {
+                const v = ctx.raw;
+                return v <= 30 ? '→ 매수 시그널' : v >= 70 ? '→ 매도 시그널' : '→ 중립';
+              }
+            }
+          }
+        },
+        annotation: {}
+      },
+      scales: {
+        y: { position:'left', title:{display:true,text:'주가',font:{size:10}}, grid:{color:'#f0f0f0'} },
+        y1: {
+          position:'right',
+          min:0, max:100,
+          title:{display:true,text:'RSI',font:{size:10}},
+          grid:{drawOnChartArea:false},
+        }
+      }
+    }
+  });
+};
+
+// Momentum Chart
+chartConfigs['momentumChart'] = () => {
+  const labels = ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','D13','D14','D15'];
+  const price = [100,102,104,103,98,95,97,100,104,108,107,110,109,112,115];
+  const momentum = price.map((v,i) => i<10 ? null : +(v - price[i-10]).toFixed(2));
+
+  new Chart(document.getElementById('momentumChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          type:'line',
+          label:'주가',
+          data: price,
+          borderColor:'#1a1a1a',
+          backgroundColor:'transparent',
+          yAxisID:'y',
+          tension:0.4,
+          pointRadius:3,
+        },
+        {
+          type:'bar',
+          label:'모멘텀',
+          data: momentum,
+          backgroundColor: momentum.map(v => v === null ? 'transparent' : v >= 0 ? 'rgba(37,99,235,0.6)' : 'rgba(225,29,72,0.6)'),
+          yAxisID:'y1',
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins:{ legend:{labels:{font:{size:11}}} },
+      scales:{
+        y:{ position:'left', title:{display:true,text:'주가',font:{size:10}}, grid:{color:'#f0f0f0'} },
+        y1:{ position:'right', title:{display:true,text:'모멘텀',font:{size:10}}, grid:{drawOnChartArea:false},
+          ticks:{ callback: v => (v>=0?'+':'')+v } }
+      }
+    }
+  });
+};
+
+// Combined Chart
+chartConfigs['combinedChart'] = () => {
+  const labels = ['1Q','2Q','3Q','4Q','5Q','6Q','7Q','8Q'];
+  const rsi = [55,68,45,30,42,66,72,38];
+  const mom = [2.1,4.5,0.8,-3.2,-1.1,3.8,5.2,-2.0];
+  new Chart(document.getElementById('combinedChart'), {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'RSI',
+          data:rsi,
+          borderColor:'#e11d48',
+          backgroundColor:'rgba(225,29,72,0.08)',
+          yAxisID:'y',
+          tension:0.4,
+          pointRadius:5,
+          pointBackgroundColor: rsi.map(v=>v<=30?'#16a34a':v>=70?'#dc2626':'#e11d48'),
+        },
+        {
+          label:'모멘텀',
+          data:mom,
+          borderColor:'#2563eb',
+          backgroundColor:'rgba(37,99,235,0.08)',
+          yAxisID:'y1',
+          tension:0.4,
+          pointRadius:5,
+          pointBackgroundColor: mom.map(v=>v>=0?'#2563eb':'#e11d48'),
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{font:{size:11}}}},
+      scales:{
+        y:{ position:'left', min:0, max:100, title:{display:true,text:'RSI',font:{size:10}}, grid:{color:'#f0f0f0'},
+          ticks:{ callback: v => {
+            if(v===30) return '30 ▶매수';
+            if(v===70) return '70 ▶매도';
+            return v;
+          }}
+        },
+        y1:{ position:'right', title:{display:true,text:'모멘텀',font:{size:10}}, grid:{drawOnChartArea:false} }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
