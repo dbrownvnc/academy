@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>급변하는 미국증권시장 우리의 대책은? — 2023.10.19</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* FADE-IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* CHART */
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 20px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.15;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5.5vw, 32px);
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--accent2); }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta strong { color: #ddd; }
+
+  /* LAYOUT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  /* SECTION */
+  .section { padding: 32px 0 8px; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent);
+    padding-left: 12px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+  .text-muted { color: var(--text2); font-size: 13px; }
+
+  /* ALERT BOX */
+  .alert {
+    background: var(--bg2);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 18px;
+    margin: 18px 0;
+  }
+  .alert-title {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  /* KPI GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .kpi-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .kpi-card.danger { border-color: var(--accent); }
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .kpi-label { font-size: 11px; color: var(--text2); margin-top: 4px; line-height: 1.3; }
+
+  /* STOCK CARD */
+  .stock-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin: 14px 0;
+  }
+  .stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .stock-name { font-weight: 700; font-size: 15px; }
+  .stock-ticker {
+    font-size: 11px;
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .stock-ticker.neutral {
+    background: var(--chart3);
+  }
+  .stock-ticker.blue {
+    background: var(--chart4);
+  }
+  .stock-body { font-size: 13.5px; color: var(--text); }
+  .stock-body li { margin-left: 16px; margin-bottom: 4px; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+  .divider-accent {
+    height: 2px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    margin: 24px 0;
+  }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: 8px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+  }
+  tbody tr:nth-child(odd) { background: var(--bg2); }
+  tbody tr:nth-child(even) { background: var(--bg); }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+
+  /* SIMULATOR */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 18px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+  .sim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sim-label { font-size: 12px; color: var(--text2); min-width: 120px; }
+  input[type=range] {
+    flex: 1;
+    min-width: 140px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-val {
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 50px;
+    text-align: right;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .sim-result strong { color: var(--accent2); }
+  .sim-reset {
+    margin-top: 10px;
+    padding: 7px 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .sim-reset:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* QUOTE */
+  .pullquote {
+    border-top: 3px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 4px;
+    margin: 24px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 3.5vw, 20px);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .pullquote footer { font-size: 12px; font-style: normal; color: var(--text2); margin-top: 8px; font-family: 'Noto Sans KR', sans-serif; }
+
+  /* PHILOSOPHY */
+  .philosophy-card {
+    background: var(--text);
+    color: #fff;
+    border-radius: 12px;
+    padding: 24px 20px;
+    margin: 16px 0;
+  }
+  .philosophy-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+  .philosophy-card p { color: #ccc; font-size: 13.5px; margin-bottom: 10px; }
+  .philosophy-card p:last-child { margin-bottom: 0; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .badge-red { background: #fee2e8; color: var(--accent); }
+  .badge-gray { background: #f3f4f6; color: var(--chart3); }
+  .badge-blue { background: #dbeafe; color: var(--chart4); }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 28px 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 40px;
+  }
+  footer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자는인생TV · 정규방송</div>
+    <h1 class="hero-title">급변하는 미국증권시장<br><span>우리의 대책은?</span></h1>
+    <div class="hero-meta">
+      <span><strong>방송일</strong> 2023년 10월 19일</span>
+      <span><strong>분석일</strong> 2026년 04월 15일</span>
+      <span><strong>키워드</strong> 국채·CRE·Tesla·TSMC</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ① 시장 개요 -->
+  <div class="section fade-in">
+    <div class="section-label">Market Overview</div>
+    <h2 class="section-title">오늘의 시장을 한마디로</h2>
+    <p>2023년 10월 19일 미국 증시는 <strong>중동 전쟁(이스라엘·하마스)의 확산</strong>, <strong>10년 국채금리의 5% 돌파 임박</strong>, <strong>파월 의장의 중립적 발언</strong>이 겹치며 전방위적인 하락을 기록했다. 나스닥 약 1%, S&P500 약 0.87% 하락하였으며, 테슬라는 단일 세션에서 9% 이상 폭락하였다.</p>
+    <p>러셀 2000(소형주 지수)의 낙폭이 특히 두드러졌으며, 이는 "소형주·중소형주를 줄이고 대형주 위주로 재편하라"는 수주 전 조언의 유효성을 입증하는 흐름이었다.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card danger fade-in">
+        <div class="kpi-value">4.95%</div>
+        <div class="kpi-label">10년 국채금리<br>(5% 돌파 임박)</div>
+      </div>
+      <div class="kpi-card fade-in">
+        <div class="kpi-value">8%</div>
+        <div class="kpi-label">30년 고정 모기지금리<br>(주택거래 급감)</div>
+      </div>
+      <div class="kpi-card fade-in">
+        <div class="kpi-value">−9%</div>
+        <div class="kpi-label">Tesla 당일 낙폭<br>(3분기 실적 실망)</div>
+      </div>
+      <div class="kpi-card fade-in">
+        <div class="kpi-value">2.5T$</div>
+        <div class="kpi-label">상업용 부동산<br>2년 내 만기 도래 대출</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-accent"></div>
+
+  <!-- ② 국채금리 -->
+  <div class="section fade-in">
+    <div class="section-label">Bond Market</div>
+    <h2 class="section-title">10년 국채금리 — 2007년 이후 최고치</h2>
+    <p>10년 만기 미국 국채 금리가 <strong>4.95%에 근접</strong>하고 있으며, 2년·30년물도 동반 상승하였다. 이는 2007년 이후 가장 높은 수준으로, 단순한 수치 이상의 의미를 갖는다.</p>
+
+    <div class="alert fade-in">
+      <div class="alert-title">⚠️ 마지노선: 10년 국채 5%</div>
+      방송에서는 10년 국채금리가 <strong>5%를 돌파하면 포트폴리오의 30%를 매각</strong>해야 한다고 명시했다. "5%를 넘으면 부러지는 게 생길 수 있다"는 표현으로, 금융 시스템 내에서 감당하지 못하는 주체가 발생할 수 있음을 경고.
+    </div>
+
+    <div class="chart-container fade-in">
+      <canvas id="bondChart" height="230"></canvas>
+    </div>
+
+    <p class="text-muted">금리 급등의 배경: ①소프트랜딩 확신 약화 ②연준의 양적긴축(QT) 지속 ③주식시장 자금 일부가 안전자산인 국채로 이동 ④중동 지정학적 불안 ⑤추가 기준금리 인상 우려</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ③ CRE 위기 -->
+  <div class="section fade-in">
+    <div class="section-label">Commercial Real Estate</div>
+    <h2 class="section-title">상업용 부동산(CRE) — 다음 위기의 진원지</h2>
+    <p>2007년에는 주거용 부동산 부실이 금융위기를 촉발했다면, 지금은 <strong>상업용 부동산(CRE)</strong>이 핵심 뇌관으로 지목된다.</p>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead>
+          <tr><th>구분</th><th>2021년 (저금리)</th><th>2023년 (고금리)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>기존 대출금리</td><td>2~3%</td><td>→ 만기 도래</td></tr>
+          <tr><td>신규 대출금리</td><td>—</td><td>7~9%</td></tr>
+          <tr><td>만기 도래 규모</td><td colspan="2">향후 2년 내 <strong>2.5조 달러</strong></td></tr>
+          <tr><td>주요 리스크</td><td colspan="2">임대수입 감소 + 이자비용 폭증 → <strong>파산 가능성</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>상업용 빌딩은 임차 사업체가 들어와야 수익이 발생하는 구조다. 재택근무 확산으로 공실률이 높아진 상황에서, 대출 만기 때 금리가 2~3배 뛴 조건으로 재융자해야 한다면 채무를 감당하지 못하는 사업자가 속출할 수 있다. 이는 <strong>중소은행의 부실 확대</strong>로 이어질 가능성이 있다.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ④ CRE 위기 시뮬레이터 -->
+  <div class="simulator fade-in">
+    <div class="sim-title">💡 상업용 부동산 이자 부담 시뮬레이터</div>
+    <div class="sim-row">
+      <span class="sim-label">대출 규모 (억$)</span>
+      <input type="range" id="loanSize" min="1" max="100" value="10" oninput="calcCRE()">
+      <span class="sim-val" id="loanSizeVal">10억$</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">기존 이자율 (%)</span>
+      <input type="range" id="oldRate" min="1" max="5" step="0.1" value="2.5" oninput="calcCRE()">
+      <span class="sim-val" id="oldRateVal">2.5%</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">신규 이자율 (%)</span>
+      <input type="range" id="newRate" min="4" max="12" step="0.1" value="8" oninput="calcCRE()">
+      <span class="sim-val" id="newRateVal">8.0%</span>
+    </div>
+    <div class="sim-result" id="creResult"></div>
+    <button class="sim-reset" onclick="resetCRE()">↺ 초기화</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑤ S&P500 전망 -->
+  <div class="section fade-in">
+    <div class="section-label">Market Outlook</div>
+    <h2 class="section-title">S&P500 연말 시나리오</h2>
+    <p>이동평균선(10일·40일)과 엘리엇 파동 이론을 바탕으로, 연말까지의 S&P500 범위를 세 가지 시나리오로 제시하였다.</p>
+
+    <div class="chart-container fade-in">
+      <canvas id="spChart" height="230"></canvas>
+    </div>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>시나리오</th><th>S&P500 범위</th><th>확률</th><th>조건</th></tr></thead>
+        <tbody>
+          <tr><td>기본 (메인)</td><td>4,400 ~ 4,600</td><td><strong>70%+</strong></td><td>지지부진한 상승</td></tr>
+          <tr><td>추가 하락</td><td>~4,200</td><td>약 50%</td><td>금리 5% 돌파 지속</td></tr>
+          <tr><td>큰 폭 하락</td><td>4,200 이하</td><td>약 10%</td><td>전쟁 확전·파산 도미노</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-muted">※ 확률은 배타적이 아닌 위험 가중치 개념으로 제시됨. "키가 크고 중간이 없는" 포트폴리오, 즉 대형주 위주 + 현금 비중 확보를 권고.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑥ 섹터별 실적 -->
+  <div class="section fade-in">
+    <div class="section-label">Sector Rotation</div>
+    <h2 class="section-title">30일 섹터별 성과</h2>
+
+    <div class="chart-container fade-in">
+      <canvas id="sectorChart" height="230"></canvas>
+    </div>
+
+    <p><span class="badge badge-blue">매수 우선</span> IT(대형 성장주), AI 관련주, 구글·메타·어도비, 국방주</p>
+    <p><span class="badge badge-red">회피</span> 에너지, 은행주(웰스파고 제외), 소형주, 고배당·유틸리티(인플레 국면)</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑦ 개별 종목 -->
+  <div class="section fade-in">
+    <div class="section-label">Stock Analysis</div>
+    <h2 class="section-title">주요 종목 분석</h2>
+
+    <!-- Tesla -->
+    <div class="stock-card fade-in">
+      <div class="stock-header">
+        <span class="stock-name">테슬라 (Tesla)</span>
+        <span class="stock-ticker">TSLA ▼9%</span>
+      </div>
+      <div class="stock-body">
+        <p>3분기 실적: 출고 46.6만 대 → 43만 대로 하향. EPS는 예상 하회. <strong>그로스 마진(매출이익률) 지속 하락</strong>이 핵심 문제.</p>
+        <ul>
+          <li>마진 하락 = 일반 자동차 제조사 수준 평가절하 위험</li>
+          <li>3개월 전 300달러 → 약 218달러(-27%)</li>
+          <li>권고 비중: <strong>최대 5% 이내</strong> (절대 10% 초과 금지)</li>
+          <li>일론 머스크의 공장 업그레이드 핑계 → 실적 악화 본질 은폐 소지</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ASML -->
+    <div class="stock-card fade-in">
+      <div class="stock-header">
+        <span class="stock-name">ASML</span>
+        <span class="stock-ticker">ASML ⚠ 매도</span>
+      </div>
+      <div class="stock-body">
+        <p>10월 18일 실적: EPS 3.8% 초과 달성, 매출 1.4% 미스. 그러나 <strong>수주량 42% 급감</strong>이 결정적 악재.</p>
+        <ul>
+          <li>대중국 매출 비중 약 50% → 지정학적 수출 규제 리스크</li>
+          <li>중동 사태 확전 시 미국의 대만 관심 분산 → 중국의 행동 가능성</li>
+          <li>차기 분기(내년 1월 발표) 실적 추가 하락 예상</li>
+          <li>펀더멘탈 원칙: <em>매출·EPS 감소 신호 시 매도</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TSMC -->
+    <div class="stock-card fade-in">
+      <div class="stock-header">
+        <span class="stock-name">TSMC</span>
+        <span class="stock-ticker blue">TSM 목표 $115</span>
+      </div>
+      <div class="stock-body">
+        <p>현재 약 90달러 → 타겟 프라이스 <strong>115달러</strong>. EPS 5달러 이상, PER 15배 수준(동종업계 18~19배 대비 저평가).</p>
+        <ul>
+          <li>2023년 저성장 → 2024년 매출 23% 성장 예상</li>
+          <li>N5·N3 공정 시장 점유율 90% 목표</li>
+          <li>GPU·LPGA·ASIC용 웨이퍼: 2028년까지 50%+ 비중 예상</li>
+          <li>최대 리스크: <strong>차이나 리스크 (대만 침공 시나리오)</strong></li>
+          <li>차이나 리스크를 감내할 수 없다면 비보유 권고</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 상승군 -->
+    <div class="stock-card fade-in">
+      <div class="stock-header">
+        <span class="stock-name">이번 주 상승 주목 종목군</span>
+        <span class="stock-ticker neutral">WatchList</span>
+      </div>
+      <div class="stock-body">
+        <p>Vestpay, Applied Materials, AJG, PenW, ThermoFisher(260달러대), Lisoures, Boer Corporation, FLR(Floor Corp), AIG 등 — 하락장에서 상대적 강세를 보인 종목들.</p>
+      </div>
+    </div>
+
+    <!-- 낙폭 매수 대상 -->
+    <div class="stock-card fade-in">
+      <div class="stock-header">
+        <span class="stock-name">하락 시 매수 대상</span>
+        <span class="stock-ticker blue">Buy on Dip</span>
+      </div>
+      <div class="stock-body">
+        <p>Google(Alphabet), Adobe, Meta — 대형 성장주이자 AI 모멘텀 보유. 시장 급변에도 장기 보유 적합. 빠질 때마다 분할 매수 전략.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑧ 파월 발언 -->
+  <div class="section fade-in">
+    <div class="section-label">Fed Watch</div>
+    <h2 class="section-title">파월의 중립적 발언과 금리 전망</h2>
+
+    <div class="pullquote fade-in">
+      "추가 금리 인상을 신중히 고려할 것이다"
+      <footer>— 제롬 파월 의장, 2023.10.19</footer>
+    </div>
+
+    <p>파월은 이날 금리 인상도, 인하도 명시적으로 언급하지 않은 <strong>중립적(뉴트럴) 발언</strong>을 했다. 이스라엘·하마스 전쟁 상황을 주시하면서 신중히 판단하겠다는 입장. 시장은 혼재된 반응을 보였다.</p>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>일정</th><th>금리 결정 가능성</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td>11월 FOMC</td><td>동결 가능성 높음</td><td>전쟁 불확실성, CRE·모기지 부담</td></tr>
+          <tr><td>12월 FOMC</td><td>인상 가능성 잔존</td><td>인플레이션 미복귀 시</td></tr>
+          <tr><td>연내 동결</td><td>시나리오로 존재</td><td>파산 도미노 우려 시</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑨ 투자 전략 요약 -->
+  <div class="section fade-in">
+    <div class="section-label">Strategy Summary</div>
+    <h2 class="section-title">핵심 투자 전략 정리</h2>
+
+    <div class="alert fade-in">
+      <div class="alert-title">🚨 가장 중요한 트리거</div>
+      <strong>10년 국채금리 5% 돌파 시 → 포트폴리오 30% 즉시 매각.</strong> 이를 선행 신호로 삼아 11월 전 1회 이상 대량 매각 가능성을 대비해야 한다.
+    </div>
+
+    <div class="table-wrap fade-in">
+      <table>
+        <thead><tr><th>전략 원칙</th><th>실행 방향</th></tr></thead>
+        <tbody>
+          <tr><td>포트폴리오 구조</td><td>대형주 비중 ↑, 소형주 비중 ↓ ("키가 크고 중간이 없는" 구조)</td></tr>
+          <tr><td>테슬라</td><td>최대 5% 이내 비중 유지</td></tr>
+          <tr><td>ASML</td><td>매도 (수주 42% 감소, 중국 리스크)</td></tr>
+          <tr><td>빅테크(구글·메타·어도비)</td><td>하락 시 분할 매수</td></tr>
+          <tr><td>에너지·은행주</td><td>회피 (웰스파고 예외)</td></tr>
+          <tr><td>고배당·유틸리티</td><td>인플레 국면에서 회피</td></tr>
+          <tr><td>TSMC</td><td>차이나 리스크 감내 가능 시에만 보유, 목표 $115</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑩ 주택 시장 -->
+  <div class="section fade-in">
+    <div class="section-label">Housing Market</div>
+    <h2 class="section-title">주택 시장: 역설적 정체</h2>
+    <p>30년 고정 모기지금리가 8% 근접하면서 주택 거래량이 급감했다. 집값이 소폭 하락했음에도 매매는 늘어나지 않는 <strong>역설</strong>이 발생 중.</p>
+    <p>미국 주택 구입자의 대다수가 은행 융자를 활용하기 때문에, 모기지 비용 부담이 수요를 억제하는 구조다. 인플레이션이 지속되는 한 집값의 대폭 하락은 어렵지만, 거래 자체가 동결되는 '주택시장 빙결(lock-in)' 현상이 심화될 수 있다.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ⑪ 철학 -->
+  <div class="section fade-in">
+    <div class="section-label">Business Philosophy</div>
+    <h2 class="section-title">데이비 형님의 생각 — 사업과 인생</h2>
+
+    <div class="philosophy-card fade-in">
+      <h4>원칙 ① 기본기 없는 사업은 없다</h4>
+      <p>사업의 세 기초: 신뢰(약속 이행), 경쟁력 있는 상품·서비스, 충분한 자금력. 이 중 하나라도 결여되면 사업이 아닌 '공놀이'에 불과하다.</p>
+      <p>사업 실패의 공통 원인 = <strong>대표의 현실 인식 부족</strong>. 행동과 이상의 괴리가 클수록 외부(매출)를 만들어낼 수 없다.</p>
+    </div>
+
+    <div class="philosophy-card fade-in">
+      <h4>원칙 ② 직원 구조의 딜레마</h4>
+      <p>"나보다 못난 사람이 내 밑에 있는 이유가 있다." 잘난 사람을 데려오려면 경제적 보상이 충분해야 한다. 그렇지 않으면 자금력이 부족한 중소 대표 + 현실 인식이 부족한 직원의 조합 → <strong>100% 실패</strong>.</p>
+    </div>
+
+    <div class="philosophy-card fade-in">
+      <h4>원칙 ③ 인간관계의 효율성</h4>
+      <p>"Win-Win이 되는 관계에 집중하라." 많은 사람을 만나는 것이 사업 성공의 열쇠라는 착각을 버릴 것. 90% 이상의 만남은 시간·돈·정력 낭비다.</p>
+      <p>골프 싱글 치는 중소기업 대표 → 6개월 내 사업 위기. 집중력의 부재가 문제.</p>
+    </div>
+
+    <div class="philosophy-card fade-in">
+      <h4>원칙 ④ 시간의 우선순위 — 가족</h4>
+      <p>부모와 함께하는 식사, 자녀와의 주말 여행 — 이 시간은 생각보다 훨씬 적다. 어른이 된 후 부모와의 가족 여행은 평생 10번도 되지 않는다. <strong>"지나고 보면 눈물과 후회만 남는다."</strong></p>
+      <p>어릴 때 쌓은 추억이 자녀가 성인이 된 후에도 가족을 찾게 만드는 동기가 된다.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>투자는인생TV 정규방송</strong> 2023년 10월 19일 분석 문서<br>
+  본 문서는 교육 목적의 방송 내용 정리이며, 투자 권유가 아닙니다.
+</footer>
+
+<script>
+// ── FADE-IN OBSERVER ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['bondChart'] = () => {
+  new Chart(document.getElementById('bondChart'), {
+    type: 'line',
+    data: {
+      labels: ['2021 초', '2021 중', '2022 초', '2022 중', '2023 초', '2023 중', '2023.10'],
+      datasets: [
+        {
+          label: '10년 국채금리 (%)',
+          data: [1.1, 1.3, 1.8, 3.0, 3.9, 3.7, 4.95],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointBackgroundColor: '#e11d48'
+        },
+        {
+          label: '2년 국채금리 (%)',
+          data: [0.1, 0.2, 0.8, 3.2, 4.4, 4.6, 5.1],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.04)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: '#2563eb'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        y: {
+          min: 0, max: 6,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      },
+      annotation: {}
+    }
+  });
+};
+
+chartConfigs['spChart'] = () => {
+  new Chart(document.getElementById('spChart'), {
+    type: 'bar',
+    data: {
+      labels: ['하락 시나리오\n(4,200 이하)', '기본 시나리오\n(4,400~4,600)', '추가 하락\n(~4,200)'],
+      datasets: [{
+        label: '확률 (%)',
+        data: [10, 70, 50],
+        backgroundColor: ['#6b7280', '#e11d48', '#f43f5e'],
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw + '%' } }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['sectorChart'] = () => {
+  new Chart(document.getElementById('sectorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['IT/기술', 'AI 관련', '국방', '헬스케어', '유틸리티', '에너지', '소형주', '은행주'],
+      datasets: [{
+        label: '30일 상대 성과',
+        data: [6, 7, 5, -1, -3, -5, -6, -4],
+        backgroundColor: ctx => ctx.raw >= 0 ? '#2563eb' : '#e11d48',
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw + '% (추정 상대 성과)' } }
+      },
+      scales: {
+        x: {
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#f0f0f0' }
+        },
+        y: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+// ── CHART OBSERVER ──
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── CRE SIMULATOR ──
+function calcCRE() {
+  const loan = parseFloat(document.getElementById('loanSize').value);
+  const oldR = parseFloat(document.getElementById('oldRate').value);
+  const newR = parseFloat(document.getElementById('newRate').value);
+
+  document.getElementById('loanSizeVal').textContent = loan + '억$';
+  document.getElementById('oldRateVal').textContent = oldR.toFixed(1) + '%';
+  document.getElementById('newRateVal').textContent = newR.toFixed(1) + '%';
+
+  const oldInterest = (loan * oldR / 100).toFixed(2);
+  const newInterest = (loan * newR / 100).toFixed(2);
+  const diff = (newInterest - oldInterest).toFixed(2);
+  const ratio = ((newInterest / oldInterest) * 100).toFixed(0);
+
+  document.getElementById('creResult').innerHTML =
+    `기존 연간 이자: <strong>${oldInterest}억$</strong><br>` +
+    `신규 연간 이자: <strong>${newInterest}억$</strong><br>` +
+    `추가 이자 부담: <strong style="color:var(--accent2)">+${diff}억$ (기존 대비 ${ratio}%)</strong><br>` +
+    `<span style="font-size:12px;color:#aaa;">임대수입이 늘지 않는 한, 파산 위험 급증</span>`;
+}
+
+function resetCRE() {
+  document.getElementById('loanSize').value = 10;
+  document.getElementById('oldRate').value = 2.5;
+  document.getElementById('newRate').value = 8;
+  calcCRE();
+}
+calcCRE();
+</script>
+</body>
+</html>

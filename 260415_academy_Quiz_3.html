@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 급변하는 미국증권시장 우리의 대책은? (2023.10.19)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a;
+    --wrong: #e11d48;
+    --correct-bg: #f0fdf4;
+    --wrong-bg: #fff1f2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 44px 20px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: 'Q';
+    position: absolute;
+    right: -10px; top: -20px;
+    font-size: 160px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: rgba(225,29,72,0.12);
+    line-height: 1;
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .hero-meta { font-size: 12px; color: #aaa; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  /* SCORE BOARD */
+  .scoreboard {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .score-item { text-align: center; }
+  .score-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .score-label { font-size: 11px; color: var(--text2); }
+  .progress-bar-wrap {
+    width: 100%;
+    background: var(--border);
+    border-radius: 20px;
+    height: 6px;
+    margin-top: 12px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--accent);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* QUESTION */
+  .q-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 18px;
+    margin: 18px 0;
+    transition: border-color 0.3s;
+  }
+  .q-card.answered { border-color: var(--border); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-difficulty {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .diff-easy { background: #dcfce7; color: var(--correct); }
+  .diff-mid { background: #fef9c3; color: #92400e; }
+  .diff-hard { background: #fee2e8; color: var(--accent); }
+  .q-type {
+    font-size: 10px;
+    color: var(--text2);
+    background: var(--bg2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .q-text { font-weight: 500; font-size: 14.5px; line-height: 1.6; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg2);
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+  }
+  .option:hover:not(:disabled) { border-color: var(--accent2); background: #fff8f9; }
+  .option:disabled { cursor: default; }
+  .option.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); font-weight: 600; }
+  .option.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); font-weight: 600; }
+  .option-num {
+    font-weight: 700;
+    font-size: 12px;
+    background: var(--border);
+    color: var(--text2);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option.correct .option-num { background: var(--correct); color: #fff; }
+  .option.wrong .option-num { background: var(--wrong); color: #fff; }
+
+  /* OX */
+  .ox-group { display: flex; gap: 10px; margin-top: 14px; }
+  .ox-btn {
+    flex: 1;
+    padding: 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    background: var(--bg2);
+    transition: all 0.2s;
+  }
+  .ox-btn:hover:not(:disabled) { transform: scale(1.04); }
+  .ox-btn:disabled { cursor: default; }
+  .ox-btn.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .ox-btn.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+
+  /* SHORT ANSWER */
+  .short-wrap { margin-top: 12px; display: flex; gap: 8px; }
+  .short-input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+  .short-input.correct { border-color: var(--correct); background: var(--correct-bg); }
+  .short-input.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .short-submit {
+    padding: 10px 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    transition: background 0.2s;
+  }
+  .short-submit:hover:not(:disabled) { background: var(--accent2); }
+  .short-submit:disabled { background: var(--border); color: var(--text2); cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--correct-bg); border-left: 3px solid var(--correct); color: #15803d; }
+  .feedback.wrong { background: var(--wrong-bg); border-left: 3px solid var(--wrong); color: #b91c2c; }
+  .feedback strong { font-weight: 700; }
+
+  /* RESET */
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin: 28px 0 40px;
+    padding: 14px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: var(--accent); }
+
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  footer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">Quiz · 시험문제 10선</div>
+    <h1 class="hero-title">급변하는 미국증권시장<br>우리의 대책은?</h1>
+    <div class="hero-meta">2023년 10월 19일 방송 · 총 10문항</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="scoreboard">
+    <div class="score-item">
+      <div class="score-val" id="scoreVal">0</div>
+      <div class="score-label">맞은 문제</div>
+    </div>
+    <div class="score-item">
+      <div class="score-val" id="wrongVal">0</div>
+      <div class="score-label">틀린 문제</div>
+    </div>
+    <div class="score-item">
+      <div class="score-val" id="totalVal">0 / 10</div>
+      <div class="score-label">진행</div>
+    </div>
+    <div class="progress-bar-wrap" style="width:100%">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="card1">
+    <div class="q-header">
+      <div class="q-num">1</div>
+      <span class="q-difficulty diff-easy">쉬움</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">방송일(2023년 10월 19일) 기준, 10년 미국 국채금리가 몇 %에 근접하고 있다고 언급되었나요?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(1, this, false)"><span class="option-num">①</span>3.5%</button>
+      <button class="option" onclick="mcq(1, this, false)"><span class="option-num">②</span>4.2%</button>
+      <button class="option" onclick="mcq(1, this, true)"><span class="option-num">③</span>4.95%</button>
+      <button class="option" onclick="mcq(1, this, false)"><span class="option-num">④</span>5.5%</button>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="card2">
+    <div class="q-header">
+      <div class="q-num">2</div>
+      <span class="q-difficulty diff-easy">쉬움</span>
+      <span class="q-type">O/X</span>
+    </div>
+    <div class="q-text">방송에서는 "10년 국채금리가 5%를 넘으면 포트폴리오의 30%를 매각해야 한다"고 명시하였다.</div>
+    <div class="ox-group">
+      <button class="ox-btn" onclick="ox(2, this, true)">O</button>
+      <button class="ox-btn" onclick="ox(2, this, false)">X</button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="card3">
+    <div class="q-header">
+      <div class="q-num">3</div>
+      <span class="q-difficulty diff-easy">쉬움</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">테슬라(TSLA)가 해당 방송일에 폭락한 주된 이유는 무엇이었나요?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(3, this, false)"><span class="option-num">①</span>CEO 일론 머스크의 트위터 인수 관련 법적 문제</button>
+      <button class="option" onclick="mcq(3, this, true)"><span class="option-num">②</span>3분기 실적 부진 및 그로스 마진(매출이익률) 지속 하락</button>
+      <button class="option" onclick="mcq(3, this, false)"><span class="option-num">③</span>중국 공장 전면 가동 중단</button>
+      <button class="option" onclick="mcq(3, this, false)"><span class="option-num">④</span>연준의 테슬라 채권 매각</button>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="card4">
+    <div class="q-header">
+      <div class="q-num">4</div>
+      <span class="q-difficulty diff-mid">보통</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">상업용 부동산(CRE) 위기와 관련하여, 향후 2년 내에 만기가 도래하는 대출 규모는 약 얼마로 언급되었나요?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(4, this, false)"><span class="option-num">①</span>0.5조 달러</button>
+      <button class="option" onclick="mcq(4, this, false)"><span class="option-num">②</span>1조 달러</button>
+      <button class="option" onclick="mcq(4, this, true)"><span class="option-num">③</span>2.5조 달러</button>
+      <button class="option" onclick="mcq(4, this, false)"><span class="option-num">④</span>5조 달러</button>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="card5">
+    <div class="q-header">
+      <div class="q-num">5</div>
+      <span class="q-difficulty diff-mid">보통</span>
+      <span class="q-type">O/X</span>
+    </div>
+    <div class="q-text">방송에서는 테슬라 비중을 전체 포트폴리오의 최대 5% 이내로 유지하라고 권고하였다.</div>
+    <div class="ox-group">
+      <button class="ox-btn" onclick="ox(5, this, true)">O</button>
+      <button class="ox-btn" onclick="ox(5, this, false)">X</button>
+    </div>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="card6">
+    <div class="q-header">
+      <div class="q-num">6</div>
+      <span class="q-difficulty diff-mid">보통</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">ASML을 매도하기로 한 가장 핵심적인 펀더멘탈 이유는 무엇인가요?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(6, this, false)"><span class="option-num">①</span>EPS가 예상치를 하회했기 때문</button>
+      <button class="option" onclick="mcq(6, this, true)"><span class="option-num">②</span>수주량이 42% 급감했기 때문</button>
+      <button class="option" onclick="mcq(6, this, false)"><span class="option-num">③</span>CEO가 교체되었기 때문</button>
+      <button class="option" onclick="mcq(6, this, false)"><span class="option-num">④</span>배당이 삭감되었기 때문</button>
+    </div>
+    <div class="feedback" id="fb6"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="card7">
+    <div class="q-header">
+      <div class="q-num">7</div>
+      <span class="q-difficulty diff-mid">보통</span>
+      <span class="q-type">단답형</span>
+    </div>
+    <div class="q-text">연말(2023년 말)까지 S&P500의 가장 유력한 목표 범위(메인 시나리오)를 정확히 입력하세요.<br><span style="font-size:12px;color:var(--text2)">예시 형식: 4000~4200</span></div>
+    <div class="short-wrap">
+      <input type="text" class="short-input" id="inp7" placeholder="숫자로 입력">
+      <button class="short-submit" id="sub7" onclick="short(7, ['4400~4600','4,400~4,600','4400-4600'])">제출</button>
+    </div>
+    <div class="feedback" id="fb7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="card8">
+    <div class="q-header">
+      <div class="q-num">8</div>
+      <span class="q-difficulty diff-mid">보통</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">TSMC의 가장 큰 투자 리스크로 방송에서 지목된 것은 무엇인가요?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(8, this, false)"><span class="option-num">①</span>삼성전자와의 기술 격차 축소</button>
+      <button class="option" onclick="mcq(8, this, false)"><span class="option-num">②</span>미국 CHIPS Act 보조금 수령 불확실성</button>
+      <button class="option" onclick="mcq(8, this, true)"><span class="option-num">③</span>차이나 리스크 (중국의 대만 침공 가능성)</button>
+      <button class="option" onclick="mcq(8, this, false)"><span class="option-num">④</span>AI 반도체 수요 과열에 따른 가격 하락</button>
+    </div>
+    <div class="feedback" id="fb8"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="card9">
+    <div class="q-header">
+      <div class="q-num">9</div>
+      <span class="q-difficulty diff-hard">어려움</span>
+      <span class="q-type">객관식</span>
+    </div>
+    <div class="q-text">방송에서 제시된 "현명한 포트폴리오 구조" 원칙으로 가장 적합한 것은?</div>
+    <div class="options">
+      <button class="option" onclick="mcq(9, this, false)"><span class="option-num">①</span>소형주 위주, 고위험·고수익 추구</button>
+      <button class="option" onclick="mcq(9, this, false)"><span class="option-num">②</span>에너지·유틸리티 등 배당주 중심</button>
+      <button class="option" onclick="mcq(9, this, true)"><span class="option-num">③</span>"키가 크고 중간이 없는" 구조 — 대형 성장주 + 현금 비중, 소형주 최소화</button>
+      <button class="option" onclick="mcq(9, this, false)"><span class="option-num">④</span>모든 섹터에 동일 비중 분산 투자</button>
+    </div>
+    <div class="feedback" id="fb9"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="card10">
+    <div class="q-header">
+      <div class="q-num">10</div>
+      <span class="q-difficulty diff-hard">어려움</span>
+      <span class="q-type">단답형</span>
+    </div>
+    <div class="q-text">방송 말미 '데이비 형님의 생각' 코너에서, 사업 실패의 가장 큰 공통 원인으로 제시된 한 가지를 완성하세요.<br><span style="font-size:12px;color:var(--text2)">힌트: "대표의 ○○○○ 부족"</span></div>
+    <div class="short-wrap">
+      <input type="text" class="short-input" id="inp10" placeholder="4글자 입력">
+      <button class="short-submit" id="sub10" onclick="short(10, ['현실인식','현실 인식'])">제출</button>
+    </div>
+    <div class="feedback" id="fb10"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">↺ 전체 초기화 — 다시 풀기</button>
+
+</div>
+
+<footer>
+  <strong>투자는인생TV</strong> 2023.10.19 방송 기반 시험문제<br>
+  본 문제는 교육 목적으로 제작되었습니다.
+</footer>
+
+<script>
+let score = 0, wrong = 0, answered = 0;
+
+const FEEDBACK = {
+  1: { correct: '✅ 정답! 10년 국채금리는 4.95%에 근접하며 5% 돌파를 목전에 두고 있었습니다.', wrong: '❌ 오답. 정답은 ③ 4.95%입니다. 방송에서는 "4.95에 가까워지고 있으며 5%를 넘을 것 같다"고 언급했습니다.' },
+  2: { correct: '✅ 정답! 방송에서 "10년 국채 5% 돌파 시 포트폴리오 30% 매각"을 명확히 언급했습니다.', wrong: '❌ 오답. 실제로 O(참)입니다. 5%를 마지노선으로 삼아 30% 매각을 선언했습니다.' },
+  3: { correct: '✅ 정답! 3분기 출고 감소 + 그로스 마진 하락이 핵심 악재였습니다. 마진 하락은 "일반 자동차 제조사 수준"으로 평가절하되는 신호입니다.', wrong: '❌ 오답. 정답은 ② 3분기 실적 부진 및 그로스 마진(매출이익률) 하락입니다.' },
+  4: { correct: '✅ 정답! 향후 2년 내 만기 도래 CRE 대출 규모는 약 2.5조 달러(2.5 trillion)입니다.', wrong: '❌ 오답. 정답은 ③ 2.5조 달러입니다. 저금리 시절 대출이 만기가 돼 고금리로 재융자해야 하는 상황입니다.' },
+  5: { correct: '✅ 정답! 방송에서 "절대 10% 이상 보유하지 마라, 5% 이내를 유지하라"고 여러 차례 강조했습니다.', wrong: '❌ 오답. O(참)입니다. 최대 5% 이내 비중 유지를 수차례 권고했습니다.' },
+  6: { correct: '✅ 정답! 수주량 42% 급감이 핵심 매도 사유입니다. 펀더멘탈리스트 원칙에 따라 "매출·EPS 감소 신호 시 매도"를 실행한 것입니다.', wrong: '❌ 오답. 정답은 ② 수주량 42% 급감입니다. EPS는 예상치를 초과했지만 수주량 급감이 핵심 악재였습니다.' },
+  7: { correct: '✅ 정답! 연말까지 메인 시나리오는 4,400~4,600이며 확률 70% 이상으로 제시되었습니다.', wrong: '❌ 오답. 정답은 4,400~4,600입니다. 대부분의 기관도 이 범위를 메인 시나리오로 보고 있다고 언급했습니다.' },
+  8: { correct: '✅ 정답! "차이나 리스크 빼고는 다른 리스크는 하나도 없는 정말 좋은 주식"이라는 표현이 나왔습니다. 중국의 대만 침공 시 TSMC가 최우선 타깃이 됩니다.', wrong: '❌ 오답. 정답은 ③ 차이나 리스크입니다. TSMC는 기술력·실적 모두 뛰어나지만 지정학 리스크가 발목을 잡습니다.' },
+  9: { correct: '✅ 정답! "키가 크고 중간이 없는" 포트폴리오: 대형 성장주(AI·빅테크) + 현금 비중, 소형주·에너지 최소화 구조를 권고했습니다.', wrong: '❌ 오답. 정답은 ③입니다. 이 표현은 극단적으로 대형주 중심으로 재편하고 소형주·에너지 등 중간 위험 자산을 줄이라는 의미입니다.' },
+  10: { correct: '✅ 정답! "사업 실패의 가장 큰 공통 원인 = 대표의 현실인식 부족"이라고 명시했습니다. 이상과 행동의 괴리가 클수록 외부(매출)를 만들어낼 수 없습니다.', wrong: '❌ 오답. 정답은 "현실인식"입니다. 대표의 현실 인식 부족이 사업 실패의 공통 원인으로 지목되었습니다.' }
+};
+
+function updateBoard() {
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('wrongVal').textContent = wrong;
+  document.getElementById('totalVal').textContent = answered + ' / 10';
+  document.getElementById('progressBar').style.width = (answered * 10) + '%';
+}
+
+function showFeedback(num, isCorrect) {
+  const fb = document.getElementById('fb' + num);
+  fb.textContent = isCorrect ? FEEDBACK[num].correct : FEEDBACK[num].wrong;
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+}
+
+function mcq(num, btn, isCorrect) {
+  const card = document.getElementById('card' + num);
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  const btns = card.querySelectorAll('.option');
+  btns.forEach(b => b.disabled = true);
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    // Mark correct answer
+    btns.forEach(b => { if (b.onclick.toString().includes('true')) b.classList.add('correct'); });
+    wrong++;
+  }
+  answered++;
+  showFeedback(num, isCorrect);
+  updateBoard();
+}
+
+function ox(num, btn, isCorrect) {
+  const card = document.getElementById('card' + num);
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  const btns = card.querySelectorAll('.ox-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const userAnswer = btn.textContent === 'O';
+  const correct = userAnswer === isCorrect;
+
+  if (correct) {
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b => {
+      if ((b.textContent === 'O') === isCorrect) b.classList.add('correct');
+    });
+    wrong++;
+  }
+  answered++;
+  showFeedback(num, correct);
+  updateBoard();
+}
+
+function short(num, correctAnswers) {
+  const card = document.getElementById('card' + num);
+  if (card.classList.contains('answered')) return;
+  const inp = document.getElementById('inp' + num);
+  const sub = document.getElementById('sub' + num);
+  const userVal = inp.value.trim().replace(/\s/g, '');
+  if (!userVal) { inp.focus(); return; }
+
+  card.classList.add('answered');
+  inp.disabled = true;
+  sub.disabled = true;
+
+  const isCorrect = correctAnswers.some(ans => userVal.replace(/\s/g, '') === ans.replace(/\s/g, ''));
+
+  inp.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) score++; else wrong++;
+  answered++;
+  showFeedback(num, isCorrect);
+  updateBoard();
+}
+
+function resetAll() {
+  score = 0; wrong = 0; answered = 0;
+  updateBoard();
+
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('answered'));
+  document.querySelectorAll('.option').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.ox-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.short-input').forEach(inp => {
+    inp.disabled = false;
+    inp.value = '';
+    inp.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.short-submit').forEach(b => b.disabled = false);
+  document.querySelectorAll('.feedback').forEach(f => {
+    f.className = 'feedback';
+    f.textContent = '';
+  });
+}
+</script>
+</body>
+</html>
