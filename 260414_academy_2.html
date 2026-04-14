@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 5회 — WACC & 포트폴리오 구성</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --th-bg: #e11d48;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', 'Noto Serif KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 48px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .hero-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: clamp(26px, 7vw, 38px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* CONTENT */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  section { padding: 36px 0 24px; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+
+  .callout {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+    font-family: 'DM Mono', 'Courier New', monospace;
+  }
+  .formula-box .f-main { font-size: 18px; color: var(--accent2); letter-spacing: 1px; }
+  .formula-box .f-desc { font-size: 12px; color: #888; margin-top: 8px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: var(--th-bg); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: var(--bg2); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-red { background: #fee2e8; color: var(--accent); }
+  .badge-blue { background: #dbeafe; color: #2563eb; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  /* SIMULATOR */
+  .sim-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    margin: 20px 0;
+  }
+  .sim-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .sim-title span { color: var(--accent); }
+
+  .input-row { margin-bottom: 14px; }
+  .input-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 5px;
+  }
+  .input-row label span { color: var(--accent); font-weight: 700; font-size: 13px; }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #e5e5e5;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(225,29,72,0.3);
+  }
+
+  .sim-result {
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sim-result-item { text-align: center; }
+  .sim-result-item .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent2);
+  }
+  .sim-result-item .lbl { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  .reset-btn {
+    margin-top: 12px;
+    background: none;
+    border: 1px solid var(--border);
+    padding: 7px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* PORTFOLIO TABLE SIM */
+  .port-table { margin: 14px 0; }
+  .port-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .port-row.header { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; }
+  .port-row input[type=number] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 13px;
+    text-align: center;
+    background: #fff;
+  }
+  .port-row input:focus { outline: 1px solid var(--accent); }
+  .wacc-output {
+    margin-top: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .wacc-output .w-val { font-size: 28px; font-weight: 900; font-family: 'Playfair Display', serif; }
+  .wacc-output .w-lbl { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .wacc-warn { font-size: 12px; color: var(--accent); margin-top: 8px; display: none; }
+
+  /* BETA SECTION */
+  .beta-vis {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 16px 0;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .beta-segment {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* STEPS */
+  .step-list { counter-reset: step; }
+  .step-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    min-width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; padding-top: 4px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: #aaa;
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 12px;
+  }
+  footer strong { color: var(--accent2); }
+
+  @media(max-width: 380px) {
+    .sim-result { grid-template-columns: 1fr; }
+    .port-row { grid-template-columns: 1fr 65px 65px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자아카데미 5회 · 2026.04.14</div>
+    <h1>완성된 포트폴리오를 위한<br><span>WACC 계산법</span></h1>
+    <div class="hero-meta">
+      <span>📊 경제·투자 분석</span>
+      <span>⏱ 약 20분 강의</span>
+      <span>🎯 포트폴리오 구성 원칙</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 1. WHY PORTFOLIO -->
+<section>
+  <div class="section-eyebrow">Section 01</div>
+  <h2>왜 포트폴리오를 구성해야 하나?</h2>
+  <p>어떤 기업도 100% 안전하지 않습니다. 40~50년간 사업을 이어온 은행도 하루아침에 무너질 수 있습니다(예: 실리콘밸리 뱅크). 투자 원금 100%를 잃을 가능성은 항상 존재하며, 그래서 <strong>리스크 분산</strong>이 필수입니다.</p>
+
+  <div class="callout">
+    <strong>실제 사례</strong> — 실리콘밸리 뱅크에 1% 비중으로 투자한 구독자는 해당 주식 가치를 99.9% 잃었음에도 포트폴리오 전체는 6개월간 약 36~37% 우상향했습니다.
+  </div>
+
+  <p>포트폴리오를 구성하는 이유는 크게 세 가지입니다.</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>투자 리스크 분산</strong> — 특정 종목의 폭락이 전체 자산에 미치는 영향을 최소화</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>예측 불가능성 대비</strong> — 증권 시장의 미래는 누구도 정확히 예측할 수 없음</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>장기 우상향 확률 제고</strong> — 소수 종목의 변동에 과도 노출되지 않고, 장기적으로 자산이 우상향할 가능성을 높임</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ACTIVE vs PASSIVE -->
+<section>
+  <div class="section-eyebrow">Section 02</div>
+  <h2>패시브 vs. 액티브 매니지먼트</h2>
+
+  <table>
+    <tr>
+      <th>구분</th>
+      <th>패시브</th>
+      <th>액티브</th>
+    </tr>
+    <tr>
+      <td>방법</td>
+      <td>ETF·채권·뮤추얼펀드 매수 후 보유</td>
+      <td>3~12개월 단위로 종목 검토·교체</td>
+    </tr>
+    <tr>
+      <td>관리 수준</td>
+      <td>낮음</td>
+      <td>높음 (주기적 리뷰 필요)</td>
+    </tr>
+    <tr>
+      <td>목적</td>
+      <td>시장 평균 수익 추구</td>
+      <td>동일 리스크에서 수익률 극대화</td>
+    </tr>
+    <tr>
+      <td>예시</td>
+      <td>S&P500 ETF 보유</td>
+      <td>성장률 부진 종목 → 더 나은 종목으로 교체</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <strong>핵심 포인트</strong> — "장기투자 = 아무것도 하지 않는 것"이 아닙니다. 최소 3개월~1년에 한 번은 포트폴리오를 리뷰하고 부진 종목을 교체해야 합니다. 3년 전 추천 종목을 그대로 들고 있는 것은 액티브 매니지먼트 실패입니다.
+  </div>
+</section>
+
+<!-- 3. BETA -->
+<section>
+  <div class="section-eyebrow">Section 03</div>
+  <h2>베타(β)란 무엇인가?</h2>
+
+  <p>베타는 S&P500 대비 개별 주식의 <strong>변동성</strong>을 나타내는 지표입니다. S&P500의 베타 = 1.0이 기준입니다.</p>
+
+  <div class="beta-vis fade-in">
+    <div class="beta-segment" style="background:#dbeafe; color:#2563eb;">β 0.8<br><small>방어적</small></div>
+    <div class="beta-segment" style="background:#f1f5f9; color:#475569;">β 1.0<br><small>S&P500 기준</small></div>
+    <div class="beta-segment" style="background:#fee2e8; color:#e11d48;">β 1.2<br><small>공격적</small></div>
+    <div class="beta-segment" style="background:#fda4af; color:#9f1239;">β 1.4+<br><small>고위험</small></div>
+  </div>
+
+  <table>
+    <tr>
+      <th>베타 값</th>
+      <th>S&P500 +10% 시</th>
+      <th>S&P500 -10% 시</th>
+      <th>특성</th>
+    </tr>
+    <tr>
+      <td>0.8</td>
+      <td class="badge badge-blue">+8%</td>
+      <td style="color:#2563eb">-8%</td>
+      <td>방어적·안정적</td>
+    </tr>
+    <tr>
+      <td>1.0</td>
+      <td>+10%</td>
+      <td>-10%</td>
+      <td>시장 평균</td>
+    </tr>
+    <tr>
+      <td>1.2</td>
+      <td class="badge badge-red">+12%</td>
+      <td style="color:#e11d48">-12%</td>
+      <td>공격적</td>
+    </tr>
+    <tr>
+      <td>1.4</td>
+      <td class="badge badge-red">+14%</td>
+      <td style="color:#e11d48">-14%</td>
+      <td>고위험·고수익</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <strong>소 같은 주식</strong>을 중심에 두어야 합니다. 빨리 오른 주식은 빨리 떨어집니다. 베타가 높을수록 단기 불안 요소가 증가합니다. 나이가 많을수록, 보수적 투자자일수록 포트폴리오 전체 베타를 낮추는 방향으로 구성해야 합니다.
+  </div>
+
+  <!-- BETA SIMULATOR -->
+  <div class="sim-card fade-in">
+    <div class="sim-title">🔢 <span>베타 시뮬레이터</span> — 수익/손실 계산기</div>
+
+    <div class="input-row">
+      <label>S&P500 변동률 <span id="spxVal">+10%</span></label>
+      <input type="range" id="spxSlider" min="-30" max="30" value="10" step="1">
+    </div>
+    <div class="input-row">
+      <label>내 주식 베타 <span id="betaVal">1.2</span></label>
+      <input type="range" id="betaSlider" min="0.3" max="2.5" value="1.2" step="0.1">
+    </div>
+    <div class="input-row">
+      <label>투자 원금 (만원) <span id="principalVal">1,000만원</span></label>
+      <input type="range" id="principalSlider" min="100" max="10000" value="1000" step="100">
+    </div>
+
+    <div class="sim-result">
+      <div class="sim-result-item">
+        <div class="val" id="myReturn">+12.0%</div>
+        <div class="lbl">내 주식 예상 변동률</div>
+      </div>
+      <div class="sim-result-item">
+        <div class="val" id="myAmount">+120만원</div>
+        <div class="lbl">손익 금액</div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetBetaSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<!-- 4. WACC -->
+<section>
+  <div class="section-eyebrow">Section 04</div>
+  <h2>WACC — 가중평균 수익률</h2>
+
+  <p><strong>WACC (Weighted Average Cost of Capital)</strong>은 포트폴리오를 구성하는 가장 핵심 개념입니다. 각 주식의 <em>과거 평균 수익률(R)</em>에 <em>비중(W)</em>을 곱해 합산한 값으로, 포트폴리오 전체의 기대 수익률을 나타냅니다.</p>
+
+  <div class="formula-box">
+    <div class="f-main">WACC = Σ (Wᵢ × Rᵢ)</div>
+    <div class="f-desc">Wᵢ = 종목 i의 비중(합계=1) &nbsp;|&nbsp; Rᵢ = 종목 i의 과거 평균 수익률</div>
+  </div>
+
+  <h3>계산 단계</h3>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>R 계산</strong> — 각 종목의 최근 3~5년 연간 주가 성장률을 구해 평균냅니다.<br><small style="color:var(--text2)">예) 애플: 7% + 10% + (-10%) + 20% ÷ 4 = 6.75% ≈ 약 7%</small></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>W 결정</strong> — 포트폴리오 내 각 종목의 비중을 정합니다. 모든 비중의 합은 반드시 1(100%)이 되어야 합니다.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>WACC 산출</strong> — Wᵢ × Rᵢ를 모든 종목에 대해 계산하고 합산합니다.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>목표 대비 점검</strong> — 실제 성과가 WACC에 못 미치면 해당 종목을 교체합니다.</div>
+    </div>
+  </div>
+
+  <h3>예시: 10만 달러 포트폴리오</h3>
+  <table>
+    <tr>
+      <th>종목</th><th>비중(W)</th><th>투자금액</th><th>연평균 수익률(R)</th><th>기여(W×R)</th>
+    </tr>
+    <tr><td>애플</td><td>20%</td><td>$20,000</td><td>5%</td><td>1.0%</td></tr>
+    <tr><td>구글</td><td>20%</td><td>$20,000</td><td>8%</td><td>1.6%</td></tr>
+    <tr><td>존슨&존슨</td><td>20%</td><td>$20,000</td><td>4%</td><td>0.8%</td></tr>
+    <tr><td>아바고</td><td>30%</td><td>$30,000</td><td>12%</td><td>3.6%</td></tr>
+    <tr><td>펩시</td><td>10%</td><td>$10,000</td><td>3%</td><td>0.3%</td></tr>
+    <tr style="font-weight:700; background:#fee2e8;">
+      <td>합계</td><td>100%</td><td>$100,000</td><td>—</td><td style="color:var(--accent)">7.3%</td>
+    </tr>
+  </table>
+
+  <!-- WACC SIMULATOR -->
+  <div class="sim-card fade-in">
+    <div class="sim-title">📊 <span>WACC 계산기</span> — 나만의 포트폴리오</div>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:12px;">각 종목의 비중(%)과 연평균 수익률(%)을 입력하세요. 비중 합계가 100%가 되어야 합니다.</p>
+
+    <div class="port-table">
+      <div class="port-row header">
+        <span>종목명</span><span>비중(%)</span><span>수익률(%)</span>
+      </div>
+      <div id="portRows"></div>
+    </div>
+
+    <div class="wacc-warn" id="waccWarn">⚠️ 비중 합계가 100%가 아닙니다. 현재: <span id="sumVal">0</span>%</div>
+
+    <div class="wacc-output" id="waccOutput">
+      <div class="w-val" id="waccVal">—</div>
+      <div class="w-lbl">포트폴리오 WACC (기대 수익률)</div>
+    </div>
+
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="reset-btn" onclick="resetWACC()">↺ 초기화</button>
+      <button class="reset-btn" onclick="calcWACC()" style="border-color:var(--accent);color:var(--accent);">▶ 계산</button>
+    </div>
+  </div>
+
+  <!-- WACC CHART -->
+  <div class="chart-container fade-in">
+    <canvas id="waccChart" height="220"></canvas>
+  </div>
+</section>
+
+<!-- 5. PORTFOLIO COMPOSITION -->
+<section>
+  <div class="section-eyebrow">Section 05</div>
+  <h2>포트폴리오 비중 구성 원칙</h2>
+
+  <h3>투자자 유형별 권장 구성</h3>
+  <table>
+    <tr>
+      <th>투자자 유형</th><th>대형주(라지캡)</th><th>성장주</th><th>기타</th>
+    </tr>
+    <tr>
+      <td>은퇴자·보수적</td>
+      <td><span class="badge badge-red">70% 이상</span></td>
+      <td>20~25%</td>
+      <td>5~10%</td>
+    </tr>
+    <tr>
+      <td>중립적</td>
+      <td>50~60%</td>
+      <td>30~40%</td>
+      <td>10%</td>
+    </tr>
+    <tr>
+      <td>공격적·30대</td>
+      <td>30~40%</td>
+      <td>50~60%</td>
+      <td>10%</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <strong>밸류주 vs 성장주</strong> — 보수적 투자자일수록 밸류주 비중을 높여야 합니다. 밸류주도 특정 시기에 성장주보다 훨씬 많이 오를 수 있습니다. 욕심을 버리고 안정성을 우선시하세요.
+  </div>
+
+  <!-- PIE CHART EXAMPLE -->
+  <div class="chart-container fade-in">
+    <canvas id="pieChart" height="230"></canvas>
+  </div>
+</section>
+
+<!-- 6. GOAL BASED -->
+<section>
+  <div class="section-eyebrow">Section 06</div>
+  <h2>목표 기반 재무 설계 (Goal Based Financial Planning)</h2>
+
+  <p>포트폴리오 구성 자체가 목적이 아닙니다. <strong>목표 지향적 투자</strong>가 진짜 목적입니다. 지금 B 지점에서 A 지점(목표)으로 나아가되, 3개월 또는 1년마다 경로를 점검하고 궤도를 수정해야 합니다.</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">A</div>
+      <div class="step-content"><strong>목표 설정</strong> — 은퇴 시점, 목표 자산 규모, 투자 기간 명확히 정하기</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">B</div>
+      <div class="step-content"><strong>포트폴리오 구성</strong> — WACC를 기반으로 기대 수익률 계산 후 종목 배분</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">C</div>
+      <div class="step-content"><strong>주기적 리뷰</strong> — 실제 수익률이 목표 WACC 미달 시, 해당 종목 교체</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">D</div>
+      <div class="step-content"><strong>지속 순환</strong> — 종목 교체 후 다시 전체 WACC 재계산 → 목표 궤도 복귀</div>
+    </div>
+  </div>
+
+  <p>10년 후 목표의 100%에 도달하기는 어렵더라도, 꾸준한 관리를 통해 90% 수준에 근접할 수 있습니다.</p>
+</section>
+
+<!-- 7. COMMON MISTAKES -->
+<section>
+  <div class="section-eyebrow">Section 07</div>
+  <h2>포트폴리오 운영 실패 사례</h2>
+
+  <table>
+    <tr>
+      <th>실패 유형</th><th>원인</th><th>결과</th>
+    </tr>
+    <tr>
+      <td>비중 조절 실패</td>
+      <td>중간 비중 자산을 고위험 섹터에 과도 배분</td>
+      <td>YTD 기준 약 40% 수익률 손실</td>
+    </tr>
+    <tr>
+      <td>액티브 매니지먼트 부재</td>
+      <td>3년 전 종목 그대로 보유</td>
+      <td>시장 변화 미반영, 기회비용 발생</td>
+    </tr>
+    <tr>
+      <td>단편적 정보 투자</td>
+      <td>"펩시 얘기하네 → 펩시 삽시다"</td>
+      <td>전체 맥락 이해 없이 개별 종목 추격매수</td>
+    </tr>
+    <tr>
+      <td>타인 포트폴리오 복사</td>
+      <td>나이·성향·목표가 다른 타인 것을 그대로 적용</td>
+      <td>리스크 불일치, 불안감 증가</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <strong>10개 종목 보유 시</strong> — 3년이 지나면 최소 4개 이상은 교체되어야 합니다. 시장 상황이 변했기 때문입니다. "그냥 두면 오르겠지"는 액티브 매니지먼트가 아닙니다.
+  </div>
+</section>
+
+<!-- 8. TAX NOTE -->
+<section>
+  <div class="section-eyebrow">Section 08</div>
+  <h2>세제 환경과 투자 전략</h2>
+
+  <table>
+    <tr>
+      <th>구분</th><th>미국 IRA/401K</th><th>미국 Brokerage</th><th>한국</th>
+    </tr>
+    <tr>
+      <td>세금 처리</td>
+      <td>은퇴 전 세금 이연</td>
+      <td>양도소득세 즉시 발생</td>
+      <td>세제 혜택 없음</td>
+    </tr>
+    <tr>
+      <td>종목 교체 시</td>
+      <td>Taxable Event 아님</td>
+      <td>Capital Gain Tax 약 24%</td>
+      <td>매매 시 과세</td>
+    </tr>
+    <tr>
+      <td>액티브 매니지먼트</td>
+      <td>세금 부담 없이 자유롭게</td>
+      <td>세후 수익 고려 필요</td>
+      <td>세후 수익 고려 필요</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <strong>한국 투자자</strong>는 모든 투자 계좌가 사실상 Brokerage 계좌입니다. 미국과 같은 은퇴 계좌 세제 혜택(IRA, 401K 등)이 없어 종목 교체 시 세금 비용을 반드시 고려해야 합니다.
+  </div>
+</section>
+
+<!-- SUMMARY CHART -->
+<section>
+  <div class="section-eyebrow">핵심 요약</div>
+  <h2>WACC 기반 포트폴리오 관리 흐름</h2>
+
+  <div class="chart-container fade-in">
+    <canvas id="flowChart" height="240"></canvas>
+  </div>
+
+  <div style="margin-top:20px;">
+    <p><strong>You know what you're doing</strong> — 내가 무슨 투자를 왜 하고 있는지 정확히 이해하고 있어야 합니다. WACC, 베타, 비중 모두 이를 위한 도구입니다.</p>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>투자아카데미 5회</strong> · WACC 계산법 분석 요약<br>
+  본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.
+</footer>
+
+<script>
+// ── BETA SIMULATOR ──────────────────────────────────────
+const spxSlider = document.getElementById('spxSlider');
+const betaSlider = document.getElementById('betaSlider');
+const principalSlider = document.getElementById('principalSlider');
+
+function updateBetaSim() {
+  const spx = parseFloat(spxSlider.value);
+  const beta = parseFloat(betaSlider.value);
+  const principal = parseInt(principalSlider.value);
+  const myReturn = spx * beta;
+  const amount = (principal * myReturn / 100).toFixed(0);
+
+  document.getElementById('spxVal').textContent = (spx >= 0 ? '+' : '') + spx + '%';
+  document.getElementById('betaVal').textContent = beta.toFixed(1);
+  document.getElementById('principalVal').textContent = principal.toLocaleString() + '만원';
+  document.getElementById('myReturn').textContent = (myReturn >= 0 ? '+' : '') + myReturn.toFixed(1) + '%';
+  document.getElementById('myAmount').textContent = (amount >= 0 ? '+' : '') + parseInt(amount).toLocaleString() + '만원';
+}
+
+function resetBetaSim() {
+  spxSlider.value = 10; betaSlider.value = 1.2; principalSlider.value = 1000;
+  updateBetaSim();
+}
+
+spxSlider.addEventListener('input', updateBetaSim);
+betaSlider.addEventListener('input', updateBetaSim);
+principalSlider.addEventListener('input', updateBetaSim);
+updateBetaSim();
+
+// ── WACC CALCULATOR ──────────────────────────────────────
+const defaultPortfolio = [
+  { name: '애플', w: 20, r: 5 },
+  { name: '구글', w: 20, r: 8 },
+  { name: '존슨&존슨', w: 20, r: 4 },
+  { name: '아바고', w: 30, r: 12 },
+  { name: '펩시', w: 10, r: 3 },
+];
+
+function renderPortRows(data) {
+  const container = document.getElementById('portRows');
+  container.innerHTML = '';
+  data.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'port-row';
+    row.innerHTML = `
+      <span style="font-size:13px; font-weight:500;">${item.name}</span>
+      <input type="number" id="w_${i}" value="${item.w}" min="0" max="100" step="1" oninput="calcWACC()">
+      <input type="number" id="r_${i}" value="${item.r}" min="-50" max="100" step="0.1" oninput="calcWACC()">
+    `;
+    container.appendChild(row);
+  });
+  calcWACC();
+}
+
+function calcWACC() {
+  let totalW = 0, wacc = 0;
+  defaultPortfolio.forEach((_, i) => {
+    const w = parseFloat(document.getElementById('w_' + i)?.value || 0);
+    const r = parseFloat(document.getElementById('r_' + i)?.value || 0);
+    if (!isNaN(w) && !isNaN(r)) { totalW += w; wacc += (w / 100) * r; }
+  });
+
+  const warn = document.getElementById('waccWarn');
+  const out = document.getElementById('waccVal');
+  document.getElementById('sumVal').textContent = totalW.toFixed(1);
+
+  if (Math.abs(totalW - 100) > 0.5) {
+    warn.style.display = 'block';
+    out.textContent = '—';
+  } else {
+    warn.style.display = 'none';
+    out.textContent = wacc.toFixed(2) + '%';
+  }
+}
+
+function resetWACC() { renderPortRows(defaultPortfolio); }
+renderPortRows(defaultPortfolio);
+
+// ── CHARTS ──────────────────────────────────────────────
+const chartConfigs = {};
+
+chartConfigs['waccChart'] = () => {
+  new Chart(document.getElementById('waccChart'), {
+    type: 'bar',
+    data: {
+      labels: ['애플', '구글', '존슨&존슨', '아바고', '펩시'],
+      datasets: [
+        {
+          label: '비중(%)',
+          data: [20, 20, 20, 30, 10],
+          backgroundColor: '#2563eb',
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: '연평균 수익률(%)',
+          data: [5, 8, 4, 12, 3],
+          backgroundColor: '#e11d48',
+          borderRadius: 4,
+          yAxisID: 'y'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 } } },
+        title: { display: true, text: '예시 포트폴리오 — 비중 vs 수익률', font: { size: 13 }, color: '#1a1a1a' }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['pieChart'] = () => {
+  new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['밸류 대형주', '성장 대형주', '배당주', '캐시/채권'],
+      datasets: [{
+        data: [40, 30, 20, 10],
+        backgroundColor: ['#e11d48', '#1a1a1a', '#6b7280', '#2563eb'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } },
+        title: { display: true, text: '보수적 투자자 포트폴리오 예시 비중', font: { size: 13 }, color: '#1a1a1a' }
+      }
+    }
+  });
+};
+
+chartConfigs['flowChart'] = () => {
+  new Chart(document.getElementById('flowChart'), {
+    type: 'line',
+    data: {
+      labels: ['Y0', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y10'],
+      datasets: [
+        {
+          label: 'WACC 관리 포트폴리오',
+          data: [100, 107, 116, 123, 133, 145, 156, 168, 182, 196, 212],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3
+        },
+        {
+          label: '방치된 포트폴리오',
+          data: [100, 104, 109, 111, 113, 110, 108, 115, 120, 125, 130],
+          borderColor: '#6b7280',
+          backgroundColor: 'rgba(107,114,128,0.05)',
+          fill: true,
+          tension: 0.4,
+          borderDash: [5,5],
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 } } },
+        title: { display: true, text: '10년간 포트폴리오 성장 시뮬레이션 (100 기준)', font: { size: 13 }, color: '#1a1a1a' }
+      },
+      scales: {
+        y: { ticks: { font: { size: 11 } } },
+        x: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+};
+
+// ── OBSERVERS ──────────────────────────────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>

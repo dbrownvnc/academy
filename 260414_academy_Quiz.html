@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시험문제 — 투자아카데미 5회 WACC</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+KR:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa;
+    --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e;
+    --border: #e5e5e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', 'Noto Serif KR', sans-serif; font-size: 15px; line-height: 1.75; }
+
+  .hero { background: var(--text); color: #fff; padding: 40px 24px 30px; }
+  .hero-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 6vw, 34px); font-weight: 900; line-height: 1.2; }
+  .hero h1 span { color: var(--accent2); }
+  .hero p { margin-top: 10px; font-size: 13px; color: #aaa; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px 60px; }
+
+  .tab-bar { display: flex; border-bottom: 2px solid var(--border); margin: 24px 0 0; }
+  .tab-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--text2); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; padding-top: 24px; }
+  .tab-content.active { display: block; }
+
+  /* QUESTION CARD */
+  .q-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px 18px; margin-bottom: 18px; }
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .q-num { min-width: 30px; height: 30px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .q-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .badge-type { background: #f1f5f9; color: #475569; }
+  .badge-easy { background: #dcfce7; color: #166534; }
+  .badge-mid { background: #fef9c3; color: #854d0e; }
+  .badge-hard { background: #fee2e8; color: #9f1239; }
+
+  .q-text { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+
+  /* OPTIONS */
+  .opt-list { list-style: none; }
+  .opt-list li { padding: 8px 12px; margin-bottom: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.18s; display: flex; gap: 10px; }
+  .opt-list li:hover { border-color: var(--accent); background: #fff5f7; }
+  .opt-list li.selected-correct { background: #dcfce7; border-color: #16a34a; color: #166534; }
+  .opt-list li.selected-wrong { background: #fee2e8; border-color: var(--accent); color: #9f1239; }
+  .opt-list li.reveal-correct { background: #dcfce7; border-color: #16a34a; color: #166534; }
+  .opt-key { font-weight: 700; min-width: 20px; }
+
+  /* SHORT ANS */
+  .short-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; font-size: 14px; margin-top: 4px; }
+  .short-input:focus { outline: 1px solid var(--accent); }
+  .check-btn { margin-top: 8px; background: var(--accent); color: #fff; border: none; padding: 8px 20px; border-radius: 20px; font-size: 13px; cursor: pointer; }
+  .check-btn:hover { background: var(--accent2); }
+  .feedback { margin-top: 10px; font-size: 13px; padding: 8px 12px; border-radius: 6px; display: none; }
+  .feedback.correct { background: #dcfce7; color: #166534; }
+  .feedback.wrong { background: #fee2e8; color: #9f1239; }
+
+  /* OX */
+  .ox-row { display: flex; gap: 12px; margin-top: 8px; }
+  .ox-btn { flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 20px; cursor: pointer; background: none; transition: all 0.18s; font-weight: 700; }
+  .ox-btn:hover { border-color: var(--accent); }
+  .ox-btn.correct-sel { border-color: #16a34a; background: #dcfce7; color: #166534; }
+  .ox-btn.wrong-sel { border-color: var(--accent); background: #fee2e8; color: #9f1239; }
+
+  /* SCORE */
+  .score-bar { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; }
+  .score-val { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: var(--accent); }
+  .score-lbl { font-size: 12px; color: var(--text2); }
+  .reset-all { background: none; border: 1px solid var(--border); padding: 8px 18px; border-radius: 20px; font-size: 12px; cursor: pointer; color: var(--text2); }
+  .reset-all:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ANSWER SECTION */
+  .a-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .a-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .a-num { min-width: 28px; height: 28px; background: #1a1a1a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .a-q { font-size: 13px; font-weight: 600; color: var(--text2); }
+  .a-ans { font-size: 14px; color: var(--text); margin: 8px 0; padding: 10px; background: #dcfce7; border-radius: 6px; border-left: 3px solid #16a34a; }
+  .a-explain { font-size: 13px; color: var(--text2); margin-top: 8px; }
+
+  footer { background: var(--text); color: #aaa; text-align: center; padding: 22px 20px; font-size: 12px; }
+  footer strong { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자아카데미 5회 · 시험문제</div>
+    <h1>WACC & 포트폴리오<br><span>10문제 퀴즈</span></h1>
+    <p>문제 탭에서 풀고, 정답/해설 탭에서 확인하세요.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('quiz')">📝 시험문제</button>
+    <button class="tab-btn" onclick="switchTab('answers')">✅ 정답 & 해설</button>
+  </div>
+
+  <!-- ── QUIZ TAB ── -->
+  <div id="tab-quiz" class="tab-content active">
+
+    <div class="score-bar">
+      <div>
+        <div class="score-val" id="scoreDisplay">0 / 0</div>
+        <div class="score-lbl">정답 수 (체크한 문제 기준)</div>
+      </div>
+      <button class="reset-all" onclick="resetAll()">↺ 전체 초기화</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">1</div>
+        <div class="q-meta"><span class="badge badge-type">객관식</span><span class="badge badge-easy">쉬움</span></div>
+      </div>
+      <div class="q-text">포트폴리오를 구성하는 가장 큰 목적은 무엇인가?</div>
+      <ul class="opt-list" id="q1">
+        <li onclick="selectOpt(this,'q1',false)"><span class="opt-key">①</span> 단기 수익 극대화</li>
+        <li onclick="selectOpt(this,'q1',true)"><span class="opt-key">②</span> 투자 리스크 분산</li>
+        <li onclick="selectOpt(this,'q1',false)"><span class="opt-key">③</span> 세금 절감</span></li>
+        <li onclick="selectOpt(this,'q1',false)"><span class="opt-key">④</span> 특정 종목 집중투자</li>
+      </ul>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">2</div>
+        <div class="q-meta"><span class="badge badge-type">OX</span><span class="badge badge-easy">쉬움</span></div>
+      </div>
+      <div class="q-text">장기투자는 한 번 포트폴리오를 구성하면 아무것도 하지 않고 그냥 두는 것을 의미한다.</div>
+      <div class="ox-row">
+        <button class="ox-btn" onclick="selectOX(this,'q2',false)">⭕ O</button>
+        <button class="ox-btn" onclick="selectOX(this,'q2',true)">❌ X</button>
+      </div>
+      <div class="feedback" id="fb-q2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">3</div>
+        <div class="q-meta"><span class="badge badge-type">객관식</span><span class="badge badge-easy">쉬움</span></div>
+      </div>
+      <div class="q-text">베타(β)가 1.0이라는 것은 무엇을 의미하는가?</div>
+      <ul class="opt-list" id="q3">
+        <li onclick="selectOpt(this,'q3',false)"><span class="opt-key">①</span> 무위험 자산</li>
+        <li onclick="selectOpt(this,'q3',false)"><span class="opt-key">②</span> 변동성이 전혀 없는 주식</li>
+        <li onclick="selectOpt(this,'q3',true)"><span class="opt-key">③</span> S&P500과 동일한 변동성</li>
+        <li onclick="selectOpt(this,'q3',false)"><span class="opt-key">④</span> 연간 1% 수익률 보장</li>
+      </ul>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">4</div>
+        <div class="q-meta"><span class="badge badge-type">단답형</span><span class="badge badge-mid">보통</span></div>
+      </div>
+      <div class="q-text">WACC의 한국어 풀이 명칭을 쓰시오.</div>
+      <input class="short-input" id="qa4" placeholder="예) 가중평균 _____ ___">
+      <button class="check-btn" onclick="checkShort('qa4', ['가중평균 수익률','가중평균 자본비용','weighted average cost of capital','wacc'])">확인</button>
+      <div class="feedback" id="fb-qa4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">5</div>
+        <div class="q-meta"><span class="badge badge-type">객관식</span><span class="badge badge-mid">보통</span></div>
+      </div>
+      <div class="q-text">다음 중 WACC 계산 공식으로 옳은 것은?</div>
+      <ul class="opt-list" id="q5">
+        <li onclick="selectOpt(this,'q5',false)"><span class="opt-key">①</span> WACC = Σ(Rᵢ ÷ Wᵢ)</li>
+        <li onclick="selectOpt(this,'q5',true)"><span class="opt-key">②</span> WACC = Σ(Wᵢ × Rᵢ)</li>
+        <li onclick="selectOpt(this,'q5',false)"><span class="opt-key">③</span> WACC = Σ(Rᵢ) ÷ n</li>
+        <li onclick="selectOpt(this,'q5',false)"><span class="opt-key">④</span> WACC = W₁ + R₁ + W₂ + R₂</li>
+      </ul>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">6</div>
+        <div class="q-meta"><span class="badge badge-type">OX</span><span class="badge badge-mid">보통</span></div>
+      </div>
+      <div class="q-text">S&P500이 10% 상승할 때 베타가 1.4인 주식은 14% 상승하지만, S&P500이 10% 하락할 때는 14% 하락한다.</div>
+      <div class="ox-row">
+        <button class="ox-btn" onclick="selectOX(this,'q6',true)">⭕ O</button>
+        <button class="ox-btn" onclick="selectOX(this,'q6',false)">❌ X</button>
+      </div>
+      <div class="feedback" id="fb-q6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">7</div>
+        <div class="q-meta"><span class="badge badge-type">객관식</span><span class="badge badge-mid">보통</span></div>
+      </div>
+      <div class="q-text">애플 20%, 구글 30%, 존슨&존슨 50%의 비중으로 포트폴리오를 구성했다. 각 수익률이 6%, 10%, 4%일 때 WACC는?</div>
+      <ul class="opt-list" id="q7">
+        <li onclick="selectOpt(this,'q7',false)"><span class="opt-key">①</span> 약 5.3%</li>
+        <li onclick="selectOpt(this,'q7',false)"><span class="opt-key">②</span> 약 6.0%</li>
+        <li onclick="selectOpt(this,'q7',true)"><span class="opt-key">③</span> 약 6.2%</li>
+        <li onclick="selectOpt(this,'q7',false)"><span class="opt-key">④</span> 약 7.1%</li>
+      </ul>
+      <div style="font-size:12px; color:var(--text2); margin-top:8px;">※ 계산: (0.2×6) + (0.3×10) + (0.5×4) = 1.2 + 3.0 + 2.0 = 6.2%</div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">8</div>
+        <div class="q-meta"><span class="badge badge-type">단답형</span><span class="badge badge-mid">보통</span></div>
+      </div>
+      <div class="q-text">포트폴리오 내 종목들의 비중(W)을 모두 합산하면 얼마가 되어야 하는가? (숫자로 입력)</div>
+      <input class="short-input" id="qa8" placeholder="숫자 또는 %로 입력">
+      <button class="check-btn" onclick="checkShort('qa8', ['1', '100', '100%', '1.0'])">확인</button>
+      <div class="feedback" id="fb-qa8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">9</div>
+        <div class="q-meta"><span class="badge badge-type">객관식</span><span class="badge badge-hard">어려움</span></div>
+      </div>
+      <div class="q-text">다음 중 포트폴리오 액티브 매니지먼트에 대한 설명으로 가장 옳은 것은?</div>
+      <ul class="opt-list" id="q9">
+        <li onclick="selectOpt(this,'q9',false)"><span class="opt-key">①</span> 매일 종목을 교체하여 단기 수익을 추구한다</li>
+        <li onclick="selectOpt(this,'q9',false)"><span class="opt-key">②</span> ETF만 매수하면 별도 관리가 필요 없다</li>
+        <li onclick="selectOpt(this,'q9',true)"><span class="opt-key">③</span> 동일 섹터 내에서 성장률이 높은 종목으로 주기적으로 교체한다</li>
+        <li onclick="selectOpt(this,'q9',false)"><span class="opt-key">④</span> 포트폴리오 베타를 항상 1 이상으로 유지한다</li>
+      </ul>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">10</div>
+        <div class="q-meta"><span class="badge badge-type">단답형</span><span class="badge badge-hard">어려움</span></div>
+      </div>
+      <div class="q-text">Goal Based Financial Planning(목표 기반 재무 설계)에서 포트폴리오 점검 주기로 강의에서 언급된 두 가지 주기를 각각 쓰시오.</div>
+      <input class="short-input" id="qa10" placeholder="예) 3개월, 1년">
+      <button class="check-btn" onclick="checkShort('qa10', ['3개월','1년','3개월, 1년','3개월과 1년','분기','연간'])">확인</button>
+      <div class="feedback" id="fb-qa10"></div>
+    </div>
+
+  </div><!-- /tab-quiz -->
+
+  <!-- ── ANSWERS TAB ── -->
+  <div id="tab-answers" class="tab-content">
+    <p style="font-size:13px; color:var(--text2); margin: 16px 0 20px;">아래는 10문제의 정답과 해설입니다.</p>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">1</div><div class="a-q">포트폴리오 구성의 주요 목적 [객관식·쉬움]</div></div>
+      <div class="a-ans">✅ 정답: ② 투자 리스크 분산</div>
+      <div class="a-explain">어떤 기업도 100% 안전하지 않으므로 여러 종목에 나눠 투자하여 한 종목의 폭락이 전체 자산에 미치는 영향을 줄이는 것이 포트폴리오의 핵심 목적입니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">2</div><div class="a-q">장기투자 = 방치? [OX·쉬움]</div></div>
+      <div class="a-ans">✅ 정답: X (거짓)</div>
+      <div class="a-explain">장기투자는 "아무것도 하지 않는 것"이 아닙니다. 최소 3개월~1년에 한 번은 포트폴리오를 리뷰하고 부진 종목을 교체하는 액티브 매니지먼트가 필요합니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">3</div><div class="a-q">베타 1.0의 의미 [객관식·쉬움]</div></div>
+      <div class="a-ans">✅ 정답: ③ S&P500과 동일한 변동성</div>
+      <div class="a-explain">베타는 S&P500 대비 변동성을 나타냅니다. β=1.0은 S&P500과 똑같이 움직임을 의미하며, 이것이 기준값입니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">4</div><div class="a-q">WACC 명칭 [단답형·보통]</div></div>
+      <div class="a-ans">✅ 정답: 가중평균 수익률 (또는 가중평균 자본비용)</div>
+      <div class="a-explain">Weighted Average Cost of Capital의 약자로, 포트폴리오 내 각 종목의 수익률을 비중으로 가중하여 평균한 값입니다. 포트폴리오 전체의 기대 수익률을 나타냅니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">5</div><div class="a-q">WACC 공식 [객관식·보통]</div></div>
+      <div class="a-ans">✅ 정답: ② WACC = Σ(Wᵢ × Rᵢ)</div>
+      <div class="a-explain">각 종목의 비중(W)과 평균 수익률(R)을 곱한 값들을 모두 합산합니다. 단순 평균이 아닌 비중 가중 평균이라는 점이 핵심입니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">6</div><div class="a-q">베타 1.4 상하락 대칭성 [OX·보통]</div></div>
+      <div class="a-ans">✅ 정답: O (참)</div>
+      <div class="a-explain">베타는 상승·하락 양방향에 모두 적용됩니다. β=1.4이면 S&P500이 10% 오를 때 +14%, 10% 내릴 때도 -14%가 됩니다. 빨리 오른 주식은 빨리 떨어지는 이유입니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">7</div><div class="a-q">WACC 직접 계산 [객관식·보통]</div></div>
+      <div class="a-ans">✅ 정답: ③ 약 6.2%</div>
+      <div class="a-explain">계산: (0.20×6%) + (0.30×10%) + (0.50×4%) = 1.2% + 3.0% + 2.0% = 6.2%. 비중의 합이 100%(=1)인지 먼저 확인해야 합니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">8</div><div class="a-q">비중 합계 [단답형·보통]</div></div>
+      <div class="a-ans">✅ 정답: 1 (또는 100%)</div>
+      <div class="a-explain">포트폴리오의 모든 종목 비중을 합산하면 반드시 1(=100%)이 되어야 합니다. 이를 지키지 않으면 WACC 계산 자체가 의미 없어집니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">9</div><div class="a-q">액티브 매니지먼트 정의 [객관식·어려움]</div></div>
+      <div class="a-ans">✅ 정답: ③ 동일 섹터 내에서 성장률이 높은 종목으로 주기적으로 교체한다</div>
+      <div class="a-explain">액티브 매니지먼트는 동일한 변동성(베타) 범위 내에서 주가 성장률이 더 높을 가능성이 있는 종목으로 갈아타는 자산운용 방법입니다. 매일 하는 단기 트레이딩이 아닙니다.</div>
+    </div>
+
+    <div class="a-card">
+      <div class="a-header"><div class="a-num">10</div><div class="a-q">포트폴리오 점검 주기 [단답형·어려움]</div></div>
+      <div class="a-ans">✅ 정답: 3개월, 1년 (두 가지 모두)</div>
+      <div class="a-explain">강의에서는 목표 기반 재무 설계의 실행 원칙으로 "3개월에 한 번" 또는 "1년에 한 번" 포트폴리오를 점검하고 목표 WACC를 달성하지 못하는 종목은 교체해야 한다고 강조했습니다.</div>
+    </div>
+
+  </div><!-- /tab-answers -->
+</div><!-- /container -->
+
+<footer>
+  <strong>투자아카데미 5회</strong> · 시험문제 & 정답·해설<br>
+  본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.
+</footer>
+
+<script>
+let scores = {};
+
+function switchTab(t) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(btn => { if(btn.textContent.includes(t === 'quiz' ? '문제' : '정답')) btn.classList.add('active'); });
+}
+
+function updateScore() {
+  const total = Object.keys(scores).length;
+  const correct = Object.values(scores).filter(Boolean).length;
+  document.getElementById('scoreDisplay').textContent = correct + ' / ' + total;
+}
+
+function selectOpt(el, qid, isCorrect) {
+  const list = document.getElementById(qid);
+  if (list.dataset.answered) return;
+  list.dataset.answered = '1';
+  el.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+  if (!isCorrect) {
+    Array.from(list.children).forEach(li => {
+      if (li.onclick && li.onclick.toString().includes('true')) li.classList.add('reveal-correct');
+    });
+  }
+  scores[qid] = isCorrect;
+  updateScore();
+}
+
+function selectOX(btn, qid, isCorrect) {
+  const row = btn.parentElement;
+  if (row.dataset.answered) return;
+  row.dataset.answered = '1';
+  btn.classList.add(isCorrect ? 'correct-sel' : 'wrong-sel');
+  const fb = document.getElementById('fb-' + qid);
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.textContent = isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다. 정답 탭에서 해설을 확인하세요.';
+  scores[qid] = isCorrect;
+  updateScore();
+}
+
+function checkShort(inputId, answers) {
+  const val = document.getElementById(inputId).value.trim().toLowerCase();
+  const correct = answers.some(a => val.includes(a.toLowerCase()) || a.toLowerCase().includes(val));
+  const fb = document.getElementById('fb-' + inputId);
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+  fb.textContent = correct ? '✅ 정답입니다!' : '❌ 오답입니다. 정답 탭에서 해설을 확인하세요.';
+  if (!scores[inputId]) { scores[inputId] = correct; updateScore(); }
+}
+
+function resetAll() {
+  scores = {};
+  document.querySelectorAll('.opt-list').forEach(l => {
+    delete l.dataset.answered;
+    Array.from(l.children).forEach(li => li.className = '');
+  });
+  document.querySelectorAll('.ox-row').forEach(r => {
+    delete r.dataset.answered;
+    Array.from(r.children).forEach(b => b.className = 'ox-btn');
+  });
+  document.querySelectorAll('.feedback').forEach(f => f.style.display = 'none');
+  document.querySelectorAll('.short-input').forEach(i => i.value = '');
+  updateScore();
+}
+</script>
+</body>
+</html>
