@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 14회 — 확인 문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+    --correct-bg: #f0fdf4;
+    --wrong-bg: #fef2f2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    padding-bottom: 60px;
+  }
+
+  /* STICKY SCOREBOARD */
+  .scoreboard {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .score-item { font-size: 12px; color: rgba(255,255,255,0.7); }
+  .score-item strong { color: #fff; font-size: 15px; margin-left: 4px; }
+  .score-bar-wrap {
+    flex: 1;
+    min-width: 80px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease, background 0.4s ease;
+    background: #dc2626;
+    width: 0%;
+  }
+
+  /* HEADER */
+  .quiz-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+    padding: 28px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quiz-header::after {
+    content: '?';
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    color: rgba(225,29,72,0.12);
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .quiz-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .quiz-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 6vw, 32px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .quiz-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* CONTAINER */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .q-number {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .q-type-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .diff-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .diff-easy { background: #dcfce7; color: #16a34a; }
+  .diff-mid { background: #fef9c3; color: #a16207; }
+  .diff-hard { background: #fee2e2; color: #dc2626; }
+
+  .q-text {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+    line-height: 1.5;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f6; }
+  .option-btn:disabled { cursor: default; }
+  .opt-letter {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .option-btn.correct { background: var(--correct-bg); border-color: var(--correct); }
+  .option-btn.correct .opt-letter { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong); }
+  .option-btn.wrong .opt-letter { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .opt-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    padding-left: 6px;
+  }
+
+  /* TEXT INPUT */
+  .text-input-wrap {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .text-input-wrap input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .text-input-wrap input:focus { border-color: var(--accent); }
+  .text-input-wrap input:disabled { background: var(--bg2); }
+  .submit-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+  .submit-btn:disabled { background: var(--border); cursor: default; }
+
+  /* OX BUTTONS */
+  .ox-wrap { display: flex; gap: 12px; }
+  .ox-btn {
+    flex: 1;
+    padding: 14px;
+    font-size: 22px;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f6; }
+  .ox-btn:disabled { cursor: default; }
+  .ox-btn.correct { background: var(--correct-bg); border-color: var(--correct); }
+  .ox-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong); }
+  .ox-result {
+    font-size: 12.5px;
+    font-weight: 700;
+    margin-top: 6px;
+    display: none;
+  }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 8px 8px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .explanation.show { display: block; }
+  .exp-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* RESULT MODAL */
+  .result-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .result-overlay.show { display: flex; }
+  .result-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 24px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .result-emoji { font-size: 52px; margin-bottom: 12px; }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .result-grade {
+    font-size: 48px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    margin: 12px 0;
+  }
+  .result-score { font-size: 16px; color: var(--text2); margin-bottom: 8px; }
+  .result-msg { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 20px; }
+  .retry-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 32px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+  }
+  .retry-btn:hover { background: var(--accent2); }
+
+  @media (max-width: 380px) {
+    .q-header { gap: 6px; }
+    .option-btn { font-size: 13px; padding: 10px 12px; }
+    .ox-btn { font-size: 20px; padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-item">📝 푼 문제 <strong id="sb-solved">0</strong>/10</div>
+  <div class="score-item">✅ 정답 <strong id="sb-correct">0</strong></div>
+  <div class="score-item">정답률 <strong id="sb-rate">0%</strong></div>
+  <div class="score-bar-wrap">
+    <div class="score-bar" id="score-bar"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="quiz-header">
+  <div class="quiz-label">투자아카데미 14회 · 확인 문제</div>
+  <div class="quiz-title">포트폴리오 조정과<br>은퇴전략</div>
+  <div class="quiz-meta">총 10문제 · 객관식 6 / 단답형 3 / OX 1</div>
+</div>
+
+<div class="container" id="quiz-area"></div>
+
+<!-- RESULT MODAL -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="r-emoji">🎉</div>
+    <div class="result-title">최종 결과</div>
+    <div class="result-grade" id="r-grade">A</div>
+    <div class="result-score" id="r-score">10점 / 10점</div>
+    <div class="result-msg" id="r-msg"></div>
+    <button class="retry-btn" onclick="retryQuiz()">↺ 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1,
+    type: 'mcq',
+    difficulty: 'easy',
+    question: '강의에서 언급한 FOMC 금리 결정 발표 일정은?',
+    options: ['11월 30일', '12월 12~13일', '12월 25일', '1월 3일'],
+    answer: 1,
+    explanation: '강의에서 "12월 13일 FOMC 발표"와 "12월 12~3일 날 발표가 될 것 같다"고 명시했다. 이 발표를 기준으로 내년 장 방향과 섹터 로테이션 전략이 결정된다.'
+  },
+  {
+    id: 2,
+    type: 'mcq',
+    difficulty: 'mid',
+    question: '물가(인플레이션)가 높을수록 늘려야 한다고 한 자산은?',
+    options: ['텔레콤 배당주', '채권(본드)', '우량주·대형 성장주', '현금'],
+    answer: 2,
+    explanation: '강의에서 "물가가 높으면 높을수록 우량주, 대형 성장주 물량은 늘려야 하고, 물가가 낮아질수록 텔레콤 배당주를 늘려야 한다"고 명시했다.'
+  },
+  {
+    id: 3,
+    type: 'mcq',
+    difficulty: 'mid',
+    question: '강의에서 제시한 성장주(개별 종목)의 포트폴리오 내 최대 비중 기준은?',
+    options: ['각 2~3%, 전체 5% 이내', '각 5% 이하, 전체 10% 이내', '각 10%, 전체 30% 이내', '제한 없음'],
+    answer: 1,
+    explanation: '강의에서 "5% 이하 이런 것들은 좀 놔두는 것이 좋다. 전체 포트폴리오 비중은 이걸 다 포함하면 10%가 넘으면 안 돼요. 최소 해봐야 5% 정도 내외에서 가져가야 된다"고 설명했다.'
+  },
+  {
+    id: 4,
+    type: 'mcq',
+    difficulty: 'mid',
+    question: '강의에서 주식 100% 포트폴리오의 연평균 수익률(CAGR)로 언급된 수치는?',
+    options: ['2.82%', '5.00%', '7.41%', '8.80%'],
+    answer: 2,
+    explanation: '강의에서 "스탁 펀드 100% 스탁을 가지고 있는 경우는 에버지 리턴이 7.41%입니다. 그 다음에 본드만 가지고 있는 분들은 2.82%예요"라고 직접 수치를 제시했다.'
+  },
+  {
+    id: 5,
+    type: 'mcq',
+    difficulty: 'hard',
+    question: '강의에서 언급된 미국 평균 물가 성장률(인플레이션)은 얼마라고 했는가?',
+    options: ['5.5%', '7.0%', '8.8%', '10.0%'],
+    answer: 2,
+    explanation: '강의에서 "실질적으로 8.8%예요. 1년에 지금 물가 성장률이"라고 명확히 언급했다.'
+  },
+  {
+    id: 6,
+    type: 'mcq',
+    difficulty: 'hard',
+    question: '경기침체와 인플레이션이 동시에 나타나는 현상으로, 강의에서 금리를 한 차례 더 올리면 올 수 있다고 언급한 것은?',
+    options: ['디플레이션', '스태그플레이션', '하이퍼인플레이션', '리세션'],
+    answer: 1,
+    explanation: '강의에서 "만약 중앙금리를 한 차례 더 올리면 스태그네이션이에요. 어쩔 수가 없어요. 모든 게 다 비싼데 살 사람은 없는 거예요"라고 언급했다. 스태그플레이션(스태그네이션)은 경기침체와 물가 상승이 동시에 오는 현상이다.'
+  },
+  {
+    id: 7,
+    type: 'short',
+    difficulty: 'easy',
+    question: '강의에서 미국 대졸 대기업 은퇴자(65세)가 사망 시까지 매달 받을 수 있다고 언급한 소셜 시큐리티 수령액 범위를 쓰시오. (예: $X~$X)',
+    answer: ['2500~3500', '$2500~$3500', '2,500~3,500', '$2,500~$3,500', '2500달러~3500달러'],
+    explanation: '강의에서 "대기업 연봉 수준에 한한 은퇴자일 경우 사망 전까지 한 2,500에서 한 3,500불 나옵니다. 매달입니다"라고 직접 언급했다.'
+  },
+  {
+    id: 8,
+    type: 'short',
+    difficulty: 'mid',
+    question: '강의에서 언급한 은퇴자의 3대 재정 위협 요소를 모두 적으시오.',
+    answer: ['건강', '자식', '배우자'],
+    isMulti: true,
+    explanation: '강의에서 "은퇴자들이 가장 큰 위험 3대 요소입니다. 첫 번째 건강입니다. 두 번째 자식. 세 번째 배우자"라고 순서대로 명시했다.'
+  },
+  {
+    id: 9,
+    type: 'short',
+    difficulty: 'hard',
+    question: '강의에서 미국 채권 100% 포트폴리오의 연평균 수익률(2.82%)이 사실상 무의미한 이유는 무엇인가? (핵심 키워드 포함)',
+    answer: ['인플레이션', '물가 상승'],
+    isMulti: true,
+    explanation: '강의에서 "사실 본드의 의미는 없다. 2.8이면 사실 인플레이션보단 성장률이 떨어진 거에요"라고 했다. 연 8.8% 인플레이션에 비해 채권 수익률 2.82%는 실질 손실을 의미한다.'
+  },
+  {
+    id: 10,
+    type: 'ox',
+    difficulty: 'easy',
+    question: '강의 내용에 따르면, 은퇴 후에는 주식 투자를 완전히 중단하고 채권과 현금만 보유해야 한다.',
+    answer: 'X',
+    explanation: '강의에서 "은퇴를 하더라도 주식 보유양은 가지고 있어야 된다"고 명확히 말했다. 단, 전 재산을 주식에 넣어서는 안 되며, 연간 필요 지출을 계산해 주식 비중을 적절히 조정하는 것이 핵심이다.'
+  }
+];
+
+let state = { solved: 0, correct: 0 };
+
+function updateScoreboard() {
+  document.getElementById('sb-solved').textContent = state.solved;
+  document.getElementById('sb-correct').textContent = state.correct;
+  const rate = state.solved === 0 ? 0 : Math.round(state.correct / state.solved * 100);
+  document.getElementById('sb-rate').textContent = rate + '%';
+  const bar = document.getElementById('score-bar');
+  bar.style.width = rate + '%';
+  bar.style.background = rate >= 70 ? '#16a34a' : rate >= 40 ? '#f59e0b' : '#dc2626';
+
+  if (state.solved === QUIZ_DATA.length) {
+    setTimeout(showResult, 600);
+  }
+}
+
+function showExplanation(card, explanation) {
+  const el = card.querySelector('.explanation');
+  el.classList.add('show');
+}
+
+function handleMCQ(card, q, chosenIdx) {
+  const btns = card.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = chosenIdx === q.answer;
+
+  btns[chosenIdx].classList.add(isCorrect ? 'correct' : 'wrong');
+  const badge = btns[chosenIdx].querySelector('.opt-badge');
+  badge.textContent = isCorrect ? '✓ 정답!' : '✗ 오답';
+
+  if (!isCorrect) {
+    btns[q.answer].classList.add('correct');
+    btns[q.answer].querySelector('.opt-badge').textContent = '✓ 정답';
+  }
+
+  state.solved++;
+  if (isCorrect) state.correct++;
+  updateScoreboard();
+  showExplanation(card, q.explanation);
+}
+
+function handleShort(card, q, inputEl, submitBtn) {
+  const val = inputEl.value.trim();
+  if (!val) return;
+
+  inputEl.disabled = true;
+  submitBtn.disabled = true;
+
+  let isCorrect = false;
+  if (q.isMulti) {
+    // Check how many keywords are in the answer
+    const matches = q.answer.filter(kw => val.includes(kw));
+    isCorrect = matches.length >= Math.ceil(q.answer.length / 2);
+  } else {
+    isCorrect = q.answer.some(a => val.includes(a) || a.includes(val));
+  }
+
+  const feedback = card.querySelector('.short-feedback');
+  feedback.textContent = isCorrect ? '✓ 정답입니다!' : `✗ 오답. 정답: ${q.answer.join(', ')}`;
+  feedback.style.color = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+  feedback.style.fontWeight = '700';
+  feedback.style.marginTop = '8px';
+  feedback.style.display = 'block';
+  feedback.style.fontSize = '13px';
+
+  state.solved++;
+  if (isCorrect) state.correct++;
+  updateScoreboard();
+  showExplanation(card, q.explanation);
+}
+
+function handleOX(card, q, chosen) {
+  const btns = card.querySelectorAll('.ox-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = chosen === q.answer;
+  const chosenBtn = chosen === 'O' ? btns[0] : btns[1];
+  chosenBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (!isCorrect) {
+    const correctBtn = q.answer === 'O' ? btns[0] : btns[1];
+    correctBtn.classList.add('correct');
+  }
+
+  const res = card.querySelector('.ox-result');
+  res.textContent = isCorrect ? '✓ 정답입니다!' : `✗ 오답. 정답은 ${q.answer}`;
+  res.style.color = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+  res.style.fontWeight = '700';
+  res.style.display = 'block';
+
+  state.solved++;
+  if (isCorrect) state.correct++;
+  updateScoreboard();
+  showExplanation(card, q.explanation);
+}
+
+function renderQuiz() {
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = '';
+
+  QUIZ_DATA.forEach((q) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+
+    const typeLabel = { mcq: '객관식', short: '단답형', ox: 'OX' }[q.type];
+    const diffClass = { easy: 'diff-easy', mid: 'diff-mid', hard: 'diff-hard' }[q.difficulty];
+    const diffLabel = { easy: '쉬움', mid: '보통', hard: '어려움' }[q.difficulty];
+
+    let controlHTML = '';
+    if (q.type === 'mcq') {
+      const opts = q.options.map((o, i) => {
+        const letters = ['A', 'B', 'C', 'D'];
+        return `<button class="option-btn" onclick="handleMCQ(this.closest('.q-card'), QUIZ_DATA[${q.id-1}], ${i})">
+          <span class="opt-letter">${letters[i]}</span>
+          <span style="flex:1">${o}</span>
+          <span class="opt-badge"></span>
+        </button>`;
+      }).join('');
+      controlHTML = `<div class="options">${opts}</div>`;
+    } else if (q.type === 'short') {
+      controlHTML = `
+        <div class="text-input-wrap">
+          <input type="text" placeholder="${q.isMulti ? '키워드를 쉼표로 구분하여 입력' : '정답을 입력하세요'}" id="inp-${q.id}">
+          <button class="submit-btn" id="sub-${q.id}" onclick="
+            handleShort(
+              this.closest('.q-card'),
+              QUIZ_DATA[${q.id-1}],
+              document.getElementById('inp-${q.id}'),
+              document.getElementById('sub-${q.id}')
+            )
+          ">제출</button>
+        </div>
+        <div class="short-feedback" style="display:none"></div>`;
+    } else {
+      controlHTML = `
+        <div class="ox-wrap">
+          <button class="ox-btn" onclick="handleOX(this.closest('.q-card'), QUIZ_DATA[${q.id-1}], 'O')">⭕ O</button>
+          <button class="ox-btn" onclick="handleOX(this.closest('.q-card'), QUIZ_DATA[${q.id-1}], 'X')">❌ X</button>
+        </div>
+        <div class="ox-result"></div>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-header">
+        <span class="q-number">Q${q.id}</span>
+        <span class="q-type-badge">${typeLabel}</span>
+        <span class="diff-badge ${diffClass}">${diffLabel}</span>
+      </div>
+      <div class="q-text">${q.question}</div>
+      ${controlHTML}
+      <div class="explanation">
+        <div class="exp-label">📖 해설</div>
+        <div>${q.explanation}</div>
+      </div>
+    `;
+    area.appendChild(card);
+  });
+}
+
+function showResult() {
+  const pct = Math.round(state.correct / QUIZ_DATA.length * 100);
+  let grade, emoji, msg;
+  if (pct >= 90) { grade = 'A'; emoji = '🏆'; msg = '훌륭합니다! 강의 내용을 완벽하게 이해하셨습니다. 포트폴리오 전략가의 자질이 보입니다!'; }
+  else if (pct >= 70) { grade = 'B'; emoji = '😊'; msg = '잘하셨습니다! 핵심 개념을 대부분 이해하셨네요. 틀린 문항의 해설을 한 번 더 확인해보세요.'; }
+  else if (pct >= 50) { grade = 'C'; emoji = '📚'; msg = '기본 개념은 이해하고 계십니다. 포트폴리오 비중과 은퇴 전략 부분을 다시 복습해보세요.'; }
+  else { grade = 'D'; emoji = '💪'; msg = '강의 내용을 다시 한 번 꼼꼼히 살펴보세요. 다시 풀면 훨씬 좋아질 거예요!'; }
+
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-grade').textContent = grade;
+  document.getElementById('r-score').textContent = `${state.correct}점 / ${QUIZ_DATA.length}점 (${pct}%)`;
+  document.getElementById('r-msg').textContent = msg;
+  document.getElementById('result-overlay').classList.add('show');
+}
+
+function retryQuiz() {
+  state = { solved: 0, correct: 0 };
+  updateScoreboard();
+  document.getElementById('result-overlay').classList.remove('show');
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// INIT
+renderQuiz();
+</script>
+</body>
+</html>
