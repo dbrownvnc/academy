@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 11회 — 분석 리포트</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --c1: #e11d48;
+    --c2: #1a1a1a;
+    --c3: #6b7280;
+    --c4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--text);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .site-header .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+  .site-header .issue {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 40px 20px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(225,29,72,0.25);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 1px solid rgba(225,29,72,0.15);
+  }
+  .hero-category {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .hero h1 em {
+    color: var(--accent);
+    font-style: normal;
+  }
+  .hero-meta {
+    font-size: 12px;
+    color: #aaa;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 640px; margin: 0 auto; padding: 0 18px; }
+
+  /* ── SECTION ── */
+  section { padding: 32px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 20px 0 8px;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .highlight strong { color: var(--accent); }
+
+  /* ── STAT CARDS ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-card .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-card .lbl {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--bg2); font-size: 13px; }
+  th { background: var(--accent); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+  /* ── CHART ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+  .chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── TAG PILLS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .tag {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .tag.red { background: #fff0f3; border-color: var(--accent); color: var(--accent); }
+
+  /* ── COMPARE TABLE ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .compare-card .compare-head {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .compare-card:first-child .compare-head { background: #f0f4ff; color: var(--c4); }
+  .compare-card:last-child .compare-head { background: #fff0f3; color: var(--accent); }
+  .compare-card ul { padding: 10px 14px; list-style: none; }
+  .compare-card ul li {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-card ul li:last-child { border-bottom: none; }
+
+  /* ── SIMULATOR ── */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 20px 0;
+  }
+  .simulator h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .sim-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .sim-row label {
+    font-size: 12px;
+    color: var(--text2);
+    flex: 1;
+    min-width: 80px;
+  }
+  .sim-row input[type=range] {
+    flex: 2;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-row .val-display {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    width: 40px;
+    text-align: right;
+  }
+  .sim-output {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+    text-align: center;
+  }
+  .sim-output .s-val { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .sim-output .s-lbl { font-size: 10px; color: var(--text2); }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── PORTFOLIO VISUAL ── */
+  .portfolio-visual {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .pv-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .pv-label { font-size: 12px; width: 80px; color: var(--text); font-weight: 500; }
+  .pv-bar-wrap { flex: 1; background: #eee; border-radius: 50px; height: 14px; overflow: hidden; }
+  .pv-bar { height: 100%; border-radius: 50px; transition: width 0.5s ease; }
+  .pv-pct { font-size: 12px; font-weight: 700; width: 36px; text-align: right; color: var(--text2); }
+
+  /* ── BELL CURVE CANVAS ── */
+  #bellCanvas { width: 100%; max-height: 180px; cursor: crosshair; }
+
+  /* ── KEY POINT ── */
+  .keypoint {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .keypoint:last-child { border-bottom: none; }
+  .keypoint .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 28px;
+  }
+  .keypoint .kp-text { font-size: 14px; color: var(--text); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--text);
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <span class="logo">INVEST ACADEMY</span>
+  <span class="issue">Vol.11 · 2023.10.21</span>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-category">투자 아카데미 11회 — 분석 리포트</div>
+    <h1>국채와 주식시장,<br><em>현대·포스트모던</em><br>포트폴리오 이론</h1>
+    <div class="hero-meta">미국 10년 국채 금리 5% 돌파 위기 분석 · MPT vs PMPT 비교</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<div class="container">
+
+<!-- 1. 핵심 요약 -->
+<section>
+  <div class="section-label">Overview</div>
+  <h2>오늘 강의의 핵심</h2>
+
+  <div class="keypoint">
+    <span class="num">01</span>
+    <span class="kp-text"><strong>미국 10년 국채 금리 5% 돌파</strong>는 주식 포트폴리오 리스크 확대 신호 — 특히 기술 성장주에 즉각적 영향</span>
+  </div>
+  <div class="keypoint">
+    <span class="num">02</span>
+    <span class="kp-text"><strong>종형 포트폴리오(Bell Curve)</strong>를 기반으로 평균 수익률 자산을 중심에, 고성과·저성과 자산을 양 끝에 배치하는 것이 기본기</span>
+  </div>
+  <div class="keypoint">
+    <span class="num">03</span>
+    <span class="kp-text"><strong>MPT(현대 포트폴리오 이론)</strong>는 패시브, <strong>PMPT(포스트모던 포트폴리오 이론)</strong>은 리밸런싱·섹터 로테이션을 통한 액티브 운영</span>
+  </div>
+  <div class="keypoint">
+    <span class="num">04</span>
+    <span class="kp-text">같은 리스크(베타)라면 <strong>더 높은 수익률</strong>의 자산을, 같은 수익률이라면 <strong>더 낮은 베타</strong>의 자산을 선택</span>
+  </div>
+</section>
+
+<!-- 2. 국채와 주식 상관관계 -->
+<section>
+  <div class="section-label">Section 01</div>
+  <h2>미국 10년 국채 금리 5%의 의미</h2>
+
+  <p>강사는 미국 10년 만기 국채(Treasury Bond) 이자율이 <strong>5%를 넘으면</strong> 주식시장의 리스크가 크게 확대된다고 강조합니다. 해당 시점에서 금리는 4.99%까지 도달했다가 4.914%로 내려앉았습니다.</p>
+
+  <div class="stat-row fade-in">
+    <div class="stat-card">
+      <div class="val">5%</div>
+      <div class="lbl">위험 기준선<br>(10년 국채 금리)</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">4.99%</div>
+      <div class="lbl">강의 당시<br>최고 도달 금리</div>
+    </div>
+  </div>
+
+  <h3>왜 기술주가 먼저 타격받는가?</h3>
+  <p>기술 성장주는 포트폴리오 내에서 국채 금리와 가장 밀접하게 연계되어 있습니다. 국채 금리가 상승하면 투자자들은 전체 포트폴리오에서 <strong>섹터 로테이션</strong>을 실행합니다.</p>
+
+  <div class="highlight">
+    <strong>메커니즘 요약:</strong> 미국 국채 이자율 상승 → 미국 경제 불확실성 증가 신호 → 투자자들이 기술주(위험) → 단기 국채(안전·5% 수익) 로 이동 → 기술주 하락
+  </div>
+
+  <div class="chart-title">기술주 vs 국채 금리 역상관 관계</div>
+  <div class="chart-container fade-in">
+    <canvas id="chart1" height="220"></canvas>
+  </div>
+
+  <h3>실전 대응 전략</h3>
+  <p>금리가 5%를 넘을 때 강사가 권장하는 행동은 <strong>전량 매도가 아닌 비중 축소</strong>입니다.</p>
+
+  <div class="portfolio-visual fade-in">
+    <div style="font-size:13px; font-weight:700; margin-bottom:12px;">📊 국채 5% 초과 시 비중 조정 예시</div>
+    <div class="pv-row">
+      <span class="pv-label">기술주 A</span>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:70%; background:var(--c4);"></div></div>
+      <span class="pv-pct">10% → 7%</span>
+    </div>
+    <div class="pv-row">
+      <span class="pv-label">기술주 B</span>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:70%; background:var(--c4);"></div></div>
+      <span class="pv-pct">10% → 7%</span>
+    </div>
+    <div class="pv-row">
+      <span class="pv-label">기술주 C</span>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:50%; background:var(--c4);"></div></div>
+      <span class="pv-pct">8% → 5%</span>
+    </div>
+    <div class="pv-row">
+      <span class="pv-label">캐시(국채)</span>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:90%; background:var(--accent);"></div></div>
+      <span class="pv-pct">+9% ↑</span>
+    </div>
+    <p style="font-size:11px; color:var(--text2); margin-top:8px; margin-bottom:0;">줄인 비중을 현금화해 단기 국채(T-Bill)에 투자 → 더 떨어지면 재매입</p>
+  </div>
+</section>
+
+<!-- 3. 종형 포트폴리오 -->
+<section>
+  <div class="section-label">Section 02</div>
+  <h2>종형 포트폴리오 (Bell Curve Portfolio)</h2>
+
+  <p>강사가 가장 강조하는 포트폴리오 구조입니다. 정규분포(Normal Distribution) 모양처럼 <strong>중간 수익률 자산을 가장 많이</strong> 배치하고, 고/저 수익률 자산은 양 끝에 소량 배치합니다.</p>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">종형 포트폴리오 수익률 분포</div>
+    <canvas id="chart2" height="220"></canvas>
+  </div>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>구분</th><th>자산 유형</th><th>비중</th><th>예시</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--accent)">High Performer</strong></td>
+          <td>스몰캡·미드캡 성장주</td>
+          <td>10~20%</td>
+          <td>스퀘어, 푸보 등 미래 투자</td>
+        </tr>
+        <tr>
+          <td><strong>Average Performer</strong></td>
+          <td>대형·메가캡, 가치주</td>
+          <td>60~80%</td>
+          <td>구글, 코스코, 월마트, 메타</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--c4)">Low Performer</strong></td>
+          <td>마이너스 수익 성장주</td>
+          <td>10~20%</td>
+          <td>장기 성장 기대 보유</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>가장 흔한 실수</h3>
+  <div class="highlight">
+    <strong>❌ 잘못된 예:</strong> 슈퍼마이크로, 쇼피파이 같은 고변동성 종목을 중간 구역(Average)에 20~30% 배치<br><br>
+    <strong>✅ 올바른 예:</strong> 동일 종목을 High Performer 구역(10~20%)에만 소량 배치, 중간은 구글·코스코·월마트로 채움
+  </div>
+
+  <!-- 벨커브 인터랙티브 -->
+  <div class="simulator fade-in">
+    <h4>🎛️ 종형 포트폴리오 시뮬레이터</h4>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:14px;">비중을 조절해 포트폴리오 리스크·수익 특성을 확인하세요</p>
+
+    <div class="sim-row">
+      <label>High Performer<br><span style="font-size:10px;">(고변동 성장주)</span></label>
+      <input type="range" id="high" min="0" max="40" value="15" oninput="updateSim()">
+      <span class="val-display" id="highVal">15%</span>
+    </div>
+    <div class="sim-row">
+      <label>Avg Performer<br><span style="font-size:10px;">(대형·가치주)</span></label>
+      <input type="range" id="avg" min="40" max="90" value="70" oninput="updateSim()">
+      <span class="val-display" id="avgVal">70%</span>
+    </div>
+    <div class="sim-row">
+      <label>Low Performer<br><span style="font-size:10px;">(미래 성장 기대)</span></label>
+      <input type="range" id="low" min="0" max="30" value="15" oninput="updateSim()">
+      <span class="val-display" id="lowVal">15%</span>
+    </div>
+
+    <div class="sim-output">
+      <div>
+        <div class="s-val" id="simTotal">100%</div>
+        <div class="s-lbl">총 비중</div>
+      </div>
+      <div>
+        <div class="s-val" id="simRisk">보통</div>
+        <div class="s-lbl">리스크 등급</div>
+      </div>
+      <div>
+        <div class="s-val" id="simBeta">~1.1</div>
+        <div class="s-lbl">예상 베타</div>
+      </div>
+    </div>
+    <div id="simWarning" style="display:none; background:#fff0f3; border-radius:6px; padding:10px; margin-top:10px; font-size:12px; color:var(--accent);"></div>
+    <button class="reset-btn" onclick="resetSim()">↺ 초기값으로 리셋</button>
+  </div>
+
+  <h3>투자 성향별 포트폴리오 구조</h3>
+  <div class="chart-container fade-in">
+    <div class="chart-title">투자 성향별 분포 비교</div>
+    <canvas id="chart3" height="220"></canvas>
+  </div>
+</section>
+
+<!-- 4. MPT vs PMPT -->
+<section>
+  <div class="section-label">Section 03</div>
+  <h2>MPT vs PMPT</h2>
+
+  <div class="compare-grid fade-in">
+    <div class="compare-card">
+      <div class="compare-head">📐 MPT (현대 포트폴리오 이론)</div>
+      <ul>
+        <li>1950년대 Harry Markowitz 주창</li>
+        <li>패시브(Passive) 방식</li>
+        <li>포트폴리오 구성 후 유지</li>
+        <li>같은 리스크 → 더 높은 수익</li>
+        <li>같은 수익 → 더 낮은 리스크</li>
+        <li>정적 자산 배분</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head">🚀 PMPT (포스트모던 포트폴리오 이론)</div>
+      <ul>
+        <li>강사가 주장·적용하는 방식</li>
+        <li>액티브(Active) 방식</li>
+        <li>리밸런싱 + 섹터 로테이션</li>
+        <li>AI·빅데이터 활용</li>
+        <li>시장 변화에 적극 대응</li>
+        <li>알파(Alpha) 수익 추구</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>MPT의 핵심 원리</h3>
+  <p>MPT는 두 가지 선택 기준을 제시합니다:</p>
+
+  <div class="stat-row fade-in">
+    <div class="stat-card">
+      <div class="val" style="font-size:20px;">리스크 동일</div>
+      <div class="lbl">→ 수익률이 더 높은 자산 선택<br>(8% vs 10% → 10% 선택)</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" style="font-size:20px;">수익 동일</div>
+      <div class="lbl">→ 베타가 낮은 자산 선택<br>(베타 1.0 vs 0.9 → 0.9 선택)</div>
+    </div>
+  </div>
+
+  <!-- MPT 계산기 -->
+  <div class="simulator fade-in">
+    <h4>🔢 MPT 자산 비교 계산기</h4>
+    <p style="font-size:12px; color:var(--text2); margin-bottom:14px;">두 자산을 비교해 MPT 원칙에 따른 최적 선택을 확인하세요</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--c4); margin-bottom:8px;">📦 자산 A</div>
+        <div class="sim-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <label style="font-size:11px;">기대 수익률 (%)</label>
+          <input type="number" id="retA" value="8" min="0" max="50" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:6px; font-size:14px;" oninput="calcMPT()">
+        </div>
+        <div class="sim-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <label style="font-size:11px;">베타 (리스크)</label>
+          <input type="number" id="betaA" value="1.0" min="0" max="3" step="0.1" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:6px; font-size:14px;" oninput="calcMPT()">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:8px;">📦 자산 B</div>
+        <div class="sim-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <label style="font-size:11px;">기대 수익률 (%)</label>
+          <input type="number" id="retB" value="10" min="0" max="50" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:6px; font-size:14px;" oninput="calcMPT()">
+        </div>
+        <div class="sim-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <label style="font-size:11px;">베타 (리스크)</label>
+          <input type="number" id="betaB" value="1.0" min="0" max="3" step="0.1" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:6px; font-size:14px;" oninput="calcMPT()">
+        </div>
+      </div>
+    </div>
+
+    <div id="mptResult" style="background:#fff; border:2px solid var(--accent); border-radius:8px; padding:14px; text-align:center;">
+      <div style="font-size:12px; color:var(--text2); margin-bottom:4px;">MPT 권장 선택</div>
+      <div id="mptChoice" style="font-size:18px; font-weight:700; color:var(--accent);">자산 B — 수익률 우위</div>
+      <div id="mptReason" style="font-size:12px; color:var(--text2); margin-top:4px;"></div>
+    </div>
+    <button class="reset-btn" onclick="resetMPT()">↺ 초기값으로 리셋</button>
+  </div>
+
+  <h3>PMPT — 알파 투자 전략</h3>
+  <p>PMPT는 포트폴리오를 구성하고 유지하는 MPT를 넘어, <strong>리밸런싱(Rebalancing)</strong>과 <strong>섹터 로테이션(Sector Rotation)</strong>으로 지속적으로 최적화합니다.</p>
+
+  <div class="highlight">
+    <strong>섹터 로테이션 예시:</strong> 세계 경제 성장 둔화 → 유가 하락 예상 → 에너지 관련 주식 매도 → 경기 방어주(헬스케어·필수소비재) 매입
+  </div>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">미국 11개 섹터 — PMPT 로테이션 활용 빈도</div>
+    <canvas id="chart4" height="220"></canvas>
+  </div>
+</section>
+
+<!-- 5. 베타와 리스크 -->
+<section>
+  <div class="section-label">Section 04</div>
+  <h2>베타(β)와 포트폴리오 리스크 관리</h2>
+
+  <p>베타(β)는 시장 대비 개별 자산의 변동성을 나타냅니다. 종형 포트폴리오의 각 구역별 권장 베타 범위가 다릅니다.</p>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead>
+        <tr><th>포트폴리오 구역</th><th>권장 베타</th><th>특성</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Average (중간)</td><td>0.9 ~ 1.2</td><td>안정적 수익, 적당한 변동</td></tr>
+        <tr><td>High Performer (우측)</td><td>1.2 ~ 1.5+</td><td>상승·하락 모두 빠름</td></tr>
+        <tr><td>Low Performer (좌측)</td><td>0.5 ~ 1.0</td><td>또는 마이너스 성과 포함 가능</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>투자 성향에 따른 포트폴리오 형태</h3>
+  <div class="compare-grid fade-in">
+    <div class="compare-card">
+      <div class="compare-head" style="background:#f0fdf4; color:#166534;">키 큰 종형 (보수적)</div>
+      <ul>
+        <li>중앙(Average) 비중 높음</li>
+        <li>68~95% 구간이 넓음</li>
+        <li>상승 속도 완만</li>
+        <li>하락 속도도 완만</li>
+        <li>가치주 중심</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head" style="background:#fff0f3; color:var(--accent);">낮고 넓은 종형 (공격적)</div>
+      <ul>
+        <li>양끝(High/Low) 비중 높음</li>
+        <li>중앙 구간이 좁음</li>
+        <li>상승 속도 빠름</li>
+        <li>하락 속도도 빠름</li>
+        <li>성장주·소형주 중심</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 핵심 경고 -->
+<section>
+  <div class="section-label">Section 05</div>
+  <h2>사기 방지 — MPT의 경고</h2>
+
+  <div class="highlight">
+    <strong>MPT의 절대 원칙:</strong> 이 세상에 리스크 = 0, 수익률 = 100%인 투자는 존재하지 않습니다.
+    이를 약속하는 것은 <strong>사기</strong>입니다.
+  </div>
+
+  <p>강사는 사기를 당하는 이유는 무지가 아니라 <strong>사행심</strong>이라고 강조합니다. 비정상적인 고수익을 제안하는 투자에 끌리는 심리 자체가 위험 신호입니다.</p>
+
+  <div class="tags">
+    <span class="tag red">리스크 없는 고수익 = 사기</span>
+    <span class="tag">월 20% 수익 약속 = 불가능</span>
+    <span class="tag">베타·수익률 기준으로 판단</span>
+  </div>
+</section>
+
+<!-- 7. 최종 요약 -->
+<section>
+  <div class="section-label">Summary</div>
+  <h2>강의 핵심 정리</h2>
+
+  <div class="tbl-wrap fade-in">
+    <table>
+      <thead><tr><th>주제</th><th>핵심 메시지</th></tr></thead>
+      <tbody>
+        <tr><td>국채 금리 5%</td><td>기술주 비중 축소, 현금·단기국채 확보</td></tr>
+        <tr><td>종형 포트폴리오</td><td>Average Performer 60~80%, 양끝은 소량</td></tr>
+        <tr><td>MPT 원칙</td><td>같은 리스크 → 고수익 / 같은 수익 → 저베타</td></tr>
+        <tr><td>PMPT(알파투자)</td><td>리밸런싱 + 섹터 로테이션으로 능동적 관리</td></tr>
+        <tr><td>사기 방지</td><td>리스크 없는 고수익은 세상에 없음</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer class="footer">
+  투자 아카데미 11회 · 분석 리포트 · 학습 목적으로만 사용
+</footer>
+
+<script>
+// ── SIMULATOR ──────────────────────────────
+function updateSim() {
+  const h = parseInt(document.getElementById('high').value);
+  const a = parseInt(document.getElementById('avg').value);
+  const l = parseInt(document.getElementById('low').value);
+  document.getElementById('highVal').textContent = h + '%';
+  document.getElementById('avgVal').textContent = a + '%';
+  document.getElementById('lowVal').textContent = l + '%';
+  const total = h + a + l;
+  const el = document.getElementById('simTotal');
+  el.textContent = total + '%';
+  el.style.color = (total < 85 || total > 115) ? '#dc2626' : 'var(--accent)';
+  const riskScore = h * 1.5 + l * 0.8 - a * 0.5;
+  let risk = '낮음'; let beta = '~0.9';
+  if (riskScore > 30) { risk = '매우 높음'; beta = '~1.4+'; }
+  else if (riskScore > 15) { risk = '높음'; beta = '~1.2'; }
+  else if (riskScore > 5) { risk = '보통'; beta = '~1.1'; }
+  else { risk = '낮음'; beta = '~0.9'; }
+  document.getElementById('simRisk').textContent = risk;
+  document.getElementById('simBeta').textContent = beta;
+  const warn = document.getElementById('simWarning');
+  if (a < 50) {
+    warn.style.display = 'block';
+    warn.textContent = '⚠️ Average Performer 비중이 50% 미만입니다. 강사는 최소 60~70% 이상을 권장합니다.';
+  } else {
+    warn.style.display = 'none';
+  }
+}
+function resetSim() {
+  document.getElementById('high').value = 15;
+  document.getElementById('avg').value = 70;
+  document.getElementById('low').value = 15;
+  updateSim();
+}
+updateSim();
+
+// ── MPT 계산기 ──────────────────────────────
+function calcMPT() {
+  const rA = parseFloat(document.getElementById('retA').value) || 0;
+  const rB = parseFloat(document.getElementById('retB').value) || 0;
+  const bA = parseFloat(document.getElementById('betaA').value) || 1;
+  const bB = parseFloat(document.getElementById('betaB').value) || 1;
+  let choice = ''; let reason = '';
+  if (bA === bB) {
+    if (rA > rB) { choice = '자산 A — 수익률 우위'; reason = `베타 동일(${bA}) → 수익률 더 높은 A(${rA}%) 선택`; }
+    else if (rB > rA) { choice = '자산 B — 수익률 우위'; reason = `베타 동일(${bB}) → 수익률 더 높은 B(${rB}%) 선택`; }
+    else { choice = '동등 — 차이 없음'; reason = '수익률과 베타가 모두 동일합니다'; }
+  } else if (rA === rB) {
+    if (bA < bB) { choice = '자산 A — 리스크 우위'; reason = `수익률 동일(${rA}%) → 베타 더 낮은 A(β${bA}) 선택`; }
+    else { choice = '자산 B — 리스크 우위'; reason = `수익률 동일(${rB}%) → 베타 더 낮은 B(β${bB}) 선택`; }
+  } else {
+    const scoreA = rA / bA; const scoreB = rB / bB;
+    if (scoreA > scoreB) { choice = '자산 A — 종합 우위'; reason = `단위리스크당 수익: A=${scoreA.toFixed(1)}, B=${scoreB.toFixed(1)}`; }
+    else if (scoreB > scoreA) { choice = '자산 B — 종합 우위'; reason = `단위리스크당 수익: A=${scoreA.toFixed(1)}, B=${scoreB.toFixed(1)}`; }
+    else { choice = '동등 — 차이 없음'; reason = '단위리스크당 수익이 동일합니다'; }
+  }
+  document.getElementById('mptChoice').textContent = choice;
+  document.getElementById('mptReason').textContent = reason;
+}
+function resetMPT() {
+  document.getElementById('retA').value = 8;
+  document.getElementById('retB').value = 10;
+  document.getElementById('betaA').value = 1.0;
+  document.getElementById('betaB').value = 1.0;
+  calcMPT();
+}
+calcMPT();
+
+// ── INTERSECTION OBSERVERS ──────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── CHART CONFIGS ──────────────────────────
+const chartConfigs = {};
+
+chartConfigs['chart1'] = () => {
+  new Chart(document.getElementById('chart1'), {
+    type: 'line',
+    data: {
+      labels: ['8월','9월','10월초','10월중','10월말'],
+      datasets: [
+        {
+          label: '10년 국채 금리(%)',
+          data: [4.25, 4.57, 4.78, 4.99, 4.91],
+          borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.08)',
+          tension: 0.4, fill: true, yAxisID: 'y'
+        },
+        {
+          label: '기술주 상대지수',
+          data: [105, 100, 95, 88, 90],
+          borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.06)',
+          tension: 0.4, fill: true, borderDash: [4,4], yAxisID: 'y2'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { font: { size: 11 } } } },
+      scales: {
+        y: { position: 'left', title: { display: true, text: '국채 금리(%)', font:{size:10} }, min: 3.8, max: 5.2 },
+        y2: { position: 'right', title: { display: true, text: '기술주 지수', font:{size:10} }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+};
+
+chartConfigs['chart2'] = () => {
+  const labels = ['-40%','-20%','-10%','-5%','0%','5%','8%','13%','18%','30%','50%','80%'];
+  const data = [1,2,4,5,6,10,18,20,14,8,4,2];
+  new Chart(document.getElementById('chart2'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: '보유 비중(%)',
+        data,
+        backgroundColor: data.map((v,i) => {
+          if (i >= 4 && i <= 8) return 'rgba(225,29,72,0.7)';
+          if (i >= 9) return 'rgba(37,99,235,0.5)';
+          return 'rgba(107,114,128,0.4)';
+        }),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` 비중: ${ctx.raw}%` } }
+      },
+      scales: { y: { title: { display: true, text: '비중(%)', font:{size:10} } } }
+    }
+  });
+};
+
+chartConfigs['chart3'] = () => {
+  new Chart(document.getElementById('chart3'), {
+    type: 'bar',
+    data: {
+      labels: ['Low\nPerformer', 'Average\nPerformer', 'High\nPerformer'],
+      datasets: [
+        { label: '보수적 투자자', data: [5, 85, 10], backgroundColor: 'rgba(37,99,235,0.6)', borderRadius: 4 },
+        { label: '균형 투자자', data: [15, 70, 15], backgroundColor: 'rgba(225,29,72,0.6)', borderRadius: 4 },
+        { label: '공격적 투자자', data: [20, 50, 30], backgroundColor: 'rgba(107,114,128,0.6)', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { labels: { font: { size: 11 } } } },
+      scales: { y: { title: { display: true, text: '비중(%)', font:{size:10} }, max: 100 } }
+    }
+  });
+};
+
+chartConfigs['chart4'] = () => {
+  new Chart(document.getElementById('chart4'), {
+    type: 'radar',
+    data: {
+      labels: ['IT/기술','헬스케어','금융','에너지','필수소비재','유틸리티','산업재','소재','부동산','통신','임의소비재'],
+      datasets: [
+        { label: '성장기', data: [90,60,55,70,40,30,60,50,45,55,70], backgroundColor: 'rgba(225,29,72,0.15)', borderColor: '#e11d48', pointBackgroundColor: '#e11d48' },
+        { label: '경기침체기', data: [45,80,65,40,85,80,55,45,60,60,40], backgroundColor: 'rgba(37,99,235,0.1)', borderColor: '#2563eb', pointBackgroundColor: '#2563eb' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { labels: { font: { size: 11 } } } },
+      scales: { r: { ticks: { display: false }, min: 0, max: 100 } }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+</script>
+</body>
+</html>
