@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 12회 — 인터랙티브 시험문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --correct: #059669;
+    --wrong: #dc2626;
+    --correct-bg: #d1fae5;
+    --wrong-bg: #fee2e2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ── Sticky Score Bar ── */
+  .score-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--text);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .score-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: var(--accent2);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .score-item {
+    font-size: 12px;
+    color: #ccc;
+    white-space: nowrap;
+  }
+  .score-item strong { color: #fff; font-size: 14px; }
+  .progress-wrap {
+    flex: 1;
+    min-width: 80px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: #dc2626;
+    transition: width 0.4s ease, background 0.4s ease;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 40px 20px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 6vw, 32px);
+    font-weight: 900;
+    line-height: 1.25;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero p { color: #aaa; font-size: 13px; margin-top: 8px; }
+
+  /* ── Container ── */
+  .container { max-width: 660px; margin: 0 auto; padding: 0 16px 80px; }
+
+  /* ── Question Card ── */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px;
+    margin: 22px 0;
+    transition: box-shadow 0.3s;
+  }
+  .q-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .type-mc { background: #eff6ff; color: #2563eb; }
+  .type-sa { background: #fef3c7; color: #92400e; }
+  .type-ox { background: #f0fdf4; color: #166534; }
+  .diff-badge {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .diff-easy { background: #dcfce7; color: #166534; }
+  .diff-mid { background: #fef9c3; color: #854d0e; }
+  .diff-hard { background: #fee2e2; color: #991b1b; }
+
+  .q-text {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  /* ── Options ── */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.6;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #fff5f7;
+  }
+  .opt-btn .opt-label {
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 20px;
+  }
+  .opt-btn.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+    color: #065f46;
+  }
+  .opt-btn.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong);
+    color: #7f1d1d;
+  }
+  .opt-btn:disabled { cursor: default; }
+  .opt-status {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ── OX Buttons ── */
+  .ox-wrap { display: flex; gap: 12px; }
+  .ox-btn {
+    flex: 1;
+    padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: 900;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #fff5f7;
+  }
+  .ox-btn.correct { background: var(--correct-bg); border-color: var(--correct); }
+  .ox-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong); }
+  .ox-btn:disabled { cursor: default; }
+
+  /* ── Short Answer ── */
+  .sa-wrap { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+  .sa-input {
+    flex: 1;
+    min-width: 160px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .sa-input:focus { border-color: var(--accent); }
+  .sa-input:disabled { background: var(--bg2); cursor: default; }
+  .sa-submit {
+    padding: 11px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .sa-submit:hover:not(:disabled) { background: var(--accent2); }
+  .sa-submit:disabled { background: var(--c3); cursor: default; }
+
+  /* ── Explanation ── */
+  .explanation {
+    display: none;
+    background: var(--text);
+    color: #f5f5f5;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .explanation.show { display: block; }
+  .explanation .exp-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── Result Modal ── */
+  #result-section {
+    display: none;
+    max-width: 500px;
+    margin: 30px auto;
+    background: var(--text);
+    color: #fff;
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+  }
+  #result-section.show { display: block; }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 54px;
+    font-weight: 900;
+    line-height: 1;
+    margin: 16px 0;
+  }
+  .result-grade {
+    display: inline-block;
+    padding: 4px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .grade-A { background: #059669; color: #fff; }
+  .grade-B { background: #2563eb; color: #fff; }
+  .grade-C { background: #d97706; color: #fff; }
+  .grade-D { background: #dc2626; color: #fff; }
+  .result-msg { font-size: 14px; color: #ccc; margin-bottom: 24px; line-height: 1.6; }
+  .retry-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .retry-btn:hover { background: var(--accent2); }
+
+  /* ── Misc ── */
+  .section-sep {
+    text-align: center;
+    color: var(--text2);
+    font-size: 12px;
+    margin: 10px 0;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Score Bar ── -->
+<div class="score-bar">
+  <span class="score-title">📝 퀴즈</span>
+  <span class="score-item">푼 문제 <strong id="s-solved">0</strong>/10</span>
+  <span class="score-item">정답 <strong id="s-correct">0</strong></span>
+  <span class="score-item">정답률 <strong id="s-rate">0%</strong></span>
+  <div class="progress-wrap">
+    <div id="progress-bar"></div>
+  </div>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-tag">투자아카데미 · 12회차</div>
+  <h1>ETF · 뮤추얼펀드<br><span>· 어뉴이티</span> 시험문제</h1>
+  <p>총 10문제 · 객관식 · 단답형 · OX 혼합</p>
+</div>
+
+<div class="container">
+  <div id="quiz-list"></div>
+  <div id="result-section">
+    <div class="result-title">최종 결과</div>
+    <div class="result-score"><span id="r-correct">0</span><span style="font-size:28px;color:#aaa">/10</span></div>
+    <div id="r-grade" class="result-grade grade-B">B</div>
+    <div id="r-msg" class="result-msg"></div>
+    <button class="retry-btn" onclick="resetQuiz()">↩ 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1,
+    type: 'mc',
+    difficulty: 'easy',
+    question: 'ETF(Exchange Traded Fund)를 펀드 유형으로 올바르게 분류한 것은?',
+    options: [
+      '오픈 엔디드 펀드(Open-End Fund)',
+      '클로즈드 엔디드 펀드(Closed-End Fund)',
+      '헤지 펀드(Hedge Fund)',
+      '인덱스 펀드(Index Fund)'
+    ],
+    answer: 1,
+    explanation: '강사는 "ETF는 Closed End Fund에 속합니다"라고 명확히 설명했습니다. 뮤추얼펀드가 오픈 엔디드 펀드이고, ETF는 클로즈드 엔디드 펀드입니다.'
+  },
+  {
+    id: 2,
+    type: 'mc',
+    difficulty: 'easy',
+    question: '뮤추얼펀드는 몇 시 이후에 거래가 가능합니까?',
+    options: [
+      '뉴욕 시간 오전 9시 30분',
+      '뉴욕 시간 오후 2시',
+      '뉴욕 시간 오후 4시',
+      '뉴욕 시간 오후 6시'
+    ],
+    answer: 2,
+    explanation: '강사는 "뮤추얼펀드는 뉴욕 시간으로 4시 이후에 거래가 가능합니다"라고 설명했습니다. ETF는 장중 실시간 거래가 가능한 반면, 뮤추얼펀드는 장 마감 후에만 거래됩니다.'
+  },
+  {
+    id: 3,
+    type: 'mc',
+    difficulty: 'mid',
+    question: '뮤추얼펀드를 매도했을 때 결제(Settlement)까지 걸리는 기간은?',
+    options: [
+      '당일(즉시)',
+      '1영업일',
+      '3영업일',
+      '7영업일'
+    ],
+    answer: 2,
+    explanation: '강사는 "뮤추얼 펀드는 세틀먼트 대가 필요해서 3일 있다가 팔립니다"라고 했습니다. 이 때문에 급락 시 즉각 대응이 어렵고, 강사가 뮤추얼펀드를 선호하지 않는 이유 중 하나입니다.'
+  },
+  {
+    id: 4,
+    type: 'mc',
+    difficulty: 'mid',
+    question: '다음 중 ETF의 단점으로 언급된 것은?',
+    options: [
+      '실시간 거래가 불가능하다',
+      '포트폴리오 내 현금 보유가 의무화되어 있다',
+      '급락 시 즉각적인 대응(리밸런싱)이 어렵다',
+      '하루에 한 번만 거래할 수 있다'
+    ],
+    answer: 2,
+    explanation: '강사는 ETF는 패시브(Buy & Hold) 운용 방식이라 "뭔가 변화가 있을 때 빨리 대책이 안 씁니다"라고 설명했습니다. 리밸런싱과 섹터로테이션 같은 액티브 매니지먼트가 어렵습니다.'
+  },
+  {
+    id: 5,
+    type: 'mc',
+    difficulty: 'mid',
+    question: 'Variable Annuity(변액 어뉴이티)에 대한 설명으로 옳은 것은?',
+    options: [
+      '100% 순수 투자상품이다',
+      'S&P500에 연동되므로 투자상품으로 분류된다',
+      '인덱스에 연동되어 있어도 보험상품이다',
+      '보험 라이선스만 있으면 판매할 수 있다'
+    ],
+    answer: 2,
+    explanation: '강사는 "인덱스 연동돼서 투자 상품이 아닙니다. 이것도 보험 상품입니다"라고 강조했습니다. 또한 Variable Annuity를 판매하려면 브로커딜러 라이선스가 필수입니다.'
+  },
+  {
+    id: 6,
+    type: 'mc',
+    difficulty: 'hard',
+    question: 'Fixed Annuity(고정 어뉴이티)에서 납입한 보험료가 들어가는 계좌는?',
+    options: [
+      '세프리트 어카운트(Separate Account)',
+      '제너럴 어카운트(General Account)',
+      '투자 어카운트(Investment Account)',
+      '인덱스 어카운트(Index Account)'
+    ],
+    answer: 1,
+    explanation: '강사는 "고정 어뉴이티라는 것은 금융상품이 아닙니다. 100% 보험 상품입니다. 여기에 납입한 보험비는 제너럴 어카운트로 들어갑니다"라고 설명했습니다. 세프리트 어카운트는 Variable Annuity에서 투자 부분이 들어가는 계좌입니다.'
+  },
+  {
+    id: 7,
+    type: 'ox',
+    difficulty: 'easy',
+    question: 'ETF는 포트폴리오 일부 매각 시 세금이 발생하지 않는다. (단, 배당금·이자소득 제외)',
+    options: ['O', 'X'],
+    answer: 0,
+    explanation: '강사는 "뮤추얼 펀드는 포트폴리오 일부 매각 시 투자하는데 세금이 발생하지만 ETF는 발생하지 않습니다"라고 설명했습니다. 단, 배당금이나 이자소득에 대한 세금은 투자자가 납부해야 합니다.'
+  },
+  {
+    id: 8,
+    type: 'ox',
+    difficulty: 'mid',
+    question: '보험 에이전트 라이선스를 보유하고 있으면 Variable Annuity를 합법적으로 판매할 수 있다.',
+    options: ['O', 'X'],
+    answer: 1,
+    explanation: '강사는 "보험 에이전트가 이걸 팔 수가 없어요. 기본적으로. Variable Annuity를 팔기 위해서는 브로커딜러 라이선스가 있어야 합니다"라고 했습니다. 보험 라이선스만으로는 불법입니다.'
+  },
+  {
+    id: 9,
+    type: 'sa',
+    difficulty: 'hard',
+    question: '강사에 따르면, 100만 달러를 Variable Annuity에 일시납(럼섬)으로 납입했을 때 보험업자(에이전트)가 즉시 가져가는 커미션은 약 몇 달러입니까? (숫자만 입력)',
+    answer: '70000',
+    answerDisplay: '약 7만 달러 ($70,000)',
+    keywords: ['70000', '7만', '7만달러', '$70,000', '70,000'],
+    explanation: '강사는 "100만 달러를 넣으면 약 7만 달러 내외는 이 보험업자가 가져갑니다. 그러면 실질적으로는 93만 달러만 투자하는 겁니다"라고 설명했습니다.'
+  },
+  {
+    id: 10,
+    type: 'sa',
+    difficulty: 'hard',
+    question: '강사가 설명한 Variable Annuity 어뉴이티제이션(Annuitization)에서, 원금 기준 연간 수령 가능한 비율은 최대 몇 %입니까? (숫자만 입력)',
+    answer: '4',
+    answerDisplay: '약 4%',
+    keywords: ['4', '4%'],
+    explanation: '강사는 "원금에서 많아야 4%예요. 1년에. 4%씩. 그러니까 1년에 1만 2천 불씩(30만 달러 원금 기준). 죽을 때까지 나오는 거예요"라고 설명했습니다. 표기된 평가액(예: 45만 달러)이 모두 인출 가능한 금액이 아닙니다.'
+  }
+];
+
+let state = { solved: 0, correct: 0, answers: {} };
+
+function renderQuiz() {
+  const list = document.getElementById('quiz-list');
+  list.innerHTML = '';
+  QUIZ_DATA.forEach(q => {
+    list.innerHTML += buildCard(q);
+  });
+  attachEvents();
+}
+
+function buildCard(q) {
+  const diffLabel = { easy: '쉬움', mid: '보통', hard: '어려움' }[q.difficulty];
+  const diffClass = { easy: 'diff-easy', mid: 'diff-mid', hard: 'diff-hard' }[q.difficulty];
+  const typeLabel = { mc: '객관식', sa: '단답형', ox: 'OX' }[q.type];
+  const typeClass = { mc: 'type-mc', sa: 'type-sa', ox: 'type-ox' }[q.type];
+
+  let inputHTML = '';
+  if (q.type === 'mc') {
+    inputHTML = `<div class="options">` +
+      q.options.map((opt, i) =>
+        `<button class="opt-btn" data-qid="${q.id}" data-idx="${i}" onclick="handleMC(${q.id},${i})">
+          <span class="opt-label">${String.fromCharCode(65+i)}.</span>
+          <span>${opt}</span>
+          <span class="opt-status"></span>
+        </button>`
+      ).join('') +
+    `</div>`;
+  } else if (q.type === 'ox') {
+    inputHTML = `<div class="ox-wrap">
+      <button class="ox-btn" data-qid="${q.id}" data-idx="0" onclick="handleOX(${q.id},0)">O</button>
+      <button class="ox-btn" data-qid="${q.id}" data-idx="1" onclick="handleOX(${q.id},1)">X</button>
+    </div>`;
+  } else {
+    inputHTML = `<div class="sa-wrap">
+      <input type="text" class="sa-input" id="sa-input-${q.id}" placeholder="답을 입력하세요" maxlength="30">
+      <button class="sa-submit" id="sa-btn-${q.id}" onclick="handleSA(${q.id})">제출</button>
+    </div>
+    <div id="sa-result-${q.id}" style="margin-top:8px;font-size:13px;font-weight:700;"></div>`;
+  }
+
+  return `
+  <div class="q-card" id="card-${q.id}">
+    <div class="q-header">
+      <div class="q-num">${q.id}</div>
+      <span class="q-type ${typeClass}">${typeLabel}</span>
+      <span class="diff-badge ${diffClass}">${diffLabel}</span>
+    </div>
+    <div class="q-text">${q.question}</div>
+    ${inputHTML}
+    <div class="explanation" id="exp-${q.id}">
+      <div class="exp-label">📖 해설</div>
+      <div>${q.explanation}</div>
+    </div>
+  </div>`;
+}
+
+function handleMC(qid, idx) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  if (state.answers[qid] !== undefined) return;
+
+  const btns = document.querySelectorAll(`[data-qid="${qid}"].opt-btn`);
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.answer;
+  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  btns[idx].querySelector('.opt-status').textContent = isCorrect ? '✓ 정답!' : '✗ 오답';
+
+  if (!isCorrect) {
+    btns[q.answer].classList.add('correct');
+    btns[q.answer].querySelector('.opt-status').textContent = '✓ 정답';
+  }
+
+  recordAnswer(qid, isCorrect);
+}
+
+function handleOX(qid, idx) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  if (state.answers[qid] !== undefined) return;
+
+  const btns = document.querySelectorAll(`[data-qid="${qid}"].ox-btn`);
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.answer;
+  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) btns[q.answer].classList.add('correct');
+
+  recordAnswer(qid, isCorrect);
+}
+
+function handleSA(qid) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  if (state.answers[qid] !== undefined) return;
+
+  const input = document.getElementById(`sa-input-${qid}`);
+  const btn = document.getElementById(`sa-btn-${qid}`);
+  const resultDiv = document.getElementById(`sa-result-${qid}`);
+  const val = input.value.trim().replace(/,/g,'').replace(/\$/g,'').replace(/%/g,'');
+
+  if (!val) {
+    input.style.borderColor = '#dc2626';
+    setTimeout(() => input.style.borderColor = '', 1000);
+    return;
+  }
+
+  const isCorrect = q.keywords.some(k => val.includes(k.replace(/,/g,'').replace(/\$/g,'').replace(/%/g,'')));
+  input.disabled = true;
+  btn.disabled = true;
+
+  if (isCorrect) {
+    resultDiv.style.color = '#059669';
+    resultDiv.textContent = '✓ 정답! — ' + q.answerDisplay;
+    input.style.borderColor = '#059669';
+  } else {
+    resultDiv.style.color = '#dc2626';
+    resultDiv.textContent = '✗ 오답. 정답: ' + q.answerDisplay;
+    input.style.borderColor = '#dc2626';
+  }
+
+  recordAnswer(qid, isCorrect);
+}
+
+function recordAnswer(qid, isCorrect) {
+  state.answers[qid] = isCorrect;
+  state.solved++;
+  if (isCorrect) state.correct++;
+  updateScoreBar();
+  document.getElementById(`exp-${qid}`).classList.add('show');
+  if (state.solved === 10) {
+    setTimeout(showResult, 600);
+  }
+}
+
+function updateScoreBar() {
+  document.getElementById('s-solved').textContent = state.solved;
+  document.getElementById('s-correct').textContent = state.correct;
+  const rate = state.solved > 0 ? Math.round(state.correct / state.solved * 100) : 0;
+  document.getElementById('s-rate').textContent = rate + '%';
+
+  const pct = (state.solved / 10) * 100;
+  const bar = document.getElementById('progress-bar');
+  bar.style.width = pct + '%';
+  if (rate >= 70) bar.style.background = '#059669';
+  else if (rate >= 40) bar.style.background = '#d97706';
+  else bar.style.background = '#dc2626';
+}
+
+function showResult() {
+  const s = document.getElementById('result-section');
+  s.classList.add('show');
+  s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  const correct = state.correct;
+  document.getElementById('r-correct').textContent = correct;
+
+  let grade, gradeClass, msg;
+  if (correct >= 9) { grade = 'A'; gradeClass = 'grade-A'; msg = '🎉 완벽합니다! ETF와 어뉴이티 구조를 완전히 이해하셨습니다.'; }
+  else if (correct >= 7) { grade = 'B'; gradeClass = 'grade-B'; msg = '👍 우수합니다! 핵심 개념을 잘 파악하고 있습니다.'; }
+  else if (correct >= 5) { grade = 'C'; gradeClass = 'grade-C'; msg = '📚 양호합니다. 틀린 문제의 해설을 다시 읽어보세요.'; }
+  else { grade = 'D'; gradeClass = 'grade-D'; msg = '💪 더 공부가 필요합니다. 분석 리포트를 다시 읽어보세요!'; }
+
+  const el = document.getElementById('r-grade');
+  el.textContent = grade;
+  el.className = 'result-grade ' + gradeClass;
+  document.getElementById('r-msg').textContent = msg;
+}
+
+function resetQuiz() {
+  state = { solved: 0, correct: 0, answers: {} };
+  document.getElementById('result-section').classList.remove('show');
+  document.getElementById('s-solved').textContent = '0';
+  document.getElementById('s-correct').textContent = '0';
+  document.getElementById('s-rate').textContent = '0%';
+  document.getElementById('progress-bar').style.width = '0%';
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function attachEvents() {
+  // Enter key for SA inputs
+  QUIZ_DATA.filter(q => q.type === 'sa').forEach(q => {
+    const inp = document.getElementById(`sa-input-${q.id}`);
+    if (inp) inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSA(q.id);
+    });
+  });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
