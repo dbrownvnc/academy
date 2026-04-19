@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>역투자 이론 (Contrarian Theory) — 투자 아카데미 10회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --subtext: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--text);
+    color: #fff;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .label {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .site-header .issue {
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    background: var(--text);
+    color: #fff;
+    padding: 52px 24px 40px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: 'C';
+    position: absolute;
+    right: -20px;
+    top: -30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 280px;
+    font-weight: 900;
+    color: var(--accent);
+    opacity: 0.08;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero .episode {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero h1 em {
+    color: var(--accent2);
+    font-style: normal;
+  }
+  .hero .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+  .hero .meta {
+    margin-top: 20px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero .meta span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    border-left: 2px solid var(--accent);
+    padding-left: 8px;
+  }
+
+  /* MAIN CONTENT */
+  .main { padding: 0 20px 60px; max-width: 640px; margin: 0 auto; }
+
+  /* SECTION */
+  .section { margin-top: 44px; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-left: 4px solid var(--accent);
+    background: var(--bg2);
+    padding: 18px 20px;
+    margin: 24px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .pullquote cite {
+    display: block;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--subtext);
+    margin-top: 8px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  /* TAG LIST */
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .tag {
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  /* STEP LIST */
+  .step-list { list-style: none; counter-reset: step; }
+  .step-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-list li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--accent);
+    min-width: 36px;
+    line-height: 1.2;
+  }
+  .step-list li .step-text { flex: 1; }
+  .step-list li .step-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .step-list li .step-desc { font-size: 13px; color: var(--subtext); }
+
+  /* COMPARE TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  thead tr { background: var(--accent); color: #fff; }
+  thead th { padding: 10px 12px; text-align: left; font-weight: 700; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:nth-child(even) { background: var(--bg2); }
+  tbody td { padding: 10px 12px; }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: var(--text);
+    color: #fff;
+    border-radius: 2px;
+    padding: 20px;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .formula-box .formula-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+  .formula-box .highlight { color: var(--accent2); font-weight: bold; }
+
+  /* CHART */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+
+  .chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--subtext);
+    margin-bottom: 8px;
+  }
+
+  /* SIMULATOR */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .simulator h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .simulator .sim-desc {
+    font-size: 13px;
+    color: var(--subtext);
+    margin-bottom: 18px;
+  }
+  .sim-row { margin-bottom: 16px; }
+  .sim-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .sim-row label span { color: var(--accent); font-weight: 700; }
+  .sim-row input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 2px;
+    padding: 16px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .sim-result .res-item {}
+  .sim-result .res-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .sim-result .res-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--accent2); }
+  .sim-result .res-unit { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .sim-reset {
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 7px 16px;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    margin-top: 12px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .sim-reset:hover { background: var(--accent); color: #fff; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    border-left: 4px solid var(--chart4);
+    padding: 14px 16px;
+    background: rgba(37,99,235,0.05);
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .highlight-box strong { color: var(--chart4); }
+
+  /* KEY POINTS */
+  .key-point {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .key-point:last-child { border-bottom: none; }
+  .key-point .icon {
+    font-size: 20px;
+    min-width: 30px;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .key-point .text { font-size: 14px; }
+  .key-point .text strong { display: block; font-size: 13px; margin-bottom: 3px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0;
+    color: var(--subtext);
+    font-size: 18px;
+    letter-spacing: 6px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  footer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <span class="label">투자 아카데미</span>
+  <span class="issue">No.10 · 2026.04.19</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="episode">Episode 10 · Contrarian Theory</div>
+  <h1>시장이 탐욕할 때<br><em>두려워하라</em></h1>
+  <p class="subtitle">역투자 이론(Contrarian Theory)의 본질과<br>펀더멘털 기반 주식 가치평가 방법론</p>
+  <div class="meta">
+    <span>미국 증권시장 분석</span>
+    <span>역투자 이론</span>
+    <span>Free Cash Flow</span>
+    <span>DCF 밸류에이션</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- 1. 핵심 요약 -->
+  <div class="section fade-in">
+    <div class="section-label">핵심 요약</div>
+    <h2>역투자 이론이란 무엇인가</h2>
+    <p>역투자 이론(Contrarian Theory)은 <strong>대다수 투자자가 매수할 때 팔고, 대다수가 매도할 때 사는</strong> 반대 방향 투자 전략이다. 이는 시장 군중심리(허들링)를 역이용해 이익을 창출하는 투자 스타일이다.</p>
+    <p>워런 버펫의 유명한 원칙이 이를 집약한다.</p>
+    <div class="pullquote">
+      "When market is greedy, be fearful.<br>When market is fearful, be greedy."
+      <cite>— Warren Buffett (역투자 이론의 대표적 실천자)</cite>
+    </div>
+    <p>단, 역투자 이론은 단독 전략이 아닌 <strong>펀더멘털 분석과 반드시 결합</strong>되어야 실효성이 있다. 이론 자체에 함몰되면 큰 손실로 이어질 수 있다.</p>
+  </div>
+
+  <!-- 2. 시장 구조 -->
+  <div class="section">
+    <div class="section-label fade-in">시장 구조</div>
+    <h2 class="fade-in">일반 시장의 70:30 법칙</h2>
+    <p class="fade-in">폭락장·폭등장 같은 외부 충격 상황을 제외한 <strong>일반적인 주식시장</strong>에서는 각 섹터·산업별로 매매와 매각이 <strong>70대 30, 또는 60대 40</strong>의 비율로 이루어진다. 역투자자들의 적극적인 활동이 이 비율을 만든다.</p>
+    <div class="chart-container fade-in">
+      <div class="chart-title">일반 시장 vs 폭락/폭등 시장 — 매수·매도 비율</div>
+      <canvas id="marketRatioChart" height="240"></canvas>
+    </div>
+    <div class="card fade-in">
+      <h3>📌 폭락장에서도 10%는 매수한다</h3>
+      <p style="font-size:13px;">동반 하락장에서는 약 90%가 적색(하락)을 기록하지만, 심지어 100% 폭락장에서도 <strong>약 10%는 진입하는 세력</strong>이 존재한다. 이들이 바로 역투자자들이다.</p>
+    </div>
+  </div>
+
+  <!-- 3. 역투자 메커니즘 -->
+  <div class="section">
+    <div class="section-label fade-in">이론 메커니즘</div>
+    <h2 class="fade-in">왜 오를 때 팔고, 내릴 때 살까?</h2>
+    <ul class="step-list fade-in">
+      <li>
+        <div class="step-text">
+          <div class="step-title">주가 상승 → 현금 고갈</div>
+          <div class="step-desc">대부분의 투자자가 매수에 참여하면 현금 동원 능력이 한계에 도달한다. 더 이상 추가 매입이 불가능해지는 시점이 온다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">추가 매입 불가 → 주가 하락 예상</div>
+          <div class="step-desc">역투자자들은 이 시점에서 주가가 상승 후 다시 하락할 것으로 판단하고, 보유 자산을 매각해 현금을 확보한다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">현금 보유 → 하락장 매입 준비</div>
+          <div class="step-desc">확보한 현금으로 하락장에서 저가 매입을 노린다. 항상 현금 10~30%를 유지하는 전략이 이 원리를 반영한다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">회복세 → 수익 실현</div>
+          <div class="step-desc">미국 증시는 30% 이상 폭락장이 오더라도 짧게는 3개월, 길게는 3년 내에 회복된다. 장기 우상향 특성을 활용한다.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 캐시 보유 시뮬레이터 -->
+  <div class="section">
+    <div class="section-label fade-in">인터랙티브 시뮬레이터</div>
+    <div class="simulator fade-in">
+      <h3>💰 역투자 현금 보유 전략 시뮬레이터</h3>
+      <p class="sim-desc">총 포트폴리오에서 현금 비율과 시장 하락 폭을 조정해 역투자 매수 가능 규모를 확인하세요.</p>
+      <div class="sim-row">
+        <label>총 포트폴리오 (만 달러) <span id="portfolioVal">100</span>만$</label>
+        <input type="range" id="portfolioSlider" min="10" max="1000" step="10" value="100">
+      </div>
+      <div class="sim-row">
+        <label>현금 보유 비율 <span id="cashRatioVal">20</span>%</label>
+        <input type="range" id="cashRatioSlider" min="5" max="50" step="5" value="20">
+      </div>
+      <div class="sim-row">
+        <label>시장 하락 폭 <span id="dropVal">30</span>%</label>
+        <input type="range" id="dropSlider" min="10" max="70" step="5" value="30">
+      </div>
+      <div class="sim-row">
+        <label>예상 회복 상승률 <span id="recoveryVal">50</span>%</label>
+        <input type="range" id="recoverySlider" min="10" max="150" step="10" value="50">
+      </div>
+      <div class="sim-result">
+        <div class="res-item">
+          <div class="res-label">보유 현금</div>
+          <div class="res-value" id="cashAmount">20</div>
+          <div class="res-unit">만 달러</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">하락 후 매수가</div>
+          <div class="res-value" id="buyPrice">70</div>
+          <div class="res-unit">만$ 규모 포지션</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">회복 시 매수분 수익</div>
+          <div class="res-value" id="buyProfit">+10.0</div>
+          <div class="res-unit">만 달러</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">전체 포트 회복 후</div>
+          <div class="res-value" id="totalAfter">125.0</div>
+          <div class="res-unit">만 달러</div>
+        </div>
+      </div>
+      <button class="sim-reset" id="simResetBtn">↺ 초기화</button>
+    </div>
+  </div>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <!-- 4. 워런버펫 vs 캐시 우드 -->
+  <div class="section">
+    <div class="section-label fade-in">대조 분석</div>
+    <h2 class="fade-in">워런 버펫 vs 캐시 우드 — 같은 역투자, 다른 결과</h2>
+    <p class="fade-in">두 사람 모두 역투자 방식을 사용하지만, <strong>펀더멘털을 기반으로 하느냐</strong>가 성패를 가른다.</p>
+
+    <table class="fade-in">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>워런 버펫</th>
+          <th>캐시 우드</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>투자 방향</td>
+          <td>역투자 (하락 시 매수)</td>
+          <td>역투자 (고점 지속 매수)</td>
+        </tr>
+        <tr>
+          <td>기반 철학</td>
+          <td>✅ 펀더멘털리스트</td>
+          <td>❌ 미래 성장 스토리</td>
+        </tr>
+        <tr>
+          <td>종목 선택 기준</td>
+          <td>강한 FCF, 실적 기반 저평가 종목</td>
+          <td>미래 기술 테마, 고밸류 성장주</td>
+        </tr>
+        <tr>
+          <td>최근 결과</td>
+          <td>장기 시장 수익률 상회</td>
+          <td>자산 규모 1/4 수준으로 감소</td>
+        </tr>
+        <tr>
+          <td>핵심 차이</td>
+          <td>좋은 회사를 쌀 때 산다</td>
+          <td>비싼 회사를 더 비싸게 산다</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box fade-in">
+      <strong>핵심 교훈:</strong> 역투자 전략이든 순투자 전략이든, 중심은 반드시 <strong>펀더멘털(Fundamentals)</strong>에 두어야 한다. 많이 팔고 많이 남기는 회사, 그리고 그 추세가 지속되는 회사가 최종 승자다.
+    </div>
+  </div>
+
+  <!-- 5. 인트린식 밸류 -->
+  <div class="section">
+    <div class="section-label fade-in">가치평가 방법론</div>
+    <h2 class="fade-in">Intrinsic Value — 회사의 실질 가치</h2>
+    <p class="fade-in">역투자의 핵심은 <strong>"싼지 비싼지를 판단하는 것"</strong>이며, 이를 객관화하는 도구가 <strong>내재가치(Intrinsic Value)</strong>다. 내재가치는 두 가지 핵심 요소로 구성된다.</p>
+    <div class="tag-list fade-in">
+      <span class="tag">① Asset (자산)</span>
+      <span class="tag">② Free Cash Flow (잉여현금흐름)</span>
+    </div>
+
+    <div class="card fade-in">
+      <h3>📊 밸런스시트(Balance Sheet) 구조</h3>
+      <p style="font-size:13px; color: var(--subtext);">Asset = Liability + Stockholders' Equity</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>자산(Asset)</th><th>부채+자본</th></tr></thead>
+        <tbody>
+          <tr><td>현금(Cash & Equivalents)</td><td>부채(Liability)</td></tr>
+          <tr><td>재고(Inventory)</td><td>장기부채(Long-term Debt)</td></tr>
+          <tr><td>무형자산(Intangible Assets)</td><td>주주자본(Stockholders' Equity)</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px; color:var(--subtext); margin-top:8px;">주주자본(SE) 규모가 늘고 있는지 줄고 있는지 추적이 중요하다.</p>
+    </div>
+  </div>
+
+  <!-- 6. DCF 공식 -->
+  <div class="section">
+    <div class="section-label fade-in">DCF 밸류에이션</div>
+    <h2 class="fade-in">할인현금흐름법 (Discounted Cash Flow)</h2>
+    <p class="fade-in">내재가치 계산에 가장 많이 사용되는 방법이 DCF(Discounted Cash Flow)다. 미래의 잉여현금흐름을 현재가치로 환산해 주당 적정 가격을 산출한다.</p>
+
+    <ul class="step-list fade-in">
+      <li>
+        <div class="step-text">
+          <div class="step-title">과거 3년 Free Cash Flow 확인</div>
+          <div class="step-desc">EBITDA → 감가상각(D&A) 제거 → 세금 적용 → 운전자본(Working Capital) 조정 → 설비투자(CapEx) 차감 = 잉여현금흐름(FCF)</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">향후 5년 FCF 예측</div>
+          <div class="step-desc">과거 3년 성장률을 기반으로 향후 5년간 FCF를 추정한다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">WACC로 현재가치 환산</div>
+          <div class="step-desc">가중평균자본비용(WACC = Weighted Average Cost of Capital)으로 미래 FCF를 현재가치로 할인한다. 신용도가 높으면 WACC가 낮고, 낮으면 높아진다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">터미널 밸류 산출</div>
+          <div class="step-desc">5년 이후 기업의 장기 성장률(Terminal Growth Rate)을 적용해 잔존가치를 계산한다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-text">
+          <div class="step-title">주당 적정 가격 산출</div>
+          <div class="step-desc">(현재가치의 합 + 터미널밸류 현재가치 - 부채) ÷ 유통주식수(Diluted Shares Outstanding) = 주당 내재가치</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="formula-box fade-in">
+      <div class="formula-title">DCF 핵심 공식</div>
+      <span class="highlight">주당 내재가치</span> = <br>
+      [Σ FCF(t) / (1 + WACC)^t + Terminal Value / (1 + WACC)^n − Debt] <br>
+      ÷ <span class="highlight">Diluted Shares Outstanding</span>
+    </div>
+
+    <div class="card fade-in">
+      <h3>📌 실제 적용 사례 (2019년 Coupa Software 예시)</h3>
+      <p style="font-size:13px;">밸류에이션 기준일 2019년 3월 7일, 당시 주가 114달러 기준으로 WACC 13.63%, 장기 성장률 4% 적용 결과, 내재가치 기준 <strong>106달러 이하면 매수</strong> 신호로 판단했다.</p>
+    </div>
+
+    <!-- FCF 시뮬레이터 -->
+    <div class="simulator fade-in">
+      <h3>🧮 간이 주당 내재가치 계산기</h3>
+      <p class="sim-desc">FCF, 성장률, WACC, 유통주식수를 조정하여 주당 내재가치를 간이 추정합니다. (5년 DCF + 터미널밸류 단순 모델)</p>
+      <div class="sim-row">
+        <label>현재 FCF (억 달러) <span id="fcfVal">10</span>억$</label>
+        <input type="range" id="fcfSlider" min="1" max="200" step="1" value="10">
+      </div>
+      <div class="sim-row">
+        <label>연간 성장률 <span id="growthVal">10</span>%</label>
+        <input type="range" id="growthSlider" min="1" max="30" step="1" value="10">
+      </div>
+      <div class="sim-row">
+        <label>WACC (할인율) <span id="waccVal">10</span>%</label>
+        <input type="range" id="waccSlider" min="5" max="20" step="0.5" value="10">
+      </div>
+      <div class="sim-row">
+        <label>터미널 성장률 <span id="tgVal">3</span>%</label>
+        <input type="range" id="tgSlider" min="1" max="8" step="0.5" value="3">
+      </div>
+      <div class="sim-row">
+        <label>유통주식수 (억 주) <span id="sharesVal">10</span>억주</label>
+        <input type="range" id="sharesSlider" min="1" max="200" step="1" value="10">
+      </div>
+      <div class="sim-result">
+        <div class="res-item">
+          <div class="res-label">5년 FCF 현재가치 합</div>
+          <div class="res-value" id="pvFcf">-</div>
+          <div class="res-unit">억 달러</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">터미널 밸류 현재가치</div>
+          <div class="res-value" id="pvTerminal">-</div>
+          <div class="res-unit">억 달러</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">기업 총 가치</div>
+          <div class="res-value" id="totalValue">-</div>
+          <div class="res-unit">억 달러</div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">주당 내재가치</div>
+          <div class="res-value" id="perShare">-</div>
+          <div class="res-unit">달러 / 주</div>
+        </div>
+      </div>
+      <button class="sim-reset" id="dcfResetBtn">↺ 초기화</button>
+    </div>
+  </div>
+
+  <!-- 7. RSI 지표 -->
+  <div class="section">
+    <div class="section-label fade-in">보조 지표</div>
+    <h2 class="fade-in">RSI — 언더밸류 종목 발굴 도구</h2>
+    <p class="fade-in">RSI(Relative Strength Index)는 주가가 퍼포먼스(실적) 대비 저평가되어 있는지 과평가되어 있는지 판단하는 지표다.</p>
+    <div class="chart-container fade-in">
+      <div class="chart-title">RSI 구간별 투자 신호</div>
+      <canvas id="rsiChart" height="220"></canvas>
+    </div>
+    <table class="fade-in">
+      <thead><tr><th>RSI 구간</th><th>의미</th><th>역투자 관점</th></tr></thead>
+      <tbody>
+        <tr><td>0 ~ 30</td><td>언더밸류 (과매도)</td><td>✅ 매수 검토 구간</td></tr>
+        <tr><td>30 ~ 70</td><td>적정 구간</td><td>⚪ 관망</td></tr>
+        <tr><td>70 ~ 100</td><td>오버밸류 (과매수)</td><td>🔴 매도 고려 구간</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box fade-in">
+      <strong>예시:</strong> 델타항공처럼 실적(퍼포먼스) 기준으로 60달러짜리 주식인데 현재 40달러에 거래되고 있다면, RSI 30 이하 구간에서 역투자 매수 신호로 해석할 수 있다.
+    </div>
+  </div>
+
+  <!-- 8. 미국 증시 특징 -->
+  <div class="section">
+    <div class="section-label fade-in">미국 증시 특징</div>
+    <h2 class="fade-in">역투자 이론이 미국 증시에서 통하는 이유</h2>
+    <div class="key-point fade-in">
+      <div class="icon">📈</div>
+      <div class="text">
+        <strong>장기 우상향</strong>
+        30% 이상 폭락장도 짧게는 3개월, 길게는 3년 내 회복된다. 장기 투자 시 우상향 특성이 역투자의 토대다.
+      </div>
+    </div>
+    <div class="key-point fade-in">
+      <div class="icon">🔍</div>
+      <div class="text">
+        <strong>투명한 회계 시스템</strong>
+        미국 기업의 99%는 정상적인 재무 보고를 한다. 엔론 같은 예외가 있지만 대부분은 신뢰할 수 있는 데이터를 제공한다. DCF 분석이 의미 있는 이유다.
+      </div>
+    </div>
+    <div class="key-point fade-in">
+      <div class="icon">🔄</div>
+      <div class="text">
+        <strong>섹터 로테이션 전략</strong>
+        단순 매수 후 보유(Buy & Hold)보다 섹터 로테이션과 리밸런싱 전략의 성과가 대부분 우수하다.
+      </div>
+    </div>
+    <div class="key-point fade-in">
+      <div class="icon">💧</div>
+      <div class="text">
+        <strong>분기 실적 발표 시 FCF 확인 필수</strong>
+        유동성 문제가 없어 보이는 기업도 다음 분기 전에 망하는 경우가 있다. 분기 실적 발표마다 잉여현금흐름(FCF) 추세를 반드시 확인해야 한다.
+      </div>
+    </div>
+    <div class="key-point fade-in">
+      <div class="icon">⚠️</div>
+      <div class="text">
+        <strong>3일 연속 하락 시 우량주 담기</strong>
+        3일간 연속 하락장 상황에서 펀더멘털이 우수한 기업군을 담는 전략이 유효하다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. FCF 비교 차트 -->
+  <div class="section">
+    <div class="section-label fade-in">개념 시각화</div>
+    <h2 class="fade-in">FCF 성장 추세 — 매수 판단 기준</h2>
+    <p class="fade-in">FCF가 지속적으로 성장하는 기업은 현재 주가가 내재가치보다 낮을 경우 역투자 매수 대상이 된다.</p>
+    <div class="chart-container fade-in">
+      <div class="chart-title">가상 기업 A — FCF 추세 vs 주가 비교</div>
+      <canvas id="fcfChart" height="240"></canvas>
+    </div>
+    <p style="font-size:12px; color:var(--subtext);" class="fade-in">※ 주가가 FCF 기반 내재가치 아래로 내려갈 때 역투자 매수 시점(음영 구간)이 형성된다.</p>
+  </div>
+
+  <!-- 10. 핵심 요약 -->
+  <div class="section">
+    <div class="section-label fade-in">최종 정리</div>
+    <h2 class="fade-in">역투자 이론 핵심 체크리스트</h2>
+    <div class="card fade-in">
+      <div class="key-point" style="border-color:#e5e5e5;">
+        <div class="icon">✅</div>
+        <div class="text"><strong>역투자는 전략의 하나</strong><br>이론에만 함몰되지 말고 펀더멘털과 반드시 결합</div>
+      </div>
+      <div class="key-point" style="border-color:#e5e5e5;">
+        <div class="icon">✅</div>
+        <div class="text"><strong>현금 10~30% 항상 보유</strong><br>하락장 매수를 위한 현금 여력 유지가 역투자의 핵심 준비</div>
+      </div>
+      <div class="key-point" style="border-color:#e5e5e5;">
+        <div class="icon">✅</div>
+        <div class="text"><strong>내재가치(Intrinsic Value) 계산</strong><br>Asset + Free Cash Flow → DCF로 주당 적정 가격 산출</div>
+      </div>
+      <div class="key-point" style="border-color:#e5e5e5;">
+        <div class="icon">✅</div>
+        <div class="text"><strong>FCF가 기업가치 측정의 핵심 잣대</strong><br>분기마다 FCF 추세 반드시 확인. 동맥경화(FCF 마이너스)는 망하는 신호</div>
+      </div>
+      <div class="key-point" style="border-bottom:none;">
+        <div class="icon">✅</div>
+        <div class="text"><strong>WACC로 현재가치 환산</strong><br>기업 신용도에 따라 WACC가 달라지며, 이것이 내재가치를 결정</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>투자 아카데미 No.10</strong> — 역투자 이론 (Contrarian Theory)<br>
+  본 문서는 강의 내용을 정리한 교육 자료입니다. 투자는 본인 판단 하에 진행하세요.
+</footer>
+
+<script>
+// ── FADE-IN & CHART OBSERVER ─────────────────────────────────────────────────
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+// Market Ratio Chart
+chartConfigs['marketRatioChart'] = () => {
+  new Chart(document.getElementById('marketRatioChart'), {
+    type: 'bar',
+    data: {
+      labels: ['일반 시장', '동반 상승장', '동반 하락장', '극단적 폭락장'],
+      datasets: [
+        {
+          label: '매수 비율 (%)',
+          data: [65, 90, 10, 10],
+          backgroundColor: '#e11d48',
+        },
+        {
+          label: '매도/관망 비율 (%)',
+          data: [35, 10, 90, 90],
+          backgroundColor: '#6b7280',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#1a1a1a' } },
+        tooltip: { mode: 'index' }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: '#777', font: { size: 11 } }, grid: { color: '#e5e5e5' } },
+        y: { stacked: true, max: 100, ticks: { color: '#777', font: { size: 11 } }, grid: { color: '#e5e5e5' } }
+      }
+    }
+  });
+};
+
+// RSI Chart
+chartConfigs['rsiChart'] = () => {
+  const labels = Array.from({length: 20}, (_, i) => `W${i+1}`);
+  const rsiData = [45,52,61,74,78,72,65,43,28,22,31,35,42,55,63,71,68,58,45,38];
+  new Chart(document.getElementById('rsiChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'RSI',
+        data: rsiData,
+        borderColor: '#e11d48',
+        backgroundColor: 'rgba(225,29,72,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: rsiData.map(v => v <= 30 ? '#2563eb' : v >= 70 ? '#e11d48' : '#6b7280'),
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: {},
+        tooltip: {
+          callbacks: {
+            label: ctx => `RSI: ${ctx.raw} ${ctx.raw <= 30 ? '← 매수 검토' : ctx.raw >= 70 ? '← 매도 검토' : ''}`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#777', font: { size: 10 } }, grid: { color: '#e5e5e5' } },
+        y: {
+          min: 0, max: 100,
+          ticks: { color: '#777', font: { size: 10 } },
+          grid: { color: '#e5e5e5' }
+        }
+      }
+    },
+    plugins: [{
+      id: 'bands',
+      beforeDraw(chart) {
+        const {ctx, chartArea: {top, bottom, left, right}, scales: {y}} = chart;
+        ctx.save();
+        // oversold band
+        ctx.fillStyle = 'rgba(37,99,235,0.08)';
+        ctx.fillRect(left, y.getPixelForValue(30), right - left, y.getPixelForValue(0) - y.getPixelForValue(30));
+        // overbought band
+        ctx.fillStyle = 'rgba(225,29,72,0.08)';
+        ctx.fillRect(left, y.getPixelForValue(100), right - left, y.getPixelForValue(70) - y.getPixelForValue(100));
+        // lines
+        ctx.strokeStyle = 'rgba(37,99,235,0.5)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(left, y.getPixelForValue(30)); ctx.lineTo(right, y.getPixelForValue(30)); ctx.stroke();
+        ctx.strokeStyle = 'rgba(225,29,72,0.5)';
+        ctx.beginPath(); ctx.moveTo(left, y.getPixelForValue(70)); ctx.lineTo(right, y.getPixelForValue(70)); ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+};
+
+// FCF Chart
+chartConfigs['fcfChart'] = () => {
+  const years = ['2020','2021','2022','2023','2024','2025','2026(예측)','2027(예측)'];
+  const fcf = [80, 90, 100, 103, 106, 112, 120, 130];
+  const price = [95, 88, 92, 85, 97, 108, 115, 128];
+  const intrinsic = [100, 103, 106, 110, 114, 118, 122, 130];
+  new Chart(document.getElementById('fcfChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'FCF 기반 내재가치',
+          data: intrinsic,
+          borderColor: '#1a1a1a',
+          borderDash: [5,3],
+          fill: false,
+          tension: 0.3,
+          pointRadius: 3,
+        },
+        {
+          label: '실제 주가',
+          data: price,
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.07)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+        },
+        {
+          label: 'FCF (지수)',
+          data: fcf,
+          borderColor: '#2563eb',
+          fill: false,
+          tension: 0.3,
+          borderWidth: 1.5,
+          pointRadius: 2,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#1a1a1a' } },
+      },
+      scales: {
+        x: { ticks: { color: '#777', font: { size: 10 } }, grid: { color: '#e5e5e5' } },
+        y: { ticks: { color: '#777', font: { size: 10 } }, grid: { color: '#e5e5e5' } }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── PORTFOLIO SIMULATOR ──────────────────────────────────────────────────────
+const SIM_DEFAULTS = { portfolio: 100, cashRatio: 20, drop: 30, recovery: 50 };
+function updateSim() {
+  const p = +document.getElementById('portfolioSlider').value;
+  const cr = +document.getElementById('cashRatioSlider').value;
+  const drop = +document.getElementById('dropSlider').value;
+  const rec = +document.getElementById('recoverySlider').value;
+  document.getElementById('portfolioVal').textContent = p;
+  document.getElementById('cashRatioVal').textContent = cr;
+  document.getElementById('dropVal').textContent = drop;
+  document.getElementById('recoveryVal').textContent = rec;
+  const cash = p * cr / 100;
+  const invested = p - cash;
+  const investedAfterDrop = invested * (1 - drop / 100);
+  const buyProfit = cash * (rec / 100);
+  const totalAfter = investedAfterDrop + cash + buyProfit;
+  document.getElementById('cashAmount').textContent = cash.toFixed(1);
+  document.getElementById('buyPrice').textContent = cash.toFixed(1);
+  document.getElementById('buyProfit').textContent = '+' + buyProfit.toFixed(1);
+  document.getElementById('totalAfter').textContent = totalAfter.toFixed(1);
+}
+['portfolioSlider','cashRatioSlider','dropSlider','recoverySlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateSim);
+});
+document.getElementById('simResetBtn').addEventListener('click', () => {
+  document.getElementById('portfolioSlider').value = SIM_DEFAULTS.portfolio;
+  document.getElementById('cashRatioSlider').value = SIM_DEFAULTS.cashRatio;
+  document.getElementById('dropSlider').value = SIM_DEFAULTS.drop;
+  document.getElementById('recoverySlider').value = SIM_DEFAULTS.recovery;
+  updateSim();
+});
+updateSim();
+
+// ── DCF SIMULATOR ────────────────────────────────────────────────────────────
+const DCF_DEFAULTS = { fcf: 10, growth: 10, wacc: 10, tg: 3, shares: 10 };
+function updateDCF() {
+  const fcf = +document.getElementById('fcfSlider').value;
+  const g = +document.getElementById('growthSlider').value / 100;
+  const wacc = +document.getElementById('waccSlider').value / 100;
+  const tg = +document.getElementById('tgSlider').value / 100;
+  const shares = +document.getElementById('sharesSlider').value;
+  document.getElementById('fcfVal').textContent = fcf;
+  document.getElementById('growthVal').textContent = Math.round(g*100);
+  document.getElementById('waccVal').textContent = Math.round(wacc*100*10)/10;
+  document.getElementById('tgVal').textContent = Math.round(tg*100*10)/10;
+  document.getElementById('sharesVal').textContent = shares;
+
+  let pvFcf = 0;
+  let lastFcf = fcf;
+  for (let t = 1; t <= 5; t++) {
+    lastFcf = lastFcf * (1 + g);
+    pvFcf += lastFcf / Math.pow(1 + wacc, t);
+  }
+  const terminal = lastFcf * (1 + tg) / (wacc - tg);
+  const pvTerminal = terminal / Math.pow(1 + wacc, 5);
+  const total = pvFcf + pvTerminal;
+  const per = total / shares;
+
+  document.getElementById('pvFcf').textContent = pvFcf.toFixed(1);
+  document.getElementById('pvTerminal').textContent = pvTerminal.toFixed(1);
+  document.getElementById('totalValue').textContent = total.toFixed(1);
+  document.getElementById('perShare').textContent = per.toFixed(2);
+}
+['fcfSlider','growthSlider','waccSlider','tgSlider','sharesSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateDCF);
+});
+document.getElementById('dcfResetBtn').addEventListener('click', () => {
+  document.getElementById('fcfSlider').value = DCF_DEFAULTS.fcf;
+  document.getElementById('growthSlider').value = DCF_DEFAULTS.growth;
+  document.getElementById('waccSlider').value = DCF_DEFAULTS.wacc;
+  document.getElementById('tgSlider').value = DCF_DEFAULTS.tg;
+  document.getElementById('sharesSlider').value = DCF_DEFAULTS.shares;
+  updateDCF();
+});
+updateDCF();
+</script>
+</body>
+</html>

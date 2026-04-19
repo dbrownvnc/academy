@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>역투자 이론 — 인터랙티브 퀴즈 10문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --sub: #777777;
+    --accent: #e11d48; --accent2: #f43f5e; --border: #e5e5e5;
+    --green: #16a34a; --red: #dc2626; --orange: #ea580c; --blue: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 15px; line-height: 1.7;
+  }
+
+  /* STICKY SCOREBOARD */
+  .scoreboard {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--text); color: #fff;
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .score-info { display: flex; gap: 16px; align-items: center; }
+  .score-label { font-size: 11px; color: rgba(255,255,255,0.5); display: block; letter-spacing: 1px; text-transform: uppercase; }
+  .score-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; line-height: 1; }
+  .score-pct { font-size: 14px; font-weight: 700; }
+  .progress-wrap { flex: 1; margin: 0 16px; }
+  .progress-bar-bg { height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; }
+  .progress-bar { height: 6px; border-radius: 3px; background: var(--accent); transition: width 0.4s, background 0.4s; width: 0%; }
+
+  /* HEADER */
+  .hero {
+    background: var(--text); color: #fff;
+    padding: 40px 24px 32px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '?';
+    position: absolute; right: -10px; top: -20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 220px; font-weight: 900; color: var(--accent);
+    opacity: 0.07; line-height: 1; pointer-events: none;
+  }
+  .hero .badge {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 4px 10px; margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 900; line-height: 1.2; margin-bottom: 10px;
+  }
+  .hero h1 em { color: var(--accent2); font-style: normal; }
+  .hero p { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .type-legend {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+  }
+  .type-legend span {
+    font-size: 11px; border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.65); padding: 3px 8px; border-radius: 2px;
+  }
+
+  /* MAIN */
+  .main { padding: 20px 20px 80px; max-width: 640px; margin: 0 auto; }
+
+  /* QUIZ CARD */
+  .quiz-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 22px 20px; margin-bottom: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .quiz-card.answered { border-left: 4px solid var(--border); }
+  .quiz-card.correct-card { border-left: 4px solid var(--green); }
+  .quiz-card.wrong-card { border-left: 4px solid var(--red); }
+
+  .card-meta {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 900; color: var(--accent); line-height: 1;
+    min-width: 32px;
+  }
+  .diff-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 2px;
+  }
+  .diff-easy { background: #dcfce7; color: #16a34a; }
+  .diff-mid { background: #fef9c3; color: #854d0e; }
+  .diff-hard { background: #fee2e2; color: #dc2626; }
+  .type-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 2px; background: rgba(37,99,235,0.1); color: var(--blue);
+    letter-spacing: 0.5px;
+  }
+
+  .q-text {
+    font-size: 15px; font-weight: 500; line-height: 1.55;
+    margin-bottom: 16px; color: var(--text);
+  }
+
+  /* MCQ OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 2px; padding: 10px 14px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 14px; color: var(--text);
+    cursor: pointer; text-align: left; transition: all 0.15s;
+    line-height: 1.45;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .option-btn:disabled { cursor: default; }
+  .option-label {
+    font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700;
+    color: var(--sub); min-width: 20px;
+  }
+  .option-btn.correct-opt { background: #f0fdf4; border-color: var(--green); }
+  .option-btn.correct-opt .option-label { color: var(--green); }
+  .option-btn.wrong-opt { background: #fff1f2; border-color: var(--red); }
+  .option-btn.wrong-opt .option-label { color: var(--red); }
+  .result-badge {
+    margin-left: auto; font-size: 12px; font-weight: 700;
+    padding: 2px 8px; border-radius: 2px; white-space: nowrap;
+  }
+  .badge-correct { background: var(--green); color: #fff; }
+  .badge-wrong { background: var(--red); color: #fff; }
+
+  /* OX BUTTONS */
+  .ox-wrap { display: flex; gap: 10px; }
+  .ox-btn {
+    flex: 1; padding: 14px; font-size: 22px; font-weight: 900;
+    border: 2px solid var(--border); background: #fff;
+    border-radius: 3px; cursor: pointer; text-align: center;
+    font-family: 'Playfair Display', serif; transition: all 0.15s;
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); }
+  .ox-btn:disabled { cursor: default; }
+  .ox-btn.correct-opt { background: #f0fdf4; border-color: var(--green); }
+  .ox-btn.wrong-opt { background: #fff1f2; border-color: var(--red); }
+
+  /* SHORT ANSWER */
+  .sa-wrap { display: flex; gap: 8px; }
+  .sa-input {
+    flex: 1; border: 1px solid var(--border); border-radius: 2px;
+    padding: 10px 14px; font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+    outline: none; transition: border 0.15s;
+  }
+  .sa-input:focus { border-color: var(--accent); }
+  .sa-input:disabled { background: var(--bg2); }
+  .sa-btn {
+    background: var(--accent); color: #fff; border: none;
+    padding: 10px 16px; font-size: 13px; font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 2px; cursor: pointer; transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .sa-btn:hover:not(:disabled) { background: var(--accent2); }
+  .sa-btn:disabled { background: var(--sub); cursor: default; }
+  .sa-result { margin-top: 8px; font-size: 13px; font-weight: 700; }
+  .sa-result.ok { color: var(--green); }
+  .sa-result.fail { color: var(--red); }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none; margin-top: 14px;
+    background: #fff; border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 2px; padding: 14px 16px;
+    font-size: 13px; color: var(--text); line-height: 1.6;
+  }
+  .explanation.show { display: block; }
+  .explanation .exp-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 8px;
+  }
+
+  /* FINAL MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff; border-radius: 4px;
+    padding: 36px 28px; max-width: 360px; width: 90%;
+    text-align: center; position: relative;
+  }
+  .modal .grade {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px; font-weight: 900; color: var(--accent); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .modal .score-text {
+    font-size: 22px; font-weight: 700; margin-bottom: 6px;
+  }
+  .modal .msg { font-size: 14px; color: var(--sub); margin-bottom: 24px; line-height: 1.6; }
+  .modal .retry-btn {
+    background: var(--accent); color: #fff; border: none;
+    padding: 12px 32px; font-size: 15px; font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 2px; cursor: pointer; width: 100%;
+    transition: background 0.15s;
+  }
+  .modal .retry-btn:hover { background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- STICKY SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-info">
+    <div>
+      <span class="score-label">푼 문제</span>
+      <span class="score-value"><span id="solvedCount">0</span><span style="font-size:13px;opacity:.5;"> / 10</span></span>
+    </div>
+    <div>
+      <span class="score-label">맞힌 문제</span>
+      <span class="score-value" id="correctCount">0</span>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+  <div class="score-pct" id="pctText">0%</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">투자 아카데미 No.10 · 시험</div>
+  <h1>역투자 이론<br><em>10문제 퀴즈</em></h1>
+  <p>강의 내용을 제대로 이해했는지 확인해보세요.<br>클릭 한 번으로 채점 + 해설 확인!</p>
+  <div class="type-legend">
+    <span>📋 객관식 6문제</span>
+    <span>✏️ 단답형 2문제</span>
+    <span>⭕ OX 2문제</span>
+    <span>🟢 쉬움 3 / 🟡 보통 5 / 🔴 어려움 2</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="quizContainer"></div>
+
+<!-- FINAL MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="grade" id="modalGrade">A</div>
+    <div class="score-text" id="modalScore"></div>
+    <div class="msg" id="modalMsg"></div>
+    <button class="retry-btn" id="retryBtn">↺ 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1, type: 'mcq', difficulty: 'easy',
+    question: '역투자 이론(Contrarian Theory)을 가장 잘 설명한 것은 무엇인가?',
+    options: [
+      '주가가 오를 때 더 많이 매수하여 수익을 극대화하는 전략',
+      '대다수 투자자가 매수할 때 팔고, 매도할 때 사는 반대 방향 투자 전략',
+      '시장의 기술적 지표만을 활용하는 단기 매매 전략',
+      '채권과 주식의 비율을 일정하게 유지하는 자산배분 전략'
+    ],
+    answer: 1,
+    explanation: '강의에서 역투자 이론(Contrarian Theory)은 "고의적으로 의도적으로 많은 사람들이 바이시그널을 통해 많이 사고 있을 때 파는, 또 많이 팔 때 다시 들어가는" 반대 세력의 투자 스타일이라고 설명했습니다.'
+  },
+  {
+    id: 2, type: 'mcq', difficulty: 'easy',
+    question: '워런 버펫의 역투자 원칙을 나타내는 문장으로 강의에서 직접 언급된 것은?',
+    options: [
+      'Buy low, sell high.',
+      'Diversify to minimize risk.',
+      'When market is greedy, be fearful. When market is fearful, be greedy.',
+      'Never catch a falling knife.'
+    ],
+    answer: 2,
+    explanation: '강의에서 워런 버펫의 대표적인 역투자 아이디어로 "When market is greedy, be fearful. When market is fearful, be greedy."를 직접 인용했습니다.'
+  },
+  {
+    id: 3, type: 'mcq', difficulty: 'mid',
+    question: '일반적인 주식시장(폭락·폭등 제외)에서 역투자자들의 활동으로 형성되는 매매 비율로 강의에서 언급된 것은?',
+    options: [
+      '90대 10 또는 80대 20',
+      '70대 30 또는 60대 40',
+      '50대 50',
+      '40대 60 또는 30대 70'
+    ],
+    answer: 1,
+    explanation: '강의에서 "일반적인 주식시장에서는 70대 30 또는 60대 40 비율로 매매 또는 매각이 각 섹터별 산업별로 이루어진다"고 설명했습니다. 역투자자들의 적극적인 활동 때문이라고 했습니다.'
+  },
+  {
+    id: 4, type: 'mcq', difficulty: 'mid',
+    question: '역투자 이론에서 주가 상승 시 매도하는 핵심 이유는 무엇인가?',
+    options: [
+      '세금 절감을 위해 연말에 매도하기 때문이다',
+      '대부분의 투자자가 매수 완료 후 현금 동원 능력이 한계에 달해 추가 상승이 어렵다고 보기 때문이다',
+      '기술적 지표가 과매수 신호를 보이기 때문이다',
+      '연준의 금리 인상 예고가 있기 때문이다'
+    ],
+    answer: 1,
+    explanation: '강의에서 "주가가 오를 때 대부분의 투자자는 매입을 한 상태이기 때문에 현금 동원 능력이 한계점에 도달하게 되고, 더 이상 추가 매입은 힘들기 때문에 주가가 상승하다 다시 하락할 것으로 보고 투자된 자산을 매각한다"고 설명했습니다.'
+  },
+  {
+    id: 5, type: 'mcq', difficulty: 'mid',
+    question: '강의에서 워런 버펫과 캐시 우드의 가장 큰 차이점으로 설명한 것은?',
+    options: [
+      '투자 금액의 규모 차이',
+      '워런 버펫은 미국 주식만, 캐시 우드는 글로벌 주식에 투자한다',
+      '워런 버펫은 펀더멘털리스트이고, 캐시 우드는 그렇지 않다',
+      '워런 버펫은 단기 투자, 캐시 우드는 장기 투자를 한다'
+    ],
+    answer: 2,
+    explanation: '강의에서 "캐티우드랑 워런버핏의 가장 큰 다른 점은, 한 사람은 펀더멘털리스트이고, 하나는 아니라는 얘기"라고 직접 언급했습니다.'
+  },
+  {
+    id: 6, type: 'mcq', difficulty: 'hard',
+    question: 'DCF(할인현금흐름법)에서 미래 FCF를 현재가치로 환산할 때 사용하는 할인율로 강의에서 설명한 것은?',
+    options: [
+      'ROE (자기자본이익률)',
+      'PER (주가수익비율)',
+      'WACC (가중평균자본비용)',
+      'EPS (주당순이익)'
+    ],
+    answer: 2,
+    explanation: '강의에서 "디스카운트 레이트(할인율)로 WACC(Weighted Average Cost of Capital, 가중평균자본비용)를 사용한다"고 설명했습니다. 기업의 신용도가 높을수록 WACC가 낮아진다고도 언급했습니다.'
+  },
+  {
+    id: 7, type: 'short', difficulty: 'mid',
+    question: '강의에서 역투자를 위한 현금 보유 비율로 언급한 범위는? (예: X%~Y%)',
+    answer: ['10%~30%', '10% ~ 30%', '10%에서 30%', '10~30%', '10퍼센트~30퍼센트'],
+    explanation: '강의에서 "저희도 항상 캐시는 들고 있어라. 적게는 10%, 많게는 30%씩 들고 있어라는 것이 이 역투자를 대비하기 위함"이라고 설명했습니다. 이는 역투자 전략의 일종의 헤지(hedge) 전략이라고도 했습니다.'
+  },
+  {
+    id: 8, type: 'short', difficulty: 'easy',
+    question: 'RSI 지수 30 이하는 무엇을 의미하는가? (강의 내용 기반 두 글자로)',
+    answer: ['언더밸류', '저평가', 'undervalue', 'under value'],
+    explanation: '강의에서 "RSI 인덱스가 30 이하는 언더밸류(Undervalue) 된 거예요. 퍼포먼스(실적)보다 주가가 떨어진 것"이라고 직접 설명했습니다. 델타항공의 예를 들어 실적 기준 60달러짜리인데 40달러에 거래되는 경우를 설명했습니다.'
+  },
+  {
+    id: 9, type: 'ox', difficulty: 'mid',
+    question: '강의에 따르면, 미국 증시에서 30% 이상 폭락장이 오더라도 최대 3년 내에 회복된다.',
+    answer: 'O',
+    explanation: '강의에서 "미국 증시의 특징 — 30% 이상 폭락장이 오더라도 짧게는 3개월, 길게는 3년에 회복된다"고 명확히 설명했습니다. 이것이 역투자 이론이 미국 증시에서 유효한 이유 중 하나입니다.'
+  },
+  {
+    id: 10, type: 'ox', difficulty: 'hard',
+    question: '강의에서 분기 실적 발표 시 반드시 확인해야 할 항목으로 "유동성 문제가 없으면 다음 분기까지 안전하다"고 설명했다.',
+    answer: 'X',
+    explanation: '강의에서 "기업의 유동성 문제를 가장 크게 다루어야 하고, 현재 분기에 유동성 문제가 없더라도 다음 분기 발표 전에 망하는 회사가 있다"고 경고했습니다. 따라서 유동성 문제가 없어도 안전하다고 단정할 수 없으며, 매 분기 잉여현금흐름(FCF)을 반드시 확인해야 합니다.'
+  }
+];
+
+let state = { solved: 0, correct: 0 };
+
+function updateScoreboard() {
+  const s = state.solved, c = state.correct;
+  document.getElementById('solvedCount').textContent = s;
+  document.getElementById('correctCount').textContent = c;
+  const pct = s === 0 ? 0 : Math.round(c / s * 100);
+  document.getElementById('pctText').textContent = pct + '%';
+  const bar = document.getElementById('progressBar');
+  bar.style.width = (s / 10 * 100) + '%';
+  bar.style.background = pct >= 70 ? '#16a34a' : pct >= 40 ? '#ea580c' : '#e11d48';
+}
+
+function showExplanation(card) {
+  card.querySelector('.explanation').classList.add('show');
+}
+
+function markCard(card, isCorrect) {
+  card.classList.add('answered');
+  card.classList.add(isCorrect ? 'correct-card' : 'wrong-card');
+}
+
+function checkComplete() {
+  if (state.solved === QUIZ_DATA.length) {
+    setTimeout(() => {
+      const c = state.correct;
+      const pct = Math.round(c / 10 * 100);
+      const grade = pct >= 90 ? 'A+' : pct >= 80 ? 'A' : pct >= 70 ? 'B' : pct >= 60 ? 'C' : 'D';
+      const msgs = {
+        'A+': '완벽합니다! 역투자 이론을 완전히 마스터했습니다. 🎉',
+        'A': '훌륭합니다! 핵심 개념을 잘 이해하고 있습니다.',
+        'B': '좋습니다! 조금 더 복습하면 완벽해질 거예요.',
+        'C': '기본기는 있습니다. 취약한 부분을 다시 복습해보세요.',
+        'D': '강의를 다시 한 번 들어보고 재도전해보세요!'
+      };
+      document.getElementById('modalGrade').textContent = grade;
+      document.getElementById('modalScore').textContent = `${c}점 / 10점 (${pct}%)`;
+      document.getElementById('modalMsg').textContent = msgs[grade];
+      document.getElementById('modalOverlay').classList.add('show');
+    }, 600);
+  }
+}
+
+function renderMCQ(q, card) {
+  const optWrap = card.querySelector('.options');
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-label">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const isCorrect = idx === q.answer;
+      optWrap.querySelectorAll('.option-btn').forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.answer) {
+          b.classList.add('correct-opt');
+          const badge = document.createElement('span');
+          badge.className = 'result-badge badge-correct';
+          badge.textContent = '✓ 정답';
+          b.appendChild(badge);
+        }
+        if (i === idx && !isCorrect) {
+          b.classList.add('wrong-opt');
+          const badge = document.createElement('span');
+          badge.className = 'result-badge badge-wrong';
+          badge.textContent = '✗ 오답';
+          b.appendChild(badge);
+        }
+      });
+      state.solved++;
+      if (isCorrect) state.correct++;
+      updateScoreboard();
+      markCard(card, isCorrect);
+      showExplanation(card);
+      checkComplete();
+    });
+    optWrap.appendChild(btn);
+  });
+}
+
+function renderOX(q, card) {
+  const wrap = card.querySelector('.ox-wrap');
+  ['O','X'].forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'ox-btn';
+    btn.textContent = val;
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const isCorrect = val === q.answer;
+      wrap.querySelectorAll('.ox-btn').forEach(b => {
+        b.disabled = true;
+        if (b.textContent === q.answer) b.classList.add('correct-opt');
+        if (b.textContent === val && !isCorrect) b.classList.add('wrong-opt');
+      });
+      state.solved++;
+      if (isCorrect) state.correct++;
+      updateScoreboard();
+      markCard(card, isCorrect);
+      showExplanation(card);
+      checkComplete();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalizeStr(s) {
+  return s.replace(/[\s%퍼센트~\-~]/g, '').toLowerCase();
+}
+
+function renderShort(q, card) {
+  const wrap = card.querySelector('.sa-wrap');
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'sa-input';
+  input.placeholder = '정답을 입력하세요';
+  const btn = document.createElement('button');
+  btn.className = 'sa-btn';
+  btn.textContent = '제출';
+  const resultEl = document.createElement('div');
+  resultEl.className = 'sa-result';
+  wrap.appendChild(input);
+  wrap.appendChild(btn);
+  wrap.after(resultEl);
+
+  const submit = () => {
+    if (btn.disabled) return;
+    const val = input.value.trim();
+    if (!val) return;
+    const isCorrect = q.answer.some(a => normalizeStr(a) === normalizeStr(val));
+    input.disabled = true;
+    btn.disabled = true;
+    resultEl.className = 'sa-result ' + (isCorrect ? 'ok' : 'fail');
+    resultEl.textContent = isCorrect
+      ? `✓ 정답! (${q.answer[0]})`
+      : `✗ 오답. 정답: ${q.answer[0]}`;
+    state.solved++;
+    if (isCorrect) state.correct++;
+    updateScoreboard();
+    markCard(card, isCorrect);
+    showExplanation(card);
+    checkComplete();
+  };
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  state = { solved: 0, correct: 0 };
+  updateScoreboard();
+
+  QUIZ_DATA.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    const diffLabel = { easy: '쉬움', mid: '보통', hard: '어려움' }[q.difficulty];
+    const diffClass = { easy: 'diff-easy', mid: 'diff-mid', hard: 'diff-hard' }[q.difficulty];
+    const typeLabel = { mcq: '객관식', ox: 'OX', short: '단답형' }[q.type];
+
+    card.innerHTML = `
+      <div class="card-meta">
+        <div class="q-num">Q${q.id}</div>
+        <span class="diff-badge ${diffClass}">${diffLabel}</span>
+        <span class="type-badge">${typeLabel}</span>
+      </div>
+      <div class="q-text">${q.question}</div>
+      ${q.type === 'mcq' ? '<div class="options"></div>' : ''}
+      ${q.type === 'ox' ? '<div class="ox-wrap"></div>' : ''}
+      ${q.type === 'short' ? '<div class="sa-wrap"></div>' : ''}
+      <div class="explanation">
+        <div class="exp-title">📖 해설 — 강의 근거</div>
+        <div>${q.explanation}</div>
+      </div>
+    `;
+
+    container.appendChild(card);
+
+    if (q.type === 'mcq') renderMCQ(q, card);
+    else if (q.type === 'ox') renderOX(q, card);
+    else if (q.type === 'short') renderShort(q, card);
+  });
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('show');
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+renderQuiz();
+</script>
+</body>
+</html>
