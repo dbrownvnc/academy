@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국 옵션 마켓 & 공매도 — 인터랙티브 시험</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-sub: #fafafa;
+  --text: #1a1a1a;
+  --text-sub: #777777;
+  --accent: #e11d48;
+  --accent2: #f43f5e;
+  --border: #e5e5e5;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --red-bg: #fff0f3;
+  --orange: #ea580c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f5f5f5;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Sticky score bar */
+.score-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--text);
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.score-label { font-size: 9px; letter-spacing: 1px; opacity: 0.55; text-transform: uppercase; }
+.score-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+.score-val.accent { color: var(--accent); }
+.score-val.green { color: #4ade80; }
+.progress-wrap {
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.5s ease, background 0.4s ease;
+}
+
+/* Hero */
+.hero {
+  background: var(--text);
+  color: #fff;
+  padding: 36px 24px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  bottom: -30px; right: -30px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.12;
+}
+.hero-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero-title span { color: var(--accent); }
+.hero-sub { font-size: 12px; opacity: 0.55; }
+
+/* Quiz list */
+.quiz-list { padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+
+/* Question card */
+.q-card {
+  background: var(--bg);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.q-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.q-num {
+  min-width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.q-meta { flex: 1; }
+.q-badges { display: flex; gap: 6px; margin-bottom: 6px; }
+.badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.badge-type { background: #fff0f3; color: var(--accent); }
+.badge-easy { background: #f0fdf4; color: var(--green); }
+.badge-mid { background: #fffbeb; color: #b45309; }
+.badge-hard { background: #fef2f2; color: #dc2626; }
+.q-text { font-size: 14px; font-weight: 500; line-height: 1.6; }
+
+/* Options */
+.q-body { padding: 14px 18px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt-btn {
+  width: 100%;
+  text-align: left;
+  background: var(--bg-sub);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  transition: all 0.18s;
+  color: var(--text);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  line-height: 1.5;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff0f3; }
+.opt-btn:disabled { cursor: default; }
+.opt-letter {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.opt-btn.correct { background: var(--green-bg); border-color: var(--green); }
+.opt-btn.correct .opt-letter { background: var(--green); color: #fff; }
+.opt-btn.wrong { background: var(--red-bg); border-color: var(--accent); }
+.opt-btn.wrong .opt-letter { background: var(--accent); color: #fff; }
+
+/* Short answer */
+.short-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+.short-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg-sub);
+  transition: border-color 0.18s;
+  outline: none;
+}
+.short-input:focus { border-color: var(--accent); }
+.short-input:disabled { background: #f3f4f6; cursor: default; }
+.submit-btn {
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  white-space: nowrap;
+  transition: background 0.18s;
+}
+.submit-btn:hover { background: var(--accent2); }
+.submit-btn:disabled { background: #ccc; cursor: default; }
+
+/* OX */
+.ox-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.ox-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--bg-sub);
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.18s;
+  color: var(--text);
+}
+.ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff0f3; }
+.ox-btn:disabled { cursor: default; }
+.ox-btn.correct { background: var(--green-bg); border-color: var(--green); }
+.ox-btn.wrong { background: var(--red-bg); border-color: var(--accent); }
+
+/* Result badge */
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.result-badge.correct-badge { background: var(--green-bg); color: var(--green); }
+.result-badge.wrong-badge { background: var(--red-bg); color: var(--accent); }
+
+/* Explanation */
+.explanation {
+  display: none;
+  background: var(--bg-sub);
+  border-top: 1px solid var(--border);
+  padding: 14px 18px;
+}
+.explanation.show { display: block; }
+.exp-title {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.exp-text { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.exp-answer {
+  margin-top: 8px;
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--text);
+}
+.exp-answer strong { color: var(--accent); }
+
+/* Final modal */
+.final-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.final-overlay.show { display: flex; }
+.final-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.final-emoji { font-size: 52px; margin-bottom: 12px; }
+.final-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+.final-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.final-grade {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.final-msg { font-size: 13px; color: var(--text-sub); margin-bottom: 24px; line-height: 1.6; }
+.retry-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- Sticky Score Bar -->
+<div class="score-bar" id="scoreBar">
+  <div class="score-item">
+    <div class="score-label">푼 문제</div>
+    <div class="score-val accent" id="sb-solved">0 / 10</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">맞힌 문제</div>
+    <div class="score-val green" id="sb-correct">0</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">정답률</div>
+    <div class="score-val" id="sb-pct">0%</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">투자아카데미 13회 · Quiz</div>
+  <h1 class="hero-title">미국 <span>옵션 마켓</span> &<br>공매도 이해 테스트</h1>
+  <div class="hero-sub">총 10문제 · 객관식 6 · 단답형 2 · OX 2</div>
+</div>
+
+<!-- Quiz -->
+<div class="quiz-list" id="quizList"></div>
+
+<!-- Final Modal -->
+<div class="final-overlay" id="finalOverlay">
+  <div class="final-card">
+    <div class="final-emoji" id="finalEmoji">🎉</div>
+    <div class="final-title">최종 결과</div>
+    <div class="final-score" id="finalScore">0/10</div>
+    <div class="final-grade" id="finalGrade">등급: -</div>
+    <div class="final-msg" id="finalMsg"></div>
+    <button class="retry-btn" onclick="retryQuiz()">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1, type: 'mc', difficulty: 'easy',
+    question: '풋 옵션(Put Option)의 가장 기본적인 기능으로 알맞은 것은?',
+    options: ['주가가 상승할 때 이익을 극대화하는 전략','주가 하락에 대비해 투자 자산을 보호하는 보험 역할','레버리지를 이용해 수익을 두 배로 늘리는 방법','기업의 내부 정보를 이용해 매매하는 전략'],
+    answer: 1,
+    explanation: '강의에서 풋 옵션은 "Bear Market에 대한 protection, downside protection"이라고 설명했습니다. 주가가 하락할 것을 대비해 프리미엄을 내고 손실을 줄이는 보험 역할입니다.'
+  },
+  {
+    id: 2, type: 'mc', difficulty: 'easy',
+    question: '강의에서 옵션의 "프리미엄(Premium)"을 비유한 것은 무엇인가?',
+    options: ['주식 배당금','환전 수수료','보험료','증권사 거래 수수료'],
+    answer: 2,
+    explanation: '강의에서 "보험료처럼 프리미엄을 지불하고 투자 리스크를 없애거나 줄인다"고 설명했습니다. 생명보험, 차 보험과 같이 프리미엄(보험료)을 내는 것과 동일한 개념입니다.'
+  },
+  {
+    id: 3, type: 'mc', difficulty: 'mid',
+    question: '강의에서 "칠수"와 "만수"가 거래하는 옵션 마켓의 이름은?',
+    options: ['뉴욕증권거래소 (NYSE)','나스닥 (NASDAQ)','시카고 Board Option Exchange (CBOE)','서울 옵션 거래소'],
+    answer: 2,
+    explanation: '강의에서 "칠수와 만수가 만나는 장소는 시카고 Board Option Exchange, CBOE"라고 명확히 설명했습니다.'
+  },
+  {
+    id: 4, type: 'mc', difficulty: 'mid',
+    question: '풋 옵션에서 "스트라이크 프라이스(Strike Price)"란?',
+    options: ['옵션을 구매할 때 내는 프리미엄 금액','옵션 계약에서 미리 정한 매도(행사) 가격','주식 시장에서의 현재 시가','만기일 이후에 적용되는 패널티 금액'],
+    answer: 1,
+    explanation: '강의에서 "90불이 스트라이킹 프라이스로 — 90불에 팔 수 있는 권리가 있는 것이 옵션 오너"라고 설명했습니다. 스트라이크 프라이스는 Exercise Price라고도 불립니다.'
+  },
+  {
+    id: 5, type: 'mc', difficulty: 'mid',
+    question: '공매도(Short Selling)의 핵심 방식으로 옳은 것은?',
+    options: ['주식을 직접 사들인 후 주가 상승을 기다린다','해당 주식을 보유하지 않고 기관에서 빌려 매도한 뒤, 주가 하락 시 싸게 사서 갚는다','풋 옵션 프리미엄만 지불하고 주식 없이 이익을 본다','주식을 담보로 대출을 받아 다른 자산에 투자한다'],
+    answer: 1,
+    explanation: '강의에서 "해당 주식을 보유하지 않고 기관에서 빌려 매도하고, 주가 하락 시 싸게 매입해 기관에 갚는다"고 설명했습니다. 미국에서는 Margin Account를 통해 주식을 차용합니다.'
+  },
+  {
+    id: 6, type: 'mc', difficulty: 'hard',
+    question: '강의에서 공매도(Short Selling)보다 개인 투자자에게 더 큰 피해를 준다고 언급한 것은?',
+    options: ['풋 옵션 매입','헤징 전략','펌프앤덤프(Pump & Dump)','콜 옵션 매도'],
+    answer: 2,
+    explanation: '강의에서 "주가를 부풀려 왕창 올린 다음 후싹 팔고 빠지는 펌프앤덤프가 개인 투자자들에게 무자비한 손해를 끼치는 게 오히려 크다"고 말했습니다. "요 놈들을 잡아야 해. 사실."이라고도 강조했습니다.'
+  },
+  {
+    id: 7, type: 'short', difficulty: 'mid',
+    question: '미국 옵션 시장에서 1 Contract(계약)가 의미하는 주식의 수는 몇 주인가?',
+    answers: ['100', '100주'],
+    explanation: '강의에서 "1 하나가 100개. 주로 100개씩 자르죠. 1 Contract = 100주"라고 명확히 설명했습니다.'
+  },
+  {
+    id: 8, type: 'short', difficulty: 'hard',
+    question: '헤징(Hedging)에서 스탑 로스(Stop Loss)의 한계점을 한 단어로 표현하면? (강의 키워드)',
+    answers: ['보장', '개런티', 'guarantee', '보장이 없다'],
+    explanation: '강의에서 "해징(헤징)은 개런티가 되지 않는다"고 설명했습니다. 급락장에서는 설정한 가격보다 훨씬 낮게 팔릴 수 있고, 100주를 같은 가격에 다 팔 수 있다는 보장도 없습니다.'
+  },
+  {
+    id: 9, type: 'ox', difficulty: 'easy',
+    question: '공매도 세력은 투자 리스크가 없기 때문에 어떤 결과에도 이익을 볼 수 있다.',
+    answer: 'X',
+    explanation: '틀렸습니다. 강의에서 "주가가 반대로 올랐다면 폭망하는 거죠"라고 했습니다. 공매도 세력은 주가가 올라가면 손실이 무한대로 커질 수 있는 큰 리스크를 집니다.'
+  },
+  {
+    id: 10, type: 'ox', difficulty: 'mid',
+    question: '공매도는 순기능이 전혀 없으므로 완전히 금지하는 것이 옳다. (강의 입장 기준)',
+    answer: 'X',
+    explanation: '강의에서는 "공매도는 있어야 한다"고 했습니다. 순기능으로 ① 시장 유동성 확보, ② 지나친 낙관주의 경계, ③ 기업 문제 발굴·감시, ④ 주가 조작 방지를 꼽았습니다. 단, 시장이 커야 하고 공매도 세력 비중이 작아야 한다는 조건을 달았습니다.'
+  }
+];
+
+let state = { solved: 0, correct: 0 };
+const LETTERS = ['A','B','C','D'];
+
+function getDiffBadge(d) {
+  if (d === 'easy') return '<span class="badge badge-easy">쉬움</span>';
+  if (d === 'mid') return '<span class="badge badge-mid">보통</span>';
+  return '<span class="badge badge-hard">어려움</span>';
+}
+function getTypeBadge(t) {
+  if (t === 'mc') return '<span class="badge badge-type">객관식</span>';
+  if (t === 'short') return '<span class="badge badge-type">단답형</span>';
+  return '<span class="badge badge-type">O / X</span>';
+}
+
+function renderQuiz() {
+  const list = document.getElementById('quizList');
+  list.innerHTML = '';
+  QUIZ_DATA.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'card-' + q.id;
+
+    let bodyHTML = '';
+    if (q.type === 'mc') {
+      bodyHTML = `<div class="options">` + q.options.map((o, i) =>
+        `<button class="opt-btn" onclick="answerMC(${q.id}, ${i})" id="opt-${q.id}-${i}">
+          <span class="opt-letter">${LETTERS[i]}</span><span>${o}</span>
+        </button>`
+      ).join('') + `</div>`;
+    } else if (q.type === 'short') {
+      bodyHTML = `<div class="short-row">
+        <input type="text" class="short-input" id="sinput-${q.id}" placeholder="답을 입력하세요" onkeydown="if(event.key==='Enter') answerShort(${q.id})">
+        <button class="submit-btn" id="sbtn-${q.id}" onclick="answerShort(${q.id})">제출</button>
+      </div>
+      <div id="short-result-${q.id}"></div>`;
+    } else {
+      bodyHTML = `<div class="ox-row">
+        <button class="ox-btn" onclick="answerOX(${q.id}, 'O')" id="ox-${q.id}-O">⭕</button>
+        <button class="ox-btn" onclick="answerOX(${q.id}, 'X')" id="ox-${q.id}-X">❌</button>
+      </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-meta">
+          <div class="q-badges">${getTypeBadge(q.type)} ${getDiffBadge(q.difficulty)}</div>
+          <div class="q-text">${q.question}</div>
+        </div>
+      </div>
+      <div class="q-body">${bodyHTML}</div>
+      <div class="explanation" id="exp-${q.id}">
+        <div class="exp-title">📖 해설</div>
+        <div class="exp-text">${q.explanation}</div>
+        ${q.type === 'short' ? `<div class="exp-answer">정답: <strong>${q.answers[0]}</strong></div>` : ''}
+        ${q.type === 'ox' ? `<div class="exp-answer">정답: <strong>${q.answer}</strong></div>` : ''}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function updateScore(correct) {
+  state.solved++;
+  if (correct) state.correct++;
+  document.getElementById('sb-solved').textContent = state.solved + ' / 10';
+  document.getElementById('sb-correct').textContent = state.correct;
+  const pct = state.solved > 0 ? Math.round(state.correct / state.solved * 100) : 0;
+  document.getElementById('sb-pct').textContent = pct + '%';
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = (state.solved / 10 * 100) + '%';
+  fill.style.background = pct < 40 ? '#e11d48' : pct < 70 ? '#ea580c' : '#16a34a';
+  if (state.solved === 10) setTimeout(showFinal, 600);
+}
+
+function showExplanation(id) {
+  const exp = document.getElementById('exp-' + id);
+  exp.classList.add('show');
+}
+
+function answerMC(qid, chosen) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const isCorrect = chosen === q.answer;
+  for (let i = 0; i < q.options.length; i++) {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === chosen && !isCorrect) btn.classList.add('wrong');
+  }
+  const badge = document.createElement('div');
+  badge.className = 'result-badge ' + (isCorrect ? 'correct-badge' : 'wrong-badge');
+  badge.innerHTML = isCorrect ? '✓ 정답!' : '✗ 오답';
+  document.getElementById('card-' + qid).querySelector('.q-body').appendChild(badge);
+  showExplanation(qid);
+  updateScore(isCorrect);
+}
+
+function answerShort(qid) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const input = document.getElementById('sinput-' + qid);
+  const btn = document.getElementById('sbtn-' + qid);
+  const val = input.value.trim();
+  if (!val) { input.focus(); return; }
+  const isCorrect = q.answers.some(a => a.toLowerCase() === val.toLowerCase() || val.includes(a) || a.includes(val));
+  input.disabled = true;
+  btn.disabled = true;
+  input.style.borderColor = isCorrect ? 'var(--green)' : 'var(--accent)';
+  const result = document.getElementById('short-result-' + qid);
+  const badge = document.createElement('div');
+  badge.className = 'result-badge ' + (isCorrect ? 'correct-badge' : 'wrong-badge');
+  badge.innerHTML = isCorrect ? '✓ 정답!' : '✗ 오답';
+  result.appendChild(badge);
+  showExplanation(qid);
+  updateScore(isCorrect);
+}
+
+function answerOX(qid, chosen) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const isCorrect = chosen === q.answer;
+  ['O','X'].forEach(v => {
+    const btn = document.getElementById(`ox-${qid}-${v}`);
+    btn.disabled = true;
+    if (v === q.answer) btn.classList.add('correct');
+    else if (v === chosen && !isCorrect) btn.classList.add('wrong');
+  });
+  const badge = document.createElement('div');
+  badge.className = 'result-badge ' + (isCorrect ? 'correct-badge' : 'wrong-badge');
+  badge.innerHTML = isCorrect ? '✓ 정답!' : '✗ 오답';
+  document.getElementById('card-' + qid).querySelector('.q-body').appendChild(badge);
+  showExplanation(qid);
+  updateScore(isCorrect);
+}
+
+function showFinal() {
+  const pct = Math.round(state.correct / 10 * 100);
+  let grade, emoji, msg;
+  if (pct >= 90) { grade = 'A'; emoji = '🏆'; msg = '완벽합니다! 옵션 마켓과 공매도의 핵심 개념을 완전히 이해하셨습니다.'; }
+  else if (pct >= 70) { grade = 'B'; emoji = '🎉'; msg = '훌륭합니다! 핵심 내용을 잘 이해하셨네요. 틀린 문제를 한 번 더 확인해보세요.'; }
+  else if (pct >= 50) { grade = 'C'; emoji = '📚'; msg = '절반 이상 맞히셨습니다. 해설을 다시 읽고 개념을 정리해보세요.'; }
+  else { grade = 'D'; emoji = '💪'; msg = '아직 더 공부가 필요합니다! 강의 내용을 한 번 더 복습하고 재도전해보세요.'; }
+
+  document.getElementById('finalEmoji').textContent = emoji;
+  document.getElementById('finalScore').textContent = state.correct + ' / 10';
+  document.getElementById('finalGrade').textContent = '등급 ' + grade + ' · ' + pct + '%';
+  document.getElementById('finalMsg').textContent = msg;
+  document.getElementById('finalOverlay').classList.add('show');
+}
+
+function retryQuiz() {
+  state = { solved: 0, correct: 0 };
+  document.getElementById('sb-solved').textContent = '0 / 10';
+  document.getElementById('sb-correct').textContent = '0';
+  document.getElementById('sb-pct').textContent = '0%';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('finalOverlay').classList.remove('show');
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
