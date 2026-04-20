@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 17회 — 시험문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --text2: #777777;
+  --accent: #e11d48; --accent2: #f43f5e; --border: #e5e5e5;
+  --green: #16a34a; --red: #dc2626; --orange: #ea580c;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 15px; }
+
+/* STICKY SCORE BAR */
+.score-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--text); color: #fff;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--accent);
+}
+.score-bar .label { font-size: 12px; opacity: 0.6; }
+.score-bar .val { font-weight: 700; font-size: 15px; }
+.progress-wrap { flex: 1; min-width: 80px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
+.progress-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease, background 0.4s ease; width: 0%; background: var(--red); }
+
+/* HERO */
+.hero { background: var(--text); color: #fff; padding: 36px 24px 28px; }
+.hero-label { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; margin-bottom: 14px; text-transform: uppercase; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(18px, 5vw, 26px); font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.55); font-size: 13px; }
+
+/* WRAP */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 20px 60px; }
+
+/* QUESTION CARD */
+.q-card {
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  margin: 28px 0 0;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.q-card.answered { border-color: var(--border); }
+.q-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.q-num {
+  background: var(--text); color: #fff;
+  font-weight: 700; font-size: 12px;
+  min-width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; flex-shrink: 0;
+}
+.q-meta { display: flex; flex-direction: column; gap: 3px; }
+.q-type { font-size: 11px; color: var(--accent); font-weight: 700; }
+.q-diff { font-size: 11px; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+.diff-easy { background: #dcfce7; color: #166534; }
+.diff-mid { background: #fef3c7; color: #92400e; }
+.diff-hard { background: #fee2e2; color: #991b1b; }
+.q-text { padding: 16px 18px 14px; font-size: 15px; line-height: 1.7; font-weight: 500; }
+
+/* OPTIONS */
+.q-options { padding: 0 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+.opt-btn {
+  width: 100%; text-align: left; padding: 12px 14px;
+  border: 1.5px solid var(--border); background: var(--bg2);
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif; font-size: 14px;
+  border-radius: 2px; transition: all 0.2s; line-height: 1.5;
+  display: flex; align-items: center; gap: 10px;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff0f3; }
+.opt-btn:disabled { cursor: default; }
+.opt-btn.correct { background: #dcfce7; border-color: var(--green); }
+.opt-btn.wrong { background: #fee2e2; border-color: var(--red); }
+.opt-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+.badge-correct { background: var(--green); color: #fff; }
+.badge-wrong { background: var(--red); color: #fff; }
+
+/* TEXT INPUT */
+.text-input-wrap { padding: 0 18px 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.text-input-wrap input {
+  flex: 1; min-width: 160px; padding: 10px 12px;
+  border: 1.5px solid var(--border); font-family: 'Noto Sans KR', sans-serif; font-size: 14px;
+  border-radius: 2px; outline: none; background: var(--bg2);
+}
+.text-input-wrap input:focus { border-color: var(--accent); }
+.text-input-wrap input:disabled { background: #f4f4f4; color: #888; }
+.submit-btn {
+  padding: 10px 18px; background: var(--accent); color: #fff;
+  border: none; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700; font-size: 14px; border-radius: 2px; transition: background 0.2s;
+}
+.submit-btn:hover:not(:disabled) { background: var(--accent2); }
+.submit-btn:disabled { background: #ccc; cursor: default; }
+
+/* OX BUTTONS */
+.ox-wrap { padding: 0 18px 16px; display: flex; gap: 10px; }
+.ox-btn {
+  flex: 1; padding: 16px; font-size: 22px; font-weight: 700;
+  border: 2px solid var(--border); background: var(--bg2); cursor: pointer;
+  border-radius: 2px; transition: all 0.2s; font-family: 'Noto Sans KR', sans-serif;
+}
+.ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff0f3; }
+.ox-btn:disabled { cursor: default; }
+.ox-btn.correct { background: #dcfce7; border-color: var(--green); }
+.ox-btn.wrong { background: #fee2e2; border-color: var(--red); }
+
+/* TEXT RESULT */
+.text-result { font-size: 13px; padding: 0 18px 6px; }
+.text-result.correct-msg { color: var(--green); font-weight: 700; }
+.text-result.wrong-msg { color: var(--red); font-weight: 700; }
+
+/* EXPLANATION */
+.explanation {
+  display: none; background: #f8fafc;
+  border-top: 1px solid var(--border);
+  padding: 14px 18px; font-size: 13.5px; line-height: 1.7; color: #374151;
+}
+.explanation.show { display: block; }
+.expl-label { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 13px; }
+
+/* FINAL MODAL */
+.final-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 200;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.final-overlay.show { display: flex; }
+.final-card {
+  background: #fff; max-width: 380px; width: 100%;
+  padding: 36px 28px; border-radius: 4px; text-align: center;
+}
+.final-card .grade-badge {
+  display: inline-block; background: var(--accent); color: #fff;
+  font-size: 48px; font-weight: 700; font-family: 'Playfair Display', serif;
+  width: 90px; height: 90px; line-height: 90px; border-radius: 50%;
+  margin: 0 auto 18px;
+}
+.final-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 8px; }
+.final-card .score-txt { font-size: 15px; color: var(--text2); margin-bottom: 18px; }
+.final-card .msg { font-size: 14px; line-height: 1.6; margin-bottom: 22px; }
+.retry-btn {
+  background: var(--accent); color: #fff; border: none;
+  padding: 13px 28px; font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif; border-radius: 2px;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- SCORE BAR -->
+<div class="score-bar" id="scoreBar">
+  <div><div class="label">푼 문제</div><div class="val" id="sbSolved">0 / 10</div></div>
+  <div><div class="label">맞힌 문제</div><div class="val" id="sbCorrect">0</div></div>
+  <div><div class="label">정답률</div><div class="val" id="sbRate">0%</div></div>
+  <div class="progress-wrap"><div class="progress-bar" id="sbBar"></div></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">투자 아카데미 · 17회</div>
+  <h1>시험문제 10선</h1>
+  <p>투자목적 7가지 & 미국 투자선진화 4단계 · 2024.01.22</p>
+</div>
+
+<div class="wrap" id="quizWrap"></div>
+
+<!-- FINAL -->
+<div class="final-overlay" id="finalOverlay">
+  <div class="final-card">
+    <div class="grade-badge" id="finalGrade">A</div>
+    <h2>최종 결과</h2>
+    <div class="score-txt" id="finalScore"></div>
+    <div class="msg" id="finalMsg"></div>
+    <button class="retry-btn" onclick="retryQuiz()">↺ 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1, type: 'mc', difficulty: 'easy',
+    question: '강의에서 소개된 투자의 목적은 총 몇 가지입니까?',
+    options: ['5가지', '6가지', '7가지', '9가지'],
+    answer: 2,
+    explanation: '강의에서 "투자의 목적이 일곱 가지가 있습니다"라고 명시했습니다. 성장, 인컴, 토탈리턴, 자본보전, 절세, 투기, 유동성의 7가지입니다.'
+  },
+  {
+    id: 2, type: 'mc', difficulty: 'easy',
+    question: '인컴(Income) 투자 목적에 해당하는 설명으로 올바른 것은?',
+    options: [
+      '주가 상승으로 투자자본을 늘리는 것',
+      '정기적인 이자나 배당금 수익으로 현금을 사용하는 것',
+      '원금 손실 없이 자산을 유지하는 것',
+      '세금 부담을 최소화하는 것'
+    ],
+    answer: 1,
+    explanation: '강의에서 인컴을 "정기적인 이자나 배당금 수익으로 현금을 사용하는 것"으로 정의했습니다. 은퇴자나 조기 은퇴 운동선수 등이 주로 활용합니다.'
+  },
+  {
+    id: 3, type: 'mc', difficulty: 'mid',
+    question: '강의에서 말한 "333 법칙"에서 각 30%에 해당하지 않는 것은?',
+    options: ['주식', '부동산', '대안투자·현금 외 기타', '암호화폐'],
+    answer: 3,
+    explanation: '강의에서 333 법칙은 "주식 30%, 부동산 30%, 나머지(대안투자 등) 30%, 현금 10%"로 구성된다고 했습니다. 암호화폐는 언급되지 않았습니다.'
+  },
+  {
+    id: 4, type: 'mc', difficulty: 'mid',
+    question: '미국 투자선진화 4단계 중, 강의에서 "시청자들에게 가르치고자 하는 핵심 단계"로 명시한 것은?',
+    options: [
+      '1단계: 주식 중심 스탁피킹',
+      '2단계: 투자 위험 분산',
+      '3단계: 포트폴리오 구성 + 섹터 로테이션 + 리밸런싱',
+      '4단계: 토탈 파이낸셜 플래닝'
+    ],
+    answer: 2,
+    explanation: '강의에서 "여러분들에게 제가 가르치고자 하는 것은 1번이 아니고 2번이 아니고 3번이에요"라고 직접 밝혔습니다.'
+  },
+  {
+    id: 5, type: 'mc', difficulty: 'mid',
+    question: '뮤니시펄 본드(Municipal Bond)의 세금 효율에 대한 강의 내용으로 올바른 것은?',
+    options: [
+      '5% 수익 = 3% 효율',
+      '5% 수익 = 6% 효율',
+      '5% 수익 = 7% 효율',
+      '5% 수익 = 10% 효율'
+    ],
+    answer: 2,
+    explanation: '강의에서 "뮤니 본드 같은 경우는 5%만 되더라도 7%의 리턴과 같은 효율을 냅니다. 왜냐하면 세금을 안 내기 때문에"라고 설명했습니다.'
+  },
+  {
+    id: 6, type: 'mc', difficulty: 'hard',
+    question: '강의에서 1970년대 오일쇼크 이후 등장한 투자 개념으로 옳게 묶인 것은?',
+    options: [
+      '스탁피킹, 개별 종목 분석',
+      '11개 섹터 분류, 산업별 위험 분산',
+      '529플랜, 트러스트 어카운트',
+      '토탈 파이낸셜 플래닝, 장기요양보험'
+    ],
+    answer: 1,
+    explanation: '강의에서 "1970년대 중동 사태, 오일쇼크 이후 11개 섹터 인더스트리를 수학적·과학적으로 만들어서 위험 분산의 개념이 생겼다"고 설명했습니다.'
+  },
+  {
+    id: 7, type: 'mc', difficulty: 'hard',
+    question: '강의에서 "자본 보전(Preservation of Capital)" 목적에 적합한 투자 수단으로 언급된 것을 모두 고른 것은?',
+    options: [
+      '소형성장주, 페니스탁',
+      '정부채(트레저리), 머니마켓펀드(MMF), CD',
+      'S&P 500 우량주, 블루칩',
+      '뮤니시펄 본드, 529플랜'
+    ],
+    answer: 1,
+    explanation: '강의에서 자본 보전 목적에는 "정부 채권, 트레저리, 10년 국채, 머니마켓펀드, CD, 뮤추얼 펀드 중 정부 채권 포함 보수적 포트폴리오"가 적합하다고 했습니다.'
+  },
+  {
+    id: 8, type: 'short', difficulty: 'mid',
+    question: '강의에서 토탈 파이낸셜 플래닝을 "( )에서 ( )까지"라는 표현으로 설명했습니다. 한국어로 각각 입력하세요. (예: A에서 B)',
+    answer: '요람에서 무덤',
+    explanation: '강의에서 "크래들에서 그레이브까지 (Cradle to Grave) — 아이가 태어나서 늙어서 죽을 때까지 한 가정의 인생 설계도를 그리는 것"이라고 설명했습니다.'
+  },
+  {
+    id: 9, type: 'ox', difficulty: 'easy',
+    question: '강의에서 주식 투자(증권 투자)를 "무노동 소득"으로 분류하는 한국 중앙정부의 시각은 선진국적 사고라고 했다.',
+    answer: 'X',
+    explanation: '강의에서 "중앙정부도 주식 투자를 무노동으로 보는 시각 자체가 후진국적인 생각"이라고 명확히 비판했습니다. 투자 기관 운용에는 엄청난 노동이 투입된다고 강조했습니다.'
+  },
+  {
+    id: 10, type: 'ox', difficulty: 'mid',
+    question: '강의에 따르면, 투자 목적이 다른 두 포트폴리오의 수익률을 직접 비교하는 것은 합리적이다.',
+    answer: 'X',
+    explanation: '강의에서 "투자는 목적에 따라 수익률이 달라지기 때문에 비교 대상을 목적이 같은 것끼리 해야 한다"고 강조했습니다. "유동성 목적인 내가 1년 5%인데 친구는 두 배 됐다고 내가 투자를 잘못하는 것이 아니다"라고 명시했습니다.'
+  }
+];
+
+let state = { solved: 0, correct: 0 };
+const answeredSet = new Set();
+
+function diffLabel(d) {
+  if (d === 'easy') return '<span class="q-diff diff-easy">쉬움</span>';
+  if (d === 'mid') return '<span class="q-diff diff-mid">보통</span>';
+  return '<span class="q-diff diff-hard">어려움</span>';
+}
+function typeLabel(t) {
+  if (t === 'mc') return '객관식';
+  if (t === 'short') return '단답형';
+  return 'OX';
+}
+
+function renderQuiz() {
+  const wrap = document.getElementById('quizWrap');
+  wrap.innerHTML = '';
+  QUIZ_DATA.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card'; card.id = 'qcard_' + q.id;
+
+    let optionsHtml = '';
+    if (q.type === 'mc') {
+      optionsHtml = `<div class="q-options" id="opts_${q.id}">` +
+        q.options.map((o, oi) => `<button class="opt-btn" id="opt_${q.id}_${oi}" onclick="submitMC(${q.id}, ${oi})">${oi+1}. ${o}</button>`).join('') +
+        `</div>`;
+    } else if (q.type === 'short') {
+      optionsHtml = `<div class="text-input-wrap" id="opts_${q.id}">
+        <input type="text" id="tinput_${q.id}" placeholder="정답을 입력하세요" onkeydown="if(event.key==='Enter')submitShort(${q.id})">
+        <button class="submit-btn" id="tbtn_${q.id}" onclick="submitShort(${q.id})">제출</button>
+      </div>
+      <div class="text-result" id="tresult_${q.id}"></div>`;
+    } else {
+      optionsHtml = `<div class="ox-wrap" id="opts_${q.id}">
+        <button class="ox-btn" id="ox_${q.id}_O" onclick="submitOX(${q.id},'O')">O</button>
+        <button class="ox-btn" id="ox_${q.id}_X" onclick="submitOX(${q.id},'X')">X</button>
+      </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">Q${q.id}</div>
+        <div class="q-meta">
+          <div class="q-type">${typeLabel(q.type)}</div>
+          ${diffLabel(q.difficulty)}
+        </div>
+      </div>
+      <div class="q-text">${q.question}</div>
+      ${optionsHtml}
+      <div class="explanation" id="expl_${q.id}">
+        <div class="expl-label">💡 해설</div>
+        ${q.explanation}
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function updateScore(isCorrect) {
+  state.solved++;
+  if (isCorrect) state.correct++;
+  document.getElementById('sbSolved').textContent = `${state.solved} / 10`;
+  document.getElementById('sbCorrect').textContent = state.correct;
+  const rate = Math.round((state.correct / state.solved) * 100);
+  document.getElementById('sbRate').textContent = rate + '%';
+  const bar = document.getElementById('sbBar');
+  bar.style.width = (state.solved * 10) + '%';
+  bar.style.background = rate < 40 ? '#dc2626' : rate < 70 ? '#ea580c' : '#16a34a';
+  if (state.solved === 10) setTimeout(showFinal, 700);
+}
+
+function lockAndShowExpl(qid) {
+  document.getElementById('expl_' + qid).classList.add('show');
+  answeredSet.add(qid);
+}
+
+function submitMC(qid, chosen) {
+  if (answeredSet.has(qid)) return;
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const btns = document.querySelectorAll(`[id^="opt_${qid}_"]`);
+  btns.forEach(b => b.disabled = true);
+  const isCorrect = chosen === q.answer;
+  btns[chosen].classList.add(isCorrect ? 'correct' : 'wrong');
+  btns[chosen].innerHTML += `<span class="opt-badge ${isCorrect ? 'badge-correct' : 'badge-wrong'}">${isCorrect ? '✓ 정답!' : '✗ 오답'}</span>`;
+  if (!isCorrect) {
+    btns[q.answer].classList.add('correct');
+    btns[q.answer].innerHTML += `<span class="opt-badge badge-correct">✓ 정답</span>`;
+  }
+  lockAndShowExpl(qid);
+  updateScore(isCorrect);
+}
+
+function submitShort(qid) {
+  if (answeredSet.has(qid)) return;
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const inp = document.getElementById('tinput_' + qid);
+  const val = inp.value.trim();
+  if (!val) { inp.style.borderColor = '#dc2626'; return; }
+  inp.disabled = true;
+  document.getElementById('tbtn_' + qid).disabled = true;
+  const isCorrect = val.includes('요람') || val.includes('무덤') || val === q.answer;
+  const res = document.getElementById('tresult_' + qid);
+  res.className = 'text-result ' + (isCorrect ? 'correct-msg' : 'wrong-msg');
+  res.textContent = isCorrect ? `✓ 정답! (정답: ${q.answer})` : `✗ 오답 — 정답: ${q.answer}`;
+  lockAndShowExpl(qid);
+  updateScore(isCorrect);
+}
+
+function submitOX(qid, chosen) {
+  if (answeredSet.has(qid)) return;
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const btnO = document.getElementById(`ox_${qid}_O`);
+  const btnX = document.getElementById(`ox_${qid}_X`);
+  btnO.disabled = true; btnX.disabled = true;
+  const isCorrect = chosen === q.answer;
+  const chosenBtn = document.getElementById(`ox_${qid}_${chosen}`);
+  chosenBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    document.getElementById(`ox_${qid}_${q.answer}`).classList.add('correct');
+  }
+  lockAndShowExpl(qid);
+  updateScore(isCorrect);
+}
+
+function showFinal() {
+  const score = state.correct;
+  const rate = Math.round(score / 10 * 100);
+  let grade, msg;
+  if (score >= 9) { grade = 'A'; msg = '🎉 완벽에 가까운 이해! 투자 선진화 마인드를 완전히 갖추셨습니다.'; }
+  else if (score >= 7) { grade = 'B'; msg = '👍 훌륭합니다! 핵심 개념을 잘 파악하고 있습니다. 한 번 더 복습해보세요.'; }
+  else if (score >= 5) { grade = 'C'; msg = '📖 절반 이상 맞히셨어요! 투자 목적과 선진화 단계를 다시 한 번 정리해보세요.'; }
+  else { grade = 'D'; msg = '💪 처음부터 차근차근 다시 도전해보세요. 강의를 한 번 더 보고 오시면 확실히 달라질 거예요!'; }
+  document.getElementById('finalGrade').textContent = grade;
+  document.getElementById('finalScore').textContent = `${score} / 10문제 정답 (${rate}%)`;
+  document.getElementById('finalMsg').textContent = msg;
+  document.getElementById('finalOverlay').classList.add('show');
+}
+
+function retryQuiz() {
+  state = { solved: 0, correct: 0 };
+  answeredSet.clear();
+  document.getElementById('sbSolved').textContent = '0 / 10';
+  document.getElementById('sbCorrect').textContent = '0';
+  document.getElementById('sbRate').textContent = '0%';
+  document.getElementById('sbBar').style.width = '0%';
+  document.getElementById('sbBar').style.background = '#dc2626';
+  document.getElementById('finalOverlay').classList.remove('show');
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
