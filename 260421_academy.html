@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 15회 — 섹터 로테이션</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-sub: #fafafa;
+    --text: #1a1a1a;
+    --text-sub: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+  }
+
+  /* ── HEADER ── */
+  .cover {
+    border-bottom: 3px solid var(--accent);
+    padding: 48px 0 28px;
+    margin-bottom: 36px;
+  }
+  .cover-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 6vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .cover h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .cover-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; color: var(--text-sub);
+    margin-top: 18px;
+  }
+  .cover-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── SECTION TITLES ── */
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 4vw, 26px);
+    font-weight: 700;
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: var(--text);
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    background: var(--bg-sub);
+    padding: 16px 18px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ── KEY POINT BOX ── */
+  .key-box {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 24px 0;
+  }
+  .key-box .kb-title {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    opacity: .8; margin-bottom: 8px; font-weight: 700;
+  }
+  .key-box p { color: #fff; margin: 0; font-size: 14px; line-height: 1.7; }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .info-card {
+    background: var(--bg-sub);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .info-card .ic-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .info-card .ic-label { font-size: 12px; color: var(--text-sub); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ── CYCLE CARDS ── */
+  .cycle-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin: 20px 0;
+  }
+  .cycle-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cycle-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+  }
+  .cycle-card.dim::before { background: var(--chart3); }
+  .cycle-card .cc-phase {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 6px;
+  }
+  .cycle-card.dim .cc-phase { color: var(--text-sub); }
+  .cycle-card .cc-name { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .cycle-card .cc-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; }
+
+  /* ── SECTOR TABLE ── */
+  .stbl {
+    width: 100%; border-collapse: collapse;
+    background: var(--bg-sub);
+    border-radius: 8px; overflow: hidden;
+    margin: 20px 0; font-size: 13px;
+  }
+  .stbl thead tr { background: var(--accent); color: #fff; }
+  .stbl th { padding: 10px 12px; text-align: left; font-weight: 600; }
+  .stbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .stbl tr:last-child td { border-bottom: none; }
+  .stbl tr:nth-child(even) td { background: #f4f4f4; }
+  .badge {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 20px; font-size: 11px; font-weight: 700;
+  }
+  .badge.up { background: #dcfce7; color: #15803d; }
+  .badge.down { background: #fee2e2; color: #b91c1c; }
+  .badge.neutral { background: #f3f4f6; color: #6b7280; }
+
+  /* ── LIST ── */
+  .styled-list { list-style: none; margin: 14px 0; }
+  .styled-list li {
+    padding: 8px 0 8px 22px;
+    border-bottom: 1px solid var(--border);
+    position: relative; font-size: 14px;
+  }
+  .styled-list li:last-child { border-bottom: none; }
+  .styled-list li::before {
+    content: '▸';
+    position: absolute; left: 0; color: var(--accent); font-size: 12px; top: 9px;
+  }
+
+  /* ── CHART ── */
+  .fade-in {
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container {
+    position: relative; max-height: 340px;
+    background: var(--bg-sub); border-radius: 10px;
+    padding: 16px; margin: 20px 0;
+    border: 1px solid var(--border);
+  }
+  .chart-container canvas {
+    opacity: 0; transition: opacity 0.4s ease; max-height: 300px;
+  }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-sub);
+    margin-bottom: 12px;
+  }
+
+  /* ── SIMULATOR ── */
+  .sim-box {
+    background: var(--bg-sub); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; margin: 24px 0;
+  }
+  .sim-box h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+  .sim-box h3 span { font-size: 18px; }
+  .sim-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 14px 0; flex-wrap: wrap; gap: 8px;
+  }
+  .sim-label { font-size: 13px; color: var(--text); font-weight: 500; }
+  .sim-val { font-weight: 700; color: var(--accent); font-size: 14px; min-width: 50px; text-align: right; }
+  input[type=range] {
+    width: 100%; accent-color: var(--accent);
+    height: 4px; cursor: pointer;
+  }
+  .sim-result {
+    margin-top: 20px; padding: 14px 16px;
+    background: var(--accent); border-radius: 8px; color: #fff;
+    font-size: 14px; line-height: 1.7;
+  }
+  .sim-result strong { font-size: 18px; display: block; margin-bottom: 4px; }
+  .reset-btn {
+    display: inline-block; margin-top: 14px;
+    background: none; border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 16px; font-size: 12px;
+    cursor: pointer; color: var(--text-sub);
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all .2s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── CYCLE PHASE INTERACTIVE ── */
+  .phase-nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .phase-btn {
+    padding: 6px 14px; border-radius: 20px;
+    border: 1.5px solid var(--border); font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+    background: #fff; color: var(--text-sub);
+    transition: all .2s;
+  }
+  .phase-btn.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .phase-detail { display: none; }
+  .phase-detail.active { display: block; }
+  .phase-detail-inner {
+    background: var(--bg-sub); border-radius: 8px; padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .phase-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text-sub); text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<header class="cover fade-in">
+  <div class="cover-label">투자 아카데미 · 15회</div>
+  <h1>섹터 로테이션,<br><em>또 당할 수는 없다</em></h1>
+  <p style="color:var(--text-sub);font-size:14px;margin-top:10px;">왜 포트폴리오를 바꿔야 하는가 — 경제 사이클과 시장 사이클의 관계</p>
+  <div class="cover-meta">
+    <span>📅 2026년 04월 21일</span>
+    <span>🎙 투자 아카데미</span>
+    <span>⏱ 분석 리포트</span>
+  </div>
+</header>
+
+<!-- SECTION 1: 개요 -->
+<section class="section fade-in">
+  <div class="section-label">Overview</div>
+  <h2>왜 섹터 로테이션인가</h2>
+  <p>미국 주식 시장은 <strong>11개의 섹터</strong>로 구성되어 있으며, 각 섹터는 경제 사이클에 따라 성과가 달라집니다. 같은 "경제 성장" 국면에서도 IT·AI 분야와 에너지·소재 분야의 수익률은 크게 다를 수 있습니다. 섹터 로테이션이란, 이러한 차이를 파악하고 경제 사이클의 변화에 맞춰 포트폴리오 비중을 조정하는 전략입니다.</p>
+
+  <div class="pull-quote">
+    <p>"30%를 더 갈 수 있는데 지금 5~6%에서 멈추거나, 작년에 가지고 있던 거를 그대로 가지고 있는 분들은 아직도 마이너스에 헤매는 분들이 많습니다."</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card fade-in">
+      <div class="ic-num">11</div>
+      <div class="ic-label">미국 주식 시장 섹터 수</div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="ic-num">6</div>
+      <div class="ic-label">경제 사이클 변화의 주요 원인</div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="ic-num">4</div>
+      <div class="ic-label">경제 사이클 국면</div>
+    </div>
+    <div class="info-card fade-in">
+      <div class="ic-num">4</div>
+      <div class="ic-label">시장 사이클 국면</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 2: 경제 사이클 -->
+<section class="section fade-in">
+  <div class="section-label">Economic Cycle</div>
+  <h2>경제 사이클 4단계</h2>
+  <p>경제 사이클은 시장 사이클보다 <strong>선행</strong>합니다. 경제 흐름이 먼저 변화하고, 주가(시장 사이클)는 이를 뒤따라 미러링(mirroring)합니다. 아래 4단계 중 현재 미국 경제는 <strong>"픽(Peak)에 가까운" 단계</strong>로 평가됩니다.</p>
+
+  <!-- Interactive Phase Explorer -->
+  <div class="sim-box fade-in">
+    <h3><span>🔄</span> 경제 사이클 탐색기</h3>
+    <div class="phase-nav">
+      <button class="phase-btn active" onclick="showPhase('trough')">저점(Trough)</button>
+      <button class="phase-btn" onclick="showPhase('expansion')">확장(Expansion)</button>
+      <button class="phase-btn" onclick="showPhase('peak')">정점(Peak)</button>
+      <button class="phase-btn" onclick="showPhase('recession')">침체(Recession)</button>
+    </div>
+
+    <div class="phase-detail active" id="phase-trough">
+      <div class="phase-detail-inner">
+        <div class="phase-name">저점 (Trough)</div>
+        <p style="margin:0;font-size:14px;">경제 사이클의 가장 낮은 지점. 이 시기는 가장 로우 포인트로, 경기 침체 이후 회복의 시작점입니다. 현재(영상 기준)는 저점이 아닙니다.</p>
+        <div style="margin-top:12px;font-size:13px;color:var(--text-sub);">💡 주목 섹터: 기술주, 성장주 (초기 회복 기대)</div>
+      </div>
+    </div>
+    <div class="phase-detail" id="phase-expansion">
+      <div class="phase-detail-inner">
+        <div class="phase-name">확장 (Expansion)</div>
+        <p style="margin:0;font-size:14px;">경제가 성장하는 시기. 미국은 약 12년간 확장 국면을 유지해왔습니다. 생산·소비가 증가하고 기업 실적이 개선됩니다.</p>
+        <div style="margin-top:12px;font-size:13px;color:var(--text-sub);">💡 주목 섹터: 산업재, 소재, 에너지 (생산 증가 → 원자재 수요 증가)</div>
+      </div>
+    </div>
+    <div class="phase-detail" id="phase-peak">
+      <div class="phase-detail-inner">
+        <div class="phase-name">정점 (Peak) ← 현재 근접</div>
+        <p style="margin:0;font-size:14px;">성장세가 최고조에 달하는 시점. 영상에서는 현재 미국 경제가 확장도 아니고 침체도 아닌, <strong>정점에 가깝다</strong>고 진단합니다. PER(주가수익비율)은 높고 EPS(주당순이익)는 하락 조짐.</p>
+        <div style="margin-top:12px;font-size:13px;color:var(--text-sub);">💡 주목 섹터: 소비재 방어주, 유틸리티, 헬스케어 (방어적 접근)</div>
+      </div>
+    </div>
+    <div class="phase-detail" id="phase-recession">
+      <div class="phase-detail-inner">
+        <div class="phase-name">침체 (Recession)</div>
+        <p style="margin:0;font-size:14px;">경기 침체. 현재는 침체 전 단계(Pre-recession)이며, 경제 성장률 둔화가 진행 중입니다. 일드커브(수익률 곡선) 역전은 침체의 전형적 전조 신호.</p>
+        <div style="margin-top:12px;font-size:13px;color:var(--text-sub);">💡 주목 섹터: 서비스, 유틸리티, 방어적 소비재</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 경제 사이클 차트 -->
+<div class="chart-container fade-in">
+  <div class="chart-title">경제 사이클별 주목 섹터 강도 (일반적 케이스)</div>
+  <canvas id="cycleChart" height="230"></canvas>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 3: 시장 사이클 -->
+<section class="section fade-in">
+  <div class="section-label">Market Cycle</div>
+  <h2>시장 사이클 4단계</h2>
+  <p>시장 사이클(주가 흐름)은 경제 사이클을 미러링하며, 투자자 심리와 밀접하게 연동됩니다. 특히 <strong>개인 투자자(개미)</strong>는 사이클의 최고점 근처에서 집중 유입되는 경향이 있어 주의가 필요합니다.</p>
+
+  <div class="cycle-grid">
+    <div class="cycle-card fade-in">
+      <div class="cc-phase">1단계</div>
+      <div class="cc-name">축적 (Accumulation)</div>
+      <div class="cc-desc">가치 투자자·기업 임원 등 초기 투자자가 저평가된 기업 주식을 매수. 개인 투자자는 대부분 관망.</div>
+    </div>
+    <div class="cycle-card fade-in">
+      <div class="cc-phase">2단계</div>
+      <div class="cc-name">상승 (Mark-up)</div>
+      <div class="cc-desc">기업 실적 개선이 가시화되며 주가 상승. 테크니션(기술적 분석가)들이 관심을 가지기 시작. PER 낮고 EPS 높아짐.</div>
+    </div>
+    <div class="cycle-card fade-in">
+      <div class="cc-phase">3단계</div>
+      <div class="cc-name">분배 (Distribution)</div>
+      <div class="cc-desc">최고점 도달 전 기관·초기 투자자들이 매각 시작. 개인 투자자 대량 유입. 매수량 급증. 기관의 매각은 외부에서 확인 불가.</div>
+    </div>
+    <div class="cycle-card dim fade-in">
+      <div class="cc-phase" style="color:var(--text-sub)">4단계</div>
+      <div class="cc-name">하락 (Decline)</div>
+      <div class="cc-desc">주가 급락. 단기간(1~4주) 내 30% 하락 가능. PER 극대화 후 EPS 하락. 뒤늦게 진입한 개인 투자자 손실 집중.</div>
+    </div>
+  </div>
+
+  <div class="key-box fade-in">
+    <div class="kb-title">⚠️ 핵심 경고</div>
+    <p>분배 단계에서 개인 투자자들은 "내가 투자를 잘한다"는 착각에 빠지기 쉽습니다. 주가가 계속 오르니 자신의 판단이 맞는다고 느끼지만, 이 시점에서 기관은 이미 매도를 시작하고 있습니다. <strong>시장 앞에서는 겸손해야 합니다.</strong></p>
+  </div>
+</section>
+
+<!-- 시장 사이클 차트 -->
+<div class="chart-container fade-in">
+  <div class="chart-title">시장 사이클 — 투자자 유형별 진입/이탈 시점</div>
+  <canvas id="marketChart" height="220"></canvas>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 4: 경제 사이클 변화 6대 원인 -->
+<section class="section fade-in">
+  <div class="section-label">Key Drivers</div>
+  <h2>경제 사이클 변화의 6대 원인</h2>
+  <p>경제 사이클을 움직이는 핵심 요인 6가지를 이해하는 것이 거시경제 분석의 출발점입니다. 시기에 따라 이 중 하나가 더 큰 영향력을 가집니다.</p>
+
+  <ul class="styled-list">
+    <li><strong>① 자본의 유동성 변화</strong> — 시장과 기업의 유동성 흐름. 주가와 직접 연결.</li>
+    <li><strong>② 노동시장 변화</strong> — 실업률, 실업수당 신청건수 등. 4%대 실업률 상승 → 임금 인상 압력 완화 → 인플레이션 억제 효과.</li>
+    <li><strong>③ 원자재 수요·공급</strong> — 서플라이 체인 이슈 해소로 가격 안정화. 차량 구매 시 프리미엄 거의 소멸.</li>
+    <li><strong>④ 금리 및 재정정책</strong> — 기준금리 변화가 주가에 직접적 영향. 2년간 금리 인상 여부가 시장의 핵심 변수.</li>
+    <li><strong>⑤ 수요와 공급 (Supply & Demand)</strong> — 경제 전반의 소비·생산 균형.</li>
+    <li><strong>⑥ 신기술 탄생 및 성장</strong> — AI의 부상: 올해는 데이터센터, 내년은 챗봇이 핵심. AI 수익화가 본격화되는 시점.</li>
+  </ul>
+
+  <!-- 비중 차트 -->
+  <div class="chart-container fade-in">
+    <div class="chart-title">현재 국면에서의 요인별 중요도 (강사 판단 기준)</div>
+    <canvas id="factorChart" height="240"></canvas>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 5: 섹터별 사이클 -->
+<section class="section fade-in">
+  <div class="section-label">Sector Strategy</div>
+  <h2>경제 사이클별 유망 섹터</h2>
+  <p>아래 표는 경제 사이클 국면에 따른 일반적인 투자 유망 섹터입니다. 단, 이는 일반적 케이스이며 현재 상황과 차이가 날 수 있습니다.</p>
+
+  <table class="stbl">
+    <thead>
+      <tr>
+        <th>경제 사이클 국면</th>
+        <th>주목 섹터</th>
+        <th>신호</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>침체 직전 / 저점</strong></td>
+        <td>기술주, 성장주</td>
+        <td><span class="badge up">회복 기대</span></td>
+      </tr>
+      <tr>
+        <td><strong>초기 확장</strong></td>
+        <td>산업재, 소재</td>
+        <td><span class="badge up">생산 증가</span></td>
+      </tr>
+      <tr>
+        <td><strong>확장 가속</strong></td>
+        <td>에너지</td>
+        <td><span class="badge up">원자재 수요↑</span></td>
+      </tr>
+      <tr>
+        <td><strong>정점 / 침체 전</strong></td>
+        <td>소비재 방어주, 유틸리티</td>
+        <td><span class="badge neutral">방어적</span></td>
+      </tr>
+      <tr>
+        <td><strong>침체기</strong></td>
+        <td>서비스, 유틸리티</td>
+        <td><span class="badge down">방어 집중</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pull-quote">
+    <p>"일드커브(수익률 곡선) 역전 — 2년물·10년물·3년물 금리가 뒤집히는 현상 — 은 경기 침체의 전형적인 전조 신호입니다."</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 6: 포트폴리오 전략 시뮬레이터 -->
+<section class="section fade-in">
+  <div class="section-label">Portfolio Simulator</div>
+  <h2>현금 비중 전략 시뮬레이터</h2>
+  <p>강사는 투자 기간과 시장 상황에 따라 현금 보유 비중을 다르게 권고합니다. 본인의 투자 기간을 입력해 권장 전략을 확인해보세요.</p>
+
+  <div class="sim-box fade-in">
+    <h3><span>💰</span> 포트폴리오 전략 계산기</h3>
+    <div class="sim-row">
+      <div class="sim-label">투자 기간</div>
+      <div class="sim-val" id="yearVal">5년</div>
+    </div>
+    <input type="range" id="yearSlider" min="1" max="20" value="5" oninput="calcPortfolio()">
+    <div class="sim-row" style="margin-top:16px;">
+      <div class="sim-label">총 투자 가능 금액 (만원)</div>
+      <div class="sim-val" id="amtVal">5,000만원</div>
+    </div>
+    <input type="range" id="amtSlider" min="1000" max="50000" step="1000" value="5000" oninput="calcPortfolio()">
+
+    <div class="sim-result" id="simResult">
+      <strong>계산 결과</strong>
+      <span id="simText">슬라이더를 조정해 결과를 확인하세요.</span>
+    </div>
+    <button class="reset-btn" onclick="resetSim()">↺ 초기화</button>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 7: 핵심 투자 원칙 -->
+<section class="section fade-in">
+  <div class="section-label">Key Principles</div>
+  <h2>핵심 투자 3원칙</h2>
+  <p>강사가 반복 강조하는 투자 판단의 3가지 축입니다.</p>
+
+  <ul class="styled-list">
+    <li><strong>① 거시경제 이해</strong> — 경제 사이클, 금리, 고용, 인플레이션 등 매크로 지표를 지속적으로 모니터링. 주가는 거시경제와 연동.</li>
+    <li><strong>② 기업 펀더멘털 분석</strong> — 재무제표(Balance Sheet, Income Statement, Cash Flow), 10-K 보고서 분석 능력 필수. 기업의 현재 건전성과 미래 성장성(3개월~1년 기준)을 분석.</li>
+    <li><strong>③ 기관 투자자 심리(Sentiment) 파악</strong> — 기관의 매수·매도 흐름을 읽는 것이 리스크 관리의 핵심. 주식 전문가는 없으며, 불확실성에 대비한 포트폴리오 다변화가 해답.</li>
+  </ul>
+
+  <div class="key-box fade-in">
+    <div class="kb-title">📌 내년(2025년) 시장 전망 (영상 기준)</div>
+    <p>올해보다 수익률이 줄어들 것으로 예상. S&P500·나스닥 성장폭 감소. 연준의 금리 인하 속도와 인플레이션 하락폭이 핵심 변수. <strong>"돌다리를 두드리듯 보수적으로"</strong> 접근 권고. 10년 이상 장기 투자자는 현금 20%, 3~4년 단기 투자자는 현금 40% 수준 권장.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 8: Sub-Industry 개념 -->
+<section class="section fade-in">
+  <div class="section-label">Investment Framework</div>
+  <h2>투자 이해의 계층 구조</h2>
+  <p>미국 주식 투자는 아래의 계층적 분류 체계를 이해하는 것에서 시작합니다.</p>
+
+  <div class="chart-container fade-in" style="max-height:none;padding:20px;">
+    <div style="text-align:center;font-size:13px;line-height:2;">
+      <div style="background:var(--accent);color:#fff;border-radius:6px;padding:10px 16px;margin-bottom:8px;font-weight:700;">주식 (Stock)</div>
+      <div style="color:var(--accent);font-size:18px;margin-bottom:4px;">▼</div>
+      <div style="background:#fce7f3;border:1.5px solid #f9a8d4;border-radius:6px;padding:10px 16px;margin-bottom:8px;font-weight:600;">기업 (Company) — 펀더멘털 분석</div>
+      <div style="color:var(--accent);font-size:18px;margin-bottom:4px;">▼</div>
+      <div style="background:#fce7f3;border:1.5px solid #f9a8d4;border-radius:6px;padding:10px 16px;margin-bottom:8px;font-weight:600;">Sub-Industry — 대형주/중형주, 가치주/성장주 구분</div>
+      <div style="color:var(--accent);font-size:18px;margin-bottom:4px;">▼</div>
+      <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:6px;padding:10px 16px;margin-bottom:8px;font-weight:600;">섹터 (Sector) — 11개 미국 섹터</div>
+      <div style="color:var(--accent);font-size:18px;margin-bottom:4px;">▼</div>
+      <div style="background:var(--bg-sub);border:1.5px solid var(--border);border-radius:6px;padding:10px 16px;font-weight:600;">거시경제 (Macro) — 경제 사이클 이해</div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--text-sub);">투자할 주식을 고를 때는 단순히 종목만 보는 것이 아니라, 해당 기업이 어떤 섹터에 속하고, 그 섹터가 현재 경제 사이클에서 어떤 위치인지를 함께 파악해야 합니다.</p>
+</section>
+
+<footer>
+  <p>이 문서는 유튜브 영상 자막을 기반으로 작성된 학습용 분석 리포트입니다.</p>
+  <p style="margin-top:4px;">투자는 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+</footer>
+
+<script>
+// ── FADE-IN OBSERVER ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ── CHART CONFIGS ──
+const chartConfigs = {};
+
+chartConfigs['cycleChart'] = () => {
+  new Chart(document.getElementById('cycleChart'), {
+    type: 'radar',
+    data: {
+      labels: ['기술주', '산업재', '에너지', '소재', '유틸리티', '방어소비재'],
+      datasets: [
+        {
+          label: '확장기',
+          data: [85, 90, 75, 80, 30, 35],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.12)',
+          borderWidth: 2, pointRadius: 3
+        },
+        {
+          label: '정점/침체 전',
+          data: [40, 30, 50, 35, 90, 85],
+          borderColor: '#e11d48',
+          backgroundColor: 'rgba(225,29,72,0.12)',
+          borderWidth: 2, pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        r: {
+          beginAtZero: true, max: 100,
+          ticks: { display: false },
+          pointLabels: { font: { size: 11 } }
+        }
+      }
+    }
+  });
+};
+
+chartConfigs['marketChart'] = () => {
+  new Chart(document.getElementById('marketChart'), {
+    type: 'line',
+    data: {
+      labels: ['', '저점', '초기상승', '상승가속', '고점', '초기하락', '급락', ''],
+      datasets: [
+        {
+          label: '주가 흐름',
+          data: [20, 22, 45, 70, 95, 80, 55, 30],
+          borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.08)',
+          fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const labels = ['', '가치투자자 진입', '테크니션 관심', '펀더멘털리스트 유입', '기관 매각 시작', '개미 대량 유입', '기관 완료, 주가 급락', ''];
+              return labels[ctx.dataIndex] || '';
+            }
+          }
+        }
+      },
+      scales: {
+        y: { display: false },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['factorChart'] = () => {
+  new Chart(document.getElementById('factorChart'), {
+    type: 'bar',
+    data: {
+      labels: ['자본 유동성', '노동시장', '원자재\n수급', '금리·정책', '수요·공급', 'AI·신기술'],
+      datasets: [{
+        label: '현재 중요도',
+        data: [75, 85, 55, 90, 65, 80],
+        backgroundColor: ['#e11d48','#f43f5e','#6b7280','#1a1a1a','#6b7280','#2563eb'],
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { font: { size: 11 } } },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+// ── CHART OBSERVER ──
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── PHASE EXPLORER ──
+function showPhase(id) {
+  document.querySelectorAll('.phase-detail').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('phase-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── PORTFOLIO SIMULATOR ──
+function calcPortfolio() {
+  const years = +document.getElementById('yearSlider').value;
+  const amt = +document.getElementById('amtSlider').value;
+  document.getElementById('yearVal').textContent = years + '년';
+  document.getElementById('amtVal').textContent = amt.toLocaleString() + '만원';
+
+  let cashPct, stockPct, msg;
+  if (years >= 10) {
+    cashPct = 20; stockPct = 80;
+    msg = '10년 이상 장기 투자자 → 현금 20%, 주식·ETF 80% 권장. 단기 변동성보다 장기 성장에 집중.';
+  } else if (years >= 5) {
+    cashPct = 30; stockPct = 70;
+    msg = '5~9년 중장기 투자자 → 현금 30%, 주식·ETF 70% 권장. 내년 범피로드(Bumpy Road) 대비 현금 확보 중요.';
+  } else if (years >= 3) {
+    cashPct = 40; stockPct = 60;
+    msg = '3~4년 중기 투자자 → 현금 40%, 주식·ETF 60% 권장. 현재 경제가 정점에 가깝기 때문에 방어적 접근 필요.';
+  } else {
+    cashPct = 50; stockPct = 50;
+    msg = '1~2년 단기 투자자 → 현금 50%, 주식·ETF 50%. 보수적 접근 권장. 리스크 관리 최우선.';
+  }
+
+  const cashAmt = Math.round(amt * cashPct / 100);
+  const stockAmt = amt - cashAmt;
+  document.getElementById('simText').innerHTML =
+    `<strong>현금 ${cashPct}% (${cashAmt.toLocaleString()}만원) · 주식/ETF ${stockPct}% (${stockAmt.toLocaleString()}만원)</strong><br>${msg}`;
+}
+calcPortfolio();
+
+function resetSim() {
+  document.getElementById('yearSlider').value = 5;
+  document.getElementById('amtSlider').value = 5000;
+  calcPortfolio();
+}
+</script>
+</body>
+</html>
