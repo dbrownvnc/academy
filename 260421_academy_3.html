@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 포트폴리오의 종류와 리스크 — 투자아카데미 16회</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── 헤더 ── */
+  .mag-header {
+    border-top: 3px solid var(--accent);
+    padding-top: 32px;
+    margin-bottom: 8px;
+  }
+  .mag-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .mag-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .mag-meta {
+    font-size: 12px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .mag-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* ── 섹션 ── */
+  .section { margin-bottom: 44px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* ── 풀쿼트 ── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 28px 0;
+    background: var(--bg2);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .pull-quote cite {
+    display: block;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── 카드 그리드 ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .card-icon { font-size: 22px; margin-bottom: 6px; }
+  .card-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--accent); }
+  .card-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* ── 리스크 테이블 ── */
+  .risk-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .risk-table th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+  .risk-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .risk-table tr:nth-child(even) td { background: var(--bg2); }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .badge-high { background: #fee2e2; color: #991b1b; }
+  .badge-mid  { background: #fef3c7; color: #92400e; }
+  .badge-low  { background: #d1fae5; color: #065f46; }
+
+  /* ── 차트 ── */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .chart-container { position: relative; max-height: 340px; margin: 20px 0; }
+  .chart-container canvas { opacity: 0; transition: opacity 0.4s ease; max-height: 300px; }
+  .chart-container.chart-ready canvas { opacity: 1; }
+  .chart-title { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 0.05em; margin-bottom: 8px; text-transform: uppercase; }
+
+  /* ── 포트폴리오 타입 ── */
+  .ptype-list { list-style: none; margin: 20px 0; }
+  .ptype-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ptype-num {
+    min-width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ptype-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .ptype-desc { font-size: 13px; color: var(--text2); }
+
+  /* ── 투자 목적 카드 ── */
+  .purpose-cards { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .purpose-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    border-radius: 0 4px 4px 0;
+  }
+  .purpose-card-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .purpose-card-desc { font-size: 12px; color: var(--text2); }
+
+  /* ── 법칙 박스 ── */
+  .rule-box {
+    background: var(--text);
+    color: #fff;
+    padding: 20px 20px;
+    margin: 24px 0;
+    border-radius: 4px;
+  }
+  .rule-box-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #fff; }
+  .rule-box p { color: #d1d5db; font-size: 13px; margin-bottom: 8px; }
+  .rule-highlight { color: var(--accent2); font-weight: 700; }
+
+  /* ── 실수 리스트 ── */
+  .mistake-list { list-style: none; counter-reset: mistake; margin: 20px 0; }
+  .mistake-item {
+    counter-increment: mistake;
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+    align-items: flex-start;
+  }
+  .mistake-item::before {
+    content: counter(mistake);
+    min-width: 28px;
+    height: 28px;
+    background: #fee2e2;
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .mistake-text { font-size: 13px; color: var(--text); line-height: 1.7; }
+  .mistake-text strong { color: var(--accent); }
+
+  /* ── 시뮬레이터 ── */
+  .simulator {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .sim-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .sim-sub { font-size: 12px; color: var(--text2); margin-bottom: 18px; }
+  .sim-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+  .sim-label { font-size: 12px; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; }
+  .sim-label span { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .sim-result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .sim-result-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .src-label { font-size: 10px; color: var(--text2); margin-bottom: 4px; font-weight: 700; letter-spacing: 0.05em; }
+  .src-value { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .src-unit { font-size: 11px; color: var(--text2); }
+  .sim-reset { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 14px; font-size: 12px; cursor: pointer; border-radius: 2px; margin-top: 14px; font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s; }
+  .sim-reset:hover { background: var(--accent); color: #fff; }
+  .sim-bars { margin-top: 16px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+  .bar-label { width: 72px; font-size: 11px; color: var(--text2); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; transition: width 0.4s ease; }
+  .bar-pct { width: 36px; font-size: 11px; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+  /* ── 타임호라이즌 ── */
+  .timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+  .tl-step {
+    flex: 1;
+    min-width: 60px;
+    text-align: center;
+    position: relative;
+  }
+  .tl-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    border: 2px solid var(--accent);
+    background: #fff;
+    position: relative;
+    z-index: 1;
+  }
+  .tl-dot.active { background: var(--accent); }
+  .tl-line {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .tl-label { font-size: 11px; color: var(--text2); }
+  .tl-risk { font-size: 10px; font-weight: 700; }
+  .tl-risk.high { color: var(--accent); }
+  .tl-risk.mid { color: #d97706; }
+  .tl-risk.low { color: #059669; }
+
+  /* ── 푸터 ── */
+  .footer { margin-top: 60px; border-top: 1px solid var(--border); padding-top: 20px; font-size: 11px; color: var(--text2); text-align: center; line-height: 1.8; }
+
+  @media (max-width: 480px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .sim-result-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="mag-header fade-in">
+  <div class="mag-eyebrow">투자아카데미 Vol.16 · 연말 특집 공개방송</div>
+  <h1 class="mag-title">개인투자자가 꼭 알아야 할<br>포트폴리오의 종류와 리스크</h1>
+  <div class="mag-meta">
+    <span>📅 2026년 04월 21일</span>
+    <span>⏱ 분석 리포트</span>
+    <span>🎓 선진국형 투자 교육</span>
+  </div>
+</div>
+
+<!-- ══ 핵심 요약 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Overview</div>
+  <h2 class="section-title">핵심 요약</h2>
+  <p>이번 방송은 투자 포트폴리오를 처음 접하는 개인 투자자를 위해 <strong>포트폴리오의 종류, 각 자산의 리스크, 구성 원칙</strong>을 미국 100년 이상의 투자 관행을 바탕으로 설명합니다. "리워드(수익)만 보고 리스크를 외면하는 것"이 한국 투자자들의 가장 큰 문제점임을 강조하며, 리스크와 리워드의 상관관계를 이해하는 것이 선진국형 투자의 출발점임을 역설합니다.</p>
+
+  <div class="pull-quote">
+    "투자를 통해 장기적으로 자산을 증식시키는 방법은 분산 포트폴리오 외에는 없습니다."
+    <cite>— 투자아카데미 16회, 강사 발언</cite>
+  </div>
+</div>
+
+<!-- ══ 3대 자산군 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Asset Classes</div>
+  <h2 class="section-title">3대 투자 자산군</h2>
+  <p>개인 투자자가 주식시장 중심으로 접근할 수 있는 세 가지 핵심 자산군입니다.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">주식 (Stock)</div>
+      <div class="card-body">미국 기준 6,000개 이상 투자 대상. 가격 변동성(상승·하락) 리스크. 리스크 크면 리워드도 크다.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📄</div>
+      <div class="card-title">채권 (Bond)</div>
+      <div class="card-body">정부채권 / 기업채권 / 지방정부채권 3종류. 정기이자 수입+원금 상환. BBB급 파산 확률 약 4%.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💵</div>
+      <div class="card-title">현금 (Cash)</div>
+      <div class="card-body">원금은 보장되지만 인플레이션으로 구매력 하락. "현금 리스크 없다"는 오해 주의.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏢</div>
+      <div class="card-title">부동산 외</div>
+      <div class="card-body">하이브리드 포트폴리오에 포함 가능. 333법칙: 주식·부동산·기타에 각 30%씩 분산.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 리스크-리워드 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Risk vs Reward</div>
+  <h2 class="section-title">리스크 비교표</h2>
+  <p>자산군별 리스크와 리워드 특성을 정리했습니다. <strong>리스크가 클수록 리워드도 크고, 리스크가 작으면 리워드도 작습니다.</strong> 단, 리스크가 일정 수준 이상 높아지면 리워드는 더 이상 비례하여 증가하지 않습니다.</p>
+
+  <table class="risk-table">
+    <thead>
+      <tr>
+        <th>자산 유형</th>
+        <th>주요 리스크</th>
+        <th>리스크 수준</th>
+        <th>기대 리워드</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>대형 가치주</td>
+        <td>가격 변동성 (낮음)</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>배당+완만한 성장</td>
+      </tr>
+      <tr>
+        <td>대형 성장주</td>
+        <td>변동성 (베타 1.2~2)</td>
+        <td><span class="badge badge-mid">MID</span></td>
+        <td>높은 자본이익</td>
+      </tr>
+      <tr>
+        <td>중소형 성장주</td>
+        <td>높은 변동성</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>매우 높음(가능)</td>
+      </tr>
+      <tr>
+        <td>IPO/마이크로캡</td>
+        <td>극단적 변동성</td>
+        <td><span class="badge badge-high">VERY HIGH</span></td>
+        <td>매우 높음(위험)</td>
+      </tr>
+      <tr>
+        <td>투자등급 채권(AAA)</td>
+        <td>파산 리스크 매우 낮음</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>낮은 이자 수익</td>
+      </tr>
+      <tr>
+        <td>BBB급 채권</td>
+        <td>파산 확률 약 4%</td>
+        <td><span class="badge badge-mid">MID</span></td>
+        <td>중간 이자 수익</td>
+      </tr>
+      <tr>
+        <td>현금</td>
+        <td>인플레이션 구매력 하락</td>
+        <td><span class="badge badge-low">HIDDEN</span></td>
+        <td>원금 보장만</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 차트: 리스크-리워드 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Visualization</div>
+  <h2 class="section-title">리스크 vs. 리워드 관계</h2>
+  <p>리스크가 일정 수준을 넘으면 리워드가 더 증가하지 않는 "<strong>프론티어 곡선</strong>"입니다. 포트폴리오의 목표는 이 경계점에서 최대 효율을 내는 것입니다.</p>
+  <div class="chart-container fade-in">
+    <canvas id="riskRewardChart" height="240"></canvas>
+  </div>
+</div>
+
+<!-- ══ 포트폴리오 구성 원칙 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Core Principles</div>
+  <h2 class="section-title">포트폴리오 구성의 두 가지 핵심</h2>
+
+  <p>포트폴리오를 구성하기 전에 반드시 정해야 하는 두 가지입니다.</p>
+
+  <div class="purpose-cards">
+    <div class="purpose-card">
+      <div class="purpose-card-title">① 리스크 톨러런스 (Risk Tolerance)</div>
+      <div class="purpose-card-desc">나는 얼마나 큰 손실을 감당할 수 있는가? 나이보다 <strong>개인의 성향</strong>이 더 중요합니다. 리스크를 높게 수용할수록 성장주 비중을 높이고, 낮게 수용할수록 채권·배당주 비중을 높입니다.</div>
+    </div>
+    <div class="purpose-card">
+      <div class="purpose-card-title">② 타임 호라이즌 (Time Horizon)</div>
+      <div class="purpose-card-desc">이 돈이 언제 필요한가? 10년 이후에 필요한 은퇴자금이라면 단기 폭락에 흔들릴 필요가 없습니다. 3년 이내에 집 구입 자금으로 써야 한다면 극도로 보수적으로 운용해야 합니다.</div>
+    </div>
+  </div>
+
+  <!-- 타임라인 시각화 -->
+  <p style="font-size:12px;color:var(--text2);margin-bottom:8px;">▼ 투자 기간에 따른 권장 리스크 수준</p>
+  <div class="timeline-row">
+    <div class="tl-step">
+      <div class="tl-line"></div>
+      <div class="tl-dot active"></div>
+      <div class="tl-label">30대</div>
+      <div class="tl-risk high">HIGH</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-line"></div>
+      <div class="tl-dot active"></div>
+      <div class="tl-label">40대</div>
+      <div class="tl-risk high">HIGH</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-line"></div>
+      <div class="tl-dot active"></div>
+      <div class="tl-label">50대</div>
+      <div class="tl-risk mid">MID</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-line"></div>
+      <div class="tl-dot"></div>
+      <div class="tl-label">60대</div>
+      <div class="tl-risk low">LOW</div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot"></div>
+      <div class="tl-label">70대+</div>
+      <div class="tl-risk low">VERY LOW</div>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--text2);">※ 일반적 기준이며, 개인의 리스크 성향에 따라 달라질 수 있습니다.</p>
+</div>
+
+<!-- ══ 투자 법칙 ══ -->
+<div class="rule-box fade-in">
+  <div class="rule-box-title">📐 5·25 법칙 &amp; 333 법칙</div>
+  <p><span class="rule-highlight">5·25 법칙</span> — 아무리 좋은 대형주라도 전체 포트폴리오에서 <strong>25% 이상 보유 금지</strong>. 중소형 종목은 <strong>5% 이상 보유 금지</strong>.</p>
+  <p><span class="rule-highlight">333 법칙</span> — 전 재산을 어느 한 자산에 몰아넣지 마라. <strong>주식 30% / 부동산 30% / 기타 30% / 현금 10%</strong> 식으로 분산.</p>
+</div>
+
+<!-- ══ 포트폴리오 유형 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Portfolio Types</div>
+  <h2 class="section-title">포트폴리오 유형 5가지</h2>
+
+  <ul class="ptype-list">
+    <li class="ptype-item">
+      <div class="ptype-num">1</div>
+      <div>
+        <div class="ptype-name">어그레시브 (Aggressive)</div>
+        <div class="ptype-desc">주식 70~80% 이상, 그중 성장주 비중 높음. 베타가 1.2~2 이상인 변동성 큰 종목 포함. 리스크와 리워드 모두 높다.</div>
+      </div>
+    </li>
+    <li class="ptype-item">
+      <div class="ptype-num">2</div>
+      <div>
+        <div class="ptype-name">디펜시브 (Defensive)</div>
+        <div class="ptype-desc">채권 60% 이상, 나머지를 존슨앤존슨·록히드마틴 등 방어적 가치주로 구성. 느린 성장, 안정적 수익.</div>
+      </div>
+    </li>
+    <li class="ptype-item">
+      <div class="ptype-num">3</div>
+      <div>
+        <div class="ptype-name">인컴 (Income)</div>
+        <div class="ptype-desc">배당주·이자 수익 중심. 이미 은퇴했거나 당장 정기적 현금 흐름이 필요한 경우. 원금은 유지하면서 인컴 창출.</div>
+      </div>
+    </li>
+    <li class="ptype-item">
+      <div class="ptype-num">4</div>
+      <div>
+        <div class="ptype-name">스페큘레이티브 (Speculative)</div>
+        <div class="ptype-desc">IPO, 코인, 마이크로캡 등 고위험 자산 비중 높음. 80~95% 폭락도 각오해야 함. 전 재산 투입 절대 금지.</div>
+      </div>
+    </li>
+    <li class="ptype-item">
+      <div class="ptype-num">5</div>
+      <div>
+        <div class="ptype-name">하이브리드 (Hybrid)</div>
+        <div class="ptype-desc">부동산 포함 다양한 에셋 클래스를 혼합. 333 법칙의 전형적 형태. 가장 분산도가 높은 구조.</div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- 차트: 포트폴리오 구성 비율 비교 -->
+  <div class="chart-container fade-in">
+    <div class="chart-title">보수적 vs. 공격적 주식 포트폴리오 예시 구성</div>
+    <canvas id="portfolioChart" height="240"></canvas>
+  </div>
+</div>
+
+<!-- ══ 투자 목적 5가지 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Investment Goals</div>
+  <h2 class="section-title">투자 목적에 따른 전략</h2>
+
+  <div class="purpose-cards">
+    <div class="purpose-card">
+      <div class="purpose-card-title">🏖 은퇴 자금</div>
+      <div class="purpose-card-desc">나이 들수록 점진적으로 리스크 낮춤. 30대 HIGH → 50대 MID → 70대 LOW. 단기 폭락에 매도하면 안 됨.</div>
+    </div>
+    <div class="purpose-card">
+      <div class="purpose-card-title">🏠 주택 구입</div>
+      <div class="purpose-card-desc">보수적으로 운용 필수. 2~3년 내 사용 예정 자금은 대형 성장주 투자 금지.</div>
+    </div>
+    <div class="purpose-card">
+      <div class="purpose-card-title">🎓 학자금 (529 플랜)</div>
+      <div class="purpose-card-desc">미국의 경우 529 플랜 활용. 어릴 때는 보수적으로 운용. 사용 시점에 가까워질수록 리스크 축소.</div>
+    </div>
+    <div class="purpose-card">
+      <div class="purpose-card-title">🏭 사업 자금</div>
+      <div class="purpose-card-desc">사업자금은 주식 투자 금지. 단기 국채(Treasury) 또는 단기 채권에 파킹(parking)만 허용.</div>
+    </div>
+    <div class="purpose-card">
+      <div class="purpose-card-title">💰 정기 인컴 창출</div>
+      <div class="purpose-card-desc">원금 유지+연 인컴 6% 목표 등. 이미 충분한 자산이 있는 경우. 소득형 채권·배당주 중심 포트폴리오.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 인터랙티브 시뮬레이터 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Interactive</div>
+  <h2 class="section-title">포트폴리오 리스크 시뮬레이터</h2>
+  <p>슬라이더로 각 자산군 비중을 조절해 보세요. 포트폴리오의 예상 리스크 수준과 기대 수익 범위를 즉시 확인할 수 있습니다.</p>
+
+  <div class="simulator">
+    <div class="sim-title">📊 나의 포트폴리오 설계</div>
+    <div class="sim-sub">슬라이더 조작 → 합계가 100%가 되도록 자동 조정됩니다</div>
+
+    <div class="sim-row">
+      <div class="sim-label">대형 가치주 (Low Risk) <span id="val_value">30</span>%</div>
+      <input type="range" id="sl_value" min="0" max="80" value="30">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">대형 성장주 (Mid Risk) <span id="val_growth">30</span>%</div>
+      <input type="range" id="sl_growth" min="0" max="80" value="30">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">중소형·성장·IPO (High Risk) <span id="val_small">20</span>%</div>
+      <input type="range" id="sl_small" min="0" max="60" value="20">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">채권 (Bond) <span id="val_bond">10</span>%</div>
+      <input type="range" id="sl_bond" min="0" max="60" value="10">
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">현금 (Cash) <span id="val_cash">10</span>%</div>
+      <input type="range" id="sl_cash" min="0" max="30" value="10">
+    </div>
+
+    <div class="sim-bars" id="simBars">
+      <div class="bar-row">
+        <div class="bar-label">대형가치주</div>
+        <div class="bar-track"><div class="bar-fill" id="bar_value" style="background:var(--chart4);width:30%"></div></div>
+        <div class="bar-pct" id="barpct_value">30%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">대형성장주</div>
+        <div class="bar-track"><div class="bar-fill" id="bar_growth" style="background:var(--chart1);width:30%"></div></div>
+        <div class="bar-pct" id="barpct_growth">30%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">중소형</div>
+        <div class="bar-track"><div class="bar-fill" id="bar_small" style="background:#dc2626;width:20%"></div></div>
+        <div class="bar-pct" id="barpct_small">20%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">채권</div>
+        <div class="bar-track"><div class="bar-fill" id="bar_bond" style="background:var(--chart3);width:10%"></div></div>
+        <div class="bar-pct" id="barpct_bond">10%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">현금</div>
+        <div class="bar-track"><div class="bar-fill" id="bar_cash" style="background:#d1d5db;width:10%"></div></div>
+        <div class="bar-pct" id="barpct_cash">10%</div>
+      </div>
+    </div>
+
+    <div class="sim-result-grid">
+      <div class="sim-result-card">
+        <div class="src-label">포트폴리오 합계</div>
+        <div class="src-value" id="totalPct">100</div>
+        <div class="src-unit">%</div>
+      </div>
+      <div class="sim-result-card">
+        <div class="src-label">리스크 점수</div>
+        <div class="src-value" id="riskScore">52</div>
+        <div class="src-unit">/100</div>
+      </div>
+      <div class="sim-result-card">
+        <div class="src-label">기대 수익 범위</div>
+        <div class="src-value" id="returnRange">5~12</div>
+        <div class="src-unit">%/년</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);" id="portfolioType">포트폴리오 유형: <strong id="ptypeLabel">모더레이트</strong></div>
+    <button class="sim-reset" onclick="resetSim()">↺ 초기값으로 리셋</button>
+  </div>
+</div>
+
+<!-- ══ 한국 투자자 흔한 실수 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Common Mistakes</div>
+  <h2 class="section-title">한국 투자자의 흔한 실수</h2>
+
+  <ul class="mistake-list">
+    <li class="mistake-item"><div class="mistake-text"><strong>목적 없이 수익만 좇는 투자</strong> — "빨리 늘리고 싶다"는 막연한 목표로 투자. 리스크는 보지 않고 수익률만 비교.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>단기 성과 과도한 강조</strong> — 올해 성과만 보고 포트폴리오를 바꾸는 행동. 장기 복리 효과를 스스로 차단.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>배우자 합의 없는 단독 투자</strong> — 손실 후 급히 만회하려다 더 큰 손실로 이어지는 패턴.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>폭락장 패닉셀</strong> — 장기 목적의 포트폴리오를 단기 하락에 매도. 이후 회복을 놓치는 가장 흔한 실패.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>20~30배 수익 사례에 현혹</strong> — 결과만 보고 그 뒤의 리스크는 무시. 100만 달러에서 15만 달러로 쪼그라든 실제 사례 존재.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>은퇴 자금으로 데이트레이딩</strong> — 목적은 은퇴이지만 실제 행동은 단기 매매. 100% 실패 패턴.</div></li>
+    <li class="mistake-item"><div class="mistake-text"><strong>타인과 수익률 비교</strong> — 리스크 성향이 다른 두 사람의 수익률은 비교 불가. 비교 자체가 무의미하며 정신 건강에도 해롭다.</div></li>
+  </ul>
+</div>
+
+<!-- ══ 분산 투자 핵심 차트 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Diversification</div>
+  <h2 class="section-title">주식 유형별 리스크 레벨</h2>
+  <div class="chart-container fade-in">
+    <div class="chart-title">주식 유형별 상대적 리스크 수준 (강사 기준)</div>
+    <canvas id="stockRiskChart" height="220"></canvas>
+  </div>
+</div>
+
+<!-- ══ 결론 ══ -->
+<div class="section fade-in">
+  <div class="section-label">Conclusion</div>
+  <h2 class="section-title">선진국형 투자의 핵심 원칙</h2>
+
+  <div class="pull-quote">
+    "리스크를 줄이면서 리워드를 최대화하는 경계점을 찾는 것, 그것이 포트폴리오입니다."
+    <cite>— 투자아카데미 16회</cite>
+  </div>
+
+  <p><strong>투자 전 반드시 체크할 3가지:</strong> ① 나의 리스크 톨러런스를 객관적으로 파악 → ② 이 돈이 언제 필요한지(타임 호라이즌) 명확히 설정 → ③ 목적에 맞는 포트폴리오 유형 선택 후 5·25 법칙, 333 법칙으로 분산.</p>
+  <p>결과(수익률)보다 <strong>과정(리스크 관리)</strong>이 먼저입니다. 행복한 투자는 리스크를 미리 알고 대비하는 것에서 시작합니다.</p>
+</div>
+
+<div class="footer">
+  투자아카데미 16회 분석 리포트 · 본 자료는 교육 목적으로 작성되었으며 투자 권유가 아닙니다.<br>
+  시험문제 파일과 별도 제공됩니다.
+</div>
+
+<script>
+// ── fade-in & chart observers ──
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+const chartConfigs = {};
+
+// Chart 1: Risk-Reward 곡선
+chartConfigs['riskRewardChart'] = () => {
+  const labels = ['현금','국채','회사채','가치주','블렌드','성장주','중소형','IPO/코인'];
+  const risk =   [5,  12, 22, 30, 42, 58, 72, 90];
+  const reward = [2,  14, 24, 35, 50, 65, 70, 68];
+  new Chart(document.getElementById('riskRewardChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: '자산 유형',
+          data: labels.map((l,i) => ({x: risk[i], y: reward[i], label: l})),
+          backgroundColor: '#e11d48cc',
+          pointRadius: 7,
+          pointHoverRadius: 10,
+        },
+        {
+          label: '프론티어 곡선',
+          data: [{x:5,y:2},{x:15,y:15},{x:30,y:35},{x:50,y:60},{x:65,y:68},{x:80,y:68},{x:95,y:66}],
+          type: 'line',
+          borderColor: '#1a1a1a',
+          borderWidth: 2,
+          borderDash: [5,4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) {
+                const d = ctx.raw;
+                return `${d.label} | 리스크:${d.x} 리워드:${d.y}`;
+              }
+              return `프론티어: (${ctx.raw.x}, ${ctx.raw.y})`;
+            }
+          }
+        },
+        legend: { display: false }
+      },
+      scales: {
+        x: { title: { display: true, text: '리스크 →', color: '#777' }, min: 0, max: 100, grid: { color: '#f0f0f0' } },
+        y: { title: { display: true, text: '기대 리워드 →', color: '#777' }, min: 0, max: 80, grid: { color: '#f0f0f0' } }
+      }
+    }
+  });
+};
+
+// Chart 2: 보수 vs 공격 포트폴리오
+chartConfigs['portfolioChart'] = () => {
+  new Chart(document.getElementById('portfolioChart'), {
+    type: 'bar',
+    data: {
+      labels: ['대형 가치주', '블렌드', '대형 성장주', '중소형 성장주', '현금'],
+      datasets: [
+        {
+          label: '보수적 포트폴리오',
+          data: [50, 30, 20, 0, 0],
+          backgroundColor: '#2563eb99',
+          borderColor: '#2563eb',
+          borderWidth: 1,
+        },
+        {
+          label: '공격적 포트폴리오',
+          data: [0, 20, 50, 25, 5],
+          backgroundColor: '#e11d4899',
+          borderColor: '#e11d48',
+          borderWidth: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top', labels: { font: { family: 'Noto Sans KR', size: 11 } } } },
+      scales: {
+        y: { max: 60, ticks: { callback: v => v + '%' }, grid: { color: '#f0f0f0' } },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+// Chart 3: 주식 유형별 리스크 레벨
+chartConfigs['stockRiskChart'] = () => {
+  new Chart(document.getElementById('stockRiskChart'), {
+    type: 'bar',
+    data: {
+      labels: ['대형 가치주', '대형 성장주', '대·중 가치주', '중소형 성장주', 'IPO/마이크로캡'],
+      datasets: [{
+        label: '리스크 수준',
+        data: [25, 50, 65, 80, 95],
+        backgroundColor: ['#2563eb','#6b7280','#f59e0b','#f43f5e','#e11d48'],
+        borderWidth: 0,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { max: 100, ticks: { callback: v => v, font: { size: 10 } }, title: { display: true, text: '상대적 리스크 수준 (0~100)', font: { size: 10 } }, grid: { color: '#f0f0f0' } },
+        y: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+};
+
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ── 시뮬레이터 ──
+const DEFAULT = { value: 30, growth: 30, small: 20, bond: 10, cash: 10 };
+const keys = ['value','growth','small','bond','cash'];
+
+function updateSim() {
+  const v = {};
+  let total = 0;
+  keys.forEach(k => {
+    v[k] = parseInt(document.getElementById('sl_' + k).value);
+    total += v[k];
+  });
+
+  keys.forEach(k => {
+    const pct = total > 0 ? Math.round(v[k] / total * 100) : 0;
+    document.getElementById('val_' + k).textContent = pct;
+    document.getElementById('barpct_' + k).textContent = pct + '%';
+    document.getElementById('bar_' + k).style.width = pct + '%';
+  });
+
+  document.getElementById('totalPct').textContent = 100;
+
+  // 리스크 점수
+  const riskWeights = { value: 20, growth: 50, small: 85, bond: 15, cash: 8 };
+  let riskScore = 0;
+  keys.forEach(k => {
+    const pct = total > 0 ? v[k] / total : 0;
+    riskScore += pct * riskWeights[k];
+  });
+  riskScore = Math.round(riskScore);
+  document.getElementById('riskScore').textContent = riskScore;
+
+  // 기대 수익 범위
+  let minR, maxR;
+  if (riskScore < 25) { minR=2; maxR=5; }
+  else if (riskScore < 45) { minR=4; maxR=8; }
+  else if (riskScore < 65) { minR=6; maxR=14; }
+  else { minR=8; maxR=25; }
+  document.getElementById('returnRange').textContent = minR + '~' + maxR;
+
+  // 유형 레이블
+  let type;
+  if (riskScore < 25) type = '디펜시브(보수)';
+  else if (riskScore < 45) type = '모더레이트(중립)';
+  else if (riskScore < 65) type = '모더레이트-어그레시브';
+  else type = '어그레시브(공격)';
+  document.getElementById('ptypeLabel').textContent = type;
+
+  // 색상 반영
+  const scoreEl = document.getElementById('riskScore');
+  scoreEl.style.color = riskScore < 40 ? '#059669' : riskScore < 65 ? '#d97706' : '#e11d48';
+}
+
+keys.forEach(k => {
+  document.getElementById('sl_' + k).addEventListener('input', updateSim);
+});
+
+function resetSim() {
+  keys.forEach(k => {
+    document.getElementById('sl_' + k).value = DEFAULT[k];
+  });
+  updateSim();
+}
+
+updateSim();
+</script>
+</body>
+</html>

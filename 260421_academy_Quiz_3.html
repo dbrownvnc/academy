@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자아카데미 16회 — 인터랙티브 퀴즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #fafafa; --text: #1a1a1a; --text2: #777777;
+    --accent: #e11d48; --accent2: #f43f5e; --border: #e5e5e5;
+    --correct: #059669; --wrong: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px 80px;
+  }
+
+  /* ── 스티키 점수판 ── */
+  #scoreboard {
+    position: sticky;
+    top: 0;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 16px;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+  .sb-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .sb-stat { font-size: 12px; font-weight: 700; }
+  .sb-stat span { color: var(--accent2); }
+  .progress-bar { flex: 1; min-width: 80px; height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-top: 2px; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.3s; }
+
+  /* ── 헤더 ── */
+  .quiz-header { padding: 28px 0 20px; border-bottom: 2px solid var(--text); margin-bottom: 28px; }
+  .quiz-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .quiz-title { font-family: 'Playfair Display', serif; font-size: clamp(22px,6vw,32px); font-weight: 700; line-height: 1.2; }
+  .quiz-meta { font-size: 12px; color: var(--text2); margin-top: 10px; }
+
+  /* ── 문제 카드 ── */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .q-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--accent); min-width: 36px; }
+  .q-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 2px 8px; border-radius: 2px;
+  }
+  .badge-type { background: #1a1a1a; color: #fff; }
+  .badge-easy { background: #d1fae5; color: #065f46; }
+  .badge-mid  { background: #fef3c7; color: #92400e; }
+  .badge-hard { background: #fee2e2; color: #991b1b; }
+  .q-text { font-size: 15px; font-weight: 500; margin-bottom: 16px; line-height: 1.75; }
+
+  /* ── 객관식 보기 ── */
+  .options-list { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 10px 14px; text-align: left; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px; cursor: pointer; transition: all 0.2s; color: var(--text);
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: #d1fae5; border-color: var(--correct); color: #065f46; }
+  .opt-btn.wrong   { background: #fee2e2; border-color: var(--wrong);   color: #991b1b; }
+  .opt-label { font-weight: 700; min-width: 18px; flex-shrink: 0; }
+  .opt-badge { margin-left: auto; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+
+  /* ── OX ── */
+  .ox-group { display: flex; gap: 10px; }
+  .ox-btn {
+    flex: 1; padding: 14px; font-size: 20px; font-weight: 700;
+    border: 2px solid var(--border); border-radius: 4px; cursor: pointer;
+    background: #fff; transition: all 0.2s; font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .ox-btn:disabled { cursor: default; }
+  .ox-btn.correct { background: #d1fae5; border-color: var(--correct); }
+  .ox-btn.wrong   { background: #fee2e2; border-color: var(--wrong); }
+
+  /* ── 단답형 ── */
+  .short-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .short-input {
+    flex: 1; min-width: 120px; padding: 10px 12px; border: 1.5px solid var(--border);
+    border-radius: 4px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .short-input:focus { border-color: var(--accent); }
+  .short-input.correct { border-color: var(--correct); background: #d1fae5; }
+  .short-input.wrong   { border-color: var(--wrong);   background: #fee2e2; }
+  .submit-btn {
+    padding: 10px 16px; background: var(--accent); color: #fff; border: none;
+    border-radius: 4px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px; font-weight: 700; transition: all 0.2s;
+  }
+  .submit-btn:hover { background: var(--accent2); }
+  .submit-btn:disabled { background: #ccc; cursor: default; }
+
+  /* ── 해설 ── */
+  .explanation {
+    display: none;
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .explanation.show { display: block; }
+  .exp-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 6px; }
+  .exp-body { font-size: 13px; color: var(--text); line-height: 1.75; }
+  .exp-body strong { color: var(--accent); }
+
+  /* ── 정답 안내 (단답/OX) ── */
+  .answer-hint { font-size: 12px; color: var(--text2); margin-top: 6px; }
+  .answer-hint strong { color: var(--correct); }
+
+  /* ── 모달 ── */
+  #resultModal {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+    z-index: 200; align-items: center; justify-content: center; padding: 20px;
+  }
+  #resultModal.show { display: flex; }
+  .modal-card {
+    background: #fff; border-radius: 8px; padding: 32px 28px; max-width: 400px;
+    width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .modal-score { font-size: 52px; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .modal-grade { font-size: 18px; font-weight: 700; margin: 8px 0; }
+  .modal-msg { font-size: 14px; color: var(--text2); margin-bottom: 24px; line-height: 1.7; }
+  .modal-retry {
+    background: var(--accent); color: #fff; border: none; border-radius: 4px;
+    padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif; transition: background 0.2s;
+  }
+  .modal-retry:hover { background: var(--accent2); }
+
+  /* ── 푸터 ── */
+  .footer { margin-top: 40px; text-align: center; font-size: 11px; color: var(--text2); border-top: 1px solid var(--border); padding-top: 16px; }
+
+  @media (max-width: 380px) {
+    .q-card { padding: 14px 12px; }
+    .ox-btn { font-size: 16px; padding: 10px; }
+    .sb-row { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── 점수판 ── -->
+<div id="scoreboard">
+  <div class="sb-row">
+    <div class="sb-stat">푼 문제 <span id="sb-solved">0</span>/10</div>
+    <div class="sb-stat">맞힌 문제 <span id="sb-correct">0</span></div>
+    <div class="sb-stat">정답률 <span id="sb-rate">0</span>%</div>
+  </div>
+  <div class="progress-bar" style="margin-top:6px;">
+    <div class="progress-fill" id="progressFill" style="width:0%;background:#ef4444;"></div>
+  </div>
+</div>
+
+<!-- ── 헤더 ── -->
+<div class="quiz-header">
+  <div class="quiz-eyebrow">투자아카데미 Vol.16 · 실력 점검 퀴즈</div>
+  <h1 class="quiz-title">포트폴리오 종류와<br>리스크 완전 정복</h1>
+  <div class="quiz-meta">총 10문제 · 객관식 6 · 단답형 3 · OX 1 · 즉시 채점 + 자동 해설</div>
+</div>
+
+<!-- ── 문제 컨테이너 ── -->
+<div id="quizContainer"></div>
+
+<!-- ── 결과 모달 ── -->
+<div id="resultModal">
+  <div class="modal-card">
+    <div class="modal-title">최종 결과 🎓</div>
+    <div class="modal-score" id="finalScore">0점</div>
+    <div class="modal-grade" id="finalGrade"></div>
+    <div class="modal-msg" id="finalMsg"></div>
+    <button class="modal-retry" onclick="retryQuiz()">↺ 다시 풀기</button>
+  </div>
+</div>
+
+<div class="footer">투자아카데미 16회 — 인터랙티브 퀴즈 · 분석 리포트 파일과 별도 제공</div>
+
+<script>
+// ══ 문제 데이터 ══
+const QUIZ_DATA = [
+  {
+    id: 1, type: 'multiple', difficulty: 'easy',
+    question: '강사가 언급한 주식시장 중심의 3대 핵심 투자 자산군이 아닌 것은?',
+    options: ['주식(Stock)', '채권(Bond)', '현금(Cash)', '부동산(Real Estate)'],
+    answer: 3,
+    explanation: '강사는 주식시장 중심 포트폴리오에서 <strong>주식·채권·현금</strong>을 3대 자산군으로 설명했습니다. 부동산은 하이브리드 포트폴리오에서 언급되나, 주식시장 중심 3대 자산군에는 포함되지 않는다고 명시했습니다.'
+  },
+  {
+    id: 2, type: 'multiple', difficulty: 'easy',
+    question: '다음 중 채권의 종류로 강사가 언급하지 않은 것은?',
+    options: ['정부 채권', '기업 채권', '지방정부 채권', '외국 채권'],
+    answer: 3,
+    explanation: '강사는 채권을 크게 <strong>정부 채권 / 기업 채권 / 지방정부 채권</strong> 3종류로 설명했습니다. 외국 채권은 이 방송에서 언급되지 않았습니다.'
+  },
+  {
+    id: 3, type: 'multiple', difficulty: 'mid',
+    question: '5·25 법칙에 대한 설명으로 올바른 것은?',
+    options: [
+      '어떤 주식도 전체의 5% 이상 보유하지 마라',
+      '중소형 종목은 5% 이상, 대형주는 25% 이상 보유하지 마라',
+      '대형주는 25% 이상, 중소형 종목은 5% 이상 보유하지 마라',
+      '모든 자산을 5개 이하, 25% 이하로 나눠라'
+    ],
+    answer: 2,
+    explanation: '강사는 <strong>"아무리 좋은 대형주라도 25% 이상 가지고 있지 마라, 아무리 좋은 중소형 미래가 총능되는 회사도 5% 이상 들고 있지 마라"</strong>고 설명했습니다.'
+  },
+  {
+    id: 4, type: 'multiple', difficulty: 'mid',
+    question: '다음 포트폴리오 유형 중 주식 비중이 가장 낮고 채권 비중이 높은 것은?',
+    options: ['어그레시브 (Aggressive)', '디펜시브 (Defensive)', '스페큘레이티브 (Speculative)', '하이브리드 (Hybrid)'],
+    answer: 1,
+    explanation: '강사는 <strong>디펜시브 포트폴리오</strong>를 채권 60% 이상, 나머지를 존슨앤존슨·록히드마틴 같은 방어적 가치주로 구성한다고 설명했습니다. "너무 느리니까 디펜시브 포트폴리오"라고 표현했습니다.'
+  },
+  {
+    id: 5, type: 'multiple', difficulty: 'mid',
+    question: '포트폴리오 구성 전 반드시 확인해야 할 두 가지 핵심 요소로 강사가 꼽은 것은?',
+    options: [
+      '기대 수익률 / 투자 원금 규모',
+      '리스크 톨러런스 / 타임 호라이즌',
+      '나이 / 직업',
+      '투자 경험 / 시장 지식'
+    ],
+    answer: 1,
+    explanation: '강사는 포트폴리오 구성 전 <strong>리스크 톨러런스(얼마나 큰 리스크를 견딜 수 있는가)와 타임 호라이즌(이 돈이 언제 필요한가)</strong>, 이 두 가지를 반드시 파악해야 한다고 강조했습니다.'
+  },
+  {
+    id: 6, type: 'multiple', difficulty: 'hard',
+    question: '다음 중 강사가 "한국 투자자들의 흔한 실수"로 직접 언급한 것과 가장 거리가 먼 것은?',
+    options: [
+      '목적 없이 현금 금액 부풀리기에만 집중',
+      '폭락장에서 장기 포트폴리오를 매도함',
+      '타인의 수익률과 자신을 비교하며 투자',
+      '채권 비중을 너무 높게 설정함'
+    ],
+    answer: 3,
+    explanation: '강사가 언급한 한국 투자자 실수는 <strong>목적 없는 투자, 단기 성과 강조, 부부 합의 없는 투자, 폭락장 패닉셀, 타인 수익률 비교, 은퇴자금 데이트레이딩</strong> 등입니다. "채권 비중이 너무 높다"는 비판은 직접적으로 언급되지 않았습니다.'
+  },
+  {
+    id: 7, type: 'short', difficulty: 'mid',
+    question: '강사가 설명한 "333 법칙"에서 자산을 분산하는 기본 비율은 각 몇 %입니까? (숫자만 입력)',
+    answer: '30',
+    altAnswers: ['33', '30%', '33%'],
+    explanation: '333 법칙은 <strong>"어떤 에셋 클래스도 30% 30% 30%로 잘라서 넣어라"</strong>는 원칙입니다. 주식 30%, 부동산 30%, 기타 30%, 현금 10% 정도로 분산하는 것이 기본 틀입니다.'
+  },
+  {
+    id: 8, type: 'short', difficulty: 'easy',
+    question: '강사가 설명한 현금 보유의 숨겨진 리스크는 무엇입니까? (핵심 단어로 입력)',
+    answer: '인플레이션',
+    altAnswers: ['인플레', 'inflation', '구매력'],
+    explanation: '강사는 현금은 원금이 보장되지만 <strong>인플레이션으로 인해 구매력이 하락</strong>하는 리스크가 있다고 설명했습니다. "현금을 다량 보유하는 것은 가장 무식한 것"이라고까지 표현했습니다.'
+  },
+  {
+    id: 9, type: 'short', difficulty: 'hard',
+    question: '강사가 언급한 BBB급 채권의 미국 기준 파산 확률은 대략 몇 %입니까? (숫자만 입력)',
+    answer: '4',
+    altAnswers: ['4%', '약 4', '약4'],
+    explanation: '강사는 <strong>"BBB급 파산 확률이 지금 미국 보러 4% 넘었어요"</strong>라고 언급했습니다. 즉 100개 중 4개 기업이 파산할 수 있다는 뜻으로, 이자나 채권을 받지 못하는 리스크가 존재합니다.'
+  },
+  {
+    id: 10, type: 'ox', difficulty: 'mid',
+    question: '"타임 호라이즌(Time Horizon)이 짧은 사람(예: 3년 내 주택 구입 예정)은 공격적으로 투자해도 된다." — 이 진술은 맞습니까?',
+    answer: 'X',
+    explanation: '강사는 <strong>"주택 구입할 때는 보수적으로 짜야 한다"</strong>고 명확히 말했습니다. 3년 내 사용할 자금을 주식에 공격적으로 투자했다가 폭락하면 주택 구입 시기를 놓칠 수 있다는 실례도 들었습니다(2억이 1천만원이 되는 상황).'
+  }
+];
+
+// ══ 상태 ══
+let state = { solved: 0, correct: 0 };
+
+// ══ 렌더 ══
+function render() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = QUIZ_DATA.map(q => renderCard(q)).join('');
+
+  QUIZ_DATA.forEach(q => {
+    if (q.type === 'multiple') {
+      q.options.forEach((_, i) => {
+        document.getElementById(`opt_${q.id}_${i}`).addEventListener('click', () => gradeMultiple(q, i));
+      });
+    } else if (q.type === 'ox') {
+      document.getElementById(`ox_${q.id}_O`).addEventListener('click', () => gradeOX(q, 'O'));
+      document.getElementById(`ox_${q.id}_X`).addEventListener('click', () => gradeOX(q, 'X'));
+    } else if (q.type === 'short') {
+      document.getElementById(`submit_${q.id}`).addEventListener('click', () => gradeShort(q));
+      document.getElementById(`input_${q.id}`).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') gradeShort(q);
+      });
+    }
+  });
+}
+
+function diffBadge(d) {
+  if (d === 'easy') return '<span class="badge badge-easy">쉬움</span>';
+  if (d === 'mid')  return '<span class="badge badge-mid">보통</span>';
+  return '<span class="badge badge-hard">어려움</span>';
+}
+function typeBadge(t) {
+  const labels = { multiple: '객관식', short: '단답형', ox: 'OX' };
+  return `<span class="badge badge-type">${labels[t]}</span>`;
+}
+
+function renderCard(q) {
+  let body = '';
+  if (q.type === 'multiple') {
+    const opts = q.options.map((opt, i) =>
+      `<button class="opt-btn" id="opt_${q.id}_${i}">
+        <span class="opt-label">${String.fromCharCode(65+i)}</span>
+        <span>${opt}</span>
+      </button>`
+    ).join('');
+    body = `<div class="options-list">${opts}</div>`;
+  } else if (q.type === 'ox') {
+    body = `<div class="ox-group">
+      <button class="ox-btn" id="ox_${q.id}_O">⭕ O</button>
+      <button class="ox-btn" id="ox_${q.id}_X">❌ X</button>
+    </div>`;
+  } else {
+    body = `<div class="short-group">
+      <input class="short-input" type="text" id="input_${q.id}" placeholder="답을 입력하세요">
+      <button class="submit-btn" id="submit_${q.id}">제출</button>
+    </div>
+    <div class="answer-hint" id="hint_${q.id}" style="display:none;"></div>`;
+  }
+
+  return `
+    <div class="q-card" id="card_${q.id}">
+      <div class="q-header">
+        <div class="q-num">Q${q.id}</div>
+        <div class="q-badges">${typeBadge(q.type)} ${diffBadge(q.difficulty)}</div>
+      </div>
+      <div class="q-text">${q.question}</div>
+      ${body}
+      <div class="explanation" id="exp_${q.id}">
+        <div class="exp-label">📖 해설</div>
+        <div class="exp-body">${q.explanation}</div>
+      </div>
+    </div>`;
+}
+
+// ══ 채점 함수 ══
+function gradeMultiple(q, selectedIdx) {
+  const isCorrect = selectedIdx === q.answer;
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById(`opt_${q.id}_${i}`);
+    btn.disabled = true;
+    if (i === q.answer) {
+      btn.classList.add('correct');
+      btn.innerHTML += '<span class="opt-badge">✓ 정답</span>';
+    } else if (i === selectedIdx && !isCorrect) {
+      btn.classList.add('wrong');
+      btn.innerHTML += '<span class="opt-badge">✗ 오답</span>';
+    }
+  });
+  recordResult(q.id, isCorrect);
+}
+
+function gradeOX(q, selected) {
+  const isCorrect = selected === q.answer;
+  ['O','X'].forEach(v => {
+    const btn = document.getElementById(`ox_${q.id}_${v}`);
+    btn.disabled = true;
+    if (v === q.answer) btn.classList.add('correct');
+    else if (v === selected && !isCorrect) btn.classList.add('wrong');
+  });
+  recordResult(q.id, isCorrect);
+}
+
+function gradeShort(q) {
+  const input = document.getElementById(`input_${q.id}`);
+  const submit = document.getElementById(`submit_${q.id}`);
+  const hint = document.getElementById(`hint_${q.id}`);
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  const allAnswers = [q.answer, ...(q.altAnswers || [])].map(a => a.toString().trim().toLowerCase());
+  const isCorrect = allAnswers.includes(raw.toLowerCase());
+
+  input.disabled = true;
+  submit.disabled = true;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  hint.style.display = 'block';
+  hint.innerHTML = isCorrect
+    ? '<strong>✓ 정답입니다!</strong>'
+    : `✗ 오답 — 정답은 <strong>${q.answer}</strong> 입니다.`;
+  recordResult(q.id, isCorrect);
+}
+
+function recordResult(qId, isCorrect) {
+  state.solved++;
+  if (isCorrect) state.correct++;
+  document.getElementById(`exp_${qId}`).classList.add('show');
+  updateScoreboard();
+  if (state.solved === QUIZ_DATA.length) {
+    setTimeout(showModal, 600);
+  }
+}
+
+function updateScoreboard() {
+  document.getElementById('sb-solved').textContent = state.solved;
+  document.getElementById('sb-correct').textContent = state.correct;
+  const rate = state.solved > 0 ? Math.round(state.correct / state.solved * 100) : 0;
+  document.getElementById('sb-rate').textContent = rate;
+  const fill = document.getElementById('progressFill');
+  fill.style.width = (state.solved / QUIZ_DATA.length * 100) + '%';
+  fill.style.background = rate < 40 ? '#ef4444' : rate < 70 ? '#f59e0b' : '#059669';
+}
+
+function showModal() {
+  const score = Math.round(state.correct / QUIZ_DATA.length * 100);
+  let grade, msg;
+  if (score >= 90) { grade = 'A+ 🏆'; msg = '완벽합니다! 선진국형 투자 마인드를 갖추셨군요. 포트폴리오 원칙을 완전히 이해하셨습니다.'; }
+  else if (score >= 80) { grade = 'A 🥇'; msg = '우수합니다! 핵심 개념을 잘 이해하고 계십니다. 몇 가지 세부 내용을 더 복습해보세요.'; }
+  else if (score >= 70) { grade = 'B 🥈'; msg = '양호합니다! 기본 개념은 잡혔습니다. 리스크 종류와 포트폴리오 법칙을 다시 정리해보세요.'; }
+  else if (score >= 50) { grade = 'C 📖'; msg = '절반 이상 맞히셨습니다. 분석 리포트를 다시 읽고 재도전해보세요!'; }
+  else { grade = 'D 💪'; msg = '리스크·리워드 개념과 투자 법칙을 중심으로 다시 공부해봅시다. 반복이 실력입니다!'; }
+
+  document.getElementById('finalScore').textContent = `${state.correct}/${QUIZ_DATA.length}점`;
+  document.getElementById('finalGrade').textContent = `등급: ${grade}`;
+  document.getElementById('finalMsg').textContent = msg;
+  document.getElementById('resultModal').classList.add('show');
+}
+
+function retryQuiz() {
+  state = { solved: 0, correct: 0 };
+  document.getElementById('resultModal').classList.remove('show');
+  updateScoreboard();
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══ 초기 실행 ══
+render();
+</script>
+</body>
+</html>
