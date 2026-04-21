@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 18회 — 주식도 비교우위가 있다</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --chart1: #e11d48;
+    --chart2: #1a1a1a;
+    --chart3: #6b7280;
+    --chart4: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.75; }
+
+  /* HERO */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 52px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(90deg, rgba(225,29,72,0.06) 0px, rgba(225,29,72,0.06) 1px, transparent 1px, transparent 40px);
+  }
+  .hero-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 6vw, 40px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    position: relative;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 36px 0 28px; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 4vw, 26px);
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 22px 0 8px;
+    color: var(--text);
+  }
+  p { color: var(--text); margin-bottom: 13px; font-weight: 300; }
+  strong { font-weight: 700; color: var(--text); }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    background: #fff5f7;
+    border-radius: 0 8px 8px 0;
+    margin: 18px 0;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+  }
+  .badge-gray { background: var(--text2); }
+  .badge-dark { background: var(--text); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+  tr:last-child td { border-bottom: none; }
+  .win { color: var(--accent); font-weight: 700; }
+
+  /* CHART CONTAINER */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chart-container {
+    position: relative;
+    max-height: 340px;
+    margin: 20px 0;
+  }
+  .chart-container canvas {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    max-height: 300px;
+  }
+  .chart-container.chart-ready canvas {
+    opacity: 1;
+  }
+
+  /* RISK METER */
+  .risk-meter {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .risk-meter label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .risk-bar-wrap {
+    background: var(--border);
+    border-radius: 6px;
+    height: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .risk-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.8s ease;
+  }
+
+  /* INTERACTIVE BETA CALCULATOR */
+  .calc-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin: 20px 0;
+  }
+  .calc-box h3 { margin-top: 0; font-size: 16px; }
+  .slider-group { margin-bottom: 16px; }
+  .slider-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  .slider-group label span { color: var(--accent); font-weight: 700; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .calc-result {
+    background: var(--text);
+    color: #fff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 10px;
+  }
+  .calc-result strong { color: var(--accent); }
+  .reset-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px 16px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s, color 0.2s;
+  }
+  .reset-btn:hover { background: var(--accent); color: #fff; }
+
+  /* GRID 2COL */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 480px) { .grid2 { grid-template-columns: 1fr; } }
+
+  /* STEPS */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .step-body { font-size: 14px; padding-top: 4px; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+    color: var(--text2);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">투자 아카데미 18회 · 2026.04.21</div>
+    <h1>주식도 <span>비교우위</span>가 있다</h1>
+    <div class="hero-meta">Modern Portfolio Theory · Beta · Alpha · Diversification</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 핵심 요약 -->
+<section>
+  <div class="section-label">Overview</div>
+  <h2>핵심 요약</h2>
+  <p>이번 강의는 <strong>같은 리스크라면 더 높은 수익률을</strong>, <strong>같은 수익률이라면 더 낮은 리스크를</strong> 선택하는 투자 원칙인 <strong>비교우위(Comparative Advantage)</strong>를 주식 투자에 적용하는 방법을 다룹니다.</p>
+  <div class="highlight">
+    🎯 오늘 강의의 핵심: 똑같은 리스크(베타)를 가진 두 주식 중 수익률이 높은 쪽이 <strong>비교우위</strong>가 있다. 그 차이가 바로 <strong>알파(α)</strong>다.
+  </div>
+</section>
+
+<!-- 3가지 투자 분석 방법 -->
+<section class="fade-in">
+  <div class="section-label">Framework</div>
+  <h2>3가지 투자 분석 방법</h2>
+  <div class="grid2">
+    <div class="card fade-in">
+      <div class="card-title"><span class="badge">①</span> 펀더멘털 분석</div>
+      <p style="font-size:13px; margin:0;">기업의 재무 상태를 숫자로 분석. 10-K 보고서, 대차대조표, 손익계산서, 비율 분석, 기업 가치평가(Valuation) 등 4가지 구성.</p>
+    </div>
+    <div class="card fade-in">
+      <div class="card-title"><span class="badge badge-gray">②</span> 기술적 분석</div>
+      <p style="font-size:13px; margin:0;">차트 패턴(Head &amp; Shoulder, 이동평균선), 지지선·저항선을 보고 주가 흐름 예측. 단, 이것만 의존하면 단기 매매(데이트레이딩)에 빠짐.</p>
+    </div>
+  </div>
+  <div class="card fade-in">
+    <div class="card-title"><span class="badge badge-dark">③</span> 현대 포트폴리오 이론 (MPT) — 오늘의 핵심</div>
+    <p style="font-size:13px; margin:0;">미국 기관 투자자 모두가 사용하는 투자 리스크 분석 프레임워크. Random Walk Hypothesis를 기반으로, 주가 예측은 불가능하다고 보고 <strong>리스크 관리와 분산투자</strong>를 핵심 전략으로 삼는다.</p>
+  </div>
+
+  <h3>기술적 분석의 한계</h3>
+  <p>기술적 분석을 지나치게 의존하면 결국 <strong>단기 매매(Short-term Day Trading)</strong>로 이어진다. 슈퍼마이크로컴퓨터 사례처럼, 가만히 보유했으면 1년에 300%가 오를 주식을 팔았다 샀다 반복하면 세금·수수료 차감 후 반 토막이 된다.</p>
+  <div class="highlight">
+    ⚠️ 기술적 분석의 올바른 사용법: 리밸런싱·섹터 로테이션 시 <strong>저점 진입 타이밍</strong>을 찾는 보조 도구로만 활용.
+  </div>
+</section>
+
+<!-- 펀더멘털 분석 4요소 -->
+<section class="fade-in">
+  <div class="section-label">Fundamental Analysis</div>
+  <h2>펀더멘털 분석 4가지 요소</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>구분</th><th>내용</th><th>주요 항목</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>대차대조표</strong><br><small>(Balance Sheet / 10-K)</small></td><td>연간 재무 보고서</td><td>자산·부채·순자산(Net Worth), 주주 자본</td></tr>
+        <tr><td><strong>손익계산서</strong><br><small>(Income Statement)</small></td><td>실적 분석</td><td>분기/연간 매출, 이익, 부채 현황</td></tr>
+        <tr><td><strong>비율 분석</strong><br><small>(Ratio Analysis)</small></td><td>유동성·재무 건전성</td><td>Working Capital, 현금 흐름, R&amp;D vs 배당 사용 비율</td></tr>
+        <tr><td><strong>기업 가치평가</strong><br><small>(Valuation)</small></td><td>주가 적정성 판단</td><td>EPS, PER, Dividend Payout Ratio, ROE</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- MPT & 리스크 유형 -->
+<section class="fade-in">
+  <div class="section-label">Modern Portfolio Theory</div>
+  <h2>현대 포트폴리오 이론과 2가지 리스크</h2>
+  <p>MPT의 핵심은 <strong>시장은 이미 효율적(Efficient)</strong>이라는 전제다. 모든 공개 정보는 이미 주가에 반영되어 있으므로, 투자 분석으로 지속적인 초과 수익을 내기는 어렵다. 따라서 <strong>리스크 관리</strong>가 투자의 본질이 된다.</p>
+
+  <div class="grid2">
+    <div class="card fade-in" style="border-left: 3px solid var(--accent);">
+      <div class="card-title">① 시스템적 리스크 (Systematic Risk)</div>
+      <p style="font-size:13px; margin:0;">전쟁·금리 충격 등 시장 전체 하락. <strong>피할 수 없는 리스크</strong>. 투자를 하는 이상 감수해야 함. "비가 올 때 옷이 젖는 것"에 비유.</p>
+    </div>
+    <div class="card fade-in" style="border-left: 3px solid var(--chart4);">
+      <div class="card-title">② 비시스템적 리스크 (Non-Systematic Risk)</div>
+      <p style="font-size:13px; margin:0;">특정 기업·산업 고유 리스크. <strong>줄일 수 있는 리스크</strong>. 분산투자(Diversification)로 상당히 낮출 수 있음.</p>
+    </div>
+  </div>
+
+  <div class="highlight">
+    💡 투자자가 집중해야 하는 것은 시스템적 리스크(①)가 아닌 비시스템적 리스크(②)다. ①은 어차피 피할 수 없으므로 공포심의 원인으로 삼으면 안 된다.
+  </div>
+</section>
+
+<!-- CAPM & Beta -->
+<section class="fade-in">
+  <div class="section-label">CAPM · Beta · Alpha</div>
+  <h2>CAPM, 베타(β), 알파(α)</h2>
+  <p>MPT의 실전 적용 방법론이 <strong>CAPM(Capital Asset Pricing Model)</strong>이다. 여기서 핵심 개념이 베타와 알파다.</p>
+
+  <h3>베타(β) — 변동성 지표</h3>
+  <p>S&amp;P 500을 기준(β=1)으로, 특정 주식이 시장 대비 얼마나 더 움직이는지를 수치화한 것.</p>
+
+  <div class="chart-container fade-in">
+    <canvas id="betaChart" height="220"></canvas>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>베타 범위</th><th>특성</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>β &lt; 1</strong></td><td>보수적, 저변동성 → 리스크↓ 수익률↓</td><td>다우존스 종목, 존슨앤존슨, 대형 가치주</td></tr>
+        <tr><td><strong>β = 1</strong></td><td>시장과 동일한 움직임</td><td>S&amp;P 500 기준</td></tr>
+        <tr><td><strong>β &gt; 1</strong></td><td>공격적, 고변동성 → 리스크↑ 수익률↑</td><td>성장주, IT 주식</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>알파(α) — 초과 수익률</h3>
+  <p>같은 베타(리스크)를 가진 주식들 중, 기대 수익을 <strong>초과하는 덤(Extra Return)</strong>. "연봉 10억에 플러스 알파"처럼, 같은 노력 대비 더 얻는 것.</p>
+  <div class="highlight">
+    📌 비교우위 = 같은 베타에서 알파가 높은 주식을 선택하거나, 같은 수익률에서 베타가 낮은 주식을 선택하는 것.
+  </div>
+</section>
+
+<!-- 베타 계산기 인터랙티브 -->
+<section class="fade-in">
+  <div class="section-label">Interactive</div>
+  <h2>베타 수익률 시뮬레이터</h2>
+  <p>S&amp;P 500 변동률과 보유 주식의 베타를 조정하면 예상 수익률을 실시간으로 계산합니다.</p>
+
+  <div class="calc-box">
+    <h3>📊 베타 기반 수익률 예측기</h3>
+    <div class="slider-group">
+      <label>S&P 500 변동률 <span id="sp500Val">+10%</span></label>
+      <input type="range" id="sp500Slider" min="-30" max="30" value="10" step="1">
+    </div>
+    <div class="slider-group">
+      <label>내 주식의 베타(β) <span id="betaVal">1.2</span></label>
+      <input type="range" id="betaSlider" min="0.1" max="3.0" value="1.2" step="0.1">
+    </div>
+    <div class="slider-group">
+      <label>알파(α) — 초과 수익률 <span id="alphaVal">+0%</span></label>
+      <input type="range" id="alphaSlider" min="-10" max="30" value="0" step="1">
+    </div>
+    <div class="calc-result" id="calcResult">
+      결과가 여기에 표시됩니다.
+    </div>
+    <button class="reset-btn" onclick="resetCalc()">⟳ 초기화</button>
+  </div>
+</section>
+
+<!-- 애플 vs 마이크로소프트 비교 -->
+<section class="fade-in">
+  <div class="section-label">Case Study</div>
+  <h2>비교우위 실전 사례: 애플 vs 마이크로소프트</h2>
+  <p>강의에서 제시된 수치를 기반으로 두 대형 IT 주식의 비교우위를 분석합니다.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>항목</th><th>애플 (AAPL)</th><th>마이크로소프트 (MSFT)</th></tr></thead>
+      <tbody>
+        <tr><td>베타(β)</td><td>1.2</td><td class="win">~1.0 (더 안정적)</td></tr>
+        <tr><td>1년 수익률</td><td>36%</td><td class="win">61.6%</td></tr>
+        <tr><td>PER (주가수익비율)</td><td>37</td><td class="win">30 (더 저평가)</td></tr>
+        <tr><td>알파(α)</td><td>-0.0% (기준)</td><td class="win">+22% (초과 수익)</td></tr>
+        <tr><td>비교우위 판정</td><td>—</td><td class="win">✅ 비교우위 있음</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container fade-in">
+    <canvas id="compareChart" height="220"></canvas>
+  </div>
+
+  <div class="highlight">
+    📌 애플이 나쁜 주식이 아니다. 단지 <strong>"같은 라지캡 IT 성장주"</strong> 카테고리 안에서 비교했을 때, 마이크로소프트가 낮은 리스크로 훨씬 높은 수익을 냈다는 의미다. 상황은 항상 변하므로 지속적인 모니터링이 필요하다.
+  </div>
+</section>
+
+<!-- 플러스 알파를 위한 전략 -->
+<section class="fade-in">
+  <div class="section-label">Strategy</div>
+  <h2>플러스 알파(α)를 위한 투자 전략</h2>
+  <p>21세기 투자는 <strong>열심히(Work Hard) + 스마트하게(Work Smart)</strong> 해야 한다. 같은 노력으로 더 나은 결과를 내는 것이 알파다.</p>
+
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>분산투자(Diversification)</strong> — 비시스템적 리스크 감소. 라지캡 성장주 70%+, IT 30%+, 중형주·현금·대체자산 소량 편입.</div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>리밸런싱(Rebalancing)</strong> — 포트폴리오 비율이 목표에서 벗어날 때 조정. 특정 섹터 리스크 증가 시 비중 축소.</div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>섹터 로테이션(Sector Rotation)</strong> — 경기 사이클에 따라 강한 섹터로 이동. 기술적 분석은 이때 저점 진입 타이밍 확인에만 활용.</div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>베타 기반 종목 비교</strong> — 같은 카테고리 내에서 베타 대비 수익률(알파)이 높은 종목으로 교체.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 주요 용어 정리 -->
+<section class="fade-in">
+  <div class="section-label">Glossary</div>
+  <h2>주요 용어 정리</h2>
+  <div class="grid2">
+    <div class="card fade-in"><div class="card-title">MPT (현대 포트폴리오 이론)</div><p style="font-size:13px;margin:0;">Modern Portfolio Theory. 분산투자로 리스크를 줄이면서 최적 수익을 추구하는 이론.</p></div>
+    <div class="card fade-in"><div class="card-title">CAPM</div><p style="font-size:13px;margin:0;">Capital Asset Pricing Model. 자산의 기대 수익률을 시장 리스크(베타)로 계산하는 모델.</p></div>
+    <div class="card fade-in"><div class="card-title">베타(β)</div><p style="font-size:13px;margin:0;">주식의 변동성. S&amp;P 500 대비 얼마나 더 움직이는지를 나타내는 수치.</p></div>
+    <div class="card fade-in"><div class="card-title">알파(α)</div><p style="font-size:13px;margin:0;">기대 수익률을 초과하는 플러스 수익. 같은 리스크에서 더 많이 버는 것.</p></div>
+    <div class="card fade-in"><div class="card-title">Random Walk Hypothesis</div><p style="font-size:13px;margin:0;">주가의 움직임은 임의적이어서 투자자가 통제·예측할 수 없다는 이론.</p></div>
+    <div class="card fade-in"><div class="card-title">Efficient Market</div><p style="font-size:13px;margin:0;">효율적 시장. 공개된 모든 정보가 이미 주가에 반영되어 있어 분석만으로 초과 수익을 내기 어렵다는 개념.</p></div>
+    <div class="card fade-in"><div class="card-title">10-K</div><p style="font-size:13px;margin:0;">미국 기업이 SEC에 연 1회 제출하는 연간 보고서. IR 페이지에서 열람 가능.</p></div>
+    <div class="card fade-in"><div class="card-title">PER (주가수익비율)</div><p style="font-size:13px;margin:0;">Price-Earnings Ratio. 주가가 주당순이익의 몇 배인지 나타내는 밸류에이션 지표.</p></div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  투자 아카데미 18회 · 투자는인생TV · 2026.04.21<br>
+  본 문서는 교육 목적으로 작성된 강의 요약본입니다.
+</footer>
+
+<script>
+// ===================== FADE IN OBSERVER =====================
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// ===================== CHART CONFIGS =====================
+const chartConfigs = {};
+
+chartConfigs['betaChart'] = () => {
+  new Chart(document.getElementById('betaChart'), {
+    type: 'bar',
+    data: {
+      labels: ['S&P 500\n(β=1)', 'β=0.5 종목', 'β=1.0 종목', 'β=1.2 종목\n(애플)', 'β=1.5 종목'],
+      datasets: [{
+        label: '시장 +10% 시 예상 수익률',
+        data: [10, 5, 10, 12, 15],
+        backgroundColor: ['#6b7280','#2563eb','#1a1a1a','#e11d48','#f43f5e'],
+        borderRadius: 6,
+      }, {
+        label: '시장 -10% 시 예상 손실',
+        data: [-10, -5, -10, -12, -15],
+        backgroundColor: ['rgba(107,114,128,0.3)','rgba(37,99,235,0.3)','rgba(26,26,26,0.3)','rgba(225,29,72,0.3)','rgba(244,63,94,0.3)'],
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR', size: 11 } } },
+        tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
+      },
+      scales: {
+        y: { ticks: { callback: v => v + '%' }, grid: { color: '#e5e5e5' } },
+        x: { ticks: { font: { family: 'Noto Sans KR', size: 11 } } }
+      }
+    }
+  });
+};
+
+chartConfigs['compareChart'] = () => {
+  new Chart(document.getElementById('compareChart'), {
+    type: 'radar',
+    data: {
+      labels: ['1년 수익률(상대)', '베타 안정성', 'PER 저평가', '알파'],
+      datasets: [{
+        label: '애플 (AAPL)',
+        data: [59, 40, 45, 10],
+        backgroundColor: 'rgba(225,29,72,0.15)',
+        borderColor: '#e11d48',
+        pointBackgroundColor: '#e11d48',
+        borderWidth: 2,
+      }, {
+        label: '마이크로소프트 (MSFT)',
+        data: [100, 85, 60, 100],
+        backgroundColor: 'rgba(37,99,235,0.15)',
+        borderColor: '#2563eb',
+        pointBackgroundColor: '#2563eb',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR', size: 11 } } }
+      },
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { display: false },
+          pointLabels: { font: { family: 'Noto Sans KR', size: 12 } }
+        }
+      }
+    }
+  });
+};
+
+// ===================== CHART OBSERVER =====================
+const chartObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const canvas = e.target.querySelector('canvas');
+      if (canvas && chartConfigs[canvas.id]) {
+        chartConfigs[canvas.id]();
+        e.target.classList.add('chart-ready');
+        chartObs.unobserve(e.target);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.chart-container').forEach(el => chartObs.observe(el));
+
+// ===================== BETA CALCULATOR =====================
+const sp500Slider = document.getElementById('sp500Slider');
+const betaSlider = document.getElementById('betaSlider');
+const alphaSlider = document.getElementById('alphaSlider');
+const sp500Val = document.getElementById('sp500Val');
+const betaVal = document.getElementById('betaVal');
+const alphaVal = document.getElementById('alphaVal');
+const calcResult = document.getElementById('calcResult');
+
+function updateCalc() {
+  const sp = parseFloat(sp500Slider.value);
+  const beta = parseFloat(betaSlider.value);
+  const alpha = parseFloat(alphaSlider.value);
+  const expected = +(beta * sp + alpha).toFixed(1);
+  const sign = v => v >= 0 ? '+' : '';
+
+  sp500Val.textContent = sign(sp) + sp + '%';
+  betaVal.textContent = beta.toFixed(1);
+  alphaVal.textContent = sign(alpha) + alpha + '%';
+
+  const emoji = expected >= 15 ? '🚀' : expected >= 5 ? '📈' : expected >= 0 ? '➡️' : expected >= -10 ? '📉' : '🔻';
+  calcResult.innerHTML = `
+    <div>S&P 500이 <strong style="color:#f43f5e">${sign(sp)}${sp}%</strong> 움직이면,</div>
+    <div>β=${beta.toFixed(1)} 주식의 기대 수익 = <strong style="color:#f43f5e">${sign(beta*sp)}${+(beta*sp).toFixed(1)}%</strong></div>
+    <div>알파(α) ${sign(alpha)}${alpha}% 추가 시 최종 예상: <strong style="color:#f43f5e">${sign(expected)}${expected}%</strong> ${emoji}</div>
+    ${beta > 1.5 ? '<div style="margin-top:6px; font-size:12px; color:#fca5a5;">⚠️ 베타가 높아 손실 시 시장보다 큰 타격</div>' : ''}
+    ${beta < 0.5 ? '<div style="margin-top:6px; font-size:12px; color:#93c5fd;">🛡️ 낮은 베타 — 보수적 포트폴리오 성격</div>' : ''}
+  `;
+}
+
+[sp500Slider, betaSlider, alphaSlider].forEach(s => s.addEventListener('input', updateCalc));
+updateCalc();
+
+function resetCalc() {
+  sp500Slider.value = 10;
+  betaSlider.value = 1.2;
+  alphaSlider.value = 0;
+  updateCalc();
+}
+</script>
+</body>
+</html>

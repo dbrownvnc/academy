@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 아카데미 18회 — 퀴즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #fafafa;
+    --text: #1a1a1a;
+    --text2: #777777;
+    --accent: #e11d48;
+    --accent2: #f43f5e;
+    --border: #e5e5e5;
+    --green: #16a34a;
+    --red: #dc2626;
+    --orange: #ea580c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.75; padding-bottom: 60px; }
+
+  /* STICKY SCORE BAR */
+  #scorebar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+  #scorebar .title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--accent); flex: 1; min-width: 120px; }
+  .score-items { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .score-item { display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
+  .score-item .label { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; }
+  .score-item .val { font-size: 16px; font-weight: 700; font-family: 'Playfair Display', serif; }
+  .progress-wrap { flex-basis: 100%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; overflow: hidden; }
+  #progressBar { height: 100%; border-radius: 2px; transition: width 0.5s ease, background 0.5s ease; width: 0%; background: var(--accent); }
+
+  /* HERO */
+  .hero {
+    background: var(--text);
+    color: #fff;
+    padding: 36px 20px 28px;
+  }
+  .hero-label { font-family: 'Playfair Display', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5vw, 32px); font-weight: 900; }
+  .hero p { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 8px; margin-bottom: 0; }
+
+  /* CONTAINER */
+  .container { max-width: 700px; margin: 0 auto; padding: 0 16px; }
+
+  /* QUIZ CARD */
+  .quiz-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 20px 20px;
+    margin: 20px 0;
+    transition: box-shadow 0.3s;
+  }
+  .quiz-card.answered { box-shadow: none; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent);
+    min-width: 32px;
+  }
+  .difficulty {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .diff-easy { background: #dcfce7; color: #16a34a; }
+  .diff-medium { background: #fef3c7; color: #d97706; }
+  .diff-hard { background: #fee2e2; color: #dc2626; }
+  .q-type { font-size: 10px; color: var(--text2); margin-left: auto; }
+
+  .question { font-size: 15px; font-weight: 500; margin-bottom: 16px; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    width: 100%;
+    text-align: left;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: #dcfce7 !important; border-color: var(--green) !important; color: var(--green) !important; font-weight: 700; }
+  .opt-btn.wrong { background: #fee2e2 !important; border-color: var(--red) !important; color: var(--red) !important; }
+  .opt-badge { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; margin-left: auto; }
+  .badge-correct { background: var(--green); color: #fff; }
+  .badge-wrong { background: var(--red); color: #fff; }
+
+  /* TEXT INPUT */
+  .text-input-wrap { display: flex; gap: 8px; }
+  .text-input-wrap input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--text);
+    background: #fff;
+  }
+  .text-input-wrap input:focus { border-color: var(--accent); }
+  .submit-btn {
+    padding: 10px 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--accent2); }
+  .submit-btn:disabled { background: var(--text2); cursor: default; }
+
+  /* OX BUTTONS */
+  .ox-wrap { display: flex; gap: 12px; }
+  .ox-btn {
+    flex: 1;
+    padding: 14px;
+    font-size: 22px;
+    font-weight: 900;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f7; }
+  .ox-btn:disabled { cursor: default; }
+  .ox-btn.correct { background: #dcfce7 !important; border-color: var(--green) !important; }
+  .ox-btn.wrong { background: #fee2e2 !important; border-color: var(--red) !important; }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent); }
+
+  /* FEEDBACK TEXT */
+  .feedback-text {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    display: none;
+  }
+  .feedback-text.show { display: block; }
+  .feedback-text.correct-text { color: var(--green); }
+  .feedback-text.wrong-text { color: var(--red); }
+
+  /* FINAL MODAL */
+  #finalModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #finalModal.show { display: flex; }
+  .modal-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 36px 28px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+  }
+  .modal-card .big-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .modal-card .grade {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .modal-card .message { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+  .retry-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .retry-btn:hover { background: var(--accent2); }
+
+  @media (max-width: 400px) {
+    .quiz-card { padding: 18px 14px 14px; }
+    .score-items { gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY SCOREBAR -->
+<div id="scorebar">
+  <div class="title">📚 투자 아카데미 18회 퀴즈</div>
+  <div class="score-items">
+    <div class="score-item"><div class="label">푼 문제</div><div class="val" id="solvedCount">0 / 10</div></div>
+    <div class="score-item"><div class="label">맞힌 문제</div><div class="val" id="correctCount">0</div></div>
+    <div class="score-item"><div class="label">정답률</div><div class="val" id="rateCount">0%</div></div>
+  </div>
+  <div class="progress-wrap"><div id="progressBar"></div></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">Quiz · 투자아카데미 18회</div>
+    <h1>주식도 비교우위가 있다</h1>
+    <p>10문제 · 객관식 · 단답형 · OX</p>
+  </div>
+</div>
+
+<div class="container" id="quizContainer"></div>
+
+<!-- FINAL MODAL -->
+<div id="finalModal">
+  <div class="modal-card">
+    <div class="big-score" id="finalScore"></div>
+    <div class="grade" id="finalGrade"></div>
+    <div class="message" id="finalMessage"></div>
+    <button class="retry-btn" onclick="retryQuiz()">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = [
+  {
+    id: 1,
+    type: 'mcq',
+    difficulty: 'easy',
+    question: '투자 아카데미 18회에서 오늘의 핵심 주제는 무엇입니까?',
+    options: ['기술적 분석과 차트 패턴', '주식도 비교우위가 있다', '섹터 로테이션 전략', '10-K 보고서 분석법'],
+    answer: 1,
+    explanation: '강의 초반 "오늘 주제는 주식도 비교우위가 있습니다"라고 명시하였습니다. 비교우위는 MBA에서 사용하는 마케팅 용어로, 같은 리스크인데 수익률이 높거나, 같은 수익률인데 리스크가 낮은 것을 뜻합니다.'
+  },
+  {
+    id: 2,
+    type: 'mcq',
+    difficulty: 'easy',
+    question: '펀더멘털 분석의 4가지 요소로 올바른 것은?',
+    options: [
+      '차트·이동평균·지지선·저항선',
+      '대차대조표·손익계산서·비율분석·기업가치평가',
+      '베타·알파·CAPM·분산투자',
+      'PER·PBR·ROE·EPS만 분석'
+    ],
+    answer: 1,
+    explanation: '강의에서 펀더멘털 분석 4가지를 ① 대차대조표(Balance Sheet / 10-K) ② 손익계산서(Income Statement) ③ 비율분석(Ratio Analysis) ④ 기업가치평가(Valuation)로 설명하였습니다.'
+  },
+  {
+    id: 3,
+    type: 'mcq',
+    difficulty: 'medium',
+    question: '기술적 분석(차트 분석)의 올바른 활용법으로 강사가 권장한 것은?',
+    options: [
+      '매일 차트를 보고 단기 매매에 적극 활용',
+      '주된 투자 판단 근거로 삼아야 한다',
+      '리밸런싱·섹터 로테이션 시 저점 진입 타이밍 확인에만 보조적으로 활용',
+      '기술적 분석은 전혀 쓸모가 없어 무시해야 한다'
+    ],
+    answer: 2,
+    explanation: '강의에서 "기술적 분석만 의지하게 되면 결국 단기 매매가 된다"고 경고하며, "우리가 리밸런싱하고 섹터 로테이션 할 때 저점에서 들어가기 위해 저점을 찾는 것으로 사용할 수가 있습니다"라고 적절한 용도를 제시하였습니다.'
+  },
+  {
+    id: 4,
+    type: 'mcq',
+    difficulty: 'medium',
+    question: '베타(β)에 대한 설명으로 옳은 것은?',
+    options: [
+      'β=1은 시장보다 두 배 움직인다는 의미다',
+      'β가 클수록 수익은 높지만 리스크는 동일하다',
+      'S&P 500을 기준(β=1)으로, 특정 주식의 상대적 변동성을 나타낸다',
+      '베타는 배당 수익률을 나타내는 지표다'
+    ],
+    answer: 2,
+    explanation: '강의에서 "가장 많이 사용하는 투자된 기업의 주식 가치의 변화의 리스크를 수치로 나타낸 것이 베타입니다. 베타가 1이 기준이에요. 1이 S&P 500이 기준이 1이에요"라고 설명하였습니다.'
+  },
+  {
+    id: 5,
+    type: 'mcq',
+    difficulty: 'hard',
+    question: '강의에서 제시된 애플(AAPL)과 마이크로소프트(MSFT) 비교에서, 마이크로소프트가 비교우위를 가진 근거로 맞는 것은?',
+    options: [
+      '마이크로소프트의 베타가 1.2로 애플보다 높기 때문',
+      '마이크로소프트의 PER이 37로 애플(30)보다 높기 때문',
+      '애플보다 낮은 베타(~1.0)에서 1년 수익률 61.6%를 기록해 리스크 대비 수익이 우월하기 때문',
+      '두 회사의 수익률이 동일하기 때문'
+    ],
+    answer: 2,
+    explanation: '강의에서 "애플은 베타 1.2이고 마이크로소프트는 1에 가까워. 그런데 1년 리턴을 보니까 애플은 36%인데 마이크로소프트는 61.6%예요"라며, 리스크(베타)가 낮은데 수익률은 훨씬 높은 마이크로소프트가 비교우위가 있다고 설명했습니다.'
+  },
+  {
+    id: 6,
+    type: 'mcq',
+    difficulty: 'medium',
+    question: '현대 포트폴리오 이론(MPT)의 기반이 되는 이론으로 "주가의 이동은 임의적이며 투자자가 기술적 분석으로 미래 주가를 예측하는 것은 불가능하다"는 것은?',
+    options: [
+      'Head & Shoulder Theory',
+      'Efficient Frontier',
+      'Random Walk Hypothesis',
+      'Dividend Discount Model'
+    ],
+    answer: 2,
+    explanation: '강의에서 "현대 포트폴리오 이론이라는 것은 Random Walk Hypothesis라는 거죠. 랜덤 워크처럼 주가의 이동, 올라가고 내려 하는 것은 임의적으로 움직인다. 우리가 인간으로서 투자자로 통제할 수 없다"고 설명하였습니다.'
+  },
+  {
+    id: 7,
+    type: 'short',
+    difficulty: 'easy',
+    question: '강의에서 비시스템적 리스크(Non-Systematic Risk)를 줄이는 가장 대표적인 방법으로 제시한 것은? (한 단어로)',
+    answer: '분산투자',
+    keywords: ['분산', 'diversification', '다각화'],
+    explanation: '강의에서 "Diversification. 우리가 얘기하는 diversification은 포트폴리오를 분산 투자한다는 얘기인 거예요. 비시스템적 리스크는 투자 분산으로 리스크를 상당히 낮출 수가 있습니다"라고 설명하였습니다.'
+  },
+  {
+    id: 8,
+    type: 'short',
+    difficulty: 'medium',
+    question: '같은 베타(리스크)를 가진 주식들 중 기대 수익률을 초과하는 "덤 수익"을 영어로 무엇이라 합니까?',
+    answer: '알파',
+    keywords: ['alpha', '알파', 'α'],
+    explanation: '강의에서 "알파라는 개념이었어요. 똑같은 리스크인데 얘는 10% 났는데 얘는 7% 났어, 그러면 이게 extra, 플러스 알파라는 얘기했잖아"라며 알파를 초과 수익으로 설명하였습니다.'
+  },
+  {
+    id: 9,
+    type: 'ox',
+    difficulty: 'easy',
+    question: '강의에 따르면, 시스템적 리스크(Systematic Risk)는 전쟁·금리충격 등 시장 전체에 영향을 주는 것으로, 투자자가 분산투자로 완전히 없앨 수 있는 리스크다.',
+    answer: 'X',
+    explanation: '강사는 "시스템적 리스크는 도저히 피할 수 없는 전체 동반 하락"이라 설명하며, "비가 오면 덜 맞을 수는 있어도 안 맞을 수는 없어요"라고 비유하였습니다. 분산투자로 줄일 수 있는 것은 비시스템적 리스크입니다.'
+  },
+  {
+    id: 10,
+    type: 'ox',
+    difficulty: 'hard',
+    question: '강의에서 강사는 "주식 전문가"라는 개념이 미국에서도 일반적으로 통용되며, 전문가라면 미래 주가를 충분히 예측할 수 있다고 설명하였다.',
+    answer: 'X',
+    explanation: '강사는 "주식 전문가가 미국에서는 절대 주식 전문가라는 말 자체가 없어요. 주식을 예측을 못하는 거예요 기본적으로 불가능합니다"라고 강조하며, 주식 전문가라는 개념 자체가 후진적이라 비판하였습니다.'
+  }
+];
+
+let state = { solved: 0, correct: 0 };
+
+function getDiffLabel(d) {
+  if (d === 'easy') return '<span class="difficulty diff-easy">쉬움</span>';
+  if (d === 'medium') return '<span class="difficulty diff-medium">보통</span>';
+  return '<span class="difficulty diff-hard">어려움</span>';
+}
+function getTypeLabel(t) {
+  if (t === 'mcq') return '객관식';
+  if (t === 'short') return '단답형';
+  return 'OX';
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  QUIZ_DATA.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = 'card-' + q.id;
+
+    let inputHtml = '';
+    if (q.type === 'mcq') {
+      inputHtml = '<div class="options">' +
+        q.options.map((opt, i) =>
+          `<button class="opt-btn" data-qid="${q.id}" data-idx="${i}" onclick="selectOption(${q.id},${i})">${opt}</button>`
+        ).join('') + '</div>';
+    } else if (q.type === 'short') {
+      inputHtml = `<div class="text-input-wrap">
+        <input type="text" id="input-${q.id}" placeholder="답을 입력하세요..." onkeydown="if(event.key==='Enter')submitShort(${q.id})">
+        <button class="submit-btn" id="sbtn-${q.id}" onclick="submitShort(${q.id})">제출</button>
+      </div>`;
+    } else {
+      inputHtml = `<div class="ox-wrap">
+        <button class="ox-btn" id="o-${q.id}" onclick="selectOX(${q.id},'O')">O</button>
+        <button class="ox-btn" id="x-${q.id}" onclick="selectOX(${q.id},'X')">X</button>
+      </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="q-num">${q.id}</div>
+        ${getDiffLabel(q.difficulty)}
+        <div class="q-type">${getTypeLabel(q.type)}</div>
+      </div>
+      <div class="question">${q.question}</div>
+      ${inputHtml}
+      <div class="feedback-text" id="fb-${q.id}"></div>
+      <div class="explanation" id="exp-${q.id}">
+        <strong>📖 해설</strong><br>${q.explanation}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateScorebar() {
+  document.getElementById('solvedCount').textContent = state.solved + ' / 10';
+  document.getElementById('correctCount').textContent = state.correct;
+  const rate = state.solved > 0 ? Math.round(state.correct / state.solved * 100) : 0;
+  document.getElementById('rateCount').textContent = rate + '%';
+  const bar = document.getElementById('progressBar');
+  bar.style.width = (state.solved / 10 * 100) + '%';
+  bar.style.background = rate >= 70 ? '#16a34a' : rate >= 40 ? '#ea580c' : '#e11d48';
+
+  if (state.solved === 10) {
+    setTimeout(showFinal, 600);
+  }
+}
+
+function markResult(qid, isCorrect) {
+  state.solved++;
+  if (isCorrect) state.correct++;
+  updateScorebar();
+
+  const fb = document.getElementById('fb-' + qid);
+  fb.className = 'feedback-text show ' + (isCorrect ? 'correct-text' : 'wrong-text');
+  fb.textContent = isCorrect ? '✓ 정답입니다!' : '✗ 오답입니다.';
+
+  document.getElementById('exp-' + qid).classList.add('show');
+  document.getElementById('card-' + qid).classList.add('answered');
+}
+
+function selectOption(qid, idx) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const btns = document.querySelectorAll(`[data-qid="${qid}"]`);
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.answer;
+  btns.forEach((b, i) => {
+    if (i === q.answer) {
+      b.classList.add('correct');
+      b.innerHTML += '<span class="opt-badge badge-correct">✓ 정답</span>';
+    } else if (i === idx && !isCorrect) {
+      b.classList.add('wrong');
+      b.innerHTML += '<span class="opt-badge badge-wrong">✗ 오답</span>';
+    }
+  });
+  markResult(qid, isCorrect);
+}
+
+function submitShort(qid) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const input = document.getElementById('input-' + qid);
+  const btn = document.getElementById('sbtn-' + qid);
+  const val = input.value.trim().toLowerCase();
+  if (!val) return;
+
+  input.disabled = true;
+  btn.disabled = true;
+
+  const isCorrect = q.keywords.some(k => val.includes(k.toLowerCase()));
+  input.style.borderColor = isCorrect ? '#16a34a' : '#dc2626';
+  input.style.background = isCorrect ? '#dcfce7' : '#fee2e2';
+  markResult(qid, isCorrect);
+}
+
+function selectOX(qid, choice) {
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  const oBtn = document.getElementById('o-' + qid);
+  const xBtn = document.getElementById('x-' + qid);
+  oBtn.disabled = true;
+  xBtn.disabled = true;
+
+  const isCorrect = choice === q.answer;
+  const selectedBtn = choice === 'O' ? oBtn : xBtn;
+  const correctBtn = q.answer === 'O' ? oBtn : xBtn;
+
+  selectedBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) correctBtn.classList.add('correct');
+  markResult(qid, isCorrect);
+}
+
+function showFinal() {
+  const score = state.correct;
+  const pct = Math.round(score / 10 * 100);
+  let grade, message;
+  if (score >= 9) { grade = '🏆 A+'; message = '완벽한 이해! 현대 포트폴리오 이론 마스터.'; }
+  else if (score >= 8) { grade = '🥇 A'; message = '훌륭합니다! 비교우위 개념을 확실히 파악했군요.'; }
+  else if (score >= 6) { grade = '🥈 B'; message = '좋습니다! 틀린 문제를 복습하면 완벽합니다.'; }
+  else if (score >= 4) { grade = '🥉 C'; message = '기본은 이해했습니다. 강의를 한 번 더 보세요.'; }
+  else { grade = '📚 D'; message = '강의를 다시 보고 도전해 보세요!'; }
+
+  document.getElementById('finalScore').textContent = score + ' / 10';
+  document.getElementById('finalGrade').textContent = grade;
+  document.getElementById('finalMessage').textContent = message;
+  document.getElementById('finalModal').classList.add('show');
+}
+
+function retryQuiz() {
+  state = { solved: 0, correct: 0 };
+  document.getElementById('finalModal').classList.remove('show');
+  updateScorebar();
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
